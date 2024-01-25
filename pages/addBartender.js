@@ -1,21 +1,18 @@
-"use client";
-
 import { useState } from "react";
-// import { navigate } from "next/navigation";
+import { useRouter } from "next/router";
 
-export default function AddBartenderPage({}) {
+export default function addBartenderPage({}) {
 	const [newBartender, setNewBartender] = useState({
 		firstName: "",
 		lastName: "",
 	});
-	console.log(newBartender);
+
 	const handleInputChange = (e) => {
 		setNewBartender({ ...newBartender, [e.target.name]: e.target.value });
-		console.log(newBartender);
 	};
 
+	const router = useRouter();
 	const handleAddBartender = async (e) => {
-		console.log(newBartender);
 		e.preventDefault();
 		try {
 			const response = await fetch("http://localhost:3000/api/addBartender", {
@@ -25,9 +22,10 @@ export default function AddBartenderPage({}) {
 				},
 				body: JSON.stringify(newBartender),
 			});
+			console.log(response);
 			if (response.ok) {
-				console.log(response, "Bartender added successfully");
-				// navigate("http://localhost:3000/bartenders");
+				console.log("Bartender added successfully");
+				router.push("http://localhost:3000/bartenders");
 			} else {
 				console.log("response not ok");
 			}

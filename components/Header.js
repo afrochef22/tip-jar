@@ -49,7 +49,7 @@ const Header = () => {
 							<Collapse isOpen={isOpen} navbar>
 								<NavItem>
 									<Link className="navbar-link" href="/bartenders">
-										bartenders
+										Bartenders
 									</Link>
 								</NavItem>
 								<NavItem className=" ">
@@ -71,7 +71,7 @@ const Header = () => {
 				<Nav>
 					<NavItem>
 						<Link className="navbar-link" href="/bartenders">
-							bartenders
+							Bartenders
 						</Link>
 					</NavItem>
 					<NavItem className=" ">
