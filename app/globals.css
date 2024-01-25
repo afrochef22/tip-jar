@@ -3,25 +3,76 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+	--primary-color: #27374d;
+	--secondary-color: #526d82;
+	--third-color: #9db2bf;
+	--text-color: #fff;
+	--font-size: 20px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.background-color {
+	background-color: var(--third-color);
+	color: var(--text-color);
+	height: 100vh;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.logo {
+	color: var(--text-color) !important;
+	font-size: 24px !important;
+}
+.navbar {
+	background-color: var(--secondary-color);
+}
+
+.collapse-menue {
+	background-color: var(--secondary-color);
+	width: 100%; /* Set the width to 100% to fill the entire navbar */
+	position: absolute; /* Use absolute positioning to overlay the menu */
+	top: 100%; /* Position the menu just below the navbar */
+	left: 0; /* Align the menu to the left edge of the navbar */
+	display: block;
+	z-index: 1; /* Ensure the menu appears above other content */
+}
+
+.navbar-link {
+	color: var(--third-color);
+	text-decoration: none;
+	padding: 5px 10px;
+}
+
+.navbar-link:hover {
+	color: #8e8585 !important;
+}
+
+.navbar-toggler {
+	display: block;
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+	border-color: var(--text-color) !important;
+}
+
+.bar {
+	width: 100%;
+	height: 2px;
+	background-color: var(--text-color);
+	margin: 35% 0;
+	transition: 0.4s;
+}
+
+/* Add styles for the "active" or "open" state if needed */
+.navbar-toggler.active .bar:nth-child(1) {
+	transform: translateY(10.5px) rotate(45deg);
+}
+
+.navbar-toggler.active .bar:nth-child(2) {
+	opacity: 0;
+}
+
+.navbar-toggler.active .bar:nth-child(3) {
+	transform: translateY(-10.5px) rotate(-45deg);
+}
+
+.collapse-menue-items {
+	padding-bottom: 8px;
 }
