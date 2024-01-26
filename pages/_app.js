@@ -1,5 +1,6 @@
-// pages/_app.js
 import "bootstrap/dist/css/bootstrap.min.css";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import "../components/fontawesom";
 import Header from "../components/Header";
 
 import "../styles/globals.css";

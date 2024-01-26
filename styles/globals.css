@@ -10,6 +10,22 @@
 	--font-size: 20px;
 }
 
+.text-color {
+	color: var(--text-color);
+}
+
+.primary-color {
+	color: var(--primary-color);
+}
+
+.secondary-color {
+	color: var(--secondary-color);
+}
+
+.third-color {
+	color: var(--third-color);
+}
+
 .background-color {
 	background-color: var(--third-color);
 	color: var(--text-color);
@@ -75,4 +91,8 @@
 
 .collapse-menue-items {
 	padding-bottom: 8px;
+}
+
+.noDecoration {
+	text-decoration: none;
 }

@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import Link from "next/link";
 import { useRouter } from "next/router";
 import style from "./Bartenders.module.css";
@@ -25,31 +27,36 @@ const Bartenders = ({ bartenders }) => {
 	};
 
 	return (
-		<Container>
-			<h1>Bartenders</h1>
+		<Container className={style.employeeList}>
+			<h1 className={` primary-color ${style.center}`}>Bartenders</h1>
 			{bartenders.map((bartender) => (
 				<Container key={bartender._id}>
 					<Row>
 						<Col>
 							<p>
-								<Link href={`/getBartender/${bartender._id}`}>
+								<Link
+									className="noDecoration primary-color"
+									href={`/getBartender/${bartender._id}`}
+								>
 									{`${bartender.firstName} ${bartender.lastName}`}
 								</Link>
 							</p>
 						</Col>
 						<Col>
 							<Button
-								className={style.red}
+								className={style.trash}
 								onClick={() => handleDelete(bartender._id)}
 							>
-								Delete
+								<FontAwesomeIcon icon="fa-solid fa-trash" />{" "}
 							</Button>
 						</Col>
 					</Row>
 				</Container>
 			))}
-			<Button>
-				<Link href={"/addBartender"}>Add Bartender</Link>
+			<Button className={style.green}>
+				<Link className="noDecoration text-color" href={"/addBartender"}>
+					Add Bartender
+				</Link>
 			</Button>
 		</Container>
 	);

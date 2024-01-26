@@ -1,3 +1,19 @@
-.red {
-	background-color: red;
+.trash {
+	background-color: var(--third-color);
+	border: none;
+	color: red;
+}
+
+.green {
+	background-color: green;
+	text-decoration: none;
+}
+
+.employeeList {
+	border: solid var(--secondary-color) 5px;
+	margin-top: 5%;
+	text-align: center;
+	max-width: 500px;
+	padding: 25px 0;
+	border-radius: 10%;
 }
