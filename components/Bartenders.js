@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import style from "./Bartenders.module.css";
 import { Button, Col, Container, Row } from "reactstrap";
+import { AddBartenderModal } from "../components/addBartender";
 
 const Bartenders = ({ bartenders }) => {
 	const router = useRouter();
@@ -47,17 +48,18 @@ const Bartenders = ({ bartenders }) => {
 								className={style.trash}
 								onClick={() => handleDelete(bartender._id)}
 							>
-								<FontAwesomeIcon icon="fa-solid fa-trash" />{" "}
+								delete
 							</Button>
 						</Col>
 					</Row>
 				</Container>
 			))}
-			<Button className={style.green}>
+			{/* <Button>
 				<Link className="noDecoration text-color" href={"/addBartender"}>
 					Add Bartender
 				</Link>
-			</Button>
+			</Button> */}
+			<AddBartenderModal />
 		</Container>
 	);
 };

@@ -1,0 +1,15 @@
+.container {
+	border: solid var(--secondary-color) 5px;
+	margin-top: 5%;
+
+	max-width: 500px;
+	padding: 25px 0;
+}
+
+.border {
+	border: solid var(--secondary-color) 2px;
+}
+
+.group {
+	margin: 0 25px;
+}
