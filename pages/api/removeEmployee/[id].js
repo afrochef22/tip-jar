@@ -1,28 +1,28 @@
 import clientPromise from "../../../lib/mongodb";
-import { userRouter } from "next/router";
 import { ObjectId } from "mongodb";
 
 export default async (req, res) => {
-	const id = req.query.getBartender;
+	const { id } = req.query;
+	console.log(req.method);
 
 	if (!ObjectId.isValid(id)) {
-		return res.status(400).json({ error: "Invalid bartender ID: ", id });
+		return res.status(400).json({ error: "Invalid employee ID: ", id });
 	}
 
-	if (req.method === "GET") {
+	if (req.method === "DELETE") {
 		try {
 			const client = await clientPromise;
-			const db = client.db("test");
-			const bartenderCollection = db.collection("bartenders");
-			const bartender = await bartenderCollection.findOne({
+			const db = client.db("TeragramBallroom");
+			const employeeCollection = db.collection("employees");
+			const employee = await employeeCollection.findOneAndDelete({
 				_id: new ObjectId(id),
 			});
 
-			if (!bartender) {
-				return res.status(404).json({ error: "Bartender not found" });
+			if (!employee.value) {
+				return res.status(404).json({ error: "Employee not found" });
 			}
 
-			res.status(200).json(bartender);
+			res.status(200).json(employee);
 		} catch (error) {
 			console.error("Error fetching data:", error);
 			res.status(500).json({ error: "Internal Server Error" });

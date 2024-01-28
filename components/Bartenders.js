@@ -1,65 +1,60 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import style from "./Bartenders.module.css";
 import { Button, Col, Container, Row } from "reactstrap";
-import { AddBartenderModal } from "../components/addBartender";
 
-const Bartenders = ({ bartenders }) => {
+const Bartenders = ({ employees }) => {
 	const router = useRouter();
 
 	const handleDelete = async (id) => {
 		console.log(`id: ${id}`);
 		try {
-			const response = await fetch(`/api/removeBartender/${id}`, {
+			const response = await fetch(`/api/removeEmployee/${id}`, {
 				method: "DELETE",
 			});
 
 			if (response.ok) {
-				console.log("Bartender deleted successfully");
-				router.push("/bartenders");
+				console.log("Employee deleted successfully");
+				router.push("/employees");
 			} else {
-				console.error("Failed to delete Bartender");
+				console.error("Failed to delete Employee");
 			}
 		} catch (error) {
-			console.error("Error deleting bartender:", error);
+			console.error("Error deleting Employee:", error);
 		}
 	};
-
 	return (
 		<Container className={style.employeeList}>
 			<h1 className={` primary-color ${style.center}`}>Bartenders</h1>
-			{bartenders.map((bartender) => (
-				<Container key={bartender._id}>
-					<Row>
-						<Col>
-							<p>
-								<Link
-									className="noDecoration primary-color"
-									href={`/getBartender/${bartender._id}`}
-								>
-									{`${bartender.firstName} ${bartender.lastName}`}
-								</Link>
-							</p>
-						</Col>
-						<Col>
-							<Button
-								className={style.trash}
-								onClick={() => handleDelete(bartender._id)}
-							>
-								delete
-							</Button>
-						</Col>
-					</Row>
-				</Container>
-			))}
-			{/* <Button>
-				<Link className="noDecoration text-color" href={"/addBartender"}>
-					Add Bartender
-				</Link>
-			</Button> */}
-			<AddBartenderModal />
+			{employees
+				.filter((bartender) => bartender.position.includes("Bartender"))
+				.map((bartender) => {
+					return (
+						<Container key={bartender._id}>
+							<Row>
+								<Col>
+									<p>
+										<Link
+											className="noDecoration primary-color"
+											href={`/getEmployee/${bartender._id}`}
+										>
+											{`${bartender.firstName} ${bartender.lastName}`}
+										</Link>
+									</p>
+								</Col>
+								<Col>
+									<Button
+										className={style.trash}
+										onClick={() => handleDelete(bartender._id)}
+									>
+										delete
+									</Button>
+								</Col>
+							</Row>
+						</Container>
+					);
+				})}
 		</Container>
 	);
 };

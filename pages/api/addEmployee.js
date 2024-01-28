@@ -3,14 +3,21 @@ import clientPromise from "../../lib/mongodb";
 export default async (req, res) => {
 	if (req.method === "POST") {
 		try {
-			const { firstName, lastName } = req.body;
-
+			const { firstName, lastName, position } = req.body;
 			const client = await clientPromise;
-			const db = client.db("test");
+			const db = client.db("TeragramBallroom");
 
-			await db.collection("bartenders").insertOne({
+			await db.collection("employees").insertOne({
 				firstName,
 				lastName,
+				position: position,
+				tipsCollected: [
+					{
+						amount: Number,
+						date: Date,
+						createdat: new Date(),
+					},
+				],
 				createdat: new Date(),
 			});
 

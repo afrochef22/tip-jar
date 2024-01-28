@@ -3,16 +3,16 @@ import clientPromise from "../../lib/mongodb";
 export default async (req, res) => {
 	try {
 		const client = await clientPromise;
-		const db = client.db("test");
+		const db = client.db("TeragramBallroom");
 
-		const bartenders = await db
-			.collection("bartenders")
+		const employees = await db
+			.collection("employees")
 			.find({})
 			.sort()
 			.limit(20)
 			.toArray();
-
-		res.json(bartenders);
+		console.log(employees);
+		res.json(employees);
 	} catch (err) {
 		console.error(err);
 	}

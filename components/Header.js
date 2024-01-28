@@ -48,8 +48,8 @@ const Header = () => {
 						<div className="collapse-menue">
 							<Collapse isOpen={isOpen} navbar>
 								<NavItem>
-									<Link className="navbar-link" href="/bartenders">
-										Bartenders
+									<Link className="navbar-link" href="/employees">
+										Employees
 									</Link>
 								</NavItem>
 								<NavItem className=" ">
@@ -70,8 +70,8 @@ const Header = () => {
 			) : (
 				<Nav>
 					<NavItem>
-						<Link className="navbar-link" href="/bartenders">
-							Bartenders
+						<Link className="navbar-link" href="/employees">
+							Employees
 						</Link>
 					</NavItem>
 					<NavItem className=" ">
