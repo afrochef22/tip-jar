@@ -29,7 +29,7 @@
 .background-color {
 	background-color: var(--third-color);
 	color: var(--text-color);
-	height: 100vh;
+	height: 100%;
 }
 
 .logo {

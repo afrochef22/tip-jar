@@ -1,5 +1,8 @@
 import clientPromise from "../lib/mongodb";
 import Bartenders from "../components/Bartenders";
+import BarBacks from "../components/BarBacks";
+import Cooks from "../components/Cooks";
+import NonPositionedEmployee from "../components/NonPositionedEmployee";
 import { AddEmployeeModal } from "../components/addEmployeeModal";
 
 import React from "react";
@@ -9,7 +12,9 @@ export default function EmployeesPage({ employees }) {
 		<div>
 			<AddEmployeeModal />
 			<Bartenders employees={employees} />
-			<Bartenders employees={employees} />
+			<BarBacks employees={employees} />
+			<Cooks employees={employees} />
+			<NonPositionedEmployee employees={employees} />
 		</div>
 	);
 }
