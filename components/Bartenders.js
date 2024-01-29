@@ -8,6 +8,11 @@ import { UpdateEmployeeModal } from "./UpdateEmployeeModal";
 const Bartenders = ({ employees }) => {
 	const router = useRouter();
 
+	// Sort employees array by last name
+	const sortedEmployees = employees.sort((a, b) =>
+		a.lastName.localeCompare(b.lastName)
+	);
+
 	const handleDelete = async (id) => {
 		console.log(`id: ${id}`);
 		try {
@@ -28,7 +33,7 @@ const Bartenders = ({ employees }) => {
 	return (
 		<Container className={style.employeeList}>
 			<h1 className={` primary-color ${style.center}`}>Bartenders</h1>
-			{employees
+			{sortedEmployees
 				.filter((bartender) => bartender.position.includes("Bartender"))
 				.map((bartender) => {
 					return (

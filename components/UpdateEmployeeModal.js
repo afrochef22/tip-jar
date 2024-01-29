@@ -72,9 +72,7 @@ export function UpdateEmployeeModal(props, args) {
 	const router = useRouter();
 	const handleUpdateEmployee = async (e) => {
 		e.preventDefault();
-		console.log(employeeUpdate.position);
 
-		console.log(employeeUpdate);
 		try {
 			const response = await fetch(
 				`http://localhost:3000/api/updateEmployee/${props.data._id}`,

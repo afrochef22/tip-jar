@@ -14,6 +14,7 @@ import style from "./addEmployee.module.css";
 
 export function AddEmployeeModal(args) {
 	const [modal, setModal] = useState(false);
+	const [alertMessage, setAlertMessage] = useState("");
 
 	const toggle = () => setModal(!modal);
 
@@ -28,7 +29,6 @@ export function AddEmployeeModal(args) {
 			},
 		],
 	});
-
 	const handleInputChange = (e) => {
 		if (e.target.name === "position") {
 			const selectedOptions = Array.from(
@@ -47,14 +47,17 @@ export function AddEmployeeModal(args) {
 	const router = useRouter();
 	const handleAddEmployee = async (e) => {
 		e.preventDefault();
-		console.log(newEmployee.position);
 
-		if (
-			!newEmployee.firstName ||
-			!newEmployee.lastName ||
-			newEmployee.position.length === 0
-		) {
-			alert("Please fill in all fields.");
+		// if (
+		// 	!newEmployee.firstName ||
+		// 	!newEmployee.lastName ||
+		// 	newEmployee.position.length === 0
+		// ) {
+		// 	alert("Please fill in all fields and select at least one position.");
+		// 	return;
+		// }
+		if (newEmployee.position.length === 0) {
+			setAlertMessage("Please select at least one position.");
 			return;
 		}
 
@@ -70,6 +73,18 @@ export function AddEmployeeModal(args) {
 			if (response.ok) {
 				console.log("Employee added successfully");
 				router.push("http://localhost:3000/employees");
+				setNewEmployee({
+					firstName: "",
+					lastName: "",
+					position: [],
+					tipsCollected: [
+						{
+							amount: Number,
+							date: Date,
+						},
+					],
+				});
+				setAlertMessage(""); // Clear the alert message
 			} else {
 				console.log("response not ok");
 			}
@@ -118,6 +133,7 @@ export function AddEmployeeModal(args) {
 									name="position"
 									value="Bartender"
 									onChange={handleInputChange}
+									onClick={() => setAlertMessage("")}
 								/>
 								Bartender
 							</Label>
@@ -128,6 +144,7 @@ export function AddEmployeeModal(args) {
 									name="position"
 									value="Bar Back"
 									onChange={handleInputChange}
+									onClick={() => setAlertMessage("")}
 								/>
 								Bar Back
 							</Label>
@@ -138,10 +155,14 @@ export function AddEmployeeModal(args) {
 									name="position"
 									value="Cook"
 									onChange={handleInputChange}
+									onClick={() => setAlertMessage("")}
 								/>
 								Cook
 							</Label>
 						</div>
+						{alertMessage && (
+							<div className={style.alertMessage}>{alertMessage}</div>
+						)}
 					</FormGroup>
 
 					<ModalFooter>
