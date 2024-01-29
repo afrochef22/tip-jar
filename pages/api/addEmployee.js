@@ -1,10 +1,10 @@
 import clientPromise from "../../lib/mongodb";
-import cors from "cors";
+// import cors from "cors";
 
-const corsMiddleware = cors({ origin: true });
+// const corsMiddleware = cors({ origin: true });
 
 export default async (req, res) => {
-	await corsMiddleware(req, res);
+	// await corsMiddleware(req, res);
 
 	if (req.method === "POST") {
 		try {

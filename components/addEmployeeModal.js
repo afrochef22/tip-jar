@@ -62,16 +62,13 @@ export function AddEmployeeModal(args) {
 		}
 
 		try {
-			const response = await fetch(
-				"https://tip-jar-delta.vercel.app/api/addEmployee",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json", // Specify the content type
-					},
-					body: JSON.stringify(newEmployee),
-				}
-			);
+			const response = await fetch("/api/addEmployee", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json", // Specify the content type
+				},
+				body: JSON.stringify(newEmployee),
+			});
 
 			if (response.ok) {
 				console.log("Employee added successfully");
