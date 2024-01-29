@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import style from "./Bartenders.module.css";
 import { Button, Col, Container, Row } from "reactstrap";
+import { UpdateEmployeeModal } from "./UpdateEmployeeModal";
 
 const Bartenders = ({ employees }) => {
 	const router = useRouter();
@@ -43,7 +44,11 @@ const Bartenders = ({ employees }) => {
 										</Link>
 									</p>
 								</Col>
+
 								<Col>
+									<Button>
+										<UpdateEmployeeModal data={bartender} />
+									</Button>
 									<Button
 										className={style.trash}
 										onClick={() => handleDelete(bartender._id)}

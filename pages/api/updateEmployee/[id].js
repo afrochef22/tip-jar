@@ -21,15 +21,14 @@ export default async (req, res) => {
 			const objectId = new ObjectId(id);
 			const filter = { _id: objectId };
 
-			let updateDocument;
+			let updateDocument = {};
 
-			if (Array.isArray(data.position)) {
-				updateDocument = {
-					$addToSet: { position: { $each: data.position || [] } },
-				};
-			} else {
-				updateDocument = {
-					$set: data,
+			// Update name and position
+			if (data.firstName || data.lastName || Array.isArray(data.position)) {
+				updateDocument.$set = {
+					...(data.firstName && { firstName: data.firstName }),
+					...(data.lastName && { lastName: data.lastName }),
+					...(Array.isArray(data.position) && { position: data.position }),
 				};
 			}
 
