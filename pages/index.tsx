@@ -2,8 +2,8 @@ import Head from "next/head";
 import clientPromise from "../lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 
-import Header from "../components/Header";
-
+import CurrentShift from "../components/CurrentShift";
+import SelectWorkingEmployee from "./SelectWorkingEmployee";
 type ConnectionStatus = {
 	isConnected: boolean;
 };
@@ -36,5 +36,9 @@ export const getServerSideProps: GetServerSideProps<
 export default function Home({
 	isConnected,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	return;
+	return (
+		<div className="background-color">
+			<CurrentShift />
+		</div>
+	);
 }

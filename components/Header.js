@@ -53,8 +53,8 @@ const Header = () => {
 									</Link>
 								</NavItem>
 								<NavItem className=" ">
-									<Link className="navbar-link" href="/CashTipForm">
-										Cash Tip Form
+									<Link className="navbar-link" href="/SelectWorkingEmployee">
+										Credit Card Tip Form
 									</Link>
 								</NavItem>
 
@@ -75,8 +75,8 @@ const Header = () => {
 						</Link>
 					</NavItem>
 					<NavItem className=" ">
-						<Link className="navbar-link" href="/CashTipForm">
-							Cash Tip Form
+						<Link className="navbar-link" href="/SelectWorkingEmployee">
+							Credit Card Tip Form
 						</Link>
 					</NavItem>
 					<NavItem className=" ">

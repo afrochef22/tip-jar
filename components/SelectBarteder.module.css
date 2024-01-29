@@ -1,0 +1,5 @@
+.backgroundColor {
+	background-color: var(--third-color); /* Your desired color */
+	color: #333; /* Adjust as needed */
+	height: 100%;
+}

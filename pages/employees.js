@@ -30,7 +30,7 @@ export async function getServerSideProps() {
 			.sort()
 			.limit(20)
 			.toArray();
-
+		console.log(employees);
 		return {
 			props: { employees: JSON.parse(JSON.stringify(employees)) },
 		};
