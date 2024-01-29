@@ -72,7 +72,7 @@ export function AddEmployeeModal(args) {
 
 			if (response.ok) {
 				console.log("Employee added successfully");
-				router.push("http://localhost:3000/employees");
+				router.push("/employees");
 				setNewEmployee({
 					firstName: "",
 					lastName: "",

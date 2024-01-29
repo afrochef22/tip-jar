@@ -74,25 +74,22 @@ export function UpdateEmployeeModal(props, args) {
 		e.preventDefault();
 
 		try {
-			const response = await fetch(
-				`http://localhost:3000/api/updateEmployee/${props.data._id}`,
-				{
-					method: "PATCH",
-					headers: {
-						"Content-Type": "application/json", // Specify the content type
-					},
+			const response = await fetch(`/api/updateEmployee/${props.data._id}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json", // Specify the content type
+				},
 
-					body: JSON.stringify({
-						firstName: employeeUpdate.firstName,
-						lastName: employeeUpdate.lastName,
-						position: employeeUpdate.position,
-					}),
-				}
-			);
+				body: JSON.stringify({
+					firstName: employeeUpdate.firstName,
+					lastName: employeeUpdate.lastName,
+					position: employeeUpdate.position,
+				}),
+			});
 
 			if (response.ok) {
 				console.log("Employee updated successfully");
-				router.push("http://localhost:3000/employees");
+				router.push("/employees");
 			} else {
 				console.log("response not ok");
 			}
