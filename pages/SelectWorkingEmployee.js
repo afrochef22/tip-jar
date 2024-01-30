@@ -1,12 +1,12 @@
 // pages/SelectWorkingEmployee.js
 import React from "react";
-import SelectBartender from "../components/SelectBartender";
+import SelectEmployee from "../components/SelectEmployee";
 import clientPromise from "../lib/mongodb";
 
 export default function SelectWorkingEmployee({ employees }) {
 	return (
 		<div className="background-color">
-			<SelectBartender employees={employees} />
+			<SelectEmployee employees={employees} />
 		</div>
 	);
 }

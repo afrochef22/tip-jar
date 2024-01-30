@@ -48,14 +48,6 @@ export function AddEmployeeModal(args) {
 	const handleAddEmployee = async (e) => {
 		e.preventDefault();
 
-		// if (
-		// 	!newEmployee.firstName ||
-		// 	!newEmployee.lastName ||
-		// 	newEmployee.position.length === 0
-		// ) {
-		// 	alert("Please fill in all fields and select at least one position.");
-		// 	return;
-		// }
 		if (newEmployee.position.length === 0) {
 			setAlertMessage("Please select at least one position.");
 			return;
