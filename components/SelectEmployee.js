@@ -44,6 +44,8 @@ export default function SelectEmployee({ employees }) {
 	const [availableEmployees, setAvailableEmployees] = useState([]);
 	const [selectedEmployees, setSelectedEmployees] = useState([]);
 
+	const [menuIsOpen, setMenuIsOpen] = useState(false);
+
 	useEffect(() => {
 		const options = employees.map((employee) => {
 			return {
@@ -56,6 +58,7 @@ export default function SelectEmployee({ employees }) {
 	}, [employees]);
 
 	const addWorkingEmployee = (selectedOptions, { removedValue }) => {
+		setMenuIsOpen(true);
 		setSelectedEmployees(selectedOptions);
 
 		setAvailableEmployees(
@@ -130,6 +133,7 @@ export default function SelectEmployee({ employees }) {
 							onChange={addWorkingEmployee}
 							isClearable={false}
 							isSearchable={false}
+							onBlur={() => setMenuIsOpen(false)} // Close dropdown on blur
 						/>
 					</FormGroup>
 					<FormGroup>
@@ -146,6 +150,7 @@ export default function SelectEmployee({ employees }) {
 							onChange={addWorkingEmployee}
 							isClearable={false}
 							isSearchable={false}
+							defaultMenuIsOpen={menuIsOpen}
 						/>
 					</FormGroup>
 					<FormGroup>
