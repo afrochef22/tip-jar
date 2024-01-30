@@ -3,6 +3,43 @@ import { FormGroup, Form, Button, Label } from "reactstrap";
 import Select from "react-select";
 import style from "./SelectEmployee.module.css";
 
+const CustomSelect = ({ options, onChange, ...props }) => {
+	const [menuIsOpen, setMenuIsOpen] = useState(false);
+
+	const handleMenuOpen = () => {
+		setMenuIsOpen(true);
+	};
+
+	const handleMenuClose = () => {
+		setMenuIsOpen(false);
+	};
+
+	const handleInputChange = (newValue) => {
+		if (!newValue) {
+			setMenuIsOpen(false);
+		}
+	};
+
+	return (
+		<Select
+			options={options}
+			isMulti
+			closeMenuOnSelect={false}
+			allowSelectAll={true}
+			hideSelectedOptions={false}
+			placeholder="Select employee(s)"
+			onChange={onChange}
+			onMenuOpen={handleMenuOpen}
+			onMenuClose={handleMenuClose}
+			onInputChange={handleInputChange}
+			isClearable={false}
+			isSearchable={false}
+			menuIsOpen={menuIsOpen}
+			{...props}
+		/>
+	);
+};
+
 export default function SelectEmployee({ employees }) {
 	const [availableEmployees, setAvailableEmployees] = useState([]);
 	const [selectedEmployees, setSelectedEmployees] = useState([]);
@@ -70,6 +107,15 @@ export default function SelectEmployee({ employees }) {
 					Who is Working?
 				</h2>
 				<Form>
+					<FormGroup>
+						<Label className="text-color" htmlFor="exampleSelect">
+							test
+						</Label>
+						<CustomSelect
+							options={sortedBartenders}
+							onChange={addWorkingEmployee}
+						/>
+					</FormGroup>
 					<FormGroup>
 						<Label className="text-color" htmlFor="exampleSelect">
 							Bartending
