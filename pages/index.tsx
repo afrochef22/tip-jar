@@ -4,6 +4,8 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 
 import CurrentShift from "../components/CurrentShift";
 import SelectWorkingEmployee from "./SelectWorkingEmployee";
+import { Button } from "reactstrap";
+import Link from "next/link";
 type ConnectionStatus = {
 	isConnected: boolean;
 };
@@ -37,8 +39,15 @@ export default function Home({
 	isConnected,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
-		<div className="background-color">
-			<CurrentShift />
+		<div className="front-page">
+			<div className="logo-container">
+				<h1 className="logo-text">TipJar</h1>
+			</div>
+			<div className="login-button-container">
+				<Link className="login-button" href="/SelectWorkingEmployee">
+					Login
+				</Link>
+			</div>
 		</div>
 	);
 }

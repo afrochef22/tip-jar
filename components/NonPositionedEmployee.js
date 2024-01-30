@@ -32,7 +32,7 @@ const NonPositionedEmployee = ({ employees }) => {
 	};
 	return (
 		<Container className={style.employeeList}>
-			<h1 className={` primary-color ${style.center}`}>
+			<h1 className={` text-color  ${style.center}`}>
 				Employees without a position
 			</h1>
 			{sortedEmployees
@@ -44,7 +44,7 @@ const NonPositionedEmployee = ({ employees }) => {
 								<Col>
 									<p>
 										<Link
-											className="noDecoration primary-color"
+											className="noDecoration text-color "
 											href={`/getEmployee/${employee._id}`}
 										>
 											{`${employee.firstName} ${employee.lastName}`}

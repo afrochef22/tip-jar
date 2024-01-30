@@ -1,0 +1,41 @@
+.backgroundColor {
+	background-color: var(--third-color); /* Your desired color */
+	color: var(--text-color); /* Adjust as needed */
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.formContainer {
+	max-width: 500px;
+	min-width: 500px;
+	margin-bottom: 10%;
+	color: var(--third-color);
+	border: solid var(--primary-color) 5px;
+	padding: 50px;
+	border-radius: 15%;
+}
+
+.centerTitle {
+	text-align: center;
+	margin-bottom: 10%;
+}
+
+.centerButton {
+	display: flex;
+	justify-content: center;
+	width: 390px;
+	margin-top: 30px;
+}
+
+@media screen and (max-width: 540px) {
+	.formContainer {
+		max-width: 300px;
+		min-width: 300px;
+	}
+
+	.centerButton {
+		width: 190px;
+	}
+}

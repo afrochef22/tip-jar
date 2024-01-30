@@ -36,9 +36,9 @@ const Header = () => {
 
 	return (
 		<Navbar className="navbar" sticky="top" expand="md">
-			<NavbarBrand className="logo" href="/">
+			<Link className="logo" href="/">
 				TipJar
-			</NavbarBrand>
+			</Link>
 			{isMobile ? (
 				<Nav>
 					<div className="navbar-toggler" onClick={handleToggle}>

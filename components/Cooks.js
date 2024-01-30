@@ -32,7 +32,7 @@ const Cooks = ({ employees }) => {
 	};
 	return (
 		<Container className={style.employeeList}>
-			<h1 className={` primary-color ${style.center}`}>Cooks</h1>
+			<h1 className={` text-color  ${style.center}`}>Cooks</h1>
 			{sortedEmployees
 				.filter((cook) => cook.position.includes("Cook"))
 				.map((cook) => {
@@ -42,7 +42,7 @@ const Cooks = ({ employees }) => {
 								<Col>
 									<p>
 										<Link
-											className="noDecoration primary-color"
+											className="noDecoration text-color "
 											href={`/getEmployee/${cook._id}`}
 										>
 											{`${cook.firstName} ${cook.lastName}`}

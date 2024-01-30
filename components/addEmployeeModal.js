@@ -89,9 +89,16 @@ export function AddEmployeeModal(args) {
 
 	return (
 		<div>
-			<Button className="text-color" onClick={toggle}>
-				Add Employee
-			</Button>
+			<div
+				className={`${style.buttonContainer} ${style.background} ${style.backgroundEffect}`}
+			>
+				<Button
+					className={`text-color ${style.addEmployeeButton} $ `}
+					onClick={toggle}
+				>
+					Add Employee
+				</Button>
+			</div>
 			<Modal isOpen={modal} toggle={toggle} {...args}>
 				<ModalHeader toggle={toggle}>Add Employee</ModalHeader>
 				<Form onSubmit={handleAddEmployee}>
@@ -159,7 +166,7 @@ export function AddEmployeeModal(args) {
 
 					<ModalFooter>
 						<Button type="submit" color="primary">
-							Add Bartender
+							Add Employee
 						</Button>{" "}
 						<Button color="secondary" onClick={toggle}>
 							Cancel

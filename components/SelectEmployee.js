@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FormGroup } from "reactstrap";
+import { FormGroup, Form, Button, Label } from "reactstrap";
 import Select from "react-select";
-import style from "./SelectBarteder.module.css";
+import style from "./SelectEmployee.module.css";
 
 export default function SelectEmployee({ employees }) {
 	const [availableEmployees, setAvailableEmployees] = useState([]);
@@ -61,54 +61,71 @@ export default function SelectEmployee({ employees }) {
 		});
 
 	return (
-		<div>
-			<FormGroup className={style.backgroundColor}>
-				<h2 htmlFor="exampleSelect">Who is bartending?</h2>
-
-				<Select
-					options={sortedBartenders}
-					isMulti
-					closeMenuOnSelect={false}
-					allowSelectAll={true}
-					hideSelectedOptions={false}
-					placeholder="Select bartender(s)"
-					onChange={addWorkingEmployee}
-					isClearable={false}
-					isSearchable={false}
-				/>
-			</FormGroup>
-
-			<FormGroup className={style.backgroundColor}>
-				<h2 htmlFor="exampleSelect">Who is Bar Backing?</h2>
-
-				<Select
-					options={sortedBarBacks}
-					isMulti
-					closeMenuOnSelect={false}
-					allowSelectAll={true}
-					hideSelectedOptions={false}
-					placeholder="Select bar back(s)"
-					onChange={addWorkingEmployee}
-					isClearable={false}
-					isSearchable={false}
-				/>
-			</FormGroup>
-
-			<FormGroup className={style.backgroundColor}>
-				<h2 htmlFor="exampleSelect">Who is Cooking?</h2>
-
-				<Select
-					options={sortedCooks}
-					isMulti
-					closeMenuOnSelect={false}
-					allowSelectAll={true}
-					hideSelectedOptions={false}
-					placeholder="Select Cook(s)"
-					onChange={addWorkingEmployee}
-					isClearable={false}
-					isSearchable={false}
-				/>
-			</FormGroup>
+		<div className={` ${style.backgroundColor}`}>
+			<div className={style.formContainer}>
+				<h2
+					className={`text-color ${style.centerTitle}`}
+					htmlFor="exampleSelect"
+				>
+					Who is Working?
+				</h2>
+				<Form>
+					<FormGroup>
+						<Label className="text-color" htmlFor="exampleSelect">
+							Bartending
+						</Label>
+						<Select
+							options={sortedBartenders}
+							isMulti
+							closeMenuOnSelect={false}
+							allowSelectAll={true}
+							hideSelectedOptions={false}
+							placeholder="Select bartender(s)"
+							onChange={addWorkingEmployee}
+							isClearable={false}
+							isSearchable={false}
+						/>
+					</FormGroup>
+					<FormGroup>
+						<Label className="text-color" htmlFor="exampleSelect">
+							Bar Backing
+						</Label>
+						<Select
+							options={sortedBarBacks}
+							isMulti
+							closeMenuOnSelect={false}
+							allowSelectAll={true}
+							hideSelectedOptions={false}
+							placeholder="Select bar back(s)"
+							onChange={addWorkingEmployee}
+							isClearable={false}
+							isSearchable={false}
+						/>
+					</FormGroup>
+					<FormGroup>
+						<Label className="text-color" htmlFor="exampleSelect">
+							Cooking
+						</Label>
+						<Select
+							options={sortedCooks}
+							isMulti
+							closeMenuOnSelect={false}
+							allowSelectAll={true}
+							hideSelectedOptions={false}
+							placeholder="Select Cook(s)"
+							onChange={addWorkingEmployee}
+							isClearable={false}
+							isSearchable={false}
+						/>
+					</FormGroup>
+					<Button
+						type="submit"
+						className={`button-color ${style.centerButton}`}
+					>
+						Add Employees
+					</Button>{" "}
+				</Form>
+			</div>
 		</div>
 	);
 }
