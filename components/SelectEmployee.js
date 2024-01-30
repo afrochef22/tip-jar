@@ -16,7 +16,7 @@ const CustomSelect = ({ options, onChange, ...props }) => {
 
 	const handleInputChange = (newValue) => {
 		if (!newValue) {
-			setMenuIsOpen(false);
+			setMenuIsOpen(true);
 		}
 	};
 
