@@ -150,7 +150,7 @@ export default function SelectEmployee({ employees }) {
 							onChange={addWorkingEmployee}
 							isClearable={false}
 							isSearchable={false}
-							defaultMenuIsOpen={menuIsOpen}
+							defaultMenuIsOpen
 						/>
 					</FormGroup>
 					<FormGroup>
