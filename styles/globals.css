@@ -57,6 +57,14 @@ body {
 	background-color: var(--button-hover);
 }
 
+.remove-button-color {
+	background-color: var(--secondary-color);
+}
+
+.remove-button-color:hover {
+	background-color: rgb(250, 65, 65);
+}
+
 .background-color {
 	background-color: var(--third-color);
 	color: var(--text-color);

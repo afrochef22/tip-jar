@@ -98,6 +98,7 @@ export default function SelectEmployee({ employees }) {
 	return (
 		<div className={` ${style.backgroundColor} `}>
 			<Container>
+				<h1 className={style.centerTitle}>Select Who's Working</h1>
 				<Row className={style.centerContainer}>
 					{/* Available Bartenders */}
 					<div className={style.formContainer}>
@@ -114,12 +115,15 @@ export default function SelectEmployee({ employees }) {
 										bartender.position.includes("Bartender")
 									)
 									.map((employee) => (
-										<Row key={employee.value}>
+										<Row className={style.seperationLine} key={employee.value}>
 											<Col xs={8} sm={8} md={8}>
 												{employee.label}
 											</Col>
 											<Col xs={4} sm={4} md={4}>
-												<Button onClick={() => addWorkingBartender(employee)}>
+												<Button
+													className="button-color"
+													onClick={() => addWorkingBartender(employee)}
+												>
 													+
 												</Button>
 											</Col>
@@ -144,12 +148,15 @@ export default function SelectEmployee({ employees }) {
 										bartender.position.includes("Bartender")
 									)
 									.map((employee) => (
-										<Row key={employee.value}>
+										<Row className={style.seperationLine} key={employee.value}>
 											<Col xs={8} sm={8} md={8}>
 												{employee.label}
 											</Col>
 											<Col xs={4} sm={4} md={4}>
-												<Button onClick={() => removeWorkingEmployee(employee)}>
+												<Button
+													className="remove-button-color"
+													onClick={() => removeWorkingEmployee(employee)}
+												>
 													-
 												</Button>
 											</Col>
@@ -174,12 +181,15 @@ export default function SelectEmployee({ employees }) {
 								{sortedBarBacks
 									.filter((barBack) => barBack.position.includes("Bar Back"))
 									.map((employee) => (
-										<Row key={employee.value}>
+										<Row className={style.seperationLine} key={employee.value}>
 											<Col xs={8} sm={8} md={8}>
 												{employee.label}
 											</Col>
 											<Col xs={4} sm={4} md={4}>
-												<Button onClick={() => addWorkingBarBack(employee)}>
+												<Button
+													className="button-color"
+													onClick={() => addWorkingBarBack(employee)}
+												>
 													+
 												</Button>
 											</Col>
@@ -202,12 +212,15 @@ export default function SelectEmployee({ employees }) {
 								{selectedBarBacks
 									.filter((barBack) => barBack.position.includes("Bar Back"))
 									.map((employee) => (
-										<Row key={employee.value}>
+										<Row className={style.seperationLine} key={employee.value}>
 											<Col xs={8} sm={8} md={8}>
 												{employee.label}
 											</Col>
 											<Col xs={4} sm={4} md={4}>
-												<Button onClick={() => removeWorkingEmployee(employee)}>
+												<Button
+													className="remove-button-color"
+													onClick={() => removeWorkingEmployee(employee)}
+												>
 													-
 												</Button>
 											</Col>
@@ -232,12 +245,15 @@ export default function SelectEmployee({ employees }) {
 								{sortedCooks
 									.filter((cook) => cook.position.includes("Cook"))
 									.map((employee) => (
-										<Row key={employee.value}>
+										<Row className={style.seperationLine} key={employee.value}>
 											<Col xs={8} sm={8} md={8}>
 												{employee.label}
 											</Col>
 											<Col xs={4} sm={4} md={4}>
-												<Button onClick={() => addWorkingCook(employee)}>
+												<Button
+													className="button-color"
+													onClick={() => addWorkingCook(employee)}
+												>
 													+
 												</Button>
 											</Col>
@@ -260,12 +276,15 @@ export default function SelectEmployee({ employees }) {
 								{selectedCooks
 									.filter((cook) => cook.position.includes("Cook"))
 									.map((employee) => (
-										<Row key={employee.value}>
+										<Row className={style.seperationLine} key={employee.value}>
 											<Col xs={8} sm={8} md={8}>
 												{employee.label}
 											</Col>
 											<Col xs={4} sm={4} md={4}>
-												<Button onClick={() => removeWorkingEmployee(employee)}>
+												<Button
+													className="remove-button-color"
+													onClick={() => removeWorkingEmployee(employee)}
+												>
 													-
 												</Button>
 											</Col>
@@ -275,8 +294,8 @@ export default function SelectEmployee({ employees }) {
 						</Col>
 					</div>
 				</Row>
-				<Row>
-					<Button className={`mx-auto mt-3 ${style.centerButton}`}>Next</Button>
+				<Row className="justify-content-center mt-4 mb-5">
+					<Button className={`mx-auto ${style.centerButton}`}>Next</Button>
 				</Row>
 			</Container>
 		</div>
