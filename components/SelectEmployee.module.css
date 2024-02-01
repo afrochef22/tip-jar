@@ -41,11 +41,19 @@
 	display: flex;
 	justify-content: center;
 	width: 300px;
+	margin-bottom: 20px;
 }
 
 .seperationLine {
 	border-bottom: 1px solid #555;
 	padding: 10px;
+}
+
+.checkBox {
+	color: green !important;
+}
+.unCheckBox {
+	color: none;
 }
 
 @media screen and (max-width: 540px) {

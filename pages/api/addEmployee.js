@@ -18,6 +18,7 @@ export default async (req, res) => {
 				position: position,
 				tipsCollected: [
 					{
+						workingPosition: String,
 						amount: Number,
 						date: Date,
 						createdat: new Date(),
