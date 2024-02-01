@@ -1,50 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { FormGroup, Form, Button, Label } from "reactstrap";
+import {
+	FormGroup,
+	Form,
+	Button,
+	Label,
+	Row,
+	Col,
+	Container,
+} from "reactstrap";
 import Select from "react-select";
 import style from "./SelectEmployee.module.css";
 
-const CustomSelect = ({ options, onChange, ...props }) => {
-	const [menuIsOpen, setMenuIsOpen] = useState(false);
-
-	const handleMenuOpen = () => {
-		setMenuIsOpen(true);
-	};
-
-	const handleMenuClose = () => {
-		setMenuIsOpen(false);
-	};
-
-	const handleInputChange = (newValue) => {
-		if (!newValue) {
-			setMenuIsOpen(true);
-		}
-	};
-
-	return (
-		<Select
-			options={options}
-			isMulti
-			closeMenuOnSelect={false}
-			allowSelectAll={true}
-			hideSelectedOptions={false}
-			placeholder="Select employee(s)"
-			onChange={onChange}
-			onMenuOpen={handleMenuOpen}
-			onMenuClose={handleMenuClose}
-			onInputChange={handleInputChange}
-			isClearable={false}
-			isSearchable={false}
-			menuIsOpen={menuIsOpen}
-			{...props}
-		/>
-	);
-};
-
 export default function SelectEmployee({ employees }) {
 	const [availableEmployees, setAvailableEmployees] = useState([]);
-	const [selectedEmployees, setSelectedEmployees] = useState([]);
-
-	const [menuIsOpen, setMenuIsOpen] = useState(false);
+	const [selectedBartenders, setSelectedBartenders] = useState([]);
+	const [selectedBarBacks, setSelectedBarBacks] = useState([]);
+	const [selectedCooks, setSelectedCooks] = useState([]);
 
 	useEffect(() => {
 		const options = employees.map((employee) => {
@@ -57,21 +28,45 @@ export default function SelectEmployee({ employees }) {
 		setAvailableEmployees(options);
 	}, [employees]);
 
-	const addWorkingEmployee = (selectedOptions, { removedValue }) => {
-		setMenuIsOpen(true);
-		setSelectedEmployees(selectedOptions);
+	const addWorkingBartender = (selectedEmployee) => {
+		setSelectedBartenders((prev) => [...prev, selectedEmployee]);
 
-		setAvailableEmployees(
-			availableEmployees.filter((value) => !selectedOptions.includes(value))
+		setAvailableEmployees((prev) =>
+			prev.filter((value) => value.value !== selectedEmployee.value)
+		);
+	};
+
+	const addWorkingBarBack = (selectedEmployee) => {
+		setSelectedBarBacks((prev) => [...prev, selectedEmployee]);
+
+		setAvailableEmployees((prev) =>
+			prev.filter((value) => value.value !== selectedEmployee.value)
+		);
+	};
+
+	const addWorkingCook = (selectedEmployee) => {
+		setSelectedCooks((prev) => [...prev, selectedEmployee]);
+
+		setAvailableEmployees((prev) =>
+			prev.filter((value) => value.value !== selectedEmployee.value)
+		);
+	};
+
+	const removeWorkingEmployee = (selectedEmployee) => {
+		setAvailableEmployees((prev) => [...prev, selectedEmployee]);
+
+		setSelectedBartenders((prev) =>
+			prev.filter((value) => value.value !== selectedEmployee.value)
 		);
 
-		if (removedValue) {
-			setAvailableEmployees((prevEmployees) => [
-				...prevEmployees,
-				removedValue,
-			]);
-		}
+		setSelectedBarBacks((prev) =>
+			prev.filter((value) => value.value !== selectedEmployee.value)
+		);
+		setSelectedCooks((prev) =>
+			prev.filter((value) => value.value !== selectedEmployee.value)
+		);
 	};
+
 	// Sort employees array by last name
 	const sortedBartenders = availableEmployees
 		.filter((bartender) => bartender.position.includes("Bartender"))
@@ -83,7 +78,7 @@ export default function SelectEmployee({ employees }) {
 		});
 
 	const sortedBarBacks = availableEmployees
-		.filter((bartender) => bartender.position.includes("Bar Back"))
+		.filter((barBack) => barBack.position.includes("Bar Back"))
 		.sort((a, b) => {
 			const lastNameA = a.label.split(" ").pop(); // Get the last word as the last name
 			const lastNameB = b.label.split(" ").pop(); // Get the last word as the last name
@@ -92,7 +87,7 @@ export default function SelectEmployee({ employees }) {
 		});
 
 	const sortedCooks = availableEmployees
-		.filter((bartender) => bartender.position.includes("Cook"))
+		.filter((cook) => cook.position.includes("Cook"))
 		.sort((a, b) => {
 			const lastNameA = a.label.split(" ").pop(); // Get the last word as the last name
 			const lastNameB = b.label.split(" ").pop(); // Get the last word as the last name
@@ -101,82 +96,189 @@ export default function SelectEmployee({ employees }) {
 		});
 
 	return (
-		<div className={` ${style.backgroundColor}`}>
-			<div className={style.formContainer}>
-				<h2
-					className={`text-color ${style.centerTitle}`}
-					htmlFor="exampleSelect"
-				>
-					Who is Working?
-				</h2>
-				<Form>
-					<FormGroup>
-						<Label className="text-color" htmlFor="exampleSelect">
-							test
-						</Label>
-						<CustomSelect
-							options={sortedBartenders}
-							onChange={addWorkingEmployee}
-						/>
-					</FormGroup>
-					<FormGroup>
-						<Label className="text-color" htmlFor="exampleSelect">
-							Bartending
-						</Label>
-						<Select
-							options={sortedBartenders}
-							isMulti
-							closeMenuOnSelect={false}
-							allowSelectAll={true}
-							hideSelectedOptions={false}
-							placeholder="Select bartender(s)"
-							onChange={addWorkingEmployee}
-							isClearable={false}
-							isSearchable={false}
-							onBlur={() => setMenuIsOpen(false)} // Close dropdown on blur
-						/>
-					</FormGroup>
-					<FormGroup>
-						<Label className="text-color" htmlFor="exampleSelect">
-							Bar Backing
-						</Label>
-						<Select
-							options={sortedBarBacks}
-							isMulti
-							closeMenuOnSelect={false}
-							allowSelectAll={true}
-							hideSelectedOptions={false}
-							placeholder="Select bar back(s)"
-							onChange={addWorkingEmployee}
-							isClearable={false}
-							isSearchable={false}
-							defaultMenuIsOpen
-						/>
-					</FormGroup>
-					<FormGroup>
-						<Label className="text-color" htmlFor="exampleSelect">
-							Cooking
-						</Label>
-						<Select
-							options={sortedCooks}
-							isMulti
-							closeMenuOnSelect={false}
-							allowSelectAll={true}
-							hideSelectedOptions={false}
-							placeholder="Select Cook(s)"
-							onChange={addWorkingEmployee}
-							isClearable={false}
-							isSearchable={false}
-						/>
-					</FormGroup>
-					<Button
-						type="submit"
-						className={`button-color ${style.centerButton}`}
-					>
-						Add Employees
-					</Button>{" "}
-				</Form>
-			</div>
+		<div className={` ${style.backgroundColor} `}>
+			<Container>
+				<Row className={style.centerContainer}>
+					{/* Available Bartenders */}
+					<div className={style.formContainer}>
+						<Col>
+							<h2
+								className={`text-color ${style.centerTitle}`}
+								htmlFor="exampleSelect"
+							>
+								Available Bartenders
+							</h2>
+							<div className={`text-color ${style.scrollableContainer}`}>
+								{sortedBartenders
+									.filter((bartender) =>
+										bartender.position.includes("Bartender")
+									)
+									.map((employee) => (
+										<Row key={employee.value}>
+											<Col xs={8} sm={8} md={8}>
+												{employee.label}
+											</Col>
+											<Col xs={4} sm={4} md={4}>
+												<Button onClick={() => addWorkingBartender(employee)}>
+													+
+												</Button>
+											</Col>
+										</Row>
+									))}
+							</div>
+						</Col>
+					</div>
+
+					{/* Working Bartenders */}
+					<div className={style.formContainer}>
+						<Col>
+							<h2
+								className={`text-color ${style.centerTitle}`}
+								htmlFor="exampleSelect"
+							>
+								Working Bartenders
+							</h2>
+							<div className={`text-color ${style.scrollableContainer}`}>
+								{selectedBartenders
+									.filter((bartender) =>
+										bartender.position.includes("Bartender")
+									)
+									.map((employee) => (
+										<Row key={employee.value}>
+											<Col xs={8} sm={8} md={8}>
+												{employee.label}
+											</Col>
+											<Col xs={4} sm={4} md={4}>
+												<Button onClick={() => removeWorkingEmployee(employee)}>
+													-
+												</Button>
+											</Col>
+										</Row>
+									))}
+							</div>
+						</Col>
+					</div>
+				</Row>
+
+				<Row className={style.centerContainer}>
+					{/* Available Bar Back */}
+					<div className={style.formContainer}>
+						<Col>
+							<h2
+								className={`text-color ${style.centerTitle}`}
+								htmlFor="exampleSelect"
+							>
+								Available Bar Back
+							</h2>
+							<div className={`text-color ${style.scrollableContainer}`}>
+								{sortedBarBacks
+									.filter((barBack) => barBack.position.includes("Bar Back"))
+									.map((employee) => (
+										<Row key={employee.value}>
+											<Col xs={8} sm={8} md={8}>
+												{employee.label}
+											</Col>
+											<Col xs={4} sm={4} md={4}>
+												<Button onClick={() => addWorkingBarBack(employee)}>
+													+
+												</Button>
+											</Col>
+										</Row>
+									))}
+							</div>
+						</Col>
+					</div>
+
+					{/* Working Bar Back */}
+					<div className={style.formContainer}>
+						<Col>
+							<h2
+								className={`text-color ${style.centerTitle}`}
+								htmlFor="exampleSelect"
+							>
+								Working Bar Back
+							</h2>
+							<div className={`text-color ${style.scrollableContainer}`}>
+								{selectedBarBacks
+									.filter((barBack) => barBack.position.includes("Bar Back"))
+									.map((employee) => (
+										<Row key={employee.value}>
+											<Col xs={8} sm={8} md={8}>
+												{employee.label}
+											</Col>
+											<Col xs={4} sm={4} md={4}>
+												<Button onClick={() => removeWorkingEmployee(employee)}>
+													-
+												</Button>
+											</Col>
+										</Row>
+									))}
+							</div>
+						</Col>
+					</div>
+				</Row>
+
+				<Row className={style.centerContainer}>
+					{/* Available Cook */}
+					<div className={style.formContainer}>
+						<Col>
+							<h2
+								className={`text-color ${style.centerTitle}`}
+								htmlFor="exampleSelect"
+							>
+								Available Cook
+							</h2>
+							<div className={`text-color ${style.scrollableContainer}`}>
+								{sortedCooks
+									.filter((cook) => cook.position.includes("Cook"))
+									.map((employee) => (
+										<Row key={employee.value}>
+											<Col xs={8} sm={8} md={8}>
+												{employee.label}
+											</Col>
+											<Col xs={4} sm={4} md={4}>
+												<Button onClick={() => addWorkingCook(employee)}>
+													+
+												</Button>
+											</Col>
+										</Row>
+									))}
+							</div>
+						</Col>
+					</div>
+
+					{/* Working Cook */}
+					<div className={style.formContainer}>
+						<Col>
+							<h2
+								className={`text-color ${style.centerTitle}`}
+								htmlFor="exampleSelect"
+							>
+								Working Cook
+							</h2>
+							<div className={`text-color ${style.scrollableContainer}`}>
+								{selectedCooks
+									.filter((cook) => cook.position.includes("Cook"))
+									.map((employee) => (
+										<Row key={employee.value}>
+											<Col xs={8} sm={8} md={8}>
+												{employee.label}
+											</Col>
+											<Col xs={4} sm={4} md={4}>
+												<Button onClick={() => removeWorkingEmployee(employee)}>
+													-
+												</Button>
+											</Col>
+										</Row>
+									))}
+							</div>
+						</Col>
+					</div>
+				</Row>
+				<Row>
+					<Button className={`mx-auto mt-3 ${style.centerButton}`}>Next</Button>
+				</Row>
+			</Container>
 		</div>
 	);
 }

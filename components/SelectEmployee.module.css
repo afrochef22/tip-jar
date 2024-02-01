@@ -7,14 +7,29 @@
 	align-items: center;
 }
 
+.centerContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .formContainer {
-	max-width: 500px;
-	min-width: 500px;
+	max-width: 400px;
+	min-width: 400px;
+	min-height: 500px;
+	max-height: 100px;
 	margin-bottom: 10%;
 	color: var(--third-color);
 	border: solid var(--primary-color) 5px;
-	padding: 50px;
+	padding: 30px 40px;
 	border-radius: 15%;
+	margin: 20px;
+}
+
+.scrollableContainer {
+	max-height: 350px; /* Adjust the max height as needed */
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .centerTitle {
@@ -26,13 +41,21 @@
 	display: flex;
 	justify-content: center;
 	width: 390px;
-	margin-top: 30px;
+	margin: 50px;
 }
 
 @media screen and (max-width: 540px) {
 	.formContainer {
 		max-width: 300px;
 		min-width: 300px;
+		min-height: 350px;
+		max-height: 50px;
+	}
+
+	.scrollableContainer {
+		max-height: 200px; /* Adjust the max height as needed */
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 
 	.centerButton {
