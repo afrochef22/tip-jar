@@ -2,33 +2,37 @@ import React from "react";
 import { Row, Col, FormGroup, Label, Input } from "reactstrap";
 import style from "./CreditTipCalculation.module.css";
 
-export default function StandardCreditTipCalculator({ bartenders }) {
+export default function HourlyCookInput({ cooks }) {
 	return (
 		<Row>
-			{bartenders.map((bartender) => (
-				<Col sm={4} key={bartender.value}>
+			<h2 className={style.title}>Enter Hours Worked</h2>
+			<h3>Cooks</h3>
+
+			{cooks.map((cook) => (
+				<Col sm={4} key={cook.value}>
 					<FormGroup row>
 						<Label className={style.name} xs={6} sm={5}>
-							{bartender.label}
+							{cook.label}
 						</Label>
-
-						<Col xs={4} sm={8}>
-							<Label xs={4} sm={4}>
-								Tips Collected
-							</Label>
+						<Label for="hours worked" xs={2} sm={3}>
+							Hours Worked
+						</Label>
+						<Col xs={3} sm={4}>
 							<Input
-								name={bartender.label}
-								id="tips colected"
+								name={`${cook.label} hours`}
+								id="hours worked"
 								type="tel"
 								inputMode="numeric"
 								pattern="[0-9]+(\.[0-9]{1,2}?"
 								step="0.01"
-							/>
+							></Input>
 						</Col>
+
 						<div className={style.seperationLine}></div>
 					</FormGroup>
 				</Col>
 			))}
+			<div className={style.positionSeperationLine}></div>
 		</Row>
 	);
 }
