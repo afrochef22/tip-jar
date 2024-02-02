@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import {
-	FormGroup,
-	Form,
-	Button,
-	Label,
-	Row,
-	Col,
-	Container,
-	Input,
-} from "reactstrap";
-import Select from "react-select";
+import { Button, Label, Row, Col, Container } from "reactstrap";
 import style from "./SelectEmployee.module.css";
 
 export default function SelectEmployee({ employees }) {
@@ -22,32 +12,26 @@ export default function SelectEmployee({ employees }) {
 	const [barBacksList, setBarBacksList] = useState([]);
 	const [cooksList, setCooksList] = useState([]);
 
+	const filterEmployeesByPosition = (employees, position) =>
+		employees.filter((employee) => employee.position.includes(position));
+
 	useEffect(() => {
 		const options = employees.map((employee) => {
 			return {
 				value: employee._id,
 				label: `${employee.firstName} ${employee.lastName}`,
 				position: employee.position || [],
+				checked: false,
+				workingPosition: "",
 			};
 		});
 		setAllEmployees(options);
 	}, [employees]);
 
 	useEffect(() => {
-		const BarBacks = allEmployees.filter((barBack) =>
-			barBack.position.includes("Bar Back")
-		);
-		setBarBacksList(BarBacks);
-
-		const Bartenders = allEmployees.filter((bartender) =>
-			bartender.position.includes("Bartender")
-		);
-		setBartenderList(Bartenders);
-
-		const Cooks = allEmployees.filter((barBack) =>
-			barBack.position.includes("Cook")
-		);
-		setCooksList(Cooks);
+		setBarBacksList(filterEmployeesByPosition(allEmployees, "Bar Back"));
+		setBartenderList(filterEmployeesByPosition(allEmployees, "Bartender"));
+		setCooksList(filterEmployeesByPosition(allEmployees, "Cook"));
 	}, [allEmployees]);
 
 	const addWorkingEmployee = (selectedEmployee, position) => {
@@ -125,6 +109,29 @@ export default function SelectEmployee({ employees }) {
 	};
 
 	const handleCheckboxChange = (selectedEmployee, position, checked) => {
+		console.log(checked);
+
+		const updatedEmployees = allEmployees.map((employee) => {
+			if (employee.value === selectedEmployee.value) {
+				if (checked) {
+					return {
+						...employee,
+						checked: checked,
+						workingPosition: position,
+					};
+				} else {
+					return {
+						...employee,
+						checked: checked,
+						workingPosition: "",
+					};
+				}
+			}
+			return employee;
+		});
+
+		setAllEmployees(updatedEmployees);
+
 		if (checked) {
 			addWorkingEmployee(selectedEmployee, position);
 		} else {
@@ -150,26 +157,50 @@ export default function SelectEmployee({ employees }) {
 	};
 
 	// Sort employees array by last name
-	const sortedBartenders = bartenderList.sort((a, b) => {
+	let sortedBartenders = bartenderList.sort((a, b) => {
 		const lastNameA = a.label.split(" ").pop(); // Get the last word as the last name
 		const lastNameB = b.label.split(" ").pop();
 
 		return lastNameA.localeCompare(lastNameB);
 	});
 
-	const sortedBarBacks = barBacksList.sort((a, b) => {
+	let sortedBarBacks = barBacksList.sort((a, b) => {
 		const lastNameA = a.label.split(" ").pop();
 		const lastNameB = b.label.split(" ").pop();
 
 		return lastNameA.localeCompare(lastNameB);
 	});
 
-	const sortedCooks = cooksList.sort((a, b) => {
+	let sortedCooks = cooksList.sort((a, b) => {
 		const lastNameA = a.label.split(" ").pop();
 		const lastNameB = b.label.split(" ").pop();
 
 		return lastNameA.localeCompare(lastNameB);
 	});
+
+	sortedBartenders = sortedBartenders.filter(
+		(bartender) => bartender.workingPosition !== "Bar Back"
+	);
+
+	sortedBartenders = sortedBartenders.filter(
+		(bartender) => bartender.workingPosition !== "Cook"
+	);
+
+	sortedBarBacks = sortedBarBacks.filter(
+		(barBack) => barBack.workingPosition !== "Bartender"
+	);
+
+	sortedBarBacks = sortedBarBacks.filter(
+		(barBack) => barBack.workingPosition !== "Cook"
+	);
+
+	sortedCooks = sortedCooks.filter(
+		(cook) => cook.workingPosition !== "Bar Back"
+	);
+
+	sortedCooks = sortedCooks.filter(
+		(cook) => cook.workingPosition !== "Bartender"
+	);
 
 	const handleNextButtonClick = () => {
 		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
@@ -178,7 +209,6 @@ export default function SelectEmployee({ employees }) {
 			query: { workingEmployees: JSON.stringify(workingEmployees) },
 		});
 	};
-
 	return (
 		<div className={` ${style.backgroundColor} `}>
 			<Container>
@@ -195,21 +225,28 @@ export default function SelectEmployee({ employees }) {
 							</h2>
 							<div className={`text-color ${style.scrollableContainer}`}>
 								{sortedBartenders.map((employee) => (
-									<Row className={style.seperationLine} key={employee.value}>
+									<Row
+										onClick={() =>
+											handleCheckboxChange(
+												employee,
+												"Bartender",
+												!employee.checked
+											)
+										}
+										className={`${style.seperationLine} ${style.clickEmployee}`}
+										key={employee.value}
+									>
 										<Col xs={8} sm={8} md={8}>
 											<Label>{employee.label}</Label>
 										</Col>
 										<Col xs={4} sm={4} md={4}>
-											<Input
-												type="checkbox"
-												onChange={(e) =>
-													handleCheckboxChange(
-														employee,
-														"Bartender",
-														e.target.checked
-													)
+											<div
+												className={
+													employee.checked
+														? style.checkedCheckbox
+														: style.unCheckBox
 												}
-											/>
+											></div>
 										</Col>
 									</Row>
 								))}
@@ -228,21 +265,28 @@ export default function SelectEmployee({ employees }) {
 							</h2>
 							<div className={`text-color ${style.scrollableContainer}`}>
 								{sortedBarBacks.map((employee) => (
-									<Row className={style.seperationLine} key={employee.value}>
+									<Row
+										onClick={() =>
+											handleCheckboxChange(
+												employee,
+												"Bar Back",
+												!employee.checked
+											)
+										}
+										className={`${style.seperationLine} ${style.clickEmployee}`}
+										key={employee.value}
+									>
 										<Col xs={8} sm={8} md={8}>
 											<Label>{employee.label}</Label>
 										</Col>
 										<Col xs={4} sm={4} md={4}>
-											<Input
-												type="checkbox"
-												onChange={(e) =>
-													handleCheckboxChange(
-														employee,
-														"Bar Back",
-														e.target.checked
-													)
+											<div
+												className={
+													employee.checked
+														? style.checkedCheckbox
+														: style.unCheckBox
 												}
-											/>
+											></div>
 										</Col>
 									</Row>
 								))}
@@ -261,21 +305,24 @@ export default function SelectEmployee({ employees }) {
 							</h2>
 							<div className={`text-color ${style.scrollableContainer}`}>
 								{sortedCooks.map((employee) => (
-									<Row className={style.seperationLine} key={employee.value}>
+									<Row
+										onClick={() =>
+											handleCheckboxChange(employee, "Cook", !employee.checked)
+										}
+										className={`${style.seperationLine} ${style.clickEmployee}`}
+										key={employee.value}
+									>
 										<Col xs={8} sm={8} md={8}>
 											<Label>{employee.label}</Label>
 										</Col>
 										<Col xs={4} sm={4} md={4}>
-											<Input
-												type="checkbox"
-												onChange={(event) =>
-													handleCheckboxChange(
-														employee,
-														"Cook",
-														event.target.checked
-													)
+											<div
+												className={
+													employee.checked
+														? style.checkedCheckbox
+														: style.unCheckBox
 												}
-											/>
+											></div>
 										</Col>
 									</Row>
 								))}

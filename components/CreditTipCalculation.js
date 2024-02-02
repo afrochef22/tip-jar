@@ -132,7 +132,10 @@ export default function CreditTipCalculation({ workingEmployees }) {
 									<Input
 										id="foodSalesTotal"
 										name="Food Sales Total"
-										type="number"
+										type="tel"
+										inputMode="numeric"
+										pattern="[0-9]*"
+										step="0.01"
 									/>
 								</Col>
 							</Row>
