@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import {
 	FormGroup,
 	Form,
@@ -13,6 +14,7 @@ import Select from "react-select";
 import style from "./SelectEmployee.module.css";
 
 export default function SelectEmployee({ employees }) {
+	const router = useRouter();
 	const [allEmployees, setAllEmployees] = useState([]);
 	const [workingEmployees, setWorkingEmployees] = useState([]);
 
@@ -169,6 +171,14 @@ export default function SelectEmployee({ employees }) {
 		return lastNameA.localeCompare(lastNameB);
 	});
 
+	const handleNextButtonClick = () => {
+		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
+		router.push({
+			pathname: "/creditTipCalculationPage", // Adjust the pathname based on your file structure
+			query: { workingEmployees: JSON.stringify(workingEmployees) },
+		});
+	};
+
 	return (
 		<div className={` ${style.backgroundColor} `}>
 			<Container>
@@ -265,11 +275,6 @@ export default function SelectEmployee({ employees }) {
 														event.target.checked
 													)
 												}
-												className={(event) => {
-													`form-check-input ${
-														event.target.checked ? "bg-success" : ""
-													}`;
-												}}
 											/>
 										</Col>
 									</Row>
@@ -285,7 +290,12 @@ export default function SelectEmployee({ employees }) {
 					>
 						Reset
 					</Button>
-					<Button className={`mx-2 ${style.centerButton}`}>Next</Button>
+					<Button
+						onClick={handleNextButtonClick}
+						className={`mx-2 ${style.centerButton}`}
+					>
+						Next
+					</Button>
 				</Row>
 			</Container>
 		</div>

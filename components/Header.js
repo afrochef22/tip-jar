@@ -54,13 +54,13 @@ const Header = () => {
 								</NavItem>
 								<NavItem className=" ">
 									<Link className="navbar-link" href="/SelectWorkingEmployee">
-										Credit Card Tip Form
+										Select Employees
 									</Link>
 								</NavItem>
 
 								<NavItem className=" ">
-									<Link className="navbar-link" href="/CreditCardTipsCollected">
-										Credit Card Tips Collected
+									<Link className="navbar-link" href="/cashTipCalculator">
+										Cash Tip Calculator
 									</Link>
 								</NavItem>
 							</Collapse>
