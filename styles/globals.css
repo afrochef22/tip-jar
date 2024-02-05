@@ -49,6 +49,10 @@ body {
 	color: var(--third-color);
 }
 
+.highlight-color {
+	color: var(--highlight);
+}
+
 .button-color {
 	background-color: var(--button-green);
 }

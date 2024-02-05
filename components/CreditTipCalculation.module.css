@@ -2,13 +2,18 @@
 	background-color: var(--third-color); /* Your desired color */
 	color: var(--text-color); /* Adjust as needed */
 	min-height: 100vh;
-	display: flex;
+	height: 100%;
+	/* display: flex; */
 	justify-content: center;
 	align-items: center;
 }
 
 .messageContainer {
 	max-width: 500px;
+}
+
+.toggleSwitches {
+	margin-top: 30px;
 }
 
 .hourlyContainer {

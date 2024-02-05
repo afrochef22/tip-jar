@@ -127,37 +127,61 @@ export default function CreditTipCalculation({ workingEmployees }) {
 		<div className={style.backgroundColor}>
 			<Container>
 				<Form onSubmit={handleCalculate}>
-					<Row className={`${style.toggleSwitches} justify-content-center`}>
-						<Col sm={4}>
+					<Row className={`${style.toggleSwitches}`}>
+						<Col>
 							{/* Switches Column */}
-							<FormGroup switch>
-								<Input
-									type="switch"
-									role="switch"
-									onChange={() => handleSwitchToggle("Bartender")}
-									checked={isBartenderHoursClicked}
-								/>
-								<Label check>Toggle Bartender tip out by hour</Label>
-							</FormGroup>
-							<FormGroup switch>
-								<Input
-									type="switch"
-									role="switch"
-									onChange={() => handleSwitchToggle("Bar Back")}
-									checked={isBarBackHoursClicked}
-								/>
-								<Label check>Toggle Bar Back tip out by hour</Label>
-							</FormGroup>
-							<FormGroup switch>
-								<Input
-									type="switch"
-									role="switch"
-									onChange={() => handleSwitchToggle("Cook")}
-									checked={isCookHoursClicked}
-								/>
-								<Label check>Toggle Cook tip out by hour</Label>
-							</FormGroup>
+							{bartenders.length <= 1 ? (
+								<div></div>
+							) : (
+								<FormGroup switch>
+									<Input
+										type="switch"
+										role="switch"
+										onChange={() => handleSwitchToggle("Bartender")}
+										checked={isBartenderHoursClicked}
+									/>
+									<Label check>
+										Toggle <span className="highlight-color">Bartender</span>{" "}
+										tip out by hour
+									</Label>
+								</FormGroup>
+							)}
+							{barBacks.length <= 1 ? (
+								<div></div>
+							) : (
+								<FormGroup switch>
+									<Input
+										type="switch"
+										role="switch"
+										onChange={() => handleSwitchToggle("Bar Back")}
+										checked={isBarBackHoursClicked}
+									/>
+									<Label check>
+										Toggle <span className="highlight-color">Bar Back</span> tip
+										out by hour
+									</Label>
+								</FormGroup>
+							)}
+							{cooks.length <= 1 ? (
+								<div></div>
+							) : (
+								<FormGroup switch>
+									<Input
+										type="switch"
+										role="switch"
+										onChange={() => handleSwitchToggle("Cook")}
+										checked={isCookHoursClicked}
+									/>
+									<Label check>
+										Toggle <span className="highlight-color">Cook</span> tip out
+										by hour
+									</Label>
+								</FormGroup>
+							)}
 						</Col>
+					</Row>
+					<Row>
+						<Col sm={2} xs={1}></Col>
 						<Col sm={4}>
 							{/* Bar Back Percentage and Input Column */}
 							<Row className={`${style.formRow} `}>
@@ -180,29 +204,34 @@ export default function CreditTipCalculation({ workingEmployees }) {
 								</Col>
 							</Row>
 						</Col>
-						<Col sm={4}>
-							<Row className={`${style.formRow} `}>
-								<Label
-									sm={8}
-									xs={8}
-									className={style.formLabel}
-									for="FoodSalesTotal"
-								>
-									Enter Total Food Sales
-								</Label>
-								<Col sm={4} xs={4}>
-									<Input
-										id="FoodSalesTotal"
-										name="FoodSalesTotal"
-										type="tel"
-										inputMode="numeric"
-										pattern="[0-9]+(\.[0-9]{1,2}?"
-										step="0.01"
-										defaultValue={0}
-									/>
-								</Col>
-							</Row>
-						</Col>
+						{cooks.length === 0 ? (
+							<div></div>
+						) : (
+							<Col sm={4}>
+								<Row className={`${style.formRow} `}>
+									<Label
+										sm={8}
+										xs={8}
+										className={style.formLabel}
+										for="FoodSalesTotal"
+									>
+										Enter Total Food Sales
+									</Label>
+									<Col sm={4} xs={4}>
+										<Input
+											id="FoodSalesTotal"
+											name="FoodSalesTotal"
+											type="tel"
+											inputMode="numeric"
+											pattern="[0-9]+(\.[0-9]{1,2})?"
+											step="0.01"
+											defaultValue={0}
+										/>
+									</Col>
+								</Row>
+							</Col>
+						)}
+						<Col sm={2} xs={1}></Col>
 						<div className={style.positionSeperationLine}></div>
 					</Row>
 					{isCookHoursClicked === false ? (

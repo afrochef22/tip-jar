@@ -21,7 +21,7 @@ export default function StandardCreditTipCalculator({ bartenders }) {
 								id="tipsCollected"
 								type="tel"
 								inputMode="numeric"
-								pattern="[0-9]+(\.[0-9]{1,2}?"
+								pattern="[0-9]+(\.[0-9]{1,2})?"
 								step="0.01"
 								required
 								onInput={(e) => {
