@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Button,
 	Form,
@@ -18,6 +18,7 @@ import HourlyBarBackInput from "./HourlyBarBackInput";
 import HourlyCookInput from "./HourlyCookInput";
 
 export default function CreditTipCalculation({ workingEmployees }) {
+	const router = useRouter();
 	const bartenders = workingEmployees.filter(
 		(employee) => employee.workingPosition === "Bartender"
 	);
@@ -28,25 +29,75 @@ export default function CreditTipCalculation({ workingEmployees }) {
 		(employee) => employee.workingPosition === "Cook"
 	);
 
-	const router = useRouter();
+	const [barBackPercentage, setBarBackPercentage] = useState(0);
+	const [foodSalesTotal, setFoodSalesTotal] = useState(0);
+	const [employeeHours, setEmployeeHours] = useState([]);
+	const [employeeTipCollected, setEmployeeTipCollected] = useState([]);
 
 	const [isBartenderHoursClicked, setBartenderHoursClicked] = useState(false);
 	const [isCookHoursClicked, setCookHoursClicked] = useState(false);
 	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
 
+	useEffect(() => {
+		if (
+			barBackPercentage &&
+			foodSalesTotal !== null &&
+			employeeHours &&
+			employeeTipCollected
+		) {
+			router.push({
+				pathname: "/TipBreakDownPage",
+				query: {
+					bartenders: JSON.stringify(bartenders),
+					barBacks: JSON.stringify(barBacks),
+					cooks: JSON.stringify(cooks),
+					barBackPercentage: JSON.stringify(barBackPercentage),
+					foodSalesTotal: JSON.stringify(foodSalesTotal),
+					employeeHours: JSON.stringify(employeeHours),
+					employeeTipCollected: JSON.stringify(employeeTipCollected),
+				},
+			});
+		}
+	}, [barBackPercentage, foodSalesTotal, employeeHours, employeeTipCollected]);
+
 	const handleCalculate = (e) => {
-		e.preventDefault(); // Prevent the default form submission behavior
+		console.log("in");
+		e.preventDefault();
 		const formData = new FormData(e.target); // Create a FormData object from the form
 		const data = {};
+		const employeeTips = {};
+		const employeeHours = {};
 
 		// Iterate through form data and convert it to a plain object
 		formData.forEach((value, key) => {
 			data[key] = value;
+
+			const regexTips = /^([a-f\d]{24})Tips$/;
+			const regexHours = /^([a-f\d]{24})Hours$/;
+			const matchTips = key.match(regexTips);
+			const matchHours = key.match(regexHours);
+
+			if (matchTips && matchTips[1]) {
+				const employeeID = matchTips[1];
+				employeeTips[employeeID] = Number(value);
+			}
+
+			if (matchHours && matchHours[1]) {
+				const employeeID = matchHours[1];
+				employeeHours[employeeID] = Number(value);
+			}
 		});
 
-		console.log(data);
-		// Here, 'data' will contain the values entered in the form fields.
-		// You can now handle or submit this data as needed.
+		setBarBackPercentage(Number(formData.get("BarBackPercentage")));
+		const foodSalesTotalValue = formData.get("FoodSalesTotal");
+
+		setFoodSalesTotal(
+			foodSalesTotalValue !== "" && foodSalesTotalValue !== undefined
+				? Number(foodSalesTotalValue)
+				: null
+		);
+		setEmployeeHours(employeeHours);
+		setEmployeeTipCollected(employeeTips);
 	};
 
 	const handleSwitchToggle = (position) => {
@@ -114,7 +165,7 @@ export default function CreditTipCalculation({ workingEmployees }) {
 									sm={8}
 									xs={8}
 									className={style.formLabel}
-									for="Food Sales Total"
+									for="BarBackPercentage"
 								>
 									Bar Back Percentage
 								</Label>
@@ -135,18 +186,19 @@ export default function CreditTipCalculation({ workingEmployees }) {
 									sm={8}
 									xs={8}
 									className={style.formLabel}
-									for="Food Sales Total"
+									for="FoodSalesTotal"
 								>
 									Enter Total Food Sales
 								</Label>
 								<Col sm={4} xs={4}>
 									<Input
-										id="food Sales Total"
-										name="Food Sales Total"
+										id="FoodSalesTotal"
+										name="FoodSalesTotal"
 										type="tel"
 										inputMode="numeric"
 										pattern="[0-9]+(\.[0-9]{1,2}?"
 										step="0.01"
+										defaultValue={0}
 									/>
 								</Col>
 							</Row>

@@ -18,11 +18,12 @@ export default function SelectEmployee({ employees }) {
 	useEffect(() => {
 		const options = employees.map((employee) => {
 			return {
-				value: employee._id,
+				id: employee._id,
 				label: `${employee.firstName} ${employee.lastName}`,
 				position: employee.position || [],
 				checked: false,
 				workingPosition: "",
+				tippedHours: { hours: Number },
 			};
 		});
 		setAllEmployees(options);
@@ -46,26 +47,26 @@ export default function SelectEmployee({ employees }) {
 		switch (position) {
 			case "Bartender":
 				setBarBacksList((prev) =>
-					prev.filter((value) => value.value !== selectedEmployee.value)
+					prev.filter((id) => id.id !== selectedEmployee.id)
 				);
 				setCooksList((prev) =>
-					prev.filter((value) => value.value !== selectedEmployee.value)
+					prev.filter((id) => id.id !== selectedEmployee.id)
 				);
 				break;
 			case "Bar Back":
 				setBartenderList((prev) =>
-					prev.filter((value) => value.value !== selectedEmployee.value)
+					prev.filter((id) => id.id !== selectedEmployee.id)
 				);
 				setCooksList((prev) =>
-					prev.filter((value) => value.value !== selectedEmployee.value)
+					prev.filter((id) => id.id !== selectedEmployee.id)
 				);
 				break;
 			case "Cook":
 				setBartenderList((prev) =>
-					prev.filter((value) => value.value !== selectedEmployee.value)
+					prev.filter((id) => id.id !== selectedEmployee.id)
 				);
 				setBarBacksList((prev) =>
-					prev.filter((value) => value.value !== selectedEmployee.value)
+					prev.filter((id) => id.id !== selectedEmployee.id)
 				);
 				break;
 			default:
@@ -75,7 +76,7 @@ export default function SelectEmployee({ employees }) {
 
 	const removeWorkingEmployee = (selectedEmployee, position) => {
 		setWorkingEmployees((prev) =>
-			prev.filter((value) => value.value !== selectedEmployee.value)
+			prev.filter((id) => id.id !== selectedEmployee.id)
 		);
 
 		switch (position) {
@@ -112,7 +113,7 @@ export default function SelectEmployee({ employees }) {
 		console.log(checked);
 
 		const updatedEmployees = allEmployees.map((employee) => {
-			if (employee.value === selectedEmployee.value) {
+			if (employee.id === selectedEmployee.id) {
 				if (checked) {
 					return {
 						...employee,
@@ -234,7 +235,7 @@ export default function SelectEmployee({ employees }) {
 											)
 										}
 										className={`${style.seperationLine} ${style.clickEmployee}`}
-										key={employee.value}
+										key={employee.id}
 									>
 										<Col xs={8} sm={8} md={8}>
 											<Label>{employee.label}</Label>
@@ -274,7 +275,7 @@ export default function SelectEmployee({ employees }) {
 											)
 										}
 										className={`${style.seperationLine} ${style.clickEmployee}`}
-										key={employee.value}
+										key={employee.id}
 									>
 										<Col xs={8} sm={8} md={8}>
 											<Label>{employee.label}</Label>
@@ -310,7 +311,7 @@ export default function SelectEmployee({ employees }) {
 											handleCheckboxChange(employee, "Cook", !employee.checked)
 										}
 										className={`${style.seperationLine} ${style.clickEmployee}`}
-										key={employee.value}
+										key={employee.id}
 									>
 										<Col xs={8} sm={8} md={8}>
 											<Label>{employee.label}</Label>
