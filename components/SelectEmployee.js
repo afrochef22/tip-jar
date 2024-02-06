@@ -23,7 +23,9 @@ export default function SelectEmployee({ employees }) {
 				position: employee.position || [],
 				checked: false,
 				workingPosition: "",
-				tippedHours: { hours: Number },
+				tipsBroughtIn: 0,
+				tippedHours: 0,
+				tipOut: 0,
 			};
 		});
 		setAllEmployees(options);

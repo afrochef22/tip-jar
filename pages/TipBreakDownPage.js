@@ -13,7 +13,7 @@ export default function creditTipCalculationPage() {
 		employeeHours,
 		employeeTipCollected,
 	} = router.query;
-	console.log(barBackPercentage, foodSalesTotal, employeeTipCollected);
+
 	const parsedBartenders = bartenders ? JSON.parse(bartenders) : [];
 	const parsedBarBacks = barBacks ? JSON.parse(barBacks) : [];
 	const parsedCooks = cooks ? JSON.parse(cooks) : [];
@@ -23,16 +23,6 @@ export default function creditTipCalculationPage() {
 	const parsedEmployeeTipCollected = employeeTipCollected
 		? JSON.parse(employeeTipCollected)
 		: [];
-
-	console.log("Parsed Values:", {
-		parsedBartenders,
-		parsedBarBacks,
-		parsedCooks,
-		parsedBarBackPercentage,
-		parsedFoodSalesTotal,
-		parsedEmployeeHours,
-		parsedEmployeeTipCollected,
-	});
 
 	return (
 		<TipBreakDown

@@ -3,19 +3,18 @@ import { Row, Col, FormGroup, Label, Input } from "reactstrap";
 import style from "./CreditTipCalculation.module.css";
 export default function BartenderHourlyInput({ bartenders }) {
 	return (
-		<Row>
-			<h2 className={style.title}>Enter Tips Collected and Hours Worked</h2>
-			<h3>Bartenders</h3>
+		<Row className={style.container}>
+			<h1>Bartenders</h1>
 			{bartenders.map((bartender) => (
-				<Col sm={4} key={bartender.id}>
+				<Col sm={4} key={bartender.id} className={style.employeeContainer}>
 					<FormGroup row>
-						<Label className={style.name} xs={12} sm={5}>
+						<Label className={style.name} xs={5} sm={5}>
 							{bartender.label}
 						</Label>
-						<Label for="hoursWorked" xs={2} sm={3}>
+						<Label for="hoursWorked" xs={3} sm={3}>
 							Hours Worked
 						</Label>
-						<Col xs={3} sm={4}>
+						<Col xs={4} sm={4}>
 							<Input
 								name={`${bartender.id}Hours`}
 								id="hoursWorked"
@@ -37,11 +36,11 @@ export default function BartenderHourlyInput({ bartenders }) {
 								}}
 							></Input>
 						</Col>
-						<Label for="tipsCollected" xs={4} sm={4}>
+						<Label for="tipsCollected" xs={6} sm={6}>
 							Tips Collected
 						</Label>
 
-						<Col xs={3} sm={8}>
+						<Col xs={6} sm={6}>
 							<Input
 								name={`${bartender.id}Tips`}
 								id="tipsCollected"
@@ -63,11 +62,9 @@ export default function BartenderHourlyInput({ bartenders }) {
 								}}
 							/>
 						</Col>
-						<div className={style.seperationLine}></div>
 					</FormGroup>
 				</Col>
 			))}
-			<div className={style.positionSeperationLine}></div>
 		</Row>
 	);
 }

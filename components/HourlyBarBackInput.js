@@ -4,17 +4,16 @@ import style from "./CreditTipCalculation.module.css";
 
 export default function HourlyBarBackInput({ barBacks }) {
 	return (
-		<Row>
-			<h2 className={style.title}>Enter Hours Worked</h2>
-			<h3>Bar Backs</h3>
+		<Row className={style.container}>
+			<h1>Bar Backs</h1>
 
 			{barBacks.map((barBack) => (
-				<Col sm={4} key={barBack.id}>
+				<Col sm={4} key={barBack.id} className={style.employeeContainer}>
 					<FormGroup row>
-						<Label className={style.name} xs={6} sm={5}>
+						<Label className={style.name} xs={12} sm={12}>
 							{barBack.label}
 						</Label>
-						<Label for="hoursWorked" xs={2} sm={3}>
+						<Label for="hoursWorked" xs={6} sm={6}>
 							Hours Worked
 						</Label>
 						<Col xs={3} sm={4}>
@@ -39,12 +38,9 @@ export default function HourlyBarBackInput({ barBacks }) {
 								}}
 							></Input>
 						</Col>
-
-						<div className={style.seperationLine}></div>
 					</FormGroup>
 				</Col>
 			))}
-			<div className={style.positionSeperationLine}></div>
 		</Row>
 	);
 }

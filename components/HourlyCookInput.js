@@ -4,17 +4,16 @@ import style from "./CreditTipCalculation.module.css";
 
 export default function HourlyCookInput({ cooks }) {
 	return (
-		<Row>
-			<h2 className={style.title}>Enter Hours Worked</h2>
-			<h3>Cooks</h3>
+		<Row className={style.container}>
+			<h1>Cooks</h1>
 
 			{cooks.map((cook) => (
-				<Col sm={4} key={cook.id}>
+				<Col sm={4} key={cook.id} className={style.employeeContainer}>
 					<FormGroup row>
-						<Label className={style.name} xs={6} sm={5}>
+						<Label className={style.name} xs={12} sm={12}>
 							{cook.label}
 						</Label>
-						<Label for="hoursWorked" xs={2} sm={3}>
+						<Label for="hoursWorked" xs={6} sm={6}>
 							Hours Worked
 						</Label>
 						<Col xs={3} sm={4}>
@@ -39,12 +38,9 @@ export default function HourlyCookInput({ cooks }) {
 								}}
 							></Input>
 						</Col>
-
-						<div className={style.seperationLine}></div>
 					</FormGroup>
 				</Col>
 			))}
-			<div className={style.positionSeperationLine}></div>
 		</Row>
 	);
 }

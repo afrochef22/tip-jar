@@ -1,0 +1,29 @@
+.topRow {
+	margin-top: 50px;
+}
+
+.backgroundColor {
+	background-color: var(--third-color); /* Your desired color */
+	color: var(--text-color); /* Adjust as needed */
+	min-height: 100vh;
+	height: 100%;
+}
+
+.container {
+	background-color: #484747;
+	margin: 10px;
+	text-align: center;
+	padding: 10px;
+	max-width: 1000px;
+	border-radius: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.employeeContainer {
+	background-color: var(--third-color);
+	margin: 5px;
+	max-width: 350px;
+	height: 100px;
+	border-radius: 10px;
+	padding: 20px;
+}

@@ -4,40 +4,46 @@ import style from "./CreditTipCalculation.module.css";
 
 export default function StandardCreditTipCalculator({ bartenders }) {
 	return (
-		<Row>
+		<Row className={style.container}>
 			{bartenders.map((bartender) => (
-				<Col sm={4} key={bartender.id}>
+				<Col sm={3} key={bartender.id} className={style.employeeContainer}>
 					<FormGroup row>
-						<Label className={style.name} xs={6} sm={5}>
+						<Label className={style.name} xs={12} sm={12}>
 							{bartender.label}
 						</Label>
 
-						<Col xs={4} sm={8}>
-							<Label for="tipdCollected" xs={4} sm={4}>
-								Tips Collected
-							</Label>
-							<Input
-								name={`${bartender.id}Tips`}
-								id="tipsCollected"
-								type="tel"
-								inputMode="numeric"
-								pattern="[0-9]+(\.[0-9]{1,2})?"
-								step="0.01"
-								required
-								onInput={(e) => {
-									e.preventDefault();
-									const inputValue = e.target.value;
-									const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
-
-									if (!isValidInput) {
-										e.target.setCustomValidity("Please enter a valid number.");
-									} else {
-										e.target.setCustomValidity("");
-									}
-								}}
-							/>
+						<Col xs={12} sm={12}>
+							<Row>
+								<Col>
+									<Label for="tipsCollected" xs={12} sm={4}>
+										Tips Collected
+									</Label>
+								</Col>
+								<Col xs={6} sm={4}>
+									<Input
+										name={`${bartender.id}Tips`}
+										id="tipsCollected"
+										type="tel"
+										inputMode="numeric"
+										pattern="[0-9]+(\.[0-9]{1,2})?"
+										step="0.01"
+										required
+										onInput={(e) => {
+											e.preventDefault();
+											const inputValue = e.target.value;
+											const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
+											if (!isValidInput) {
+												e.target.setCustomValidity(
+													"Please enter a valid number."
+												);
+											} else {
+												e.target.setCustomValidity("");
+											}
+										}}
+									/>
+								</Col>
+							</Row>
 						</Col>
-						<div className={style.seperationLine}></div>
 					</FormGroup>
 				</Col>
 			))}

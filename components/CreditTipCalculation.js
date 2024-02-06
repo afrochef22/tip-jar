@@ -45,12 +45,29 @@ export default function CreditTipCalculation({ workingEmployees }) {
 			employeeHours &&
 			employeeTipCollected
 		) {
+			const bartendersWithHoursAndTip = bartenders.map((bartender) => {
+				const id = bartender.id;
+				const tippedHours = employeeHours[id] || 0; // Get hours for the current bartender
+				const tipsBroughtIn = employeeTipCollected[id];
+				return { ...bartender, tippedHours, tipsBroughtIn };
+			});
+			const barBacksWithHours = barBacks.map((barBack) => {
+				const id = barBack.id;
+				const tippedHours = employeeHours[id] || 0; // Get hours for the current barBack
+				return { ...barBack, tippedHours };
+			});
+			const cooksWithHours = cooks.map((cook) => {
+				const id = cook.id;
+				const tippedHours = employeeHours[id] || 0; // Get hours for the current cook
+				return { ...cook, tippedHours };
+			});
+
 			router.push({
 				pathname: "/TipBreakDownPage",
 				query: {
-					bartenders: JSON.stringify(bartenders),
-					barBacks: JSON.stringify(barBacks),
-					cooks: JSON.stringify(cooks),
+					bartenders: JSON.stringify(bartendersWithHoursAndTip),
+					barBacks: JSON.stringify(barBacksWithHours),
+					cooks: JSON.stringify(cooksWithHours),
 					barBackPercentage: JSON.stringify(barBackPercentage),
 					foodSalesTotal: JSON.stringify(foodSalesTotal),
 					employeeHours: JSON.stringify(employeeHours),
@@ -59,6 +76,22 @@ export default function CreditTipCalculation({ workingEmployees }) {
 			});
 		}
 	}, [barBackPercentage, foodSalesTotal, employeeHours, employeeTipCollected]);
+
+	const [defaultbarBackPercentage, setDefaultBarBackPercentage] = useState(15);
+	const handleIncrease = () => {
+		console.log("up");
+		setDefaultBarBackPercentage((prevPercentage) =>
+			Math.min(prevPercentage + 1, 100)
+		);
+	};
+
+	const handleDecrease = () => {
+		console.log("down");
+
+		setDefaultBarBackPercentage((prevPercentage) =>
+			Math.max(prevPercentage - 1, 0)
+		);
+	};
 
 	const handleCalculate = (e) => {
 		console.log("in");
@@ -124,147 +157,169 @@ export default function CreditTipCalculation({ workingEmployees }) {
 	};
 
 	return (
-		<div className={style.backgroundColor}>
-			<Container>
-				<Form onSubmit={handleCalculate}>
-					<Row className={`${style.toggleSwitches}`}>
-						<Col>
-							{/* Switches Column */}
-							{bartenders.length <= 1 ? (
-								<div></div>
-							) : (
-								<FormGroup switch>
-									<Input
-										type="switch"
-										role="switch"
-										onChange={() => handleSwitchToggle("Bartender")}
-										checked={isBartenderHoursClicked}
-									/>
-									<Label check>
-										Toggle <span className="highlight-color">Bartender</span>{" "}
-										tip out by hour
-									</Label>
-								</FormGroup>
-							)}
-							{barBacks.length <= 1 ? (
-								<div></div>
-							) : (
-								<FormGroup switch>
-									<Input
-										type="switch"
-										role="switch"
-										onChange={() => handleSwitchToggle("Bar Back")}
-										checked={isBarBackHoursClicked}
-									/>
-									<Label check>
-										Toggle <span className="highlight-color">Bar Back</span> tip
-										out by hour
-									</Label>
-								</FormGroup>
-							)}
-							{cooks.length <= 1 ? (
-								<div></div>
-							) : (
-								<FormGroup switch>
-									<Input
-										type="switch"
-										role="switch"
-										onChange={() => handleSwitchToggle("Cook")}
-										checked={isCookHoursClicked}
-									/>
-									<Label check>
-										Toggle <span className="highlight-color">Cook</span> tip out
-										by hour
-									</Label>
-								</FormGroup>
-							)}
-						</Col>
-					</Row>
-					<Row>
-						<Col sm={2} xs={1}></Col>
+		<Container className={style.backgroundColor}>
+			<Form onSubmit={handleCalculate}>
+				<Row className={`${style.toggleContainer} `}>
+					<Col>
+						{/* Switches Column */}
+						{bartenders.length <= 1 ? (
+							<div></div>
+						) : (
+							<FormGroup switch>
+								<Input
+									type="switch"
+									role="switch"
+									onChange={() => handleSwitchToggle("Bartender")}
+									checked={isBartenderHoursClicked}
+								/>
+								<Label check>
+									Toggle to tip out{" "}
+									<span className="highlight-color">Bartender</span> by hours
+									worked.
+								</Label>
+								<div className={style.seperationLine}></div>
+							</FormGroup>
+						)}
+						{barBacks.length <= 1 ? (
+							<div></div>
+						) : (
+							<FormGroup switch>
+								<Input
+									type="switch"
+									role="switch"
+									onChange={() => handleSwitchToggle("Bar Back")}
+									checked={isBarBackHoursClicked}
+								/>
+								<Label check>
+									Toggle <span className="highlight-color">Bar Back</span> tip
+									out by hour
+								</Label>
+								<div className={style.seperationLine}></div>
+							</FormGroup>
+						)}
+						{cooks.length <= 1 ? (
+							<div></div>
+						) : (
+							<FormGroup switch>
+								<Input
+									type="switch"
+									role="switch"
+									onChange={() => handleSwitchToggle("Cook")}
+									checked={isCookHoursClicked}
+								/>
+								<Label check>
+									Toggle <span className="highlight-color">Cook</span> tip out
+									by hour
+								</Label>
+								<div className={style.seperationLine}></div>
+							</FormGroup>
+						)}
+					</Col>
+				</Row>
+				<Row className={style.container}>
+					<Col sm={2} xs={1}></Col>
+					<Col sm={4}>
+						{/* Bar Back Percentage and Input Column */}
+						<Row className={`${style.formRow}`}>
+							<Label
+								sm={8}
+								xs={8}
+								className={style.formLabel}
+								for="BarBackPercentage"
+							>
+								Bar Back Percentage
+							</Label>
+							<Col md={4} sm={4} xs={3} className="d-flex align-items-center">
+								<Input
+									id="BarBackPercentage"
+									name="BarBackPercentage"
+									type="tel"
+									inputMode="numeric"
+									value={defaultbarBackPercentage}
+									onChange={(e) => setDefaultBarBackPercentage(e.target.value)}
+								/>
+								<Col sm={1} xs={1}>
+									<div
+										className={`d-flex flex-column ${style.smallButtonsContainer}`}
+									>
+										<Button
+											size="sm"
+											onClick={handleIncrease}
+											className={` ${style.percentageButton}`}
+										>
+											˄
+										</Button>
+										<Button
+											size="sm"
+											onClick={handleDecrease}
+											className={style.percentageButton}
+										>
+											˯
+										</Button>
+									</div>
+								</Col>
+							</Col>
+						</Row>
+					</Col>
+					{cooks.length === 0 ? (
+						<div></div>
+					) : (
 						<Col sm={4}>
-							{/* Bar Back Percentage and Input Column */}
 							<Row className={`${style.formRow} `}>
 								<Label
 									sm={8}
 									xs={8}
 									className={style.formLabel}
-									for="BarBackPercentage"
+									for="FoodSalesTotal"
 								>
-									Bar Back Percentage
+									Enter Total Food Sales
 								</Label>
-								<Col sm={3} xs={4}>
+								<Col sm={4} xs={4}>
 									<Input
-										id="BarBackPercentage"
-										name="BarBackPercentage"
+										id="FoodSalesTotal"
+										name="FoodSalesTotal"
 										type="tel"
 										inputMode="numeric"
-										defaultValue={15}
+										pattern="[0-9]+(\.[0-9]{1,2})?"
+										step="0.01"
+										defaultValue={0}
 									/>
 								</Col>
 							</Row>
 						</Col>
-						{cooks.length === 0 ? (
-							<div></div>
-						) : (
-							<Col sm={4}>
-								<Row className={`${style.formRow} `}>
-									<Label
-										sm={8}
-										xs={8}
-										className={style.formLabel}
-										for="FoodSalesTotal"
-									>
-										Enter Total Food Sales
-									</Label>
-									<Col sm={4} xs={4}>
-										<Input
-											id="FoodSalesTotal"
-											name="FoodSalesTotal"
-											type="tel"
-											inputMode="numeric"
-											pattern="[0-9]+(\.[0-9]{1,2})?"
-											step="0.01"
-											defaultValue={0}
-										/>
-									</Col>
-								</Row>
-							</Col>
-						)}
-						<Col sm={2} xs={1}></Col>
-						<div className={style.positionSeperationLine}></div>
-					</Row>
-					{isCookHoursClicked === false ? (
-						<div></div>
-					) : (
-						<HourlyCookInput cooks={cooks} />
 					)}
-					{isBarBackHoursClicked === false ? (
-						<div></div>
-					) : (
-						<HourlyBarBackInput barBacks={barBacks} />
-					)}
-					{isBartenderHoursClicked === false ? (
-						<StandardCreditTipCalculator bartenders={bartenders} />
-					) : (
-						<BartenderHourlyInput bartenders={bartenders} />
-					)}
-					<div className={style.centerButtonContainer}>
-						<Button
-							className={`${style.centerButton} ${style.backButton}`}
-							onClick={handleBackButtonClick}
-						>
-							Back
-						</Button>
-						<Button
-							className={`${style.centerButton} ${style.calculateButton}`}
-							type="submit"
-						>
-							Calculate
-						</Button>
-					</div>
-				</Form>
-			</Container>
-		</div>
+					<Col sm={2} xs={1}></Col>
+				</Row>
+				{isCookHoursClicked === false ? (
+					<div></div>
+				) : (
+					<HourlyCookInput cooks={cooks} />
+				)}
+				{isBarBackHoursClicked === false ? (
+					<div></div>
+				) : (
+					<HourlyBarBackInput barBacks={barBacks} />
+				)}
+				{isBartenderHoursClicked === false ? (
+					<StandardCreditTipCalculator bartenders={bartenders} />
+				) : (
+					<BartenderHourlyInput bartenders={bartenders} />
+				)}
+				<div className={style.centerButtonContainer}>
+					<Button
+						className={`${style.centerButton} ${style.backButton}`}
+						onClick={handleBackButtonClick}
+					>
+						Back
+					</Button>
+					<Button
+						className={`${style.centerButton} ${style.calculateButton}`}
+						type="submit"
+					>
+						Calculate
+					</Button>
+				</div>
+			</Form>
+		</Container>
 	);
 }
