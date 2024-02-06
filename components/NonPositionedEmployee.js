@@ -42,6 +42,11 @@ const NonPositionedEmployee = ({ employees }) => {
 						<Container key={employee._id}>
 							<Row>
 								<Col>
+									<Button className="editBtn">
+										<UpdateEmployeeModal data={employee} />
+									</Button>
+								</Col>
+								<Col>
 									<p>
 										<Link
 											className="noDecoration text-color "
@@ -53,16 +58,14 @@ const NonPositionedEmployee = ({ employees }) => {
 								</Col>
 
 								<Col>
-									<Button>
-										<UpdateEmployeeModal data={employee} />
-									</Button>
 									<Button
 										className={style.trash}
 										onClick={() => handleDelete(employee._id)}
 									>
-										delete
+										🗑
 									</Button>
 								</Col>
+								<div className="seperationLine"></div>
 							</Row>
 						</Container>
 					);

@@ -215,7 +215,8 @@ export default function SelectEmployee({ employees }) {
 	return (
 		<div className={` ${style.backgroundColor} `}>
 			<Container>
-				<h1 className={style.centerTitle}>Select Who's Working</h1>
+				<h1 className={style.centerTitle}>Credit Card Tip Calculator</h1>
+				<h3 className={style.centerTitle}>Select Who's Working</h3>
 				<Row className={style.centerContainer}>
 					{/* Available Bartenders */}
 					<div className={style.formContainer}>

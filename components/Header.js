@@ -47,18 +47,18 @@ const Header = () => {
 						<div className="bar"></div>
 						<div className="collapse-menue">
 							<Collapse isOpen={isOpen} navbar>
-								<NavItem>
-									<Link className="navbar-link" href="/employees">
+								<NavItem className="navbar-link-mobile">
+									<Link className="navbar-link " href="/employees">
 										Employees
 									</Link>
 								</NavItem>
-								<NavItem className=" ">
+								<NavItem className="navbar-link-mobile">
 									<Link className="navbar-link" href="/SelectWorkingEmployee">
-										Select Employees
+										Credit Tip Calculator
 									</Link>
 								</NavItem>
 
-								<NavItem className=" ">
+								<NavItem className="navbar-link-mobile ">
 									<Link className="navbar-link" href="/cashTipCalculator">
 										Cash Tip Calculator
 									</Link>
@@ -76,7 +76,7 @@ const Header = () => {
 					</NavItem>
 					<NavItem className=" ">
 						<Link className="navbar-link" href="/SelectWorkingEmployee">
-							Select Employees
+							Credit Tip Calculator
 						</Link>
 					</NavItem>
 					<NavItem className=" ">

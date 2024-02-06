@@ -8,6 +8,13 @@
 	/* align-items: center; */
 }
 
+.background {
+	background-color: var(--third-color); /* Your desired color */
+	color: var(--text-color); /* Adjust as needed */
+	min-height: 100vh;
+	height: 100%;
+}
+
 .messageContainer {
 	max-width: 500px;
 }

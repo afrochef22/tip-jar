@@ -40,6 +40,11 @@ const BarBacks = ({ employees }) => {
 						<Container key={barBacks._id}>
 							<Row>
 								<Col>
+									<Button className="editBtn">
+										<UpdateEmployeeModal data={barBacks} />
+									</Button>
+								</Col>
+								<Col>
 									<p>
 										<Link
 											className="noDecoration text-color "
@@ -51,16 +56,14 @@ const BarBacks = ({ employees }) => {
 								</Col>
 
 								<Col>
-									<Button>
-										<UpdateEmployeeModal data={barBacks} />
-									</Button>
 									<Button
 										className={style.trash}
 										onClick={() => handleDelete(barBacks._id)}
 									>
-										delete
+										🗑
 									</Button>
 								</Col>
+								<div className="seperationLine"></div>
 							</Row>
 						</Container>
 					);

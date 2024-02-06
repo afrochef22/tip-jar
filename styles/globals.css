@@ -153,6 +153,10 @@ body {
 	border-color: var(--text-color) !important;
 }
 
+.navbar-link-mobile {
+	margin-bottom: 10px;
+}
+
 .bar {
 	width: 100%;
 	height: 2px;

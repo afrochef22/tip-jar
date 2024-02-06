@@ -102,7 +102,7 @@ export function UpdateEmployeeModal(props, args) {
 
 	return (
 		<div>
-			<div onClick={toggle}>✍🏽</div>
+			<div onClick={toggle}>✏️</div>
 			<Modal isOpen={modal} toggle={toggle} {...args}>
 				<ModalHeader toggle={toggle}>
 					Edit {props.data.firstName} {props.data.lastName} info.

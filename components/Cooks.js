@@ -40,6 +40,11 @@ const Cooks = ({ employees }) => {
 						<Container key={cook._id}>
 							<Row>
 								<Col>
+									<Button className="editBtn">
+										<UpdateEmployeeModal data={cook} />
+									</Button>
+								</Col>
+								<Col>
 									<p>
 										<Link
 											className="noDecoration text-color "
@@ -51,16 +56,14 @@ const Cooks = ({ employees }) => {
 								</Col>
 
 								<Col>
-									<Button>
-										<UpdateEmployeeModal data={cook} />
-									</Button>
 									<Button
 										className={style.trash}
 										onClick={() => handleDelete(cook._id)}
 									>
-										delete
+										🗑
 									</Button>
 								</Col>
+								<div className="seperationLine"></div>
 							</Row>
 						</Container>
 					);
