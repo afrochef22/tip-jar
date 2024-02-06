@@ -39,7 +39,12 @@ const Bartenders = ({ employees }) => {
 					return (
 						<Container key={bartender._id}>
 							<Row>
-								<Col>
+								<Col xs={2}>
+									<Button className="editBtn">
+										<UpdateEmployeeModal data={bartender} />
+									</Button>
+								</Col>
+								<Col xs={8}>
 									<p>
 										<Link
 											className="noDecoration text-color "
@@ -50,17 +55,15 @@ const Bartenders = ({ employees }) => {
 									</p>
 								</Col>
 
-								<Col>
-									<Button>
-										<UpdateEmployeeModal data={bartender} />
-									</Button>
+								<Col xs={2}>
 									<Button
 										className={style.trash}
 										onClick={() => handleDelete(bartender._id)}
 									>
-										delete
+										🗑
 									</Button>
 								</Col>
+								<div className="seperationLine"></div>
 							</Row>
 						</Container>
 					);

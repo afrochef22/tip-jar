@@ -19,7 +19,7 @@ export default function BartenderHourlyInput({ bartenders }) {
 								name={`${bartender.id}Hours`}
 								id="hoursWorked"
 								type="tel"
-								inputMode="numeric"
+								inputMode="decimal"
 								pattern="[0-9]+(\.[0-9]{1,2})?"
 								step="0.01"
 								required
@@ -45,7 +45,7 @@ export default function BartenderHourlyInput({ bartenders }) {
 								name={`${bartender.id}Tips`}
 								id="tipsCollected"
 								type="tel"
-								inputMode="numeric"
+								inputMode="decimal"
 								pattern="[0-9]+(\.[0-9]{1,2})?"
 								step="0.01"
 								required

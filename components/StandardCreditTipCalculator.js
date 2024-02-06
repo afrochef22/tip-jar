@@ -15,16 +15,16 @@ export default function StandardCreditTipCalculator({ bartenders }) {
 						<Col xs={12} sm={12}>
 							<Row>
 								<Col>
-									<Label for="tipsCollected" xs={12} sm={4}>
+									<Label for="tipsCollected" xs={12} sm={12}>
 										Tips Collected
 									</Label>
 								</Col>
-								<Col xs={6} sm={4}>
+								<Col xs={6} sm={6}>
 									<Input
 										name={`${bartender.id}Tips`}
 										id="tipsCollected"
 										type="tel"
-										inputMode="numeric"
+										inputMode="decimal"
 										pattern="[0-9]+(\.[0-9]{1,2})?"
 										step="0.01"
 										required

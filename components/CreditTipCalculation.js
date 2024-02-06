@@ -279,10 +279,10 @@ export default function CreditTipCalculation({ workingEmployees }) {
 										id="FoodSalesTotal"
 										name="FoodSalesTotal"
 										type="tel"
-										inputMode="numeric"
+										inputMode="decimal"
 										pattern="[0-9]+(\.[0-9]{1,2})?"
 										step="0.01"
-										defaultValue={0}
+										placeholder="0"
 									/>
 								</Col>
 							</Row>
