@@ -192,8 +192,9 @@ export default function CreditTipCalculation({ workingEmployees }) {
 										checked={isBarBackHoursClicked}
 									/>
 									<Label check>
-										Toggle <span className="highlight-color">Bar Back</span> tip
-										out by hour
+										Toggle to tip out{" "}
+										<span className="highlight-color">Bar Back</span> by hours
+										worked.
 									</Label>
 									<div className={style.seperationLine}></div>
 								</FormGroup>
@@ -209,8 +210,9 @@ export default function CreditTipCalculation({ workingEmployees }) {
 										checked={isCookHoursClicked}
 									/>
 									<Label check>
-										Toggle <span className="highlight-color">Cook</span> tip out
-										by hour
+										Toggle to tip out{" "}
+										<span className="highlight-color">Cook</span> by hours
+										worked.
 									</Label>
 									<div className={style.seperationLine}></div>
 								</FormGroup>

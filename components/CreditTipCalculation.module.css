@@ -81,7 +81,8 @@
 	background-color: var(--third-color);
 	border: none;
 	color: var(--highlight);
-	margin-left: 5px;
+	margin: 5px;
+	margin-left: 10px;
 }
 
 .toggleContainer {
@@ -92,9 +93,11 @@
 	border-radius: 20px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .container {
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	background-color: #484747;
 	margin: 10px;
 	text-align: center;
@@ -116,6 +119,10 @@
 	margin: 10px auto;
 	/* max-width: 90%; */
 	padding-bottom: 10px;
+}
+
+.BarBackPercentageLabel {
+	margin-top: 10px;
 }
 @media screen and (max-width: 540px) {
 	.backgroundColor {

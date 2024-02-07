@@ -54,13 +54,13 @@ const Header = () => {
 								</NavItem>
 								<NavItem className="navbar-link-mobile">
 									<Link className="navbar-link" href="/SelectWorkingEmployee">
-										Credit Tip Calculator
+										💳 Calculator
 									</Link>
 								</NavItem>
 
 								<NavItem className="navbar-link-mobile ">
-									<Link className="navbar-link" href="/cashTipCalculator">
-										Cash Tip Calculator
+									<Link className="navbar-link" href="/CashTipCalculator">
+										💵 Calculator
 									</Link>
 								</NavItem>
 							</Collapse>
@@ -76,12 +76,12 @@ const Header = () => {
 					</NavItem>
 					<NavItem className=" ">
 						<Link className="navbar-link" href="/SelectWorkingEmployee">
-							Credit Tip Calculator
+							💳 Calculator
 						</Link>
 					</NavItem>
 					<NavItem className=" ">
-						<Link className="navbar-link" href="/CreditCardTipsCollected">
-							Credit Card Tips Collected
+						<Link className="navbar-link" href="/CashTipCalculator">
+							💵 Calculator
 						</Link>
 					</NavItem>
 				</Nav>
