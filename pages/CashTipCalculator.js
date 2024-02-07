@@ -105,49 +105,10 @@ export default function CashTipCalculator() {
 	return (
 		<Container className={style.backgroundColor}>
 			<Form onSubmit={handleCalculate} className={style.background}>
-				<Row className={`${style.toggleContainer} `}>
-					{numberOfBartenders <= 1 ? (
-						<div></div>
-					) : (
-						<FormGroup switch>
-							<Input
-								type="switch"
-								role="switch"
-								onChange={() => handleSwitchToggle("Bartender")}
-								checked={isBartenderHoursClicked}
-							/>
-							<Label check>
-								Toggle to tip out{" "}
-								<span className="highlight-color">Bartender</span> by hours
-								worked.
-							</Label>
-							<div className={style.seperationLine}></div>
-						</FormGroup>
-					)}
-					{numberOfBarBacks <= 1 ? (
-						<div></div>
-					) : (
-						<FormGroup switch>
-							<Input
-								type="switch"
-								role="switch"
-								onChange={() => handleSwitchToggle("Bar Back")}
-								checked={isBarBackHoursClicked}
-							/>
-							<Label check>
-								Toggle to tip out{" "}
-								<span className="highlight-color">Bar Back</span> by hours
-								worked.
-							</Label>
-							<div className={style.seperationLine}></div>
-						</FormGroup>
-					)}
-				</Row>
-
 				<Row className={style.container}>
-					<Col md={5} sm={5} xs={6}>
+					<Col md={5} sm={5} xs={12} className="mb-2 mt-2">
 						<Row>
-							<Col>
+							<Col xs={8}>
 								<Label for="CashTips">Cash Tips Collected</Label>
 							</Col>
 
@@ -166,13 +127,13 @@ export default function CashTipCalculator() {
 						</Row>
 					</Col>
 
-					<Col md={7} sm={5} xs={6}>
+					<Col md={7} sm={5} xs={12} className="mb-2 mt-2">
 						<Row>
 							<Col>
 								<Label
 									md={7}
 									sm={6}
-									xs={7}
+									xs={9}
 									for="BarBackPercentage"
 									className={style.BarBackPercentageLabel}
 								>
@@ -180,7 +141,7 @@ export default function CashTipCalculator() {
 								</Label>
 							</Col>
 
-							<Col md={4} sm={5} xs={5} className="d-flex align-items-center">
+							<Col md={4} sm={5} xs={4} className="d-flex align-items-center">
 								<div className="d-flex align-items-center">
 									<Input
 										id="BarBackPercentage"
@@ -216,9 +177,9 @@ export default function CashTipCalculator() {
 				</Row>
 
 				<Row className={style.container}>
-					<Col>
+					<Col md={5} sm={5} xs={12} className="mb-2 mt-2">
 						<Row>
-							<Col>
+							<Col xs={9}>
 								<Label for="barBackNumber">Number of Bar Backs</Label>
 							</Col>
 							<Col>
@@ -235,9 +196,9 @@ export default function CashTipCalculator() {
 							</Col>
 						</Row>
 					</Col>
-					<Col>
+					<Col className="mb-2 mt-2">
 						<Row>
-							<Col>
+							<Col xs={9}>
 								<Label for="bartenderNumber">Number of Bartenders</Label>
 							</Col>
 							<Col>
@@ -256,17 +217,55 @@ export default function CashTipCalculator() {
 							</Col>
 						</Row>
 					</Col>
-					{isBarBackHoursClicked && barBacks.length > 1 ? (
-						<HourlyBarBackCashInput barBacks={barBacks} />
-					) : (
+				</Row>
+				<Row className={`${style.toggleContainer} `}>
+					{numberOfBarBacks <= 1 ? (
 						<div></div>
+					) : (
+						<FormGroup switch>
+							<Input
+								type="switch"
+								role="switch"
+								onChange={() => handleSwitchToggle("Bar Back")}
+								checked={isBarBackHoursClicked}
+							/>
+							<Label check>
+								Toggle to tip out{" "}
+								<span className="highlight-color">Bar Back</span> by hours
+								worked.
+							</Label>
+							<div className={style.seperationLine}></div>
+						</FormGroup>
 					)}
-					{isBartenderHoursClicked && bartenders.length > 1 ? (
-						<HourlyBartenderCashInput bartenders={bartenders} />
-					) : (
+					{numberOfBartenders <= 1 ? (
 						<div></div>
+					) : (
+						<FormGroup switch>
+							<Input
+								type="switch"
+								role="switch"
+								onChange={() => handleSwitchToggle("Bartender")}
+								checked={isBartenderHoursClicked}
+							/>
+							<Label check>
+								Toggle to tip out{" "}
+								<span className="highlight-color">Bartender</span> by hours
+								worked.
+							</Label>
+							<div className={style.seperationLine}></div>
+						</FormGroup>
 					)}
 				</Row>
+				{isBarBackHoursClicked && barBacks.length > 1 ? (
+					<HourlyBarBackCashInput barBacks={barBacks} />
+				) : (
+					<div></div>
+				)}
+				{isBartenderHoursClicked && bartenders.length > 1 ? (
+					<HourlyBartenderCashInput bartenders={bartenders} />
+				) : (
+					<div></div>
+				)}
 				<div className={style.centerButtonContainer}>
 					<Button
 						className={`${style.centerButton} ${style.calculateButton}`}

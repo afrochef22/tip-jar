@@ -107,6 +107,19 @@
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.cashHourlyContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #484747;
+	margin: 10px;
+	text-align: center;
+	padding: 10px;
+	max-width: 850px;
+	border-radius: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .employeeContainer {
 	background-color: var(--third-color);
 	margin: 5px;
