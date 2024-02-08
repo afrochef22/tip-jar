@@ -37,6 +37,7 @@ export default function CreditTipCalculation({ workingEmployees }) {
 	const [isBartenderHoursClicked, setBartenderHoursClicked] = useState(false);
 	const [isCookHoursClicked, setCookHoursClicked] = useState(false);
 	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
+	console.log(employeeTipCollected);
 
 	useEffect(() => {
 		if (
@@ -100,22 +101,33 @@ export default function CreditTipCalculation({ workingEmployees }) {
 		const data = {};
 		const employeeTips = {};
 		const employeeHours = {};
-
+		console.log(formData);
 		// Iterate through form data and convert it to a plain object
 		formData.forEach((value, key) => {
 			data[key] = value;
+			console.log(value);
 
-			const regexTips = /^([a-f\d]{24})Tips$/;
-			const regexHours = /^([a-f\d]{24})Hours$/;
+			const isValidId = (id) => {
+				const regex = /^[0-9a-fA-F]{24}$/;
+				const regexUUID =
+					/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+				return regex.test(id) || regexUUID.test(id);
+			};
+
+			const regexTips =
+				/^([\da-fA-F]{24}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})Tips$/;
+			const regexHours =
+				/^([\da-fA-F]{24}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})Hours$/;
+
 			const matchTips = key.match(regexTips);
 			const matchHours = key.match(regexHours);
 
-			if (matchTips && matchTips[1]) {
+			if (matchTips && matchTips[1] && isValidId(matchTips[1])) {
 				const employeeID = matchTips[1];
 				employeeTips[employeeID] = Number(value);
 			}
 
-			if (matchHours && matchHours[1]) {
+			if (matchHours && matchHours[1] && isValidId(matchHours[1])) {
 				const employeeID = matchHours[1];
 				employeeHours[employeeID] = Number(value);
 			}

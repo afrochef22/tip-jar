@@ -11,6 +11,7 @@ export default function SelectEmployeeDisplay({
 	sortedCooks,
 	btn,
 	submit,
+	addNewEmployee,
 }) {
 	console.log(position);
 	let content;
@@ -21,6 +22,7 @@ export default function SelectEmployeeDisplay({
 					onClick={handleCheckboxChange}
 					sortedBartenders={sortedBartenders}
 					btn={btn}
+					addNewEmployee={addNewEmployee}
 				/>
 			);
 			break;
@@ -30,6 +32,7 @@ export default function SelectEmployeeDisplay({
 					onClick={handleCheckboxChange}
 					sortedBarBacks={sortedBarBacks}
 					btn={btn}
+					addNewEmployee={addNewEmployee}
 				/>
 			);
 			break;
@@ -40,6 +43,7 @@ export default function SelectEmployeeDisplay({
 					sortedCooks={sortedCooks}
 					btn={btn}
 					submit={submit}
+					addNewEmployee={addNewEmployee}
 				/>
 			);
 			break;

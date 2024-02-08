@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
+import AddGuestEmployee from "./AddGuestEmployee";
 
-export default function SelectBartender({ onClick, sortedBartenders, btn }) {
+export default function SelectBartender({
+	onClick,
+	sortedBartenders,
+	btn,
+	addNewEmployee,
+}) {
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 760);
@@ -16,6 +22,11 @@ export default function SelectBartender({ onClick, sortedBartenders, btn }) {
 			window.removeEventListener("resize", updateScreenSize);
 		};
 	}, []);
+
+	const checkedBartendersCount = sortedBartenders.filter(
+		(bartender) => bartender.checked
+	).length;
+
 	return (
 		<div>
 			{isMobile ? (
@@ -30,7 +41,19 @@ export default function SelectBartender({ onClick, sortedBartenders, btn }) {
 							>
 								Bartenders
 							</h2>
-							<div className={`text-color ${style.scrollableContainer}`}>
+							<h5 className={`text-color ${style.centerTitle}`}>
+								{" "}
+								{checkedBartendersCount} selected
+							</h5>
+
+							<div
+								className={`text-color }  ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
+							>
+								<AddGuestEmployee
+									position="Bartender"
+									addNewEmployee={addNewEmployee}
+								/>
+
 								{sortedBartenders.map((employee) => (
 									<Row
 										onClick={() =>
@@ -74,9 +97,18 @@ export default function SelectBartender({ onClick, sortedBartenders, btn }) {
 						>
 							Bartenders
 						</h2>
+						<h5 className={`text-color ${style.centerTitle}`}>
+							{" "}
+							{checkedBartendersCount} selected
+						</h5>
 						<div
 							className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
 						>
+							<AddGuestEmployee
+								position="Bartender"
+								addNewEmployee={addNewEmployee}
+							/>
+
 							{sortedBartenders.map((employee) => (
 								<Row
 									onClick={() =>

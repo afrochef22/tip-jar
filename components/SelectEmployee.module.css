@@ -1,7 +1,7 @@
 .backgroundColor {
 	background-color: var(--third-color); /* Your desired color */
 	color: var(--text-color); /* Adjust as needed */
-	min-height: 100vh;
+	height: 93vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -27,7 +27,7 @@
 }
 
 .scrollableContainer {
-	max-height: 350px;
+	max-height: 325px;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -90,17 +90,40 @@
 	}
 
 	.scrollableContainer {
-		max-height: 35vh; /* Adjust the max height as needed */
+		max-height: 35vh;
 		overflow-y: auto;
 		overflow-x: hidden;
 	}
 	.scrollableContainerMobile {
-		max-height: 350px; /* Adjust the max height as needed */
+		max-height: 350px;
 		overflow-y: auto;
 		overflow-x: hidden;
 	}
 
 	.centerButton {
 		width: 150px;
+	}
+}
+
+@media screen and (min-height: 900px) {
+	.scrollableContainerMobile {
+		max-height: 300px;
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+}
+@media screen and (min-height: 700px) and (max-height: 900px) {
+	.scrollableContainerMobile {
+		max-height: 290px;
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+}
+
+@media screen and (max-height: 700px) {
+	.scrollableContainerMobile {
+		max-height: 200px;
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 }

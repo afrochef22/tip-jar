@@ -96,6 +96,12 @@ export default function SelectEmployee({ employees }) {
 		}
 	};
 
+	const addNewEmployee = (newEmployeeData) => {
+		setAllEmployees([...allEmployees, newEmployeeData]);
+		setWorkingEmployees(() => [...workingEmployees, newEmployeeData]);
+	};
+	console.log(allEmployees);
+
 	const removeWorkingEmployee = (selectedEmployee, position) => {
 		setWorkingEmployees((prev) =>
 			prev.filter((id) => id.id !== selectedEmployee.id)
@@ -255,6 +261,7 @@ export default function SelectEmployee({ employees }) {
 							sortedCooks={sortedCooks}
 							btn={handleNextBtn}
 							submit={handleSubmitButtonClick}
+							addNewEmployee={addNewEmployee}
 						/>
 					) : (
 						<>
@@ -263,18 +270,21 @@ export default function SelectEmployee({ employees }) {
 									<SelectBartender
 										sortedBartenders={sortedBartenders}
 										onClick={handleCheckboxChange}
+										addNewEmployee={addNewEmployee}
 									/>
 								</Col>
 								<Col className={style.selectEmp} md={4} sm={6} xs={12}>
 									<SelectBarBack
 										sortedBarBacks={sortedBarBacks}
 										onClick={handleCheckboxChange}
+										addNewEmployee={addNewEmployee}
 									/>
 								</Col>
 								<Col className={style.selectEmp} md={4} sm={6} xs={12}>
 									<SelectCook
 										sortedCooks={sortedCooks}
 										onClick={handleCheckboxChange}
+										addNewEmployee={addNewEmployee}
 									/>
 								</Col>
 							</Row>

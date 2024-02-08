@@ -15,17 +15,14 @@ export default function TipBreakDown({
 	const bartenderHours = bartenders
 		.map((bartender) => bartender.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
-	console.log(bartenderHours);
 
 	const barBackHours = barBacks
 		.map((barBack) => barBack.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
-	console.log(barBackHours);
 
 	const cookHours = cooks
 		.map((cook) => cook.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
-	console.log(cookHours);
 
 	const totalTipsCollected = Object.values(employeeTipCollected).reduce(
 		(acc, tips) => acc + tips,
@@ -107,10 +104,6 @@ export default function TipBreakDown({
 		}
 	});
 	console.log(typeof tipsPerBartender());
-
-	console.log(barBacksWithTipOut.map((bartender) => typeof bartender.tipOut));
-	console.log("bartenderWithTipOut", bartendersWithTipOut);
-	console.log("bartenders", bartenders);
 
 	return (
 		<Container className={style.topRow}>

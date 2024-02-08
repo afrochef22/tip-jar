@@ -15,11 +15,9 @@ export default function StandardCreditTipCalculator({ bartenders }) {
 						<Col xs={12} sm={12}>
 							<Row>
 								<Col>
-									<Label for="tipsCollected" xs={12} sm={12}>
-										Tips Collected
-									</Label>
+									<Label for="tipsCollected">Tips Collected</Label>
 								</Col>
-								<Col xs={6} sm={6}>
+								<Col>
 									<Input
 										name={`${bartender.id}Tips`}
 										id="tipsCollected"

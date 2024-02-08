@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
+import AddGuestEmployee from "./AddGuestEmployee";
 
-export default function SelectCook({ sortedCooks, onClick, btn, submit }) {
+export default function SelectCook({
+	sortedCooks,
+	onClick,
+	btn,
+	submit,
+	addNewEmployee,
+}) {
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 760);
@@ -16,6 +23,11 @@ export default function SelectCook({ sortedCooks, onClick, btn, submit }) {
 			window.removeEventListener("resize", updateScreenSize);
 		};
 	}, []);
+
+	const checkedCooksCount = sortedCooks.filter(
+		(bartender) => bartender.checked
+	).length;
+
 	return (
 		<div>
 			{isMobile ? (
@@ -30,9 +42,17 @@ export default function SelectCook({ sortedCooks, onClick, btn, submit }) {
 							>
 								Cooks
 							</h2>
+							<h5 className={`text-color ${style.centerTitle}`}>
+								{" "}
+								{checkedCooksCount} selected
+							</h5>
 							<div
 								className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
 							>
+								<AddGuestEmployee
+									position="Cook"
+									addNewEmployee={addNewEmployee}
+								/>
 								{sortedCooks.map((employee) => (
 									<Row
 										onClick={() => onClick(employee, "Cook", !employee.checked)}
@@ -77,7 +97,16 @@ export default function SelectCook({ sortedCooks, onClick, btn, submit }) {
 						>
 							Cooks
 						</h2>
+						<h5 className={`text-color ${style.centerTitle}`}>
+							{" "}
+							{checkedCooksCount} selected
+						</h5>
+
 						<div className={`text-color ${style.scrollableContainer}`}>
+							<AddGuestEmployee
+								position="Cook"
+								addNewEmployee={addNewEmployee}
+							/>
 							{sortedCooks.map((employee) => (
 								<Row
 									onClick={() => onClick(employee, "Cook", !employee.checked)}
