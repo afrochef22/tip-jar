@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import style from "./SelectEmployee.module.css";
+import SelectEmployeeDisplay from "./SelectEmployeeDisplay";
+import SelectBartender from "./SelectBartender";
+import SelectBarBack from "./SelectBarBack";
+import SelectCook from "./SelectCook";
 
 export default function SelectEmployee({ employees }) {
 	const router = useRouter();
@@ -11,6 +15,22 @@ export default function SelectEmployee({ employees }) {
 	const [bartenderList, setBartenderList] = useState([]);
 	const [barBacksList, setBarBacksList] = useState([]);
 	const [cooksList, setCooksList] = useState([]);
+
+	const [nextBtn, setNextBtn] = useState("Bartender");
+
+	const [isMobile, setIsMobile] = useState(false);
+	const updateScreenSize = () => {
+		setIsMobile(window.innerWidth < 760);
+	};
+
+	// Use useEffect to update screen size on mount and window resize
+	useEffect(() => {
+		updateScreenSize();
+		window.addEventListener("resize", updateScreenSize);
+		return () => {
+			window.removeEventListener("resize", updateScreenSize);
+		};
+	}, []);
 
 	const filterEmployeesByPosition = (employees, position) =>
 		employees.filter((employee) => employee.position.includes(position));
@@ -153,9 +173,13 @@ export default function SelectEmployee({ employees }) {
 		setCooksList(
 			allEmployees.filter((employee) => employee.position.includes("Cook"))
 		);
+		setNextBtn("Bartender");
 
 		document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
 			checkbox.checked = false;
+		});
+		router.push({
+			pathname: "/SelectWorkingEmployee", // Adjust the pathname based on your file structure
 		});
 	};
 
@@ -205,7 +229,11 @@ export default function SelectEmployee({ employees }) {
 		(cook) => cook.workingPosition !== "Bartender"
 	);
 
-	const handleNextButtonClick = () => {
+	const handleNextBtn = (position) => {
+		setNextBtn(position);
+	};
+
+	const handleSubmitButtonClick = () => {
 		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
 		router.push({
 			pathname: "/creditTipCalculationPage", // Adjust the pathname based on your file structure
@@ -218,135 +246,70 @@ export default function SelectEmployee({ employees }) {
 				<h1 className={style.centerTitle}>Credit Card Tip Calculator</h1>
 				<h3 className={style.centerTitle}>Select Who's Working</h3>
 				<Row className={style.centerContainer}>
-					{/* Available Bartenders */}
-					<div className={style.formContainer}>
-						<Col>
-							<h2
-								className={`text-color ${style.centerTitle}`}
-								htmlFor="exampleSelect"
-							>
-								Bartenders
-							</h2>
-							<div className={`text-color ${style.scrollableContainer}`}>
-								{sortedBartenders.map((employee) => (
-									<Row
-										onClick={() =>
-											handleCheckboxChange(
-												employee,
-												"Bartender",
-												!employee.checked
-											)
-										}
-										className={`${style.seperationLine} ${style.clickEmployee}`}
-										key={employee.id}
-									>
-										<Col xs={8} sm={8} md={8}>
-											<Label>{employee.label}</Label>
-										</Col>
-										<Col xs={4} sm={4} md={4}>
-											<div
-												className={
-													employee.checked
-														? style.checkedCheckbox
-														: style.unCheckBox
-												}
-											></div>
-										</Col>
-									</Row>
-								))}
-							</div>
-						</Col>
-					</div>
-
-					{/* Available Bar Back */}
-					<div className={style.formContainer}>
-						<Col>
-							<h2
-								className={`text-color ${style.centerTitle}`}
-								htmlFor="exampleSelect"
-							>
-								Bar Backs
-							</h2>
-							<div className={`text-color ${style.scrollableContainer}`}>
-								{sortedBarBacks.map((employee) => (
-									<Row
-										onClick={() =>
-											handleCheckboxChange(
-												employee,
-												"Bar Back",
-												!employee.checked
-											)
-										}
-										className={`${style.seperationLine} ${style.clickEmployee}`}
-										key={employee.id}
-									>
-										<Col xs={8} sm={8} md={8}>
-											<Label>{employee.label}</Label>
-										</Col>
-										<Col xs={4} sm={4} md={4}>
-											<div
-												className={
-													employee.checked
-														? style.checkedCheckbox
-														: style.unCheckBox
-												}
-											></div>
-										</Col>
-									</Row>
-								))}
-							</div>
-						</Col>
-					</div>
-
-					{/* Available Cook */}
-					<div className={style.formContainer}>
-						<Col>
-							<h2
-								className={`text-color ${style.centerTitle}`}
-								htmlFor="exampleSelect"
-							>
-								Cooks
-							</h2>
-							<div className={`text-color ${style.scrollableContainer}`}>
-								{sortedCooks.map((employee) => (
-									<Row
-										onClick={() =>
-											handleCheckboxChange(employee, "Cook", !employee.checked)
-										}
-										className={`${style.seperationLine} ${style.clickEmployee}`}
-										key={employee.id}
-									>
-										<Col xs={8} sm={8} md={8}>
-											<Label>{employee.label}</Label>
-										</Col>
-										<Col xs={4} sm={4} md={4}>
-											<div
-												className={
-													employee.checked
-														? style.checkedCheckbox
-														: style.unCheckBox
-												}
-											></div>
-										</Col>
-									</Row>
-								))}
-							</div>
-						</Col>
-					</div>
+					{isMobile ? (
+						<SelectEmployeeDisplay
+							position={nextBtn}
+							handleCheckboxChange={handleCheckboxChange}
+							sortedBarBacks={sortedBarBacks}
+							sortedBartenders={sortedBartenders}
+							sortedCooks={sortedCooks}
+							btn={handleNextBtn}
+							submit={handleSubmitButtonClick}
+						/>
+					) : (
+						<>
+							<Row>
+								<Col className={style.selectEmp} md={4} sm={6} xs={12}>
+									<SelectBartender
+										sortedBartenders={sortedBartenders}
+										onClick={handleCheckboxChange}
+									/>
+								</Col>
+								<Col className={style.selectEmp} md={4} sm={6} xs={12}>
+									<SelectBarBack
+										sortedBarBacks={sortedBarBacks}
+										onClick={handleCheckboxChange}
+									/>
+								</Col>
+								<Col className={style.selectEmp} md={4} sm={6} xs={12}>
+									<SelectCook
+										sortedCooks={sortedCooks}
+										onClick={handleCheckboxChange}
+									/>
+								</Col>
+							</Row>
+						</>
+					)}
 				</Row>
-				<Row className="justify-content-center mt-4 mb-5">
-					<Button
-						onClick={handleReset}
-						className={`mx-2 ${style.centerButton}`}
-					>
-						Reset
-					</Button>
-					<Button
-						onClick={handleNextButtonClick}
-						className={`mx-2 ${style.centerButton}`}
-					>
-						Next
-					</Button>
+
+				{/* Available Bartenders */}
+
+				{/* Available Bar Back */}
+
+				{/* Available Cook */}
+				<Row className="justify-content-center">
+					{nextBtn === "Bartender" ? (
+						<></>
+					) : (
+						<>
+							<Button
+								onClick={handleReset}
+								className={`mx-2 ${style.centerButton}`}
+							>
+								Reset
+							</Button>
+						</>
+					)}
+					{isMobile ? (
+						<></>
+					) : (
+						<Button
+							onClick={handleSubmitButtonClick}
+							className={`mx-2 ${style.centerButton}`}
+						>
+							Next
+						</Button>
+					)}
 				</Row>
 			</Container>
 		</div>

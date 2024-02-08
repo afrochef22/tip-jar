@@ -41,29 +41,43 @@ const Header = () => {
 				TipJar
 			</Link>
 			{isMobile ? (
-				<Nav>
-					<div className="navbar-toggler" onClick={handleToggle}>
-						<div className="bar"></div>
-						<div className="bar"></div>
-						<div className="bar"></div>
-						<div className="collapse-menue">
-							<Collapse isOpen={isOpen} navbar>
-								<NavItem className="navbar-link-mobile">
-									<Link className="navbar-link" href="/SelectWorkingEmployee">
-										Credit <FontAwesomeIcon icon=" fa-calculator" />
-									</Link>
-								</NavItem>
-
-								<NavItem className="navbar-link-mobile ">
-									<Link className="navbar-link" href="/CashTipCalculator">
-										Cash <FontAwesomeIcon icon=" fa-calculator" />
-									</Link>
-								</NavItem>
-							</Collapse>
-						</div>
-					</div>
-				</Nav>
+				<div>
+					<Link className="navbar-link" href="/SelectWorkingEmployee">
+						Credit <FontAwesomeIcon icon=" fa-calculator" />
+					</Link>
+					<Link className="navbar-link" href="/CashTipCalculator">
+						Cash <FontAwesomeIcon icon=" fa-calculator" />
+					</Link>
+				</div>
 			) : (
+				<></>
+			)}
+
+			{isMobile ? (
+				<></>
+			) : (
+				// <Nav>
+				// 	<div className="navbar-toggler" onClick={handleToggle}>
+				// 		<div className="bar"></div>
+				// 		<div className="bar"></div>
+				// 		<div className="bar"></div>
+				// 		<div className="collapse-menue">
+				// 			<Collapse isOpen={isOpen} navbar>
+				// 				<NavItem className="navbar-link-mobile">
+				// 					<Link className="navbar-link" href="/SelectWorkingEmployee">
+				// 						Credit <FontAwesomeIcon icon=" fa-calculator" />
+				// 					</Link>
+				// 				</NavItem>
+
+				// 				<NavItem className="navbar-link-mobile ">
+				// 					<Link className="navbar-link" href="/CashTipCalculator">
+				// 						Cash <FontAwesomeIcon icon=" fa-calculator" />
+				// 					</Link>
+				// 				</NavItem>
+				// 			</Collapse>
+				// 		</div>
+				// 	</div>
+				// </Nav>
 				<Nav>
 					<NavItem className=" ">
 						<Link className="navbar-link" href="/SelectWorkingEmployee">

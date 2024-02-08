@@ -313,7 +313,7 @@ export default function CreditTipCalculation({ workingEmployees }) {
 							className={`${style.centerButton} ${style.backButton}`}
 							onClick={handleBackButtonClick}
 						>
-							Back
+							Rest
 						</Button>
 						<Button
 							className={`${style.centerButton} ${style.calculateButton}`}
