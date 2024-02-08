@@ -30,7 +30,9 @@ export default function SelectBarBack({ onClick, sortedBarBacks, btn }) {
 							>
 								Bar Backs
 							</h2>
-							<div className={`text-color ${style.scrollableContainer}`}>
+							<div
+								className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
+							>
 								{sortedBarBacks.map((employee) => (
 									<Row
 										onClick={() =>

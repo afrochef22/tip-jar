@@ -30,7 +30,9 @@ export default function SelectCook({ sortedCooks, onClick, btn, submit }) {
 							>
 								Cooks
 							</h2>
-							<div className={`text-color ${style.scrollableContainer}`}>
+							<div
+								className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
+							>
 								{sortedCooks.map((employee) => (
 									<Row
 										onClick={() => onClick(employee, "Cook", !employee.checked)}

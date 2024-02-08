@@ -74,7 +74,9 @@ export default function SelectBartender({ onClick, sortedBartenders, btn }) {
 						>
 							Bartenders
 						</h2>
-						<div className={`text-color ${style.scrollableContainer}`}>
+						<div
+							className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
+						>
 							{sortedBartenders.map((employee) => (
 								<Row
 									onClick={() =>
