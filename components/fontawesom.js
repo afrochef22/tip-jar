@@ -7,6 +7,7 @@ import {
 	faHouse,
 	faMoneyBill1,
 	faCalculator,
+	faClock,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faSpinner, faTrash, faHouse, faMoneyBill1, faCalculator);
+library.add(faSpinner, faTrash, faHouse, faMoneyBill1, faCalculator, faClock);

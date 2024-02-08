@@ -29,15 +29,13 @@ export default function CashTipCalculator() {
 	const [numberOfBarBacks, setNumberOfBarBacks] = useState(1);
 	const [bartenders, setBartenders] = useState([]);
 	const [barBacks, setBarBacks] = useState([]);
-	console.log(
-		numberOfBarBacks,
-		numberOfBartenders,
-		tipsCollected,
-		isBarBackHoursClicked,
-		isBartenderHoursClicked,
-		barBacks,
-		bartenders
-	);
+	// console.log(defaultbarBackPercentage);
+	// numberOfBarBacks,
+	// numberOfBartenders,
+	// isBarBackHoursClicked,
+	// isBartenderHoursClicked,
+	// barBacks,
+	// bartenders
 
 	const handleSwitchToggle = (position) => {
 		switch (position) {
@@ -97,8 +95,25 @@ export default function CashTipCalculator() {
 
 	const handleCalculate = (e) => {
 		e.preventDefault();
+
+		const data = {};
+		const formData = new FormData(e.target);
+		const employeeHours = {};
+
+		formData.forEach((value, key) => {
+			data;
+		});
+
 		router.push({
-			pathname: "/",
+			pathname: "/CashTipBreakDownPage",
+			query: {
+				numberOfBarBacks: JSON.stringify(numberOfBarBacks),
+				numberOfBartenders: JSON.stringify(numberOfBartenders),
+				tipsCollected: JSON.stringify(tipsCollected),
+				barBacks: JSON.stringify(barBacks),
+				bartenders: JSON.stringify(bartenders),
+				barBackPercentage: JSON.stringify(defaultbarBackPercentage),
+			},
 		});
 	};
 
@@ -122,7 +137,7 @@ export default function CashTipCalculator() {
 									pattern="[0-9]+(\.[0-9]{1,2})?"
 									step="0.01"
 									placeholder="0"
-									onChange={(e) => setTipsCollected(e.target.value)}
+									onChange={(e) => setTipsCollected(parseFloat(e.target.value))}
 								></Input>
 							</Col>
 						</Row>
@@ -192,7 +207,9 @@ export default function CashTipCalculator() {
 									pattern="[0-9]+(\.[0-9]{1,2})?"
 									step="0.01"
 									placeholder="0"
-									onChange={(e) => handleNumberOfBarBacksChange(e.target.value)}
+									onChange={(e) =>
+										handleNumberOfBarBacksChange(parseFloat(e.target.value))
+									}
 								></Input>
 							</Col>
 						</Row>
@@ -212,7 +229,7 @@ export default function CashTipCalculator() {
 									step="0.01"
 									placeholder="0"
 									onChange={(e) =>
-										handleNumberOfBartendersChange(e.target.value)
+										handleNumberOfBartendersChange(parseFloat(e.target.value))
 									}
 								></Input>
 							</Col>
@@ -258,12 +275,18 @@ export default function CashTipCalculator() {
 					)}
 				</Row>
 				{isBarBackHoursClicked && barBacks.length > 1 ? (
-					<HourlyBarBackCashInput barBacks={barBacks} />
+					<HourlyBarBackCashInput
+						barBacks={barBacks}
+						updateBarBacks={setBarBacks}
+					/>
 				) : (
 					<div></div>
 				)}
 				{isBartenderHoursClicked && bartenders.length > 1 ? (
-					<HourlyBartenderCashInput bartenders={bartenders} />
+					<HourlyBartenderCashInput
+						bartenders={bartenders}
+						updateBartenders={setBartenders}
+					/>
 				) : (
 					<div></div>
 				)}

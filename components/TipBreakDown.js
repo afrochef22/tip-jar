@@ -1,14 +1,5 @@
 import React from "react";
-import {
-	Button,
-	Form,
-	FormGroup,
-	Label,
-	Input,
-	Col,
-	Container,
-	Row,
-} from "reactstrap";
+import { Button, Col, Container, Row } from "reactstrap";
 import style from "./TipBreakDown.module.css";
 
 export default function TipBreakDown({
@@ -125,76 +116,37 @@ export default function TipBreakDown({
 			<div className={style.backgroundColor}>
 				<Row className={` ${style.container}`}>
 					<Col sm={4} xs={6}>
-						<h4>
-							Total Tips: <p>${totalTipsCollected}</p>
-						</h4>
+						<h4>Total Tips:</h4>
+						<h2 className="highlight-color">${totalTipsCollected}</h2>
 					</Col>
 					<Col sm={4} xs={6}>
-						<h4>
-							Food sales: <p>${foodSalesTotal}</p>
-						</h4>
+						<h4>Food sales:</h4>
+						<h2 className="highlight-color">${foodSalesTotal}</h2>
 					</Col>
 					<Col sm={4} xs={12}>
-						<h4>
-							Bar Back Percentage: <p>{barBackPercentage}%</p>
-						</h4>
+						<h4>Bar Back Percentage:</h4>
+						<h2 className="highlight-color">{barBackPercentage}%</h2>
 					</Col>
 				</Row>
 				<div className={style.container}>
 					<h1>Cook Tips {tipsPerCook}</h1>
-					{cookHours === 0 ? <></> : <h4>Tips per hour: {tipsPerCook()}</h4>}
-					{cooks.length > 0 &&
-						cooksWithTipOut.map((cook) => (
-							<Col key={cook.id} xs={12} sm={6} md={4}>
-								<Container className={style.employeeContainer}>
-									<Row>
-										<Col>
-											{" "}
-											{cook.label.split(" ").map((namePart, index, parts) => (
-												<div key={index}>
-													{index === 0 ? (
-														<div>{namePart}</div> // Display the first name on top
-													) : index === 1 ? (
-														<div style={{ marginTop: "5px" }}>
-															{parts.slice(1).join(" ")}
-														</div> // Join the remaining parts for last name(s)
-													) : null}
-												</div>
-											))}
-										</Col>
-										{cookHours === 0 ? (
-											<></>
-										) : (
+					<Row>
+						{cookHours === 0 ? (
+							<></>
+						) : (
+							<h4>
+								Tips per hour:
+								<span className="highlight-color"> ${tipsPerCook()}</span>
+							</h4>
+						)}
+						{cooks.length > 0 &&
+							cooksWithTipOut.map((cook) => (
+								<Col key={cook.id} xs={12} sm={6} md={4}>
+									<Container className={style.employeeContainer}>
+										<Row>
 											<Col>
-												⏳ <p>{cook.tippedHours}</p>
-											</Col>
-										)}
-										<Col>
-											💰 <p>${cook.tipOut}</p>
-										</Col>
-									</Row>
-								</Container>
-							</Col>
-						))}
-				</div>
-
-				<div className={style.container}>
-					<h1>Bar Back Tips </h1>
-					{barBackHours === 0 ? (
-						<></>
-					) : (
-						<h5>Tips per hour: {tipsPerBarBack()}</h5>
-					)}
-					{barBacks.length > 0 &&
-						barBacksWithTipOut.map((barBack) => (
-							<Col key={barBack.id} xs={12} sm={6} md={4}>
-								<Container className={style.employeeContainer}>
-									<Row>
-										<Col>
-											{" "}
-											{barBack.label
-												.split(" ")
-												.map((namePart, index, parts) => (
+												{" "}
+												{cook.label.split(" ").map((namePart, index, parts) => (
 													<div key={index}>
 														{index === 0 ? (
 															<div>{namePart}</div> // Display the first name on top
@@ -205,21 +157,71 @@ export default function TipBreakDown({
 														) : null}
 													</div>
 												))}
-										</Col>
-										{barBackHours === 0 ? (
-											<></>
-										) : (
-											<Col>
-												⏳ <p>{barBack.tippedHours}</p>
 											</Col>
-										)}
-										<Col>
-											💰 <p>${barBack.tipOut}</p>
-										</Col>
-									</Row>
-								</Container>
-							</Col>
-						))}
+											{cookHours === 0 ? (
+												<></>
+											) : (
+												<Col>
+													⏳ <p>{cook.tippedHours}</p>
+												</Col>
+											)}
+											<Col>
+												💰 <p>${cook.tipOut}</p>
+											</Col>
+										</Row>
+									</Container>
+								</Col>
+							))}
+					</Row>
+				</div>
+
+				<div className={style.container}>
+					<h1>Bar Back Tips </h1>
+					{barBackHours === 0 ? (
+						<></>
+					) : (
+						<h5>
+							Tips per hour:{" "}
+							<span className="highlight-color">${tipsPerBarBack()}</span>
+						</h5>
+					)}
+					<Row>
+						{barBacks.length > 0 &&
+							barBacksWithTipOut.map((barBack) => (
+								<Col key={barBack.id} xs={12} sm={6} md={4}>
+									<Container className={style.employeeContainer}>
+										<Row>
+											<Col>
+												{" "}
+												{barBack.label
+													.split(" ")
+													.map((namePart, index, parts) => (
+														<div key={index}>
+															{index === 0 ? (
+																<div>{namePart}</div> // Display the first name on top
+															) : index === 1 ? (
+																<div style={{ marginTop: "5px" }}>
+																	{parts.slice(1).join(" ")}
+																</div> // Join the remaining parts for last name(s)
+															) : null}
+														</div>
+													))}
+											</Col>
+											{barBackHours === 0 ? (
+												<></>
+											) : (
+												<Col>
+													⏳ <p>{barBack.tippedHours}</p>
+												</Col>
+											)}
+											<Col>
+												💰 <p>${barBack.tipOut}</p>
+											</Col>
+										</Row>
+									</Container>
+								</Col>
+							))}
+					</Row>
 				</div>
 
 				<div className={style.container}>
@@ -227,7 +229,10 @@ export default function TipBreakDown({
 					{bartenderHours === 0 ? (
 						<></>
 					) : (
-						<h5>Tips per hour: {tipsPerBartender()}</h5>
+						<h5>
+							Tips per hour:{" "}
+							<span className="highlight-color">${tipsPerBartender()}</span>
+						</h5>
 					)}
 					<Row>
 						{bartendersWithTipOut.map((bartender) => (
