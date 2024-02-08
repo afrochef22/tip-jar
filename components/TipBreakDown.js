@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "./TipBreakDown.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function TipBreakDown({
 	bartenders,
@@ -117,11 +118,13 @@ export default function TipBreakDown({
 				<Row className={` ${style.container}`}>
 					<Col sm={4} xs={6}>
 						<h4>Total Tips:</h4>
-						<h2 className="highlight-color">${totalTipsCollected}</h2>
+						<h2 className="highlight-color">
+							${totalTipsCollected.toFixed(2)}
+						</h2>
 					</Col>
 					<Col sm={4} xs={6}>
 						<h4>Food sales:</h4>
-						<h2 className="highlight-color">${foodSalesTotal}</h2>
+						<h2 className="highlight-color">${foodSalesTotal.toFixed(2)}</h2>
 					</Col>
 					<Col sm={4} xs={12}>
 						<h4>Bar Back Percentage:</h4>
@@ -129,14 +132,17 @@ export default function TipBreakDown({
 					</Col>
 				</Row>
 				<div className={style.container}>
-					<h1>Cook Tips {tipsPerCook}</h1>
+					<h1>Cook Tips </h1>
 					<Row>
 						{cookHours === 0 ? (
 							<></>
 						) : (
 							<h4>
 								Tips per hour:
-								<span className="highlight-color"> ${tipsPerCook()}</span>
+								<span className="highlight-color">
+									{" "}
+									${tipsPerCook().toFixed(2)}
+								</span>
 							</h4>
 						)}
 						{cooks.length > 0 &&
@@ -162,11 +168,15 @@ export default function TipBreakDown({
 												<></>
 											) : (
 												<Col>
-													⏳ <p>{cook.tippedHours}</p>
+													<FontAwesomeIcon icon="fa-clock" />{" "}
+													<p>{cook.tippedHours} hrs</p>
 												</Col>
 											)}
 											<Col>
-												💰 <p>${cook.tipOut}</p>
+												<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+												<p className="highlight-color">
+													${cook.tipOut.toFixed(2)}
+												</p>
 											</Col>
 										</Row>
 									</Container>
@@ -182,7 +192,9 @@ export default function TipBreakDown({
 					) : (
 						<h5>
 							Tips per hour:{" "}
-							<span className="highlight-color">${tipsPerBarBack()}</span>
+							<span className="highlight-color">
+								${tipsPerBarBack().toFixed(2)}
+							</span>
 						</h5>
 					)}
 					<Row>
@@ -211,11 +223,15 @@ export default function TipBreakDown({
 												<></>
 											) : (
 												<Col>
-													⏳ <p>{barBack.tippedHours}</p>
+													<FontAwesomeIcon icon="fa-clock" />{" "}
+													<p>{barBack.tippedHours} hrs</p>
 												</Col>
 											)}
 											<Col>
-												💰 <p>${barBack.tipOut}</p>
+												<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+												<p className="highlight-color">
+													${barBack.tipOut.toFixed(2)}
+												</p>
 											</Col>
 										</Row>
 									</Container>
@@ -231,7 +247,9 @@ export default function TipBreakDown({
 					) : (
 						<h5>
 							Tips per hour:{" "}
-							<span className="highlight-color">${tipsPerBartender()}</span>
+							<span className="highlight-color">
+								${tipsPerBartender().toFixed(2)}
+							</span>
 						</h5>
 					)}
 					<Row>
@@ -259,11 +277,15 @@ export default function TipBreakDown({
 											<></>
 										) : (
 											<Col>
-												⏳ <p>{bartender.tippedHours}</p>
+												<FontAwesomeIcon icon="fa-clock" />{" "}
+												<p>{bartender.tippedHours} hrs</p>
 											</Col>
 										)}
 										<Col>
-											💰 <p>${bartender.tipOut}</p>
+											<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+											<p className="highlight-color">
+												${bartender.tipOut.toFixed(2)}
+											</p>
 										</Col>
 									</Row>
 								</Container>

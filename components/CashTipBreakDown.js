@@ -76,15 +76,17 @@ export default function CashTipBreakDown({
 		<Container className={style.topRow}>
 			<div className={style.backgroundColor}>
 				<Row className={` ${style.container}`}>
-					<Col sm={4} xs={6}>
+					<Col sm={6} xs={6}>
 						<h4>
-							Total Tips: <p>${tipsCollected}</p>
+							Total Tips:
+							<p className="highlight-color">${tipsCollected}</p>
 						</h4>
 					</Col>
 
-					<Col sm={4} xs={12}>
+					<Col sm={6} xs={6}>
 						<h4>
-							Bar Back Percentage: <p>{barBackPercentage}%</p>
+							Bar Back Percentage:{" "}
+							<p className="highlight-color">{barBackPercentage}%</p>
 						</h4>
 					</Col>
 				</Row>
@@ -94,7 +96,10 @@ export default function CashTipBreakDown({
 					{barBackHours === 0 ? (
 						<></>
 					) : (
-						<h5>Tips per hour: {tipsPerBarBack()}</h5>
+						<h5>
+							Tips per hour:{" "}
+							<span className="highlight-color">${tipsPerBarBack()}</span>
+						</h5>
 					)}
 					<Row>
 						{barBacks.length > 0 &&
@@ -106,18 +111,22 @@ export default function CashTipBreakDown({
 												<Row>
 													<Col> {barBack.name}</Col>
 													<Col>
-														💰 <p>${tipsPerBarBack()}</p>
+														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
+														<p className="highlight-color">
+															${tipsPerBarBack()}
+														</p>
 													</Col>
 												</Row>
 											) : (
 												<Row>
 													<Col> {barBack.name}</Col>
 													<Col>
-														⏳ <p>{barBack.hours}</p>
+														<FontAwesomeIcon icon="fa-clock" />{" "}
+														<p>{barBack.hours}</p>
 													</Col>
 													<Col>
-														💰{" "}
-														<p>
+														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
+														<p className="highlight-color">
 															${(tipsPerBarBack() * barBack.hours).toFixed(2)}
 														</p>
 													</Col>
@@ -135,7 +144,10 @@ export default function CashTipBreakDown({
 					{bartenderHours === 0 ? (
 						<></>
 					) : (
-						<h5>Tips per hour: {tipsPerBartender()}</h5>
+						<h5>
+							Tips per hour:{" "}
+							<span className="highlight-color">${tipsPerBartender()}</span>
+						</h5>
 					)}
 					<Row>
 						{bartendersWithTipOut.map((bartender) => (
@@ -147,7 +159,10 @@ export default function CashTipBreakDown({
 												<Col> {bartender.name}</Col>
 
 												<Col>
-													💰 <p>${tipsPerBartender()}</p>
+													<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
+													<p className="highlight-color">
+														${tipsPerBartender()}
+													</p>
 												</Col>
 											</Row>
 										) : (
@@ -155,11 +170,11 @@ export default function CashTipBreakDown({
 												<Col> {bartender.name}</Col>
 												<Col>
 													<FontAwesomeIcon icon="fa-clock" />{" "}
-													<p>{bartender.hours}</p>
+													<p>{bartender.hours} hrs</p>
 												</Col>
 												<Col>
-													💰{" "}
-													<p>
+													<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
+													<p className="highlight-color">
 														${(tipsPerBartender() * bartender.hours).toFixed(2)}
 													</p>
 												</Col>

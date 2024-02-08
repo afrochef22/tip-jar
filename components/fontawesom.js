@@ -2,12 +2,11 @@
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
-	faSpinner,
-	faTrash,
-	faHouse,
+	faSackDollar,
 	faMoneyBill1,
 	faCalculator,
 	faClock,
+	faDollarSign,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faSpinner, faTrash, faHouse, faMoneyBill1, faCalculator, faClock);
+library.add(faSackDollar, faDollarSign, faMoneyBill1, faCalculator, faClock);
