@@ -105,6 +105,7 @@ export default function CashTipCalculator() {
 	return (
 		<Container className={style.backgroundColor}>
 			<Form onSubmit={handleCalculate} className={style.background}>
+				<h1 className={style.centerTitle}>Cash Tip Calculator</h1>
 				<Row className={style.container}>
 					<Col md={5} sm={5} xs={12} className="mb-2 mt-2">
 						<Row>
@@ -220,7 +221,7 @@ export default function CashTipCalculator() {
 				</Row>
 				<Row className={`${style.toggleContainer} `}>
 					{numberOfBarBacks <= 1 ? (
-						<div></div>
+						<div className={style.hidden}></div>
 					) : (
 						<FormGroup switch>
 							<Input
@@ -238,7 +239,7 @@ export default function CashTipCalculator() {
 						</FormGroup>
 					)}
 					{numberOfBartenders <= 1 ? (
-						<div></div>
+						<div className={style.hidden}></div>
 					) : (
 						<FormGroup switch>
 							<Input

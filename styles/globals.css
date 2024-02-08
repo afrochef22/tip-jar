@@ -28,6 +28,10 @@ body {
 	--font-size: 20px;
 } */
 
+.hidden {
+	display: none;
+}
+
 .logo-text {
 	font-family: "Italiana", sans-serif;
 	font-size: 10rem;
@@ -136,13 +140,13 @@ body {
 }
 
 .navbar-link {
-	color: var(--highlight);
+	color: var(--text-color);
 	text-decoration: none;
 	padding: 5px 10px;
 }
 
 .navbar-link:hover {
-	color: var(--text-color) !important;
+	color: var(--highlight) !important;
 }
 
 .navbar-link-mobile {

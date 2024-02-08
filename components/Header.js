@@ -10,6 +10,7 @@ import {
 	NavbarToggler,
 } from "reactstrap";
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Header = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -48,19 +49,14 @@ const Header = () => {
 						<div className="collapse-menue">
 							<Collapse isOpen={isOpen} navbar>
 								<NavItem className="navbar-link-mobile">
-									<Link className="navbar-link " href="/employees">
-										Employees
-									</Link>
-								</NavItem>
-								<NavItem className="navbar-link-mobile">
 									<Link className="navbar-link" href="/SelectWorkingEmployee">
-										💳 Calculator
+										Credit <FontAwesomeIcon icon=" fa-calculator" />
 									</Link>
 								</NavItem>
 
 								<NavItem className="navbar-link-mobile ">
 									<Link className="navbar-link" href="/CashTipCalculator">
-										💵 Calculator
+										Cash <FontAwesomeIcon icon=" fa-calculator" />
 									</Link>
 								</NavItem>
 							</Collapse>
@@ -69,19 +65,14 @@ const Header = () => {
 				</Nav>
 			) : (
 				<Nav>
-					<NavItem>
-						<Link className="navbar-link" href="/employees">
-							Employees
-						</Link>
-					</NavItem>
 					<NavItem className=" ">
 						<Link className="navbar-link" href="/SelectWorkingEmployee">
-							💳 Calculator
+							Credit <FontAwesomeIcon icon=" fa-calculator" />
 						</Link>
 					</NavItem>
 					<NavItem className=" ">
 						<Link className="navbar-link" href="/CashTipCalculator">
-							💵 Calculator
+							Cash <FontAwesomeIcon icon=" fa-calculator" />
 						</Link>
 					</NavItem>
 				</Nav>
