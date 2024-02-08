@@ -82,6 +82,13 @@
 		max-height: 50px;
 	}
 
+	.formContainerMobile {
+		max-width: 300px;
+		min-width: 300px;
+		min-height: 50vh;
+		max-height: 50px;
+	}
+
 	.scrollableContainer {
 		max-height: 350px; /* Adjust the max height as needed */
 		overflow-y: auto;

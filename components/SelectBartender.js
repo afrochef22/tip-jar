@@ -20,7 +20,9 @@ export default function SelectBartender({ onClick, sortedBartenders, btn }) {
 		<div>
 			{isMobile ? (
 				<Container>
-					<div className={style.formContainer}>
+					<div
+						className={`${style.formContainerMobile} ${style.formContainer}`}
+					>
 						<Col>
 							<h2
 								className={`text-color ${style.centerTitle}`}
