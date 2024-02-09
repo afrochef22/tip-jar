@@ -11,7 +11,7 @@ export default function SelectBarBack({
 }) {
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
-		setIsMobile(window.innerWidth < 760);
+		setIsMobile(window.innerWidth < 875);
 	};
 
 	// Use useEffect to update screen size on mount and window resize
@@ -29,7 +29,7 @@ export default function SelectBarBack({
 		<div>
 			{isMobile ? (
 				<Container>
-					<div
+					<Row
 						className={`${style.formContainerMobile} ${style.formContainer}`}
 					>
 						<Col>
@@ -74,7 +74,7 @@ export default function SelectBarBack({
 								))}
 							</div>
 						</Col>
-					</div>
+					</Row>
 					<Row className="justify-content-center mt-4 mb-1">
 						<Button
 							onClick={() => btn("Bartender")}
@@ -91,7 +91,7 @@ export default function SelectBarBack({
 					</Row>
 				</Container>
 			) : (
-				<div className={style.formContainer}>
+				<Container className={style.formContainer}>
 					<Col>
 						<h2
 							className={`text-color ${style.centerTitle}`}
@@ -132,7 +132,7 @@ export default function SelectBarBack({
 							))}
 						</div>
 					</Col>
-				</div>
+				</Container>
 			)}
 		</div>
 	);

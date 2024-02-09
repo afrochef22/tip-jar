@@ -20,7 +20,7 @@ export default function SelectEmployee({ employees }) {
 
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
-		setIsMobile(window.innerWidth < 760);
+		setIsMobile(window.innerWidth < 875);
 	};
 
 	// Use useEffect to update screen size on mount and window resize
@@ -248,7 +248,7 @@ export default function SelectEmployee({ employees }) {
 	};
 	return (
 		<div className={` ${style.backgroundColor} `}>
-			<Container>
+			<Container fluid className={style.background}>
 				<h1 className={style.centerTitle}>Credit Card Tip Calculator</h1>
 				<h3 className={style.centerTitle}>Select Who's Working</h3>
 				<Row className={style.centerContainer}>
@@ -264,23 +264,23 @@ export default function SelectEmployee({ employees }) {
 							addNewEmployee={addNewEmployee}
 						/>
 					) : (
-						<>
+						<Container fluid>
 							<Row>
-								<Col className={style.selectEmp} md={4} sm={6} xs={12}>
+								<Col className={style.selectEmp}>
 									<SelectBartender
 										sortedBartenders={sortedBartenders}
 										onClick={handleCheckboxChange}
 										addNewEmployee={addNewEmployee}
 									/>
 								</Col>
-								<Col className={style.selectEmp} md={4} sm={6} xs={12}>
+								<Col className={style.selectEmp}>
 									<SelectBarBack
 										sortedBarBacks={sortedBarBacks}
 										onClick={handleCheckboxChange}
 										addNewEmployee={addNewEmployee}
 									/>
 								</Col>
-								<Col className={style.selectEmp} md={4} sm={6} xs={12}>
+								<Col className={style.selectEmp}>
 									<SelectCook
 										sortedCooks={sortedCooks}
 										onClick={handleCheckboxChange}
@@ -288,7 +288,7 @@ export default function SelectEmployee({ employees }) {
 									/>
 								</Col>
 							</Row>
-						</>
+						</Container>
 					)}
 				</Row>
 

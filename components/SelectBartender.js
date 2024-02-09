@@ -11,7 +11,7 @@ export default function SelectBartender({
 }) {
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
-		setIsMobile(window.innerWidth < 760);
+		setIsMobile(window.innerWidth < 875);
 	};
 
 	// Use useEffect to update screen size on mount and window resize
@@ -31,7 +31,7 @@ export default function SelectBartender({
 		<div>
 			{isMobile ? (
 				<Container>
-					<div
+					<Row
 						className={`${style.formContainerMobile} ${style.formContainer}`}
 					>
 						<Col>
@@ -78,7 +78,7 @@ export default function SelectBartender({
 								))}
 							</div>
 						</Col>
-					</div>
+					</Row>
 					<Row className="justify-content-center mt-4 mb-5">
 						<Button
 							onClick={() => btn("BarBack")}
@@ -89,7 +89,9 @@ export default function SelectBartender({
 					</Row>
 				</Container>
 			) : (
-				<div className={style.formContainer}>
+				<Container
+					className={`${style.formContainerMobile} ${style.formContainer}`}
+				>
 					<Col>
 						<h2
 							className={`text-color ${style.centerTitle}`}
@@ -133,7 +135,7 @@ export default function SelectBartender({
 							))}
 						</div>
 					</Col>
-				</div>
+				</Container>
 			)}
 		</div>
 	);
