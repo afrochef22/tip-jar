@@ -13,7 +13,6 @@ export default function SelectEmployeeDisplay({
 	submit,
 	addNewEmployee,
 }) {
-	console.log(position);
 	let content;
 	switch (position) {
 		case "Bartender":

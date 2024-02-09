@@ -292,11 +292,6 @@ export default function SelectEmployee({ employees }) {
 					)}
 				</Row>
 
-				{/* Available Bartenders */}
-
-				{/* Available Bar Back */}
-
-				{/* Available Cook */}
 				<Row className="justify-content-center">
 					{nextBtn === "Bartender" ? (
 						<></>

@@ -78,13 +78,14 @@ export default function SelectBarBack({
 					<Row className="justify-content-center mt-4 mb-1">
 						<Button
 							onClick={() => btn("Bartender")}
-							className={`mx-2 ${style.centerButton}`}
+							className={`${style.centerButton}`}
 						>
 							Back
 						</Button>
+
 						<Button
 							onClick={() => btn("Cook")}
-							className={`mx-2 ${style.centerButton}`}
+							className={` ${style.centerButton}`}
 						>
 							Next
 						</Button>

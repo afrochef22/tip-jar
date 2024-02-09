@@ -51,7 +51,8 @@
 	display: flex;
 	justify-content: center;
 	width: 150px;
-	margin-bottom: 20px;
+
+	margin: 5px 10px;
 }
 
 .seperationLine {
@@ -112,7 +113,10 @@
 	}
 
 	.centerButton {
-		width: 150px !important;
+		display: flex;
+		justify-content: center;
+		width: 100px;
+		margin-bottom: 20px;
 	}
 }
 
@@ -138,7 +142,7 @@
 }
 @media screen and (min-height: 700px) and (max-height: 900px) {
 	.scrollableContainerMobile {
-		max-height: 325px;
+		max-height: 280px;
 		overflow-y: auto;
 		overflow-x: hidden;
 	}
