@@ -50,7 +50,7 @@
 .centerButton {
 	display: flex;
 	justify-content: center;
-	width: 300px;
+	width: 150px;
 	margin-bottom: 20px;
 }
 
@@ -112,7 +112,7 @@
 	}
 
 	.centerButton {
-		width: 150px;
+		width: 150px !important;
 	}
 }
 
