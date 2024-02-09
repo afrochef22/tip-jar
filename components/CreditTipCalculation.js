@@ -232,19 +232,19 @@ export default function CreditTipCalculation({ workingEmployees }) {
 						</Col>
 					</Row>
 					<Row className={style.container}>
-						<Col sm={2} xs={1}></Col>
-						<Col sm={4}>
+						<Col md={1} sm={1} xs={1}></Col>
+						<Col md={4} sm={12}>
 							{/* Bar Back Percentage and Input Column */}
 							<Row className={`${style.formRow}`}>
 								<Label
 									sm={8}
-									xs={8}
+									xs={7}
 									className={style.formLabel}
 									for="BarBackPercentage"
 								>
 									Bar Back Percentage
 								</Label>
-								<Col md={4} sm={4} xs={3} className="d-flex align-items-center">
+								<Col md={4} sm={2} xs={3} className="d-flex align-items-center">
 									<Input
 										id="BarBackPercentage"
 										name="BarBackPercentage"
@@ -255,23 +255,21 @@ export default function CreditTipCalculation({ workingEmployees }) {
 											setDefaultBarBackPercentage(e.target.value)
 										}
 									/>
-									<Col sm={1} xs={1}>
-										<div className={` flex-column `}>
-											<Button
-												// size="sm"
-												onClick={handleIncrease}
-												className={` ${style.percentageButton}`}
-											>
-												˄
-											</Button>
-											<Button
-												// size="sm"
-												onClick={handleDecrease}
-												className={style.percentageButton}
-											>
-												˯
-											</Button>
-										</div>
+									<Col sm={3} xs={2}>
+										<Button
+											// size="sm"
+											onClick={handleIncrease}
+											className={` ${style.percentageButton}`}
+										>
+											˄
+										</Button>
+										<Button
+											// size="sm"
+											onClick={handleDecrease}
+											className={style.percentageButton}
+										>
+											˯
+										</Button>
 									</Col>
 								</Col>
 							</Row>
@@ -279,7 +277,7 @@ export default function CreditTipCalculation({ workingEmployees }) {
 						{cooks.length === 0 ? (
 							<div></div>
 						) : (
-							<Col sm={4}>
+							<Col md={5} sm={12}>
 								<Row className={`${style.formRow} `}>
 									<Label
 										sm={8}
@@ -298,12 +296,13 @@ export default function CreditTipCalculation({ workingEmployees }) {
 											pattern="[0-9]+(\.[0-9]{1,2})?"
 											step="0.01"
 											placeholder="0"
+											required={true}
 										/>
 									</Col>
 								</Row>
 							</Col>
 						)}
-						<Col sm={2} xs={1}></Col>
+						<Col md={1} sm={1} xs={1}></Col>
 					</Row>
 					{isCookHoursClicked === false ? (
 						<div></div>

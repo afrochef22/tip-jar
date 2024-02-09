@@ -6,7 +6,7 @@ export default function StandardCreditTipCalculator({ bartenders }) {
 	return (
 		<Row className={style.container}>
 			{bartenders.map((bartender) => (
-				<Col sm={3} key={bartender.id} className={style.employeeContainer}>
+				<Col sm={4} key={bartender.id} className={style.employeeContainer}>
 					<FormGroup row>
 						<Label className={style.name} xs={12} sm={12}>
 							{bartender.label}

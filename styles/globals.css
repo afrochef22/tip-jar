@@ -14,7 +14,7 @@ body {
 	--secondary-color: #d02828;
 	--third-color: #333;
 	--text-color: #fff;
-	--highlight: #e7ae1c;
+	--highlight: #00ffab;
 	--button-green: #186f1c;
 	--button-hover: #27b02e;
 	--font-size: 20px;
@@ -113,6 +113,12 @@ body {
 	border-radius: 5px;
 	cursor: pointer;
 	text-decoration: none;
+}
+
+.footer {
+	background-color: #555;
+	color: var(--text-color);
+	text-align: center;
 }
 
 .login-button:hover {
