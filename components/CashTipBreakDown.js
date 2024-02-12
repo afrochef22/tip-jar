@@ -98,7 +98,9 @@ export default function CashTipBreakDown({
 					) : (
 						<h5>
 							Tips per hour:{" "}
-							<span className="highlight-color">${tipsPerBarBack()}</span>
+							<span className="highlight-color">
+								${tipsPerBarBack().toFixed(2)}
+							</span>
 						</h5>
 					)}
 					<Row>
@@ -109,22 +111,22 @@ export default function CashTipBreakDown({
 										<Row>
 											{barBackHours === 0 ? (
 												<Row>
-													<Col> {barBack.name}</Col>
-													<Col>
+													<Col className=" mt-2"> {barBack.name}</Col>
+													<Col className=" mt-2">
 														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
 														<p className="highlight-color">
-															${tipsPerBarBack()}
+															${tipsPerBarBack().toFixed(2)}
 														</p>
 													</Col>
 												</Row>
 											) : (
 												<Row>
-													<Col> {barBack.name}</Col>
-													<Col>
+													<Col className=" mt-2"> {barBack.name}</Col>
+													<Col className=" mt-2">
 														<FontAwesomeIcon icon="fa-clock" />{" "}
 														<p>{barBack.hours}</p>
 													</Col>
-													<Col>
+													<Col className=" mb-4 mt-2">
 														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
 														<p className="highlight-color">
 															${(tipsPerBarBack() * barBack.hours).toFixed(2)}
@@ -146,7 +148,9 @@ export default function CashTipBreakDown({
 					) : (
 						<h5>
 							Tips per hour:{" "}
-							<span className="highlight-color">${tipsPerBartender()}</span>
+							<span className="highlight-color">
+								${tipsPerBartender().toFixed(2)}
+							</span>
 						</h5>
 					)}
 					<Row>
@@ -156,23 +160,23 @@ export default function CashTipBreakDown({
 									<Row>
 										{bartenderHours === 0 ? (
 											<Row>
-												<Col> {bartender.name}</Col>
+												<Col className=" mt-2"> {bartender.name}</Col>
 
-												<Col>
+												<Col className=" mt-2">
 													<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
 													<p className="highlight-color">
-														${tipsPerBartender()}
+														${tipsPerBartender().toFixed(2)}
 													</p>
 												</Col>
 											</Row>
 										) : (
 											<Row>
-												<Col> {bartender.name}</Col>
-												<Col>
+												<Col className=" mt-2"> {bartender.name}</Col>
+												<Col className=" mt-2">
 													<FontAwesomeIcon icon="fa-clock" />{" "}
 													<p>{bartender.hours} hrs</p>
 												</Col>
-												<Col>
+												<Col className="mb-2 mt-2">
 													<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
 													<p className="highlight-color">
 														${(tipsPerBartender() * bartender.hours).toFixed(2)}

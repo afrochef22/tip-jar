@@ -106,7 +106,7 @@ export default function TipBreakDown({
 	console.log(typeof tipsPerBartender());
 
 	return (
-		<Container className={style.topRow}>
+		<Container className={`${style.topRow} justify-content-center`}>
 			<div className={style.backgroundColor}>
 				<Row className={` ${style.container}`}>
 					<Col sm={4} xs={6}>

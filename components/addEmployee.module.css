@@ -7,11 +7,23 @@
 }
 
 .border {
-	border: solid var(--secondary-color) 2px;
+	border: solid #333 2px;
+}
+.checkBox {
+	border: solid #333 2px;
+	margin-left: 5px;
+	margin-right: 2px;
 }
 
 .group {
 	margin: 0 25px;
+}
+input .requiredBorder[required] {
+	border-color: 10px red;
+}
+
+.alertMessage {
+	color: red;
 }
 
 .center {

@@ -105,7 +105,7 @@ export function AddEmployeeModal(args) {
 					<FormGroup className={style.group}>
 						<Label>First Name:</Label>
 						<Input
-							className={style.border}
+							className={`${style.border} ${style.requiredBorder}`}
 							type="text"
 							name="firstName"
 							onChange={handleInputChange}
@@ -115,7 +115,7 @@ export function AddEmployeeModal(args) {
 					<FormGroup className={style.group}>
 						<Label>Last Name:</Label>
 						<Input
-							className={style.border}
+							className={`${style.border} ${style.requiredBorder}`}
 							type="text"
 							name="lastName"
 							onChange={handleInputChange}
@@ -127,7 +127,7 @@ export function AddEmployeeModal(args) {
 						<div>
 							<Label check>
 								<Input
-									className={style.border}
+									className={style.checkBox}
 									type="checkbox"
 									name="position"
 									value="Bartender"
@@ -138,7 +138,7 @@ export function AddEmployeeModal(args) {
 							</Label>
 							<Label check>
 								<Input
-									className={style.border}
+									className={style.checkBox}
 									type="checkbox"
 									name="position"
 									value="Bar Back"
@@ -149,7 +149,7 @@ export function AddEmployeeModal(args) {
 							</Label>
 							<Label check>
 								<Input
-									className={style.border}
+									className={style.checkBox}
 									type="checkbox"
 									name="position"
 									value="Cook"
