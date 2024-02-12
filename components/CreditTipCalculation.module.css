@@ -120,7 +120,7 @@
 	margin: 10px;
 	text-align: center;
 	padding: 10px;
-	max-width: 850px;
+	max-width: 1000px;
 	border-radius: 20px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -171,5 +171,15 @@
 
 	.messageContainer {
 		margin-top: 50px;
+	}
+}
+
+@media screen and (min-width: 500px) and (max-width: 1000px) {
+	.employeeContainer {
+		background-color: var(--third-color);
+		margin: 5px;
+		min-width: 45%;
+		border-radius: 10px;
+		padding: 20px;
 	}
 }
