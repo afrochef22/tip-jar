@@ -6,6 +6,7 @@ import SelectEmployeeDisplay from "./SelectEmployeeDisplay";
 import SelectBartender from "./SelectBartender";
 import SelectBarBack from "./SelectBarBack";
 import SelectCook from "./SelectCook";
+import { CurrentShift, ShowDateComparer } from "./CurrentShift";
 
 export default function SelectEmployee({ employees }) {
 	const router = useRouter();
@@ -249,6 +250,7 @@ export default function SelectEmployee({ employees }) {
 	return (
 		<div className={` ${style.backgroundColor} `}>
 			<Container fluid className={style.background}>
+				<CurrentShift />
 				<h1 className={style.centerTitle}>Credit Card Tip Calculator</h1>
 				<h3 className={style.centerTitle}>Select Who's Working</h3>
 				<Row className={style.centerContainer}>
@@ -291,7 +293,6 @@ export default function SelectEmployee({ employees }) {
 						</Container>
 					)}
 				</Row>
-
 				<Row className="justify-content-center">
 					{nextBtn === "Bartender" ? (
 						<></>
