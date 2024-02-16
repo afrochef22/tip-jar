@@ -1,10 +1,6 @@
-import Head from "next/head";
 import clientPromise from "../lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 
-import CurrentShift from "../components/CurrentShift";
-import SelectWorkingEmployee from "./SelectWorkingEmployee";
-import { Button } from "reactstrap";
 import Link from "next/link";
 type ConnectionStatus = {
 	isConnected: boolean;
