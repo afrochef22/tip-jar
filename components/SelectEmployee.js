@@ -265,6 +265,7 @@ export default function SelectEmployee({ employees }) {
 				</h1>
 				<CurrentShowPerforming
 					handleSelectedBand={handleSelectedBand}
+					setSelectedShow={setSelectedShow}
 					selectedShow={selectedShow}
 				/>
 				<h3 className={style.centerTitle}>Select Who's Working</h3>

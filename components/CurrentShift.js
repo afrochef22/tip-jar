@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import style from "./CurrentShift.module.css";
 import { Container, Row, Col, Label } from "reactstrap";
 import { DateTime } from "luxon";
+import { CardsSkeleton } from "./skeletons";
 
 function DayOfTheWeek(day) {
 	switch (day) {
@@ -193,6 +194,29 @@ export function ShowDateComparer(dateData) {
 	switch (true) {
 		case zonedDate.hour < 6:
 			if (dateData.yesterdayDate === 0) {
+				compareDate = `${DayOfTheWeekAbbreviated(
+					dateData.yesterday
+				)} ${MonthAbbreviated(dateData.lastMonth)} ${
+					dateData.lastDayOfPrevMonth
+				}`;
+			} else {
+				compareDate = `${DayOfTheWeekAbbreviated(
+					dateData.yesterday
+				)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
+			}
+
+			break;
+
+		default:
+			compareDate = `${DayOfTheWeekAbbreviated(
+				dateData.day
+			)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
+	}
+	return compareDate;
+
+	switch (true) {
+		case zonedDate.hour < 6:
+			if (dateData.yesterdayDate === 0) {
 				compareDate = `${MonthAbbreviated(dateData.lastMonth)} ${
 					dateData.lastDayOfPrevMonth
 				}`;
@@ -210,9 +234,14 @@ export function ShowDateComparer(dateData) {
 	return compareDate;
 }
 
-export function CurrentShowPerforming({ handleSelectedBand, selectedShow }) {
+export function CurrentShowPerforming({
+	handleSelectedBand,
+	setSelectedShow,
+	selectedShow,
+}) {
 	const [bandPerformingToday, setBandPerformingToday] = useState([]);
 	const [showFullDescription, setShowFullDescription] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const toggleDescription = () => {
 		setShowFullDescription(!showFullDescription);
@@ -224,54 +253,69 @@ export function CurrentShowPerforming({ handleSelectedBand, selectedShow }) {
 			.then((response) => response.json())
 			.then((data) => {
 				setBandPerformingToday(data.bandPerformingToday);
+				setIsLoading(false);
 			})
 			.catch((error) => console.error("Error fetching data:", error));
 	}, []);
-
+	useEffect(() => {
+		if (bandPerformingToday.length === 1) {
+			setSelectedShow(bandPerformingToday[0]);
+		}
+	}, [bandPerformingToday, setSelectedShow]);
 	return (
 		<Container className={style.center}>
-			<h3>Select Show</h3>
-			<Row className="justify-content-center">
-				{bandPerformingToday.map((band) => (
-					<Col key={band} sm={4}>
-						{band ? (
-							<Container
-								className={`${style.bandContainer} ${
-									showFullDescription ? style.expanded : ""
-								}`}
-							>
-								<Row>
-									<Col sm={10} xs={10}>
-										<Label>
-											{showFullDescription ? band : band.slice(0, 25)}
-											{band.length > 25 && (
-												<span
-													className="highlight-color"
-													onClick={toggleDescription}
-												>
-													{showFullDescription ? " less" : "... more"}
-												</span>
-											)}
-										</Label>
-									</Col>
-									<Col
-										sm={2}
-										xs={2}
-										className={
-											selectedShow === band
-												? style.checkedCheckbox
-												: style.unCheckBox
-										}
-										onClick={() => handleSelectedBand(band)}
-									></Col>
-								</Row>
-							</Container>
-						) : (
-							<p key={band}>No Show Today</p>
-						)}
-					</Col>
-				))}
-			</Row>
+			<h3 className={style.title}>Select A Show</h3>
+			{isLoading ? (
+				<Row className="justify-content-center">
+					<CardsSkeleton />
+				</Row>
+			) : (
+				<Row className="justify-content-center">
+					{bandPerformingToday.length === 0 ? (
+						<div>No show Today</div>
+					) : (
+						bandPerformingToday.map((band) => (
+							<Col key={band} sm={4}>
+								{band ? (
+									<Container
+										className={`${style.bandContainer} ${
+											showFullDescription ? style.expanded : ""
+										}`}
+									>
+										<Row>
+											<Col sm={10} xs={10}>
+												<Label>
+													{showFullDescription ? band : band.slice(0, 25)}
+													{band.length > 25 && (
+														<span
+															className="highlight-color"
+															onClick={toggleDescription}
+														>
+															{showFullDescription ? " less" : "... more"}
+														</span>
+													)}
+												</Label>
+											</Col>
+											<Col
+												sm={2}
+												xs={2}
+												className={
+													selectedShow === band
+														? style.checkedCheckbox
+														: style.unCheckBox
+												}
+												onClick={() => handleSelectedBand(band)}
+											></Col>
+										</Row>
+									</Container>
+								) : (
+									<p key={band}>No Show Today</p>
+								)}
+							</Col>
+						))
+					)}
+				</Row>
+			)}
 		</Container>
 	);
 }

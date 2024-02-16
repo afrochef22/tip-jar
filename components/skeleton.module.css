@@ -1,0 +1,49 @@
+.shimmer {
+	position: relative;
+	overflow: hidden;
+}
+
+.shimmer:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+		to right,
+		transparent 0%,
+		rgba(255, 255, 255, 0.6) 50%,
+		transparent 100%
+	);
+	animation: shimmer_pulsate 1.5s infinite; /* Adjusted animation duration */
+}
+
+@keyframes shimmer_pulsate {
+	0% {
+		transform: translateX(-100%) scale(0.5); /* Initial scale */
+		opacity: 0.5; /* Initial opacity */
+	}
+	50% {
+		opacity: 1; /* Full opacity */
+	}
+	100% {
+		transform: translateX(100%) scale(1.5); /* Final scale */
+		opacity: 0.5; /* Back to initial opacity */
+	}
+}
+
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.bandContainer {
+	background-color: #555;
+	max-width: 250px;
+	min-width: 10%;
+	height: 90%;
+	border-radius: 10px;
+	padding: 5px;
+}
