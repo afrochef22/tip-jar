@@ -256,12 +256,6 @@ export default function SelectEmployee({ employees }) {
 				selectedShow: JSON.stringify(selectedShow),
 			},
 		});
-		// router.push({
-		// 	pathname: "/TipBreakDownPage", // Adjust the pathname based on your file structure
-		// 	query: {
-		// 		selectedShow: JSON.stringify(selectedShow),
-		// 	},
-		// });
 	};
 	return (
 		<div className={` ${style.backgroundColor} `}>

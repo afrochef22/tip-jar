@@ -111,32 +111,33 @@ export default function TipBreakDown({
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
 			<div className={style.backgroundColor}>
-				<Row className={` ${style.container}`}>
-					<Row className={` justify-content-center`}>
-						<Col>
+				<Container className={` ${style.container}`}>
+					<Row>
+						<Col sm={6} xs={12}>
 							<h4>Show: {selectedShow}</h4>
 						</Col>
-
-						<Col>
+						<Col sm={6} xs={12}>
 							<h4> {CurrentShift()}</h4>
 						</Col>
 					</Row>
 
-					<Col sm={4} xs={6}>
-						<h4>Total Tips:</h4>
-						<h2 className="highlight-color">
-							${totalTipsCollected.toFixed(2)}
-						</h2>
-					</Col>
-					<Col sm={4} xs={6}>
-						<h4>Food sales:</h4>
-						<h2 className="highlight-color">${foodSalesTotal.toFixed(2)}</h2>
-					</Col>
-					<Col sm={4} xs={12}>
-						<h4>Bar Back Percentage:</h4>
-						<h2 className="highlight-color">{barBackPercentage}%</h2>
-					</Col>
-				</Row>
+					<Row>
+						<Col sm={4} xs={6}>
+							<h4>Total Tips:</h4>
+							<h2 className="highlight-color">
+								${totalTipsCollected.toFixed(2)}
+							</h2>
+						</Col>
+						<Col sm={4} xs={6}>
+							<h4>Food sales:</h4>
+							<h2 className="highlight-color">${foodSalesTotal.toFixed(2)}</h2>
+						</Col>
+						<Col sm={4} xs={12}>
+							<h4>Bar Back Percentage:</h4>
+							<h2 className="highlight-color">{barBackPercentage}%</h2>
+						</Col>
+					</Row>
+				</Container>
 				<div className={style.container}>
 					<h1>Cook Tips </h1>
 					<Row>

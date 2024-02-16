@@ -27,7 +27,7 @@ function findBandPerformingToday(html) {
 			.replace("@", "")
 			.trim();
 
-		console.log("Band Name:", bandName);
+		console.log("Band Name: hi", bandName);
 		console.log("Event Date:", eventDate, today);
 
 		if (eventDate === today) {

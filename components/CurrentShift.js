@@ -182,22 +182,20 @@ export function CurrentShift() {
 		</div>
 	);
 }
-
+// ${DayOfTheWeekAbbreviated(dateData.yesterday)}
 export function ShowDateComparer(dateData) {
 	dateData = CurrentDate();
 	let compareDate = "";
 	switch (true) {
 		case dateData.hour < 6:
 			if (dateData.yesterdayDate === 0) {
-				compareDate = `${DayOfTheWeekAbbreviated(
-					dateData.yesterday
-				)} ${MonthAbbreviated(dateData.lastMonth)} ${
+				compareDate = `${MonthAbbreviated(dateData.lastMonth)} ${
 					dateData.lastDayOfPrevMonth
 				}`;
 			} else {
-				compareDate = `${DayOfTheWeekAbbreviated(
-					dateData.yesterday
-				)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
+				compareDate = `${MonthAbbreviated(dateData.month)} ${
+					dateData.yesterdayDate
+				}`;
 			}
 
 			break;
@@ -271,78 +269,4 @@ export function CurrentShowPerforming({ handleSelectedBand, selectedShow }) {
 			</Row>
 		</Container>
 	);
-}
-{
-	/* <Container className={style.center}>
-	<h3>Select Show</h3>
-	{bandPerformingToday.map((band) => (
-		<Row>
-			{band ? (
-				<Row>
-					{showFullDescription ? (
-						<Container className={style.employeeContainer}>
-							<Row>
-								<Col sm={2} className={style.selectEmp}>
-									{band.length < 25 ? (
-										<Label>{band}</Label>
-									) : (
-										<Label>
-											{band}
-											<span
-												className="highlight-color"
-												onClick={toggleDescription}
-											>
-												{showFullDescription ? "less" : "... more"}
-											</span>
-										</Label>
-									)}
-								</Col>
-								<Col
-									sm={2}
-									className={
-										// employee.checked
-										// 	? style.checkedCheckbox
-										// 	:
-										style.unCheckBox
-									}
-								></Col>
-							</Row>
-						</Container>
-					) : (
-						<Container className={style.employeeContainer}>
-							<Row>
-								<Col>
-									{band.length < 25 ? (
-										<Label>{band}</Label>
-									) : (
-										<Label>
-											{band.slice(0, 25)}
-											<span
-												className="highlight-color"
-												onClick={toggleDescription}
-											>
-												{showFullDescription ? " less" : "... more"}
-											</span>
-										</Label>
-									)}
-								</Col>
-								<Col
-									sm={6}
-									className={
-										// employee.checked
-										// 	? style.checkedCheckbox
-										// 	:
-										style.unCheckBox
-									}
-								></Col>
-							</Row>
-						</Container>
-					)}
-				</Row>
-			) : (
-				<p>No Show Today</p>
-			)}
-		</Row>
-	))}
-</Container>; */
 }
