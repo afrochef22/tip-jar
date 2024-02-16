@@ -1,5 +1,35 @@
 .center {
 	text-align: center;
 	margin: auto;
-	padding-top: 5%;
+}
+
+.checkBox {
+	color: green !important;
+}
+.unCheckBox {
+	height: 20px;
+	width: 20px;
+	background-color: white;
+	border-radius: 15%;
+}
+
+.checkedCheckbox {
+	height: 20px;
+	width: 20px;
+	background-color: #4caf50 !important;
+	border-radius: 15%;
+}
+
+.selectEmp {
+	width: 425px;
+	margin: auto;
+}
+
+.bandContainer {
+	background-color: #555;
+	max-width: 250px;
+	min-width: 10%;
+	height: 90%;
+	border-radius: 10px;
+	padding: 5px;
 }

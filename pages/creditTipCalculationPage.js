@@ -4,10 +4,15 @@ import CreditTipCalculation from "../components/CreditTipCalculation";
 
 export default function creditTipCalculationPage() {
 	const router = useRouter();
-	const { workingEmployees } = router.query;
+	const { workingEmployees, selectedShow } = router.query;
 	const parsedWorkingEmployees = workingEmployees
 		? JSON.parse(workingEmployees)
 		: [];
-
-	return <CreditTipCalculation workingEmployees={parsedWorkingEmployees} />;
+	const parseSelectedShow = selectedShow ? JSON.parse(selectedShow) : "";
+	return (
+		<CreditTipCalculation
+			workingEmployees={parsedWorkingEmployees}
+			selectedShow={parseSelectedShow}
+		/>
+	);
 }

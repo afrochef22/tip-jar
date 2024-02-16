@@ -6,7 +6,7 @@ import SelectEmployeeDisplay from "./SelectEmployeeDisplay";
 import SelectBartender from "./SelectBartender";
 import SelectBarBack from "./SelectBarBack";
 import SelectCook from "./SelectCook";
-import { CurrentShift, ShowDateComparer } from "./CurrentShift";
+import { CurrentShift, CurrentShowPerforming } from "./CurrentShift";
 
 export default function SelectEmployee({ employees }) {
 	const router = useRouter();
@@ -23,6 +23,8 @@ export default function SelectEmployee({ employees }) {
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 875);
 	};
+	const [selectedShow, setSelectedShow] = useState("");
+	const [shouldNavigate, setShouldNavigate] = useState(false);
 
 	// Use useEffect to update screen size on mount and window resize
 	useEffect(() => {
@@ -97,11 +99,14 @@ export default function SelectEmployee({ employees }) {
 		}
 	};
 
+	const handleSelectedBand = (band) => {
+		setSelectedShow(band);
+	};
+
 	const addNewEmployee = (newEmployeeData) => {
 		setAllEmployees([...allEmployees, newEmployeeData]);
 		setWorkingEmployees(() => [...workingEmployees, newEmployeeData]);
 	};
-	console.log(allEmployees);
 
 	const removeWorkingEmployee = (selectedEmployee, position) => {
 		setWorkingEmployees((prev) =>
@@ -192,24 +197,24 @@ export default function SelectEmployee({ employees }) {
 
 	// Sort employees array by last name
 	let sortedBartenders = bartenderList.sort((a, b) => {
-		const lastNameA = a.label.split(" ").pop(); // Get the last word as the last name
-		const lastNameB = b.label.split(" ").pop();
+		const firstNameA = a.label;
+		const firstNameB = b.label;
 
-		return lastNameA.localeCompare(lastNameB);
+		return firstNameA.localeCompare(firstNameB);
 	});
 
 	let sortedBarBacks = barBacksList.sort((a, b) => {
-		const lastNameA = a.label.split(" ").pop();
-		const lastNameB = b.label.split(" ").pop();
+		const firstNameA = a.label;
+		const firstNameB = b.label;
 
-		return lastNameA.localeCompare(lastNameB);
+		return firstNameA.localeCompare(firstNameB);
 	});
 
 	let sortedCooks = cooksList.sort((a, b) => {
-		const lastNameA = a.label.split(" ").pop();
-		const lastNameB = b.label.split(" ").pop();
+		const firstNameA = a.label;
+		const firstNameB = b.label;
 
-		return lastNameA.localeCompare(lastNameB);
+		return firstNameA.localeCompare(firstNameB);
 	});
 
 	sortedBartenders = sortedBartenders.filter(
@@ -242,16 +247,32 @@ export default function SelectEmployee({ employees }) {
 
 	const handleSubmitButtonClick = () => {
 		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
+		console.log(selectedShow);
+
 		router.push({
 			pathname: "/creditTipCalculationPage", // Adjust the pathname based on your file structure
-			query: { workingEmployees: JSON.stringify(workingEmployees) },
+			query: {
+				workingEmployees: JSON.stringify(workingEmployees),
+				selectedShow: JSON.stringify(selectedShow),
+			},
 		});
+		// router.push({
+		// 	pathname: "/TipBreakDownPage", // Adjust the pathname based on your file structure
+		// 	query: {
+		// 		selectedShow: JSON.stringify(selectedShow),
+		// 	},
+		// });
 	};
 	return (
 		<div className={` ${style.backgroundColor} `}>
 			<Container fluid className={style.background}>
-				<CurrentShift />
-				<h1 className={style.centerTitle}>Credit Card Tip Calculator</h1>
+				<h1 className={`${style.centerTitle} mt-5`}>
+					Credit Card Tip Calculator
+				</h1>
+				<CurrentShowPerforming
+					handleSelectedBand={handleSelectedBand}
+					selectedShow={selectedShow}
+				/>
 				<h3 className={style.centerTitle}>Select Who's Working</h3>
 				<Row className={style.centerContainer}>
 					{isMobile ? (

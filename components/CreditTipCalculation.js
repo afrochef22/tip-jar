@@ -17,7 +17,11 @@ import BartenderHourlyInput from "./BartenderHourlyInput";
 import HourlyBarBackInput from "./HourlyBarBackInput";
 import HourlyCookInput from "./HourlyCookInput";
 
-export default function CreditTipCalculation({ workingEmployees }) {
+export default function CreditTipCalculation({
+	workingEmployees,
+	selectedShow,
+}) {
+	console.log(selectedShow);
 	const router = useRouter();
 	const bartenders = workingEmployees.filter(
 		(employee) => employee.workingPosition === "Bartender"
@@ -73,6 +77,7 @@ export default function CreditTipCalculation({ workingEmployees }) {
 					foodSalesTotal: JSON.stringify(foodSalesTotal),
 					employeeHours: JSON.stringify(employeeHours),
 					employeeTipCollected: JSON.stringify(employeeTipCollected),
+					selectedShow: JSON.stringify(selectedShow),
 				},
 			});
 		}

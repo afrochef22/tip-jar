@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import style from "./CurrentShift.module.css";
+import { Container, Row, Col, Label } from "reactstrap";
 
 function DayOfTheWeek(day) {
 	switch (day) {
@@ -177,9 +178,7 @@ const test = CurrentDate();
 export function CurrentShift() {
 	return (
 		<div className={style.center}>
-			<h1>{ShiftDay()}</h1>
 			<h3>{ShiftDate()}</h3>
-			<div>{ShowDateComparer()}</div>
 		</div>
 	);
 }
@@ -204,9 +203,146 @@ export function ShowDateComparer(dateData) {
 			break;
 
 		default:
-			compareDate = `${DayOfTheWeekAbbreviated(
-				dateData.day
-			)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
+			compareDate = `${MonthAbbreviated(dateData.month)} ${dateData.date}`;
 	}
 	return compareDate;
+}
+
+export function CurrentShowPerforming({ handleSelectedBand, selectedShow }) {
+	const [bandPerformingToday, setBandPerformingToday] = useState([]);
+	const [showFullDescription, setShowFullDescription] = useState(false);
+
+	const toggleDescription = () => {
+		setShowFullDescription(!showFullDescription);
+	};
+
+	useEffect(() => {
+		// Fetch data from your API when the component mounts
+		fetch("/api/FindBandPerformingToday")
+			.then((response) => response.json())
+			.then((data) => {
+				setBandPerformingToday(data.bandPerformingToday);
+			})
+			.catch((error) => console.error("Error fetching data:", error));
+	}, []);
+	return (
+		<Container className={style.center}>
+			<h3>Select Show</h3>
+			<Row className="justify-content-center">
+				{bandPerformingToday.map((band) => (
+					<Col key={band} sm={4}>
+						{band ? (
+							<Container
+								className={`${style.bandContainer} ${
+									showFullDescription ? style.expanded : ""
+								}`}
+							>
+								<Row>
+									<Col sm={10} xs={10}>
+										<Label>
+											{showFullDescription ? band : band.slice(0, 25)}
+											{band.length > 25 && (
+												<span
+													className="highlight-color"
+													onClick={toggleDescription}
+												>
+													{showFullDescription ? " less" : "... more"}
+												</span>
+											)}
+										</Label>
+									</Col>
+									<Col
+										sm={2}
+										xs={2}
+										className={
+											selectedShow === band
+												? style.checkedCheckbox
+												: style.unCheckBox
+										}
+										onClick={() => handleSelectedBand(band)}
+									></Col>
+								</Row>
+							</Container>
+						) : (
+							<p key={band}>No Show Today</p>
+						)}
+					</Col>
+				))}
+			</Row>
+		</Container>
+	);
+}
+{
+	/* <Container className={style.center}>
+	<h3>Select Show</h3>
+	{bandPerformingToday.map((band) => (
+		<Row>
+			{band ? (
+				<Row>
+					{showFullDescription ? (
+						<Container className={style.employeeContainer}>
+							<Row>
+								<Col sm={2} className={style.selectEmp}>
+									{band.length < 25 ? (
+										<Label>{band}</Label>
+									) : (
+										<Label>
+											{band}
+											<span
+												className="highlight-color"
+												onClick={toggleDescription}
+											>
+												{showFullDescription ? "less" : "... more"}
+											</span>
+										</Label>
+									)}
+								</Col>
+								<Col
+									sm={2}
+									className={
+										// employee.checked
+										// 	? style.checkedCheckbox
+										// 	:
+										style.unCheckBox
+									}
+								></Col>
+							</Row>
+						</Container>
+					) : (
+						<Container className={style.employeeContainer}>
+							<Row>
+								<Col>
+									{band.length < 25 ? (
+										<Label>{band}</Label>
+									) : (
+										<Label>
+											{band.slice(0, 25)}
+											<span
+												className="highlight-color"
+												onClick={toggleDescription}
+											>
+												{showFullDescription ? " less" : "... more"}
+											</span>
+										</Label>
+									)}
+								</Col>
+								<Col
+									sm={6}
+									className={
+										// employee.checked
+										// 	? style.checkedCheckbox
+										// 	:
+										style.unCheckBox
+									}
+								></Col>
+							</Row>
+						</Container>
+					)}
+				</Row>
+			) : (
+				<p>No Show Today</p>
+			)}
+		</Row>
+	))}
+</Container>; */
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "./TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CurrentShift } from "./CurrentShift";
 
 export default function TipBreakDown({
 	bartenders,
@@ -11,7 +12,9 @@ export default function TipBreakDown({
 	foodSalesTotal,
 	employeeHours,
 	employeeTipCollected,
+	selectedShow,
 }) {
+	console.log(CurrentShift());
 	const bartenderHours = bartenders
 		.map((bartender) => bartender.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
@@ -109,6 +112,16 @@ export default function TipBreakDown({
 		<Container className={`${style.topRow} justify-content-center`}>
 			<div className={style.backgroundColor}>
 				<Row className={` ${style.container}`}>
+					<Row className={` justify-content-center`}>
+						<Col>
+							<h4>Show: {selectedShow}</h4>
+						</Col>
+
+						<Col>
+							<h4> {CurrentShift()}</h4>
+						</Col>
+					</Row>
+
 					<Col sm={4} xs={6}>
 						<h4>Total Tips:</h4>
 						<h2 className="highlight-color">
