@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import style from "./CurrentShift.module.css";
 import { Container, Row, Col, Label } from "reactstrap";
+import { DateTime } from "luxon";
 
 function DayOfTheWeek(day) {
 	switch (day) {
@@ -185,9 +186,12 @@ export function CurrentShift() {
 // ${DayOfTheWeekAbbreviated(dateData.yesterday)}
 export function ShowDateComparer(dateData) {
 	dateData = CurrentDate();
+	const timeZone = "America/Los_Angeles";
+	const zonedDate = DateTime.now().setZone(timeZone);
+
 	let compareDate = "";
 	switch (true) {
-		case dateData.hour < 6:
+		case zonedDate.hour < 6:
 			if (dateData.yesterdayDate === 0) {
 				compareDate = `${MonthAbbreviated(dateData.lastMonth)} ${
 					dateData.lastDayOfPrevMonth
@@ -223,6 +227,7 @@ export function CurrentShowPerforming({ handleSelectedBand, selectedShow }) {
 			})
 			.catch((error) => console.error("Error fetching data:", error));
 	}, []);
+
 	return (
 		<Container className={style.center}>
 			<h3>Select Show</h3>
