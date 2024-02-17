@@ -24,7 +24,7 @@ function DayOfTheWeek(day) {
 		case 5:
 			day = "Friday";
 			break;
-		case -1:
+		case 6:
 			day = "Saturday";
 			break;
 		default:
@@ -52,7 +52,7 @@ function DayOfTheWeekAbbreviated(day) {
 		case 5:
 			day = "Fri";
 			break;
-		case -1:
+		case 6:
 			day = "Sat";
 			break;
 		default:
@@ -133,7 +133,7 @@ function CurrentDate() {
 	return dateData;
 }
 
-function ShiftDate(dateData) {
+export function ShiftDate(dateData) {
 	dateData = CurrentDate();
 	let shiftDate = "";
 
@@ -184,7 +184,7 @@ export function CurrentShift() {
 		</div>
 	);
 }
-// ${DayOfTheWeekAbbreviated(dateData.yesterday)}
+console.log(DayOfTheWeekAbbreviated(6));
 export function ShowDateComparer(dateData) {
 	dateData = CurrentDate();
 	const timeZone = "America/Los_Angeles";
@@ -214,24 +214,24 @@ export function ShowDateComparer(dateData) {
 	}
 	return compareDate;
 
-	switch (true) {
-		case zonedDate.hour < 6:
-			if (dateData.yesterdayDate === 0) {
-				compareDate = `${MonthAbbreviated(dateData.lastMonth)} ${
-					dateData.lastDayOfPrevMonth
-				}`;
-			} else {
-				compareDate = `${MonthAbbreviated(dateData.month)} ${
-					dateData.yesterdayDate
-				}`;
-			}
+	// switch (true) {
+	// 	case zonedDate.hour < 6:
+	// 		if (dateData.yesterdayDate === 0) {
+	// 			compareDate = `${MonthAbbreviated(dateData.lastMonth)} ${
+	// 				dateData.lastDayOfPrevMonth
+	// 			}`;
+	// 		} else {
+	// 			compareDate = `${MonthAbbreviated(dateData.month)} ${
+	// 				dateData.yesterdayDate
+	// 			}`;
+	// 		}
 
-			break;
+	// 		break;
 
-		default:
-			compareDate = `${MonthAbbreviated(dateData.month)} ${dateData.date}`;
-	}
-	return compareDate;
+	// 	default:
+	// 		compareDate = `${MonthAbbreviated(dateData.month)} ${dateData.date}`;
+	// }
+	// return compareDate;
 }
 
 export function CurrentShowPerforming({
@@ -285,8 +285,8 @@ export function CurrentShowPerforming({
 										<Row>
 											<Col sm={10} xs={10}>
 												<Label>
-													{showFullDescription ? band : band.slice(0, 25)}
-													{band.length > 25 && (
+													{showFullDescription ? band : band.slice(0, 18)}
+													{band.length > 18 && (
 														<span
 															className="highlight-color"
 															onClick={toggleDescription}

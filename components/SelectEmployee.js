@@ -263,11 +263,11 @@ export default function SelectEmployee({ employees }) {
 				<h1 className={`${style.centerTitle} mt-5`}>
 					Credit Card Tip Calculator
 				</h1>
-				{/* <CurrentShowPerforming
+				<CurrentShowPerforming
 					handleSelectedBand={handleSelectedBand}
 					setSelectedShow={setSelectedShow}
 					selectedShow={selectedShow}
-				/> */}
+				/>
 				<h3 className={style.centerTitle}>Select Who's Working</h3>
 				<Row className={style.centerContainer}>
 					{isMobile ? (

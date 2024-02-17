@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "./TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CurrentShift } from "./CurrentShift";
+import { CurrentShift, ShiftDate } from "./CurrentShift";
+import { useRouter } from "next/router";
 
 export default function TipBreakDown({
 	bartenders,
@@ -14,7 +15,9 @@ export default function TipBreakDown({
 	employeeTipCollected,
 	selectedShow,
 }) {
-	console.log(CurrentShift());
+	const [newTipBreakdown, setNewTipBreakdown] = useState({});
+	const router = useRouter();
+	console.log(bartenders);
 	const bartenderHours = bartenders
 		.map((bartender) => bartender.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
@@ -106,7 +109,49 @@ export default function TipBreakDown({
 			return { ...cook, tipOut };
 		}
 	});
-	console.log(typeof tipsPerBartender());
+
+	const handleBackButtonClick = () => {
+		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
+		router.push({
+			pathname: "/SelectWorkingEmployee", // Adjust the pathname based on your file structure
+		});
+	};
+	console.log(ShiftDate());
+
+	const handleAddTipBreakDown = async (e) => {
+		e.preventDefault();
+		setNewTipBreakdown({
+			show: selectedShow,
+			date: ShiftDate(),
+			totalTips: totalTipsCollected,
+			foodSales: foodSalesTotal,
+			barBackPercentage: barBackPercentage,
+			cookTips: cooksWithTipOut,
+			barBackTips: barBacksWithTipOut,
+			BartenderTips: bartendersWithTipOut,
+		});
+		console.log(newTipBreakdown);
+		try {
+			const response = await fetch("/api/addTipBreakDown", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json", // Specify the content type
+				},
+				body: JSON.stringify(newTipBreakdown),
+			});
+
+			if (response.ok) {
+				console.log("Tip Breakdown added successfully");
+				// router.push("/SelectWorkingEmployee");
+
+				setAlertMessage(""); // Clear the alert message
+			} else {
+				console.log("response not ok");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
@@ -300,6 +345,24 @@ export default function TipBreakDown({
 						))}
 					</Row>
 				</div>
+				<Row>
+					<Col>
+						<Button
+							onClick={handleBackButtonClick}
+							className={style.centerButton}
+						>
+							Reset
+						</Button>
+					</Col>
+					<Col>
+						<Button
+							onClick={handleAddTipBreakDown}
+							className={style.centerButton}
+						>
+							Submit
+						</Button>
+					</Col>
+				</Row>
 			</div>
 		</Container>
 	);

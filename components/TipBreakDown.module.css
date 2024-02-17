@@ -33,3 +33,14 @@
 	border-radius: 10px;
 	padding: 5px;
 }
+
+.centerButton {
+	width: 140px;
+	margin-top: 5px;
+}
+
+.centerButtonContainer {
+	display: flex;
+	justify-content: center;
+	margin: 20px;
+}
