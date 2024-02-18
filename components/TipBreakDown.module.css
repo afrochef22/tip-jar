@@ -1,5 +1,5 @@
 .topRow {
-	margin-top: 50px;
+	margin-top: 20px;
 }
 
 .backgroundColor {
@@ -36,7 +36,7 @@
 
 .centerButton {
 	width: 140px;
-	margin-top: 5px;
+	margin: 5px 0 15px 0;
 }
 
 .centerButtonContainer {

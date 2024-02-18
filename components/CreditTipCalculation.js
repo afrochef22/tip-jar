@@ -300,7 +300,6 @@ export default function CreditTipCalculation({
 											inputMode="decimal"
 											pattern="[0-9]+(\.[0-9]{1,2})?"
 											step="0.01"
-											placeholder="0"
 											required={true}
 										/>
 									</Col>

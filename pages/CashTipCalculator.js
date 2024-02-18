@@ -136,7 +136,7 @@ export default function CashTipCalculator() {
 									inputMode="numeric"
 									pattern="[0-9]+(\.[0-9]{1,2})?"
 									step="0.01"
-									placeholder="0"
+									required
 									onChange={(e) => setTipsCollected(parseFloat(e.target.value))}
 								></Input>
 							</Col>
@@ -206,7 +206,7 @@ export default function CashTipCalculator() {
 									inputMode="numeric"
 									pattern="[0-9]+(\.[0-9]{1,2})?"
 									step="0.01"
-									placeholder="0"
+									required
 									onChange={(e) =>
 										handleNumberOfBarBacksChange(parseFloat(e.target.value))
 									}
@@ -227,7 +227,7 @@ export default function CashTipCalculator() {
 									inputMode="numeric"
 									pattern="[0-9]+(\.[0-9]{1,2})?"
 									step="0.01"
-									placeholder="0"
+									required
 									onChange={(e) =>
 										handleNumberOfBartendersChange(parseFloat(e.target.value))
 									}

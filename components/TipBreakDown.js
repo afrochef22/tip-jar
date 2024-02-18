@@ -345,7 +345,7 @@ export default function TipBreakDown({
 						))}
 					</Row>
 				</div>
-				<Row>
+				{/* <Row>
 					<Col>
 						<Button
 							onClick={handleBackButtonClick}
@@ -362,7 +362,7 @@ export default function TipBreakDown({
 							Submit
 						</Button>
 					</Col>
-				</Row>
+				</Row> */}
 			</div>
 		</Container>
 	);
