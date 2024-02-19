@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "./TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,8 +16,15 @@ export default function TipBreakDown({
 	selectedShow,
 }) {
 	const [newTipBreakdown, setNewTipBreakdown] = useState({});
+	const [submitting, setSubmitting] = useState(false);
 	const router = useRouter();
-	console.log(bartenders);
+
+	useEffect(() => {
+		if (submitting) {
+			submitTipBreakdown();
+		}
+	}, [submitting, newTipBreakdown]);
+
 	const bartenderHours = bartenders
 		.map((bartender) => bartender.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
@@ -111,26 +118,30 @@ export default function TipBreakDown({
 	});
 
 	const handleBackButtonClick = () => {
-		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
 		router.push({
-			pathname: "/SelectWorkingEmployee", // Adjust the pathname based on your file structure
+			pathname: "/SelectWorkingEmployee",
 		});
 	};
-	console.log(ShiftDate());
 
 	const handleAddTipBreakDown = async (e) => {
 		e.preventDefault();
-		setNewTipBreakdown({
+		const tipBreakdown = {
 			show: selectedShow,
 			date: ShiftDate(),
-			totalTips: totalTipsCollected,
+			totalTips: Number(totalTipsCollected.toFixed(2)),
 			foodSales: foodSalesTotal,
 			barBackPercentage: barBackPercentage,
 			cookTips: cooksWithTipOut,
 			barBackTips: barBacksWithTipOut,
 			BartenderTips: bartendersWithTipOut,
-		});
+		};
+
+		setNewTipBreakdown(tipBreakdown);
 		console.log(newTipBreakdown);
+		setSubmitting(true);
+	};
+
+	const submitTipBreakdown = async () => {
 		try {
 			const response = await fetch("/api/addTipBreakDown", {
 				method: "POST",
@@ -142,9 +153,7 @@ export default function TipBreakDown({
 
 			if (response.ok) {
 				console.log("Tip Breakdown added successfully");
-				// router.push("/SelectWorkingEmployee");
-
-				setAlertMessage(""); // Clear the alert message
+				setSubmitting(false);
 			} else {
 				console.log("response not ok");
 			}
@@ -345,7 +354,7 @@ export default function TipBreakDown({
 						))}
 					</Row>
 				</div>
-				{/* <Row>
+				<Row>
 					<Col>
 						<Button
 							onClick={handleBackButtonClick}
@@ -362,7 +371,7 @@ export default function TipBreakDown({
 							Submit
 						</Button>
 					</Col>
-				</Row> */}
+				</Row>
 			</div>
 		</Container>
 	);

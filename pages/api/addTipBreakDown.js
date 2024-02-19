@@ -1,4 +1,5 @@
 import clientPromise from "../../lib/mongodb";
+import { ObjectId } from "mongodb";
 
 export default async (req, res) => {
 	if (req.method === "POST") {
@@ -16,7 +17,7 @@ export default async (req, res) => {
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
 
-			await db.collection("tipBreakdown").insertOne({
+			const tipBreakdownResult = await db.collection("tipBreakdown").insertOne({
 				show,
 				date,
 				totalTips,
@@ -28,6 +29,64 @@ export default async (req, res) => {
 
 				createdat: new Date(),
 			});
+
+			const tipBreakdownId = tipBreakdownResult.insertedId;
+
+			// Update employees' tip information
+			const updateEmployeeTip = async (employeeId, tipOut, workingPosition) => {
+				await db.collection("employees").updateOne(
+					{ _id: employeeId },
+					{
+						$addToSet: {
+							tipsCollected: {
+								date,
+								amount: tipOut,
+								workingPosition,
+								show,
+								tipBreakdownId: tipBreakdownId.toString(), // Convert ObjectId to string
+							},
+						},
+					}
+				);
+			};
+
+			// Update tip information for cooks
+			for (const cook of cookTips) {
+				const objectId = new ObjectId(cook.id);
+
+				console.log(objectId, cook.tipOut, cook.workingPosition);
+				await updateEmployeeTip(
+					objectId,
+					cook.tipOut,
+					cook.workingPosition,
+					tipBreakdownId
+				);
+			}
+
+			// Update tip information for bar backs
+			for (const barBack of barBackTips) {
+				const objectId = new ObjectId(barBack.id);
+
+				console.log(barBack.id, barBack.tipOut, barBack.workingPosition);
+				await updateEmployeeTip(
+					objectId,
+					barBack.tipOut,
+					barBack.workingPosition,
+					tipBreakdownId
+				);
+			}
+
+			// Update tip information for bartenders
+			for (const bartender of BartenderTips) {
+				const objectId = new ObjectId(bartender.id);
+
+				await updateEmployeeTip(
+					objectId,
+					bartender.tipOut,
+					bartender.workingPosition,
+					tipBreakdownId
+				);
+			}
 
 			res.status(201).json({ message: "Tip Break Down added successfully" });
 		} catch (error) {
