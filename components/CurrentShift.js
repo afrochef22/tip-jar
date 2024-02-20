@@ -191,47 +191,51 @@ export function ShowDateComparer(dateData) {
 	const zonedDate = DateTime.now().setZone(timeZone);
 
 	let compareDate = "";
-	switch (true) {
-		case zonedDate.hour < 6:
-			if (dateData.yesterdayDate === 0) {
-				compareDate = `${DayOfTheWeekAbbreviated(
-					dateData.yesterday
-				)} ${MonthAbbreviated(dateData.lastMonth)} ${
-					dateData.lastDayOfPrevMonth
-				}`;
-			} else {
-				compareDate = `${DayOfTheWeekAbbreviated(
-					dateData.yesterday
-				)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
-			}
 
-			break;
-
-		default:
-			compareDate = `${DayOfTheWeekAbbreviated(
-				dateData.day
-			)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
-	}
-	return compareDate;
+	// Teragram
 
 	// switch (true) {
 	// 	case zonedDate.hour < 6:
 	// 		if (dateData.yesterdayDate === 0) {
-	// 			compareDate = `${MonthAbbreviated(dateData.lastMonth)} ${
+	// 			compareDate = `${DayOfTheWeekAbbreviated(
+	// 				dateData.yesterday
+	// 			)} ${MonthAbbreviated(dateData.lastMonth)} ${
 	// 				dateData.lastDayOfPrevMonth
 	// 			}`;
 	// 		} else {
-	// 			compareDate = `${MonthAbbreviated(dateData.month)} ${
-	// 				dateData.yesterdayDate
-	// 			}`;
+	// 			compareDate = `${DayOfTheWeekAbbreviated(
+	// 				dateData.yesterday
+	// 			)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
 	// 		}
 
 	// 		break;
 
 	// 	default:
-	// 		compareDate = `${MonthAbbreviated(dateData.month)} ${dateData.date}`;
+	// 		compareDate = `${DayOfTheWeekAbbreviated(
+	// 			dateData.day
+	// 		)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
 	// }
 	// return compareDate;
+
+	// Moroccan
+	switch (true) {
+		case zonedDate.hour < 6:
+			if (dateData.yesterdayDate === 0) {
+				compareDate = `${MonthAbbreviated(dateData.lastMonth)} ${
+					dateData.lastDayOfPrevMonth
+				}`;
+			} else {
+				compareDate = `${MonthAbbreviated(dateData.month)} ${
+					dateData.yesterdayDate
+				}`;
+			}
+
+			break;
+
+		default:
+			compareDate = `${MonthAbbreviated(dateData.month)} ${dateData.date}`;
+	}
+	return compareDate;
 }
 
 export function CurrentShowPerforming({

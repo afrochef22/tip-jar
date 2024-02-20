@@ -17,13 +17,13 @@ export default async (req, res) => {
 				lastName,
 				position: position,
 				tipsCollected: [
-					{
-						date: Date,
-						amount: Number,
-						workingPosition: String,
-						show: String,
-						createdat: new Date(),
-					},
+					// {
+					// 	date: Date,
+					// 	amount: Number,
+					// 	workingPosition: String,
+					// 	show: String,
+					// 	createdat: new Date(),
+					// },
 				],
 				createdat: new Date(),
 			});

@@ -48,6 +48,12 @@ const Header = () => {
 					<Link className="navbar-link" href="/CashTipCalculator">
 						Cash <FontAwesomeIcon icon=" fa-calculator" />
 					</Link>
+					<Link className="navbar-link" href="/CCTipsTotals">
+						CC Tip Totals
+					</Link>
+					<Link className="navbar-link" href="/getAllTipBreakDowns">
+						Tip Breakdown
+					</Link>
 				</div>
 			) : (
 				<></>
@@ -87,6 +93,16 @@ const Header = () => {
 					<NavItem className=" ">
 						<Link className="navbar-link" href="/CashTipCalculator">
 							Cash <FontAwesomeIcon icon=" fa-calculator" />
+						</Link>
+					</NavItem>
+					<NavItem>
+						<Link className="navbar-link" href="/CCTipsTotals">
+							CC Tip Totals
+						</Link>
+					</NavItem>
+					<NavItem>
+						<Link className="navbar-link" href="/getAllTipBreakDowns">
+							Tip Breakdown
 						</Link>
 					</NavItem>
 				</Nav>
