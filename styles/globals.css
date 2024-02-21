@@ -203,3 +203,76 @@ body {
 	max-width: 75%;
 	/* padding-bottom: 5px; */
 }
+
+.table-scroll {
+	overflow-x: auto;
+}
+.sticky-row {
+	position: sticky;
+	left: 0;
+	background-color: rgb(83, 55, 55); /* Adjust as needed */
+	z-index: 1000; /* Adjust as needed */
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	--bs-table-bg: none;
+}
+.table-container {
+	max-width: 80%; /* Adjust the value as needed */
+	overflow-x: auto;
+	overflow-y: hidden; /* Hide vertical scrollbar */
+}
+.employee-column {
+	position: sticky;
+	left: 0;
+	background-color: #fff;
+	width: 200px;
+}
+
+/* Style for table header cells */
+.table th {
+	background-color: #f2f2f2;
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: center;
+}
+
+/* Style for table body cells */
+.table td {
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: center;
+}
+
+/* Style for last coloumn */
+/* .table tbody td:last-child {
+	background-color: rgb(233, 255, 233);
+} */
+
+.table tbody tr:nth-child(odd) td:last-child {
+	background-color: rgb(98, 149, 98);
+}
+/* Style for last coloumn */
+/* .table tbody td:first-child {
+	background-color: #f2f2f2;
+} */
+
+/* Style for alternating rows */
+.table tbody tr:nth-child(even) {
+	background-color: #f7efef;
+}
+.table tbody tr:nth-child(odd) {
+	background-color: #b49191;
+}
+
+.table tfoot {
+	background-color: rgb(144, 218, 115) !important;
+}
+
+/* .scrollableContainer {
+	max-height: 625px;
+	overflow-y: auto;
+	overflow-x: hidden;
+} */
