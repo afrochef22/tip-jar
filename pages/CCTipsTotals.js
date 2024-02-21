@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import clientPromise from "../lib/mongodb";
-import { FormGroup, Label, Input, Button } from "reactstrap";
+import { FormGroup, Label, Input, Row, Col, Container } from "reactstrap";
 import { DateTime } from "luxon";
 import { getStartDate, getEndDate } from "../components/DateRange";
 
@@ -10,8 +10,8 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	const end = getEndDate(start);
 	console.log("Start Date:", start);
 	console.log("End Date:", end);
-	const [startDate, setStartDate] = useState();
-	const [endDate, setEndDate] = useState();
+	const [startDate, setStartDate] = useState(DateTime.fromISO(start));
+	const [endDate, setEndDate] = useState(DateTime.fromISO(end));
 
 	const handleStartDateChange = (e) => {
 		setStartDate(DateTime.fromISO(e.target.value));
@@ -19,12 +19,6 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 
 	const handleEndDateChange = (e) => {
 		setEndDate(DateTime.fromISO(e.target.value));
-	};
-
-	const handleDateSubmit = (e) => {
-		e.preventDefault();
-		console.log("Start Date:", startDate.toISODate());
-		console.log("End Date:", endDate.toISODate());
 	};
 
 	// Filter employees with tips within the date range
@@ -49,18 +43,33 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	return (
 		<div>
 			<h1>Employee Tips Totals</h1>
-			<div>Date Range</div>
-			<form onSubmit={handleDateSubmit}>
-				<FormGroup>
+			<div>
+				Date Range:{" "}
+				{startDate.toLocaleString({
+					month: "2-digit",
+					day: "2-digit",
+					year: "numeric",
+				})}{" "}
+				to{" "}
+				{endDate.toLocaleString({
+					month: "2-digit",
+					day: "2-digit",
+					year: "numeric",
+				})}
+			</div>
+
+			<Row>
+				<Col>
 					<Label for="startDate">Start</Label>
 					<Input
 						id="startDate"
 						name="startDate"
 						placeholder="date placeholder"
 						type="date"
-						value=""
 						onChange={handleStartDateChange}
 					/>
+				</Col>
+				<Col>
 					<Label for="endDate">End</Label>
 					<Input
 						id="endDate"
@@ -69,26 +78,28 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 						type="date"
 						onChange={handleEndDateChange}
 					/>
-					<Button type="submit">Set</Button>
-				</FormGroup>
-			</form>
+				</Col>
+			</Row>
+
 			{employeesWithTipsInRange.map((employee) => {
+				// Filter the tips collected by the selected date range
+				const tipsInRange = employee.tipsCollected.filter((tip) => {
+					const tipDate = DateTime.fromFormat(tip.date, "MM/dd/yyyy");
+					return (
+						tipDate >= startDate.startOf("day") &&
+						tipDate <= endDate.endOf("day")
+					);
+				});
 				return (
 					<div key={employee._id}>
 						<h2>{`${employee.firstName} ${employee.lastName}`}</h2>
 						<ul>
-							{employee.tipsCollected.map((tip) => {
-								// Find the corresponding tip breakdown for the employee's tip
-								const tipBreakdown = allTipBreakdowns.find(
-									(tipBreakdown) => tipBreakdown._id === tip.tipBreakdownId
-								);
-								return (
-									<li key={tip._id}>
-										Date: {tip.date}, Amount: {tip.amount}, Working Position:{" "}
-										{tip.workingPosition}, Show: {tip.show}
-									</li>
-								);
-							})}
+							{tipsInRange.map((tip) => (
+								<li key={tip._id}>
+									Date: {tip.date}, Amount: {tip.amount}, Working Position:{" "}
+									{tip.workingPosition}, Show: {tip.show}
+								</li>
+							))}
 						</ul>
 					</div>
 				);
