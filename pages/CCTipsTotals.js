@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clientPromise from "../lib/mongodb";
 import {
 	FormGroup,
@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import { DateTime } from "luxon";
 import { getStartDate, getEndDate } from "../components/DateRange";
+import Link from "next/link";
 
 export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	// Define the start and end dates for the date range (replace these with your actual start and end dates)
@@ -70,27 +71,10 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	};
 
 	return (
-		<div className=" background-color">
-			<Container>
-				<h1>Employee Tips Totals</h1>
-				<h4>
-					Date Range:{" "}
-					{startDate.toLocaleString({
-						month: "2-digit",
-						day: "2-digit",
-						year: "numeric",
-					})}{" "}
-					to{" "}
-					{endDate.toLocaleString({
-						month: "2-digit",
-						day: "2-digit",
-						year: "numeric",
-					})}
-				</h4>
-			</Container>
-			<Container>
-				<Row>
-					<Col lg={2} md={3} sm={5} xs={6}>
+		<div className=" employeeTipsPage ">
+			<Container className="">
+				<Row className="date-input-row mt-5 mb-4">
+					<Col lg={3} md={4} sm={5} xs={6}>
 						<Label for="startDate">Start</Label>
 						<Input
 							id="startDate"
@@ -100,7 +84,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 							onChange={handleStartDateChange}
 						/>
 					</Col>
-					<Col lg={2} md={3} sm={5} xs={6}>
+					<Col lg={3} md={3} sm={5} xs={6}>
 						<Label for="endDate">End</Label>
 						<Input
 							id="endDate"
@@ -111,11 +95,25 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 						/>
 					</Col>
 				</Row>
+				<h4 className="m-2">
+					Date Range:{" "}
+					{startDate.toLocaleString({
+						month: "2-digit",
+						day: "2-digit",
+						year: "numeric",
+					})}
+					{"  "}-{"  "}
+					{endDate.toLocaleString({
+						month: "2-digit",
+						day: "2-digit",
+						year: "numeric",
+					})}
+				</h4>
 			</Container>
 
-			<Container className="table-scroll table-container">
+			<Container className=" table-scroll mt-1">
 				<table bordered className="table">
-					<thead className="sticky-row">
+					<thead className="sticky-header">
 						<tr>
 							<th className="employee-column sticky-row">Date</th>
 							{uniqueDates.map((date) => {
@@ -133,7 +131,9 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 									</th>
 								);
 							})}
-							<th>Total Tips</th>
+							<th className="employeeTipsCol" colSpan={2} rowSpan={2}>
+								Employee Total Tips
+							</th>
 						</tr>
 						<tr>
 							<th className="employee-column">Name</th>
@@ -147,12 +147,13 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 									),
 								];
 								return uniqueShows.map((show, index) => (
-									<th key={`show-${date}-${index}`}>
-										{show.length > 10 ? show.substring(0, 8) + "..." : show}
+									<th className="lastBand" key={`show-${date}-${index}`}>
+										<Link href={"/"}>
+											{show.length > 10 ? show.substring(0, 8) + "..." : show}
+										</Link>
 									</th>
 								));
 							})}
-							<th></th>
 						</tr>
 					</thead>
 					<tbody className="scorllableContainer">
@@ -187,7 +188,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 					</tbody>
 					<tfoot>
 						<tr>
-							<td className="employee-column">Total</td>
+							<td className="employee-column">Total Tips</td>
 							{uniqueDates.map((date) => {
 								const total = employeesWithTipsInRange.reduce(
 									(acc, employee) => {
@@ -209,7 +210,11 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 										.map((tip) => tip.show)
 								).size;
 								return (
-									<td key={`total-${date}`} colSpan={uniqueShowsCount}>
+									<td
+										className="totals"
+										key={`total-${date}`}
+										colSpan={uniqueShowsCount}
+									>
 										${total.toFixed(2)}
 									</td>
 								);

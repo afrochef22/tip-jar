@@ -18,6 +18,11 @@ body {
 	--button-green: #186f1c;
 	--button-hover: #27b02e;
 	--font-size: 20px;
+	--even-row: #dde6ed;
+	--odd-row: #9db2bf;
+	--thead-tfoot: #526d82;
+	--lastCol-odd: #127765;
+	--lastCol-even: #1b9c85;
 }
 
 /* :root {
@@ -208,71 +213,146 @@ body {
 	overflow-x: auto;
 }
 .sticky-row {
-	position: sticky;
-	left: 0;
 	background-color: rgb(83, 55, 55); /* Adjust as needed */
 	z-index: 1000; /* Adjust as needed */
 }
 
 .table {
-	width: 100%;
+	/* width: 100%; */
 	border-collapse: collapse;
 	--bs-table-bg: none;
 }
 .table-container {
-	max-width: 80%; /* Adjust the value as needed */
+	max-width: 100%;
 	overflow-x: auto;
-	overflow-y: hidden; /* Hide vertical scrollbar */
+}
+
+.container {
+	max-width: 80%;
+	margin: auto;
+	text-align: center;
+	padding: 0px;
 }
 .employee-column {
 	position: sticky;
 	left: 0;
-	background-color: #fff;
-	width: 200px;
+	/* background-color: #fff; */
+	max-width: 200px;
+	min-width: 100px;
+	z-index: 1 !important;
+}
+
+.table td,
+.table th {
+	text-align: center;
+	vertical-align: middle;
 }
 
 /* Style for table header cells */
 .table th {
-	background-color: #f2f2f2;
-	border: 1px solid #ddd;
+	background-color: var(--thead-tfoot);
+	border: 1px solid #333;
 	padding: 8px;
 	text-align: center;
+	color: var(--text-color);
+	width: 100px;
+}
+.lastBand {
+	background-color: var(--thead-tfoot) !important;
+	border: 1px solid #333 !important;
+	padding: 8px !important;
+	text-align: center !important;
+	color: var(--text-color) !important;
+	width: 100px !important;
+}
+
+.table th:last-child {
+	background-color: var(--lastCol-even);
+	border: 1px solid #333;
+	padding: 0;
+	text-align: center;
+
+	color: var(--text-color);
 }
 
 /* Style for table body cells */
 .table td {
-	border: 1px solid #ddd;
+	border: 1px solid #333;
 	padding: 8px;
 	text-align: center;
+	width: 100px;
 }
 
 /* Style for last coloumn */
-/* .table tbody td:last-child {
-	background-color: rgb(233, 255, 233);
-} */
+
+.table tbody td:first-child {
+	background-color: var(--even-row);
+}
+.table tbody tr:nth-child(odd) td:first-child {
+	background-color: var(--odd-row);
+}
 
 .table tbody tr:nth-child(odd) td:last-child {
-	background-color: rgb(98, 149, 98);
+	background-color: var(--lastCol-odd);
+	color: var(--text-color);
 }
-/* Style for last coloumn */
-/* .table tbody td:first-child {
-	background-color: #f2f2f2;
-} */
 
-/* Style for alternating rows */
+.table tbody tr:nth-child(even) td:last-child {
+	background-color: var(--lastCol-even);
+	color: var(--text-color);
+}
+
 .table tbody tr:nth-child(even) {
-	background-color: #f7efef;
+	background-color: var(--even-row);
 }
 .table tbody tr:nth-child(odd) {
-	background-color: #b49191;
+	background-color: var(--odd-row);
+}
+
+.table tfoot:first-child {
+	background-color: var(--thead-tfoot);
+	color: var(--text-color);
 }
 
 .table tfoot {
-	background-color: rgb(144, 218, 115) !important;
+	background-color: var(--thead-tfoot);
+	color: var(--text-color);
 }
 
-/* .scrollableContainer {
-	max-height: 625px;
-	overflow-y: auto;
-	overflow-x: hidden;
-} */
+.table tfoot td:first-child {
+	background-color: var(--thead-tfoot);
+	color: var(--text-color);
+}
+
+.table tfoot td:last-child {
+	background-color: var(--lastCol-even);
+	color: var(--text-color);
+}
+
+.totals {
+	color: var(--text-color) !important;
+}
+
+.employeeTipsCol {
+	margin: auto;
+}
+
+.date-input-container {
+	display: flex;
+	justify-content: center;
+}
+
+.employeeTipsPage {
+	background-color: var(--third-color);
+	color: var(--text-color);
+	height: 100%;
+	min-height: 100vh;
+}
+.scorllableContainer {
+	padding: 0;
+}
+
+.date-input-row {
+	/* display: flex; */
+	justify-content: center;
+}
