@@ -12,8 +12,10 @@ import {
 import { DateTime } from "luxon";
 import { getStartDate, getEndDate } from "../components/DateRange";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function CCTipsTotals({ employees, allTipBreakdowns }) {
+	const router = useRouter();
 	// Define the start and end dates for the date range (replace these with your actual start and end dates)
 	const start = getStartDate();
 	const end = getEndDate(start);
@@ -70,12 +72,19 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 		}, 0);
 	};
 
+	const handleLink = (id) => {
+		router.push({
+			pathname: `/getSelectedTipBreakDown/`,
+			query: { id: JSON.stringify(id) },
+		});
+	};
+
 	return (
 		<div className=" employeeTipsPage ">
 			<Container className="">
 				<Row className="date-input-row mt-5 mb-4">
 					<Col lg={3} md={4} sm={5} xs={6}>
-						<Label for="startDate">Start</Label>
+						<Label for="startDate">Select Start Date</Label>
 						<Input
 							id="startDate"
 							name="startDate"
@@ -85,7 +94,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 						/>
 					</Col>
 					<Col lg={3} md={3} sm={5} xs={6}>
-						<Label for="endDate">End</Label>
+						<Label for="endDate">Select End Date</Label>
 						<Input
 							id="endDate"
 							name="endDate"
@@ -122,7 +131,8 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 									...new Set(
 										allTipBreakdowns
 											.filter((tip) => tip.date === date)
-											.map((tip) => tip.show)
+											.map((tip) => ({ id: tip.id, show: tip.show })) // Include both id and show in the array
+											.map((tip) => tip.show) // Extract only the show name
 									),
 								];
 								return (
@@ -143,12 +153,31 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 									...new Set(
 										allTipBreakdowns
 											.filter((tip) => tip.date === date)
-											.map((tip) => tip.show)
+											.map((tip) => ({ id: tip._id, show: tip.show })) // Include both id and show in the array
+											.map((tip) => tip.show) // Extract only the show name
 									),
 								];
+								// Create an object to map each show name to its corresponding ID
+								let showIdMap = {};
+								allTipBreakdowns
+									.filter((tip) => uniqueShows.includes(tip.show))
+									.forEach((tip) => {
+										showIdMap[tip.show] = tip._id;
+									});
+
 								return uniqueShows.map((show, index) => (
-									<th className="lastBand" key={`show-${date}-${index}`}>
-										<Link href={"/"}>
+									<th
+										className="lastBand table-hover"
+										key={`show-${date}-${index}`}
+									>
+										{}
+										<Link
+											// onClick={handleLink(showIdMap[show])}
+											className="noDecoration band-name"
+											href={{
+												pathname: `/getSelectedTipBreakDown/${showIdMap[show]}`,
+											}}
+										>
 											{show.length > 10 ? show.substring(0, 8) + "..." : show}
 										</Link>
 									</th>
@@ -181,14 +210,16 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 											);
 										});
 									})}
-									<td>{calculateTotalTips(employee).toFixed(2)}</td>
+									<td className=" bold-text">
+										{calculateTotalTips(employee).toFixed(2)}
+									</td>
 								</tr>
 							);
 						})}
 					</tbody>
 					<tfoot>
 						<tr>
-							<td className="employee-column">Total Tips</td>
+							<td className="employee-column bold-text">Total Tips</td>
 							{uniqueDates.map((date) => {
 								const total = employeesWithTipsInRange.reduce(
 									(acc, employee) => {
@@ -211,7 +242,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 								).size;
 								return (
 									<td
-										className="totals"
+										className="totals bold-text"
 										key={`total-${date}`}
 										colSpan={uniqueShowsCount}
 									>
@@ -219,7 +250,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 									</td>
 								);
 							})}
-							<td>
+							<td className=" bold-text">
 								{/* Total for the "Total Tips" column */}$
 								{employeesWithTipsInRange
 									.reduce(

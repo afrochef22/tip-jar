@@ -1,8 +1,11 @@
 import clientPromise from "../lib/mongodb";
-
 import React from "react";
+import { useRouter } from "next/router";
 
-export default function getAllTipBreakDowns({ allTipBreakdowns }) {
+export default function getAllTipBreakDown({ allTipBreakdowns }) {
+	const router = useRouter();
+	const { date, show, ...additionalParams } = router.query;
+	console.log("date: ", date, "show: ", show, "additional: ", additionalParams);
 	return (
 		<div>
 			{allTipBreakdowns.map((data) => {
@@ -10,7 +13,6 @@ export default function getAllTipBreakDowns({ allTipBreakdowns }) {
 					<div>
 						<div>{data.date}</div>
 						<div>{data.show}</div>
-						<div>{data.totalTips}</div>
 					</div>
 				);
 			})}

@@ -41,7 +41,6 @@ export default function CreditTipCalculation({
 	const [isBartenderHoursClicked, setBartenderHoursClicked] = useState(false);
 	const [isCookHoursClicked, setCookHoursClicked] = useState(false);
 	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
-	console.log(employeeTipCollected);
 
 	useEffect(() => {
 		if (
