@@ -4,7 +4,9 @@ import style from "./TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CurrentShift, ShiftDate } from "./CurrentShift";
 import { useRouter } from "next/router";
+import GetAllTipBreakdowns from "./GetAllTipBreakdowns";
 
+console.log(GetAllTipBreakdowns);
 export default function TipBreakDown({
 	bartenders,
 	barBacks,
@@ -14,14 +16,21 @@ export default function TipBreakDown({
 	employeeHours,
 	employeeTipCollected,
 	selectedShow,
+	allTipBreakdowns,
 }) {
+	console.log(allTipBreakdowns);
 	const [newTipBreakdown, setNewTipBreakdown] = useState({});
 	const [submitting, setSubmitting] = useState(false);
+	const [submitError, setSubmitError] = useState("");
+
 	const router = useRouter();
 
 	useEffect(() => {
 		if (submitting) {
 			submitTipBreakdown();
+			router.push({
+				pathname: "/CCTipsTotals",
+			});
 		}
 	}, [submitting, newTipBreakdown]);
 
@@ -125,6 +134,38 @@ export default function TipBreakDown({
 
 	const handleAddTipBreakDown = async (e) => {
 		e.preventDefault();
+		const tipBreakdownExists = allTipBreakdowns.allTipBreakdowns.some(
+			(breakdown) => {
+				return (
+					breakdown.show === selectedShow && breakdown.date === ShiftDate()
+				);
+			}
+		);
+
+		if (tipBreakdownExists) {
+			setSubmitError(
+				"Tip breakdown already exists for the selected show and date."
+			);
+			return;
+		}
+
+		// Ensure that all required fields are filled out
+		if (!selectedShow) {
+			setSubmitError("Please select a show.");
+			return;
+		}
+
+		// Ensure that other fields have valid values before submission
+		if (bartendersWithTipOut.length <= 0) {
+			setSubmitError("Please fill out all fields.");
+			return;
+		}
+		if (!employeeTipCollected) {
+			setSubmitError("Please fill out all fields.");
+			return;
+		}
+
+		// If the tip breakdown doesn't exist, proceed with submitting it
 		const tipBreakdown = {
 			show: selectedShow,
 			date: ShiftDate(),
@@ -137,8 +178,8 @@ export default function TipBreakDown({
 		};
 
 		setNewTipBreakdown(tipBreakdown);
-		console.log(newTipBreakdown);
 		setSubmitting(true);
+		// Continue with the submission process
 	};
 
 	const submitTipBreakdown = async () => {
@@ -354,6 +395,13 @@ export default function TipBreakDown({
 						))}
 					</Row>
 				</div>
+				{submitError && (
+					<Row>
+						<Col>
+							<div className={style.error}>{submitError}</div>
+						</Col>
+					</Row>
+				)}
 				<Row>
 					<Col>
 						<Button
@@ -364,12 +412,20 @@ export default function TipBreakDown({
 						</Button>
 					</Col>
 					<Col>
-						<Button
-							onClick={handleAddTipBreakDown}
-							className={style.centerButton}
-						>
-							Submit
-						</Button>
+						<form type="submit" disabled={submitting}>
+							<Button
+								onClick={handleAddTipBreakDown}
+								className={style.centerButton}
+							>
+								{submitting ? (
+									<>
+										<FontAwesomeIcon icon="spinner" spin /> Submitting...
+									</>
+								) : (
+									"Submit"
+								)}
+							</Button>
+						</form>
 					</Col>
 				</Row>
 			</div>

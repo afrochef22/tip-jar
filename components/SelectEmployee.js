@@ -144,8 +144,6 @@ export default function SelectEmployee({ employees }) {
 	};
 
 	const handleCheckboxChange = (selectedEmployee, position, checked) => {
-		console.log(checked);
-
 		const updatedEmployees = allEmployees.map((employee) => {
 			if (employee.id === selectedEmployee.id) {
 				if (checked) {
@@ -247,7 +245,6 @@ export default function SelectEmployee({ employees }) {
 
 	const handleSubmitButtonClick = () => {
 		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
-		console.log(selectedShow);
 
 		router.push({
 			pathname: "/creditTipCalculationPage", // Adjust the pathname based on your file structure

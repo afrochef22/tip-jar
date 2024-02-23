@@ -1,8 +1,10 @@
 import React from "react";
+import clientPromise from "../lib/mongodb";
+
 import { useRouter } from "next/router";
 import TipBreakDown from "../components/TipBreakDown";
 
-export default function creditTipCalculationPage() {
+export default function creditTipCalculationPage(allTipBreakdowns) {
 	const router = useRouter();
 	const {
 		bartenders,
@@ -25,7 +27,6 @@ export default function creditTipCalculationPage() {
 		? JSON.parse(employeeTipCollected)
 		: [];
 	const parseSelectedShow = selectedShow ? JSON.parse(selectedShow) : "";
-	console.log("show: ", selectedShow);
 
 	return (
 		<TipBreakDown
@@ -37,6 +38,27 @@ export default function creditTipCalculationPage() {
 			employeeHours={parsedEmployeeHours}
 			employeeTipCollected={parsedEmployeeTipCollected}
 			selectedShow={parseSelectedShow}
+			allTipBreakdowns={allTipBreakdowns}
 		/>
 	);
+}
+
+export async function getServerSideProps() {
+	try {
+		const client = await clientPromise;
+		const db = client.db("TeragramBallroom");
+
+		const allTipBreakdowns = await db
+			.collection("tipBreakdown")
+			.find({})
+			.sort()
+			.limit(20)
+			.toArray();
+		console.log(allTipBreakdowns);
+		return {
+			props: { allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)) },
+		};
+	} catch (err) {
+		console.error(err);
+	}
 }

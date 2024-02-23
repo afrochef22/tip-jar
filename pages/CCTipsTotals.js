@@ -33,6 +33,8 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	const uniqueDates = [
 		...new Set(allTipBreakdowns.map((tip) => tip.date)),
 	].filter((date) => {
+		// Check if the date is not null before parsing it
+		if (!date) return false; // Skip null dates
 		const currentDate = DateTime.fromFormat(date, "MM/dd/yyyy");
 		return (
 			currentDate >= startDate.startOf("day") &&

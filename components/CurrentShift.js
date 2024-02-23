@@ -184,7 +184,6 @@ export function CurrentShift() {
 		</div>
 	);
 }
-console.log(DayOfTheWeekAbbreviated(6));
 export function ShowDateComparer(dateData) {
 	dateData = CurrentDate();
 	const timeZone = "America/Los_Angeles";

@@ -51,9 +51,9 @@ const Header = () => {
 					<Link className="navbar-link" href="/CCTipsTotals">
 						CC Tip Totals
 					</Link>
-					<Link className="navbar-link" href="/getAllTipBreakDowns">
+					{/* <Link className="navbar-link" href="/getAllTipBreakDowns">
 						Tip Breakdown
-					</Link>
+					</Link> */}
 				</div>
 			) : (
 				<></>
@@ -100,11 +100,11 @@ const Header = () => {
 							CC Tip Totals
 						</Link>
 					</NavItem>
-					<NavItem>
+					{/* <NavItem>
 						<Link className="navbar-link" href="/getAllTipBreakDowns">
 							Tip Breakdown
 						</Link>
-					</NavItem>
+					</NavItem> */}
 				</Nav>
 			)}
 		</Navbar>

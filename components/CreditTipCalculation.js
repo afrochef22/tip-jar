@@ -21,7 +21,6 @@ export default function CreditTipCalculation({
 	workingEmployees,
 	selectedShow,
 }) {
-	console.log(selectedShow);
 	const router = useRouter();
 	const bartenders = workingEmployees.filter(
 		(employee) => employee.workingPosition === "Bartender"
@@ -99,17 +98,14 @@ export default function CreditTipCalculation({
 	};
 
 	const handleCalculate = (e) => {
-		console.log("in");
 		e.preventDefault();
 		const formData = new FormData(e.target); // Create a FormData object from the form
 		const data = {};
 		const employeeTips = {};
 		const employeeHours = {};
-		console.log(formData);
 		// Iterate through form data and convert it to a plain object
 		formData.forEach((value, key) => {
 			data[key] = value;
-			console.log(value);
 
 			const isValidId = (id) => {
 				const regex = /^[0-9a-fA-F]{24}$/;
