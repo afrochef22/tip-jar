@@ -18,11 +18,11 @@ body {
 	--button-green: #186f1c;
 	--button-hover: #27b02e;
 	--font-size: 20px;
-	--even-row: #d2fdd4;
+	--even-row: #d9ded9;
 	--odd-row: #fff;
-	--lastCol-even: #00ffab;
-	--lastCol-odd: #62fdca;
-	--thead-tfoot: #00ffab;
+	--lastCol-even: rgb(35, 35, 35);
+	--lastCol-odd: rgb(35, 35, 35);
+	--thead-tfoot: #b9b9b9;
 }
 
 /* :root {
@@ -221,6 +221,7 @@ body {
 	/* width: 100%; */
 	border-collapse: collapse;
 	--bs-table-bg: none;
+	margin-bottom: 0px;
 }
 .table-container {
 	max-width: 100%;
@@ -228,7 +229,7 @@ body {
 }
 
 .container {
-	max-width: 80%;
+	max-width: 98%;
 	margin: auto;
 	text-align: center;
 	padding: 0px;
@@ -266,9 +267,9 @@ body {
 }
 
 .table th:last-child {
-	background-color: var(--lastCol-even);
-	border: 2px solid #333;
-	padding: 0;
+	background-color: black;
+	color: var(--button-hover);
+	padding: 5px;
 	text-align: center;
 }
 
@@ -282,6 +283,9 @@ body {
 
 /* Style for last coloumn */
 
+.table tbody td:last-child {
+}
+
 .table tbody td:first-child {
 	background-color: var(--even-row);
 }
@@ -291,10 +295,12 @@ body {
 
 .table tbody tr:nth-child(odd) td:last-child {
 	background-color: var(--lastCol-odd);
+	color: var(--button-hover);
 }
 
 .table tbody tr:nth-child(even) td:last-child {
 	background-color: var(--lastCol-even);
+	color: var(--button-hover);
 }
 
 .table tbody tr:nth-child(even) {
@@ -317,7 +323,8 @@ body {
 }
 
 .table tfoot td:last-child {
-	background-color: var(--lastCol-even);
+	background-color: black;
+	color: var(--button-hover);
 }
 
 .totals {
@@ -356,4 +363,8 @@ body {
 
 .bold-text {
 	font-weight: bold;
+}
+
+.border-box {
+	border: solid 3px var(--secondary-color);
 }

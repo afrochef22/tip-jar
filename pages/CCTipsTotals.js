@@ -122,7 +122,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 				</h4>
 			</Container>
 
-			<Container className=" table-scroll mt-1">
+			<Container className=" table-scroll mt-4 border-box">
 				<table bordered className="table">
 					<thead className="sticky-header">
 						<tr>
@@ -213,7 +213,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 										});
 									})}
 									<td className=" bold-text">
-										{calculateTotalTips(employee).toFixed(2)}
+										${calculateTotalTips(employee).toFixed(2)}
 									</td>
 								</tr>
 							);
