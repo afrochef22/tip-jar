@@ -22,6 +22,7 @@ export function AddEmployeeModal(args) {
 		firstName: "",
 		lastName: "",
 		position: [],
+		active: true,
 		tipsCollected: [
 			{
 				amount: Number,
@@ -69,6 +70,7 @@ export function AddEmployeeModal(args) {
 					firstName: "",
 					lastName: "",
 					position: [],
+					active: true,
 					tipsCollected: [
 						{
 							amount: Number,

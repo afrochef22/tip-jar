@@ -8,7 +8,7 @@ export default async (req, res) => {
 
 	if (req.method === "POST") {
 		try {
-			const { firstName, lastName, position } = req.body;
+			const { firstName, lastName, position, active } = req.body;
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
 
@@ -16,6 +16,7 @@ export default async (req, res) => {
 				firstName,
 				lastName,
 				position: position,
+				active,
 				tipsCollected: [
 					// {
 					// 	date: Date,

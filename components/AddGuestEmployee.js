@@ -16,9 +16,17 @@ import style from "./addEmployee.module.css";
 import style2 from "./SelectEmployee.module.css";
 
 import { v4 as uuidv4 } from "uuid";
+import SelectNonActiveBartender from "./SelectNonActiveBartender";
 
-export default function AddGuestEmployee({ position, addNewEmployee }) {
+export default function AddGuestEmployee({
+	position,
+	addNewEmployee,
+	sortedBartenders,
+	onClick,
+}) {
 	const [modal, setModal] = useState(false);
+	const [nestedModal, setNestedModal] = useState(false);
+	const [closeAll, setCloseAll] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [newEmployee, setNewEmployee] = useState({
 		id: 0,
@@ -32,6 +40,14 @@ export default function AddGuestEmployee({ position, addNewEmployee }) {
 		tipOut: 0,
 	});
 	const toggle = () => setModal(!modal);
+	const toggleNested = () => {
+		setNestedModal(!nestedModal);
+		setCloseAll(false);
+	};
+	const toggleAll = () => {
+		setNestedModal(!nestedModal);
+		setCloseAll(true);
+	};
 
 	const handleInputChange = (e) => {
 		setNewEmployee({ ...newEmployee, [e.target.name]: e.target.value });
@@ -53,6 +69,7 @@ export default function AddGuestEmployee({ position, addNewEmployee }) {
 			label,
 			position: [position],
 			checked: newEmployee.checked,
+			active: false,
 			workingPosition: position,
 			tipsBroughtIn: 0,
 			tippedHours: 0,
@@ -69,6 +86,7 @@ export default function AddGuestEmployee({ position, addNewEmployee }) {
 			lastName: "",
 			position: [""],
 			checked: true,
+			active: false,
 			workingPosition: position,
 			tipsBroughtIn: 0,
 			tippedHours: 0,
@@ -90,48 +108,73 @@ export default function AddGuestEmployee({ position, addNewEmployee }) {
 				</Col>
 			</Row>
 			<Modal isOpen={modal} toggle={toggle}>
-				<ModalHeader toggle={toggle}>Add Employee</ModalHeader>
-				<Form onSubmit={handleAddEmployee}>
-					<FormGroup className={style.group}>
-						<Label>First Name:</Label>
-						<Input
-							className={style.border}
-							type="text"
-							name="firstName"
-							onChange={handleInputChange}
-							required={true}
-						/>
-					</FormGroup>
-					<FormGroup className={style.group}>
-						<Label>Last Name:</Label>
-						<Input
-							className={style.border}
-							type="text"
-							name="lastName"
-							onChange={handleInputChange}
-							required={true}
-						/>
-					</FormGroup>
-					<FormGroup className={style.group}>
-						<Label>Position:</Label>
-						<Input
-							className={style.border}
-							type="text"
-							name="position"
-							value={position}
-							required={true}
-						/>
-					</FormGroup>
+				<ModalHeader toggle={toggle}>Select Employee</ModalHeader>
+				<SelectNonActiveBartender
+					position={position}
+					addNewEmployee={addNewEmployee}
+					sortedBartenders={sortedBartenders}
+					onClick={onClick}
+				/>
 
-					<ModalFooter>
-						<Button type="submit" color="primary">
-							Add Employee
-						</Button>{" "}
-						<Button color="secondary" onClick={toggle}>
-							Cancel
-						</Button>
-					</ModalFooter>
-				</Form>
+				<Row
+					onClick={toggleNested}
+					className={`${style2.seperationLine} ${style.clickEmployee}`}
+				>
+					<Col xs={8} sm={8} md={8}>
+						<Label className="highlight-color">+ Fill In</Label>
+					</Col>
+					<Col xs={4} sm={4} md={4}>
+						<div className={style2.unCheckBox}></div>
+					</Col>
+				</Row>
+				<Modal
+					isOpen={nestedModal}
+					toggle={toggleNested}
+					onClosed={closeAll ? toggle : undefined}
+				>
+					<ModalHeader toggle={toggle}>Add Employee</ModalHeader>
+					<Form onSubmit={handleAddEmployee}>
+						<FormGroup className={style.group}>
+							<Label>First Name:</Label>
+							<Input
+								className={style.border}
+								type="text"
+								name="firstName"
+								onChange={handleInputChange}
+								required={true}
+							/>
+						</FormGroup>
+						<FormGroup className={style.group}>
+							<Label>Last Name:</Label>
+							<Input
+								className={style.border}
+								type="text"
+								name="lastName"
+								onChange={handleInputChange}
+								required={true}
+							/>
+						</FormGroup>
+						<FormGroup className={style.group}>
+							<Label>Position:</Label>
+							<Input
+								className={style.border}
+								type="text"
+								name="position"
+								value={position}
+								required={true}
+							/>
+						</FormGroup>
+
+						<ModalFooter>
+							<Button type="submit" color="primary">
+								Add Employee
+							</Button>{" "}
+							<Button color="secondary" onClick={toggle}>
+								Cancel
+							</Button>
+						</ModalFooter>
+					</Form>
+				</Modal>
 			</Modal>
 		</div>
 	);

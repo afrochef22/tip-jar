@@ -49,30 +49,34 @@ export default function SelectCook({
 							<div
 								className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
 							>
-								<AddGuestEmployee
+								{/* <AddGuestEmployee
 									position="Cook"
 									addNewEmployee={addNewEmployee}
-								/>
-								{sortedCooks.map((employee) => (
-									<Row
-										onClick={() => onClick(employee, "Cook", !employee.checked)}
-										className={`${style.seperationLine} ${style.clickEmployee}`}
-										key={employee.id}
-									>
-										<Col xs={8} sm={8} md={8}>
-											<Label>{employee.label}</Label>
-										</Col>
-										<Col xs={4} sm={4} md={4}>
-											<div
-												className={
-													employee.checked
-														? style.checkedCheckbox
-														: style.unCheckBox
-												}
-											></div>
-										</Col>
-									</Row>
-								))}
+								/> */}
+								{sortedCooks
+									.filter((employee) => employee.active === true)
+									.map((employee) => (
+										<Row
+											onClick={() =>
+												onClick(employee, "Cook", !employee.checked)
+											}
+											className={`${style.seperationLine} ${style.clickEmployee}`}
+											key={employee.id}
+										>
+											<Col xs={8} sm={8} md={8}>
+												<Label>{employee.label}</Label>
+											</Col>
+											<Col xs={4} sm={4} md={4}>
+												<div
+													className={
+														employee.checked
+															? style.checkedCheckbox
+															: style.unCheckBox
+													}
+												></div>
+											</Col>
+										</Row>
+									))}
 							</div>
 						</Col>
 					</Row>
@@ -103,10 +107,10 @@ export default function SelectCook({
 						</h5>
 
 						<div className={`text-color ${style.scrollableContainer}`}>
-							<AddGuestEmployee
+							{/* <AddGuestEmployee
 								position="Cook"
 								addNewEmployee={addNewEmployee}
-							/>
+							/> */}
 							{sortedCooks.map((employee) => (
 								<Row
 									onClick={() => onClick(employee, "Cook", !employee.checked)}

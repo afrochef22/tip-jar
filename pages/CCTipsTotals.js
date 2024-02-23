@@ -60,6 +60,13 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 			);
 		});
 	});
+	console.log(employeesWithTipsInRange);
+	let sortedEmployees = employeesWithTipsInRange.sort((a, b) => {
+		const firstNameA = a.lastName;
+		const firstNameB = b.lastName;
+
+		return firstNameA.localeCompare(firstNameB);
+	});
 
 	const calculateTotalTips = (employee) => {
 		return employee.tipsCollected.reduce((total, tip) => {
@@ -106,8 +113,8 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 						/>
 					</Col>
 				</Row>
-				<h4 className="m-2">
-					Date Range:{" "}
+				<h3>Current Date Range: </h3>
+				<h5 className="m-2">
 					{startDate.toLocaleString({
 						month: "2-digit",
 						day: "2-digit",
@@ -119,14 +126,14 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 						day: "2-digit",
 						year: "numeric",
 					})}
-				</h4>
+				</h5>
 			</Container>
 
-			<Container className=" table-scroll mt-4 border-box">
-				<table bordered className="table">
+			<Container className=" table-scroll mt-4 border-box ">
+				<table bordered className="table ">
 					<thead className="sticky-header">
 						<tr>
-							<th className="employee-column sticky-row">Date</th>
+							<th className="employee-column sticky-row text-color">Date</th>
 							{uniqueDates.map((date) => {
 								// Get unique shows for the current date
 								const uniqueShows = [
@@ -138,7 +145,11 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 									),
 								];
 								return (
-									<th key={`date-${date}`} colSpan={uniqueShows.length}>
+									<th
+										className="text-color"
+										key={`date-${date}`}
+										colSpan={uniqueShows.length}
+									>
 										{date}
 									</th>
 								);
@@ -188,7 +199,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 						</tr>
 					</thead>
 					<tbody className="scorllableContainer">
-						{employeesWithTipsInRange.map((employee) => {
+						{sortedEmployees.map((employee) => {
 							return (
 								<tr key={employee._id}>
 									<td className="employee-column">{`${employee.firstName} ${employee.lastName}`}</td>

@@ -21,6 +21,7 @@ export function UpdateEmployeeModal(props, args) {
 		firstName: "",
 		lastName: "",
 		position: [],
+		active: "",
 		tipsCollected: [
 			{
 				amount: Number,
@@ -52,6 +53,12 @@ export function UpdateEmployeeModal(props, args) {
 					position: updatedPositions,
 				};
 			});
+		} else if (e.target.name === "active") {
+			// handle active status changes
+			setEmployeeUpdate((prevEmployee) => ({
+				...prevEmployee,
+				active: e.target.checked, // Set the active status based on checkbox state
+			}));
 		} else {
 			setEmployeeUpdate((prevEmployee) => ({
 				...prevEmployee,
@@ -66,6 +73,7 @@ export function UpdateEmployeeModal(props, args) {
 			firstName: props.data.firstName,
 			lastName: props.data.lastName,
 			position: props.data.position, // Pre-populate positions
+			active: props.data.active,
 		});
 	}, [props.data]);
 
@@ -84,6 +92,7 @@ export function UpdateEmployeeModal(props, args) {
 					firstName: employeeUpdate.firstName,
 					lastName: employeeUpdate.lastName,
 					position: employeeUpdate.position,
+					active: employeeUpdate.active,
 				}),
 			});
 
@@ -163,6 +172,21 @@ export function UpdateEmployeeModal(props, args) {
 									checked={employeeUpdate.position.includes("Cook")}
 								/>
 								Cook
+							</Label>
+						</div>
+					</FormGroup>
+					<FormGroup className={style.group}>
+						<Label>Active:</Label>
+						<div>
+							<Label check>
+								<Input
+									className={style.border}
+									type="checkbox"
+									name="active"
+									// value="Bartender"
+									onChange={handleInputChange}
+									checked={employeeUpdate.active}
+								/>
 							</Label>
 						</div>
 					</FormGroup>

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import AddGuestEmployee from "./AddGuestEmployee";
-import { on } from "events";
 
-export default function SelectBartender({
+export default function SelectNonActiveBartender({
 	onClick,
 	sortedBartenders,
 	btn,
@@ -38,28 +37,27 @@ export default function SelectBartender({
 					>
 						<Col>
 							<h2
-								className={`text-color ${style.centerTitle}`}
+								className={`third-color ${style.centerTitle}`}
 								htmlFor="exampleSelect"
 							>
 								Bartenders
 							</h2>
-							<h5 className={`text-color ${style.centerTitle}`}>
+							<h5 className={`third-color ${style.centerTitle}`}>
 								{" "}
 								{checkedBartendersCount} selected
 							</h5>
 
 							<div
-								className={`text-color }  ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
+								className={`third-color }  ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
 							>
-								{/* <AddGuestEmployee
+								<AddGuestEmployee
 									position="Bartender"
 									addNewEmployee={addNewEmployee}
 									sortedBartenders={sortedBartenders}
-									onClick={onClick}
-								/> */}
+								/>
 
 								{sortedBartenders
-									.filter((employee) => employee.active === true)
+									.filter((employee) => employee.active === false)
 									.map((employee) => (
 										<Row
 											onClick={() =>
@@ -85,14 +83,6 @@ export default function SelectBartender({
 							</div>
 						</Col>
 					</Row>
-					<Row className="justify-content-center mt-4 mb-5">
-						<Button
-							onClick={() => btn("BarBack")}
-							className={`mx-2 ${style.centerButton}`}
-						>
-							Next
-						</Button>
-					</Row>
 				</Container>
 			) : (
 				<Container
@@ -100,22 +90,22 @@ export default function SelectBartender({
 				>
 					<Col>
 						<h2
-							className={`text-color ${style.centerTitle}`}
+							className={`third-color ${style.centerTitle}`}
 							htmlFor="exampleSelect"
 						>
 							Bartenders
 						</h2>
-						<h5 className={`text-color ${style.centerTitle}`}>
+						<h5 className={`third-color ${style.centerTitle}`}>
 							{" "}
 							{checkedBartendersCount} selected
 						</h5>
 						<div
-							className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
+							className={`third-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
 						>
-							{/* <AddGuestEmployee
+							<AddGuestEmployee
 								position="Bartender"
 								addNewEmployee={addNewEmployee}
-							/> */}
+							/>
 
 							{sortedBartenders.map((employee) => (
 								<Row
@@ -128,7 +118,7 @@ export default function SelectBartender({
 									<Col xs={8} sm={8} md={8}>
 										<Label>{employee.label}</Label>
 									</Col>
-									<Col xs={4} sm={4} md={4}>
+									<Col className="button-color" xs={4} sm={4} md={4}>
 										<div
 											className={
 												employee.checked

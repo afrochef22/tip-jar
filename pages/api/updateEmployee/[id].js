@@ -23,12 +23,18 @@ export default async (req, res) => {
 
 			let updateDocument = {};
 
-			// Update name and position
-			if (data.firstName || data.lastName || Array.isArray(data.position)) {
+			// Update name, position, and active status
+			if (
+				data.firstName ||
+				data.lastName ||
+				Array.isArray(data.position) ||
+				data.active !== undefined
+			) {
 				updateDocument.$set = {
 					...(data.firstName && { firstName: data.firstName }),
 					...(data.lastName && { lastName: data.lastName }),
 					...(Array.isArray(data.position) && { position: data.position }),
+					...(data.active !== undefined && { active: data.active }),
 				};
 			}
 

@@ -28,9 +28,9 @@ export default function TipBreakDown({
 	useEffect(() => {
 		if (submitting) {
 			submitTipBreakdown();
-			router.push({
-				pathname: "/CCTipsTotals",
-			});
+			setTimeout(() => {
+				router.push("/CCTipsTotals");
+			}, 1000);
 		}
 	}, [submitting, newTipBreakdown]);
 
@@ -157,7 +157,7 @@ export default function TipBreakDown({
 
 		// Ensure that other fields have valid values before submission
 		if (bartendersWithTipOut.length <= 0) {
-			setSubmitError("Please fill out all fields.");
+			setSubmitError("Please select at least 1 bartender.");
 			return;
 		}
 		if (!employeeTipCollected) {

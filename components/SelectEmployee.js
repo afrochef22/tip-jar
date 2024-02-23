@@ -49,6 +49,7 @@ export default function SelectEmployee({ employees }) {
 				tipsBroughtIn: 0,
 				tippedHours: 0,
 				tipOut: 0,
+				active: employee.active,
 			};
 		});
 		setAllEmployees(options);

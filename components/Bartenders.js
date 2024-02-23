@@ -35,6 +35,7 @@ const Bartenders = ({ employees }) => {
 			<h1 className={` text-color ${style.center}`}>Bartenders</h1>
 			{sortedEmployees
 				.filter((bartender) => bartender.position.includes("Bartender"))
+
 				.map((bartender) => {
 					return (
 						<Container key={bartender._id}>

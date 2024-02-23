@@ -358,7 +358,7 @@ body {
 }
 
 .band-name:hover {
-	color: var(--secondary-color);
+	color: var(--button-hover);
 }
 
 .bold-text {
@@ -366,5 +366,5 @@ body {
 }
 
 .border-box {
-	border: solid 3px var(--secondary-color);
+	border: solid 5px var(--secondary-color);
 }
