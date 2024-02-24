@@ -193,28 +193,28 @@ export function ShowDateComparer(dateData) {
 
 	// Teragram
 
-	switch (true) {
-		case zonedDate.hour < 6:
-			if (dateData.yesterdayDate === 0) {
-				compareDate = `${DayOfTheWeekAbbreviated(
-					dateData.yesterday
-				)} ${MonthAbbreviated(dateData.lastMonth)} ${
-					dateData.lastDayOfPrevMonth
-				}`;
-			} else {
-				compareDate = `${DayOfTheWeekAbbreviated(
-					dateData.yesterday
-				)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
-			}
+	// switch (true) {
+	// 	case zonedDate.hour < 6:
+	// 		if (dateData.yesterdayDate === 0) {
+	// 			compareDate = `${DayOfTheWeekAbbreviated(
+	// 				dateData.yesterday
+	// 			)} ${MonthAbbreviated(dateData.lastMonth)} ${
+	// 				dateData.lastDayOfPrevMonth
+	// 			}`;
+	// 		} else {
+	// 			compareDate = `${DayOfTheWeekAbbreviated(
+	// 				dateData.yesterday
+	// 			)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
+	// 		}
 
-			break;
+	// 		break;
 
-		default:
-			compareDate = `${DayOfTheWeekAbbreviated(
-				dateData.day
-			)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
-	}
-	return compareDate;
+	// 	default:
+	// 		compareDate = `${DayOfTheWeekAbbreviated(
+	// 			dateData.day
+	// 		)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
+	// }
+	// return compareDate;
 
 	// Moroccan
 	switch (true) {
