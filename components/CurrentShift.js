@@ -105,18 +105,20 @@ function MonthAbbreviated(month) {
 }
 
 function CurrentDate() {
-	const newDate = new Date();
-	const date = newDate.getDate();
-	const month = newDate.getMonth() + 1;
-	const year = newDate.getFullYear();
-	const day = newDate.getDay();
+	const timeZone = "America/Los_Angeles";
+	const zonedDate = DateTime.now().setZone(timeZone);
 
-	const yesterdayDate = newDate.getDate() - 1;
-	const lastMonth = newDate.getMonth();
-	const lastYear = newDate.getFullYear() - 1;
-	const yesterday = newDate.getDay() - 1;
-	const hour = newDate.getHours();
-	const lastDayOfPrevMonth = new Date(year, lastMonth, 0).getDate();
+	const date = zonedDate.day;
+	const month = zonedDate.month;
+	const year = zonedDate.year;
+	const day = zonedDate.weekday;
+
+	const yesterdayDate = zonedDate.minus({ days: 1 }).day;
+	const lastMonth = zonedDate.minus({ months: 1 }).month;
+	const lastYear = zonedDate.minus({ years: 1 }).year;
+	const yesterday = zonedDate.minus({ days: 1 }).weekday;
+	const hour = zonedDate.hour;
+	const lastDayOfPrevMonth = zonedDate.minus({ months: 1 }).daysInMonth;
 
 	const dateData = {
 		date,
@@ -188,33 +190,34 @@ export function ShowDateComparer(dateData) {
 	dateData = CurrentDate();
 	const timeZone = "America/Los_Angeles";
 	const zonedDate = DateTime.now().setZone(timeZone);
-
+	console.log("hi", zonedDate);
 	let compareDate = "";
-
+	// Extract relevant date information from zonedDate
+	const month = zonedDate.month;
+	const day = zonedDate.day;
+	const yesterday = zonedDate.minus({ days: 1 }).day;
 	// Teragram
 
-	// switch (true) {
-	// 	case zonedDate.hour < 6:
-	// 		if (dateData.yesterdayDate === 0) {
-	// 			compareDate = `${DayOfTheWeekAbbreviated(
-	// 				dateData.yesterday
-	// 			)} ${MonthAbbreviated(dateData.lastMonth)} ${
-	// 				dateData.lastDayOfPrevMonth
-	// 			}`;
-	// 		} else {
-	// 			compareDate = `${DayOfTheWeekAbbreviated(
-	// 				dateData.yesterday
-	// 			)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
-	// 		}
+	switch (true) {
+		case zonedDate.hour < 6:
+			if (day === 1) {
+				compareDate = `${DayOfTheWeekAbbreviated(yesterday)} ${MonthAbbreviated(
+					dateData.lastMonth
+				)} ${dateData.lastDayOfPrevMonth}`;
+			} else {
+				compareDate = `${DayOfTheWeekAbbreviated(
+					dateData.yesterday
+				)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
+			}
 
-	// 		break;
+			break;
 
-	// 	default:
-	// 		compareDate = `${DayOfTheWeekAbbreviated(
-	// 			dateData.day
-	// 		)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
-	// }
-	// return compareDate;
+		default:
+			compareDate = `${DayOfTheWeekAbbreviated(
+				dateData.day
+			)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
+	}
+	return compareDate;
 
 	// Moroccan
 	switch (true) {
