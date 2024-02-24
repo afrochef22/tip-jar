@@ -146,7 +146,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 								];
 								return (
 									<th
-										className="text-color"
+										className="band-date"
 										key={`date-${date}`}
 										colSpan={uniqueShows.length}
 									>

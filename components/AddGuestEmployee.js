@@ -11,6 +11,8 @@ import {
 	ModalFooter,
 	Row,
 	Col,
+	ModalBody,
+	Container,
 } from "reactstrap";
 import style from "./addEmployee.module.css";
 import style2 from "./SelectEmployee.module.css";
@@ -23,6 +25,8 @@ export default function AddGuestEmployee({
 	addNewEmployee,
 	sortedBartenders,
 	onClick,
+	sortedBarBacks,
+	sortedCooks,
 }) {
 	const [modal, setModal] = useState(false);
 	const [nestedModal, setNestedModal] = useState(false);
@@ -32,7 +36,7 @@ export default function AddGuestEmployee({
 		id: 0,
 		firstName: "",
 		lastName: "",
-		position: "",
+		position: [],
 		checked: true, // Assuming all new employees are initially checked
 		workingPosition: position, // Assigning the working position
 		tipsBroughtIn: 0,
@@ -50,14 +54,20 @@ export default function AddGuestEmployee({
 	};
 
 	const handleInputChange = (e) => {
-		setNewEmployee({ ...newEmployee, [e.target.name]: e.target.value });
+		console.log(e.target);
+		setNewEmployee({
+			...newEmployee,
+			[e.target.name]: e.target.value,
+			position: [position],
+			active: false,
+		});
 	};
 
 	function generateRandomId() {
 		return uuidv4();
 	}
 
-	const handleAddEmployee = (e) => {
+	const handleAddEmployee = async (e) => {
 		e.preventDefault();
 		// Generate a random ID
 		const id = generateRandomId();
@@ -78,10 +88,9 @@ export default function AddGuestEmployee({
 		// Pass the new employee data to the parent component
 		addNewEmployee(newEmployeeData);
 		// Close the modal
-		toggle();
+		toggleNested();
 		// Reset the form fields
 		setNewEmployee({
-			id: 0,
 			firstName: "",
 			lastName: "",
 			position: [""],
@@ -92,6 +101,40 @@ export default function AddGuestEmployee({
 			tippedHours: 0,
 			tipOut: 0,
 		});
+
+		try {
+			const response = await fetch("/api/addEmployee", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json", // Specify the content type
+				},
+				body: JSON.stringify(newEmployee),
+			});
+
+			if (response.ok) {
+				console.log("Employee added successfully");
+				router.push("/employees");
+				setNewEmployee({
+					firstName: "",
+					lastName: "",
+					position: [],
+					active: true,
+					tipsCollected: [
+						{
+							amount: Number,
+							date: Date,
+						},
+					],
+				});
+				setAlertMessage(""); // Clear the alert message
+			} else {
+				console.log("response not ok");
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			toggleNested();
+		}
 	};
 
 	return (
@@ -109,24 +152,24 @@ export default function AddGuestEmployee({
 			</Row>
 			<Modal isOpen={modal} toggle={toggle}>
 				<ModalHeader toggle={toggle}>Select Employee</ModalHeader>
-				<SelectNonActiveBartender
-					position={position}
-					addNewEmployee={addNewEmployee}
-					sortedBartenders={sortedBartenders}
-					onClick={onClick}
-				/>
+				<ModalBody>
+					<SelectNonActiveBartender
+						position={position}
+						addNewEmployee={addNewEmployee}
+						sortedBartenders={sortedBartenders}
+						sortedBarBacks={sortedBarBacks}
+						sortedCooks={sortedCooks}
+						onClick={onClick}
+					/>
+					<ModalFooter>
+						<Button color="success" onClick={toggleNested}>
+							Register New Fill In
+						</Button>
 
-				<Row
-					onClick={toggleNested}
-					className={`${style2.seperationLine} ${style.clickEmployee}`}
-				>
-					<Col xs={8} sm={8} md={8}>
-						<Label className="highlight-color">+ Fill In</Label>
-					</Col>
-					<Col xs={4} sm={4} md={4}>
-						<div className={style2.unCheckBox}></div>
-					</Col>
-				</Row>
+						<Button onClick={toggle}>Done</Button>
+					</ModalFooter>
+				</ModalBody>
+
 				<Modal
 					isOpen={nestedModal}
 					toggle={toggleNested}
@@ -169,7 +212,7 @@ export default function AddGuestEmployee({
 							<Button type="submit" color="primary">
 								Add Employee
 							</Button>{" "}
-							<Button color="secondary" onClick={toggle}>
+							<Button color="secondary" onClick={toggleNested}>
 								Cancel
 							</Button>
 						</ModalFooter>

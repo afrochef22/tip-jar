@@ -355,6 +355,10 @@ body {
 
 .band-name {
 	color: black;
+	min-width: 200px !important;
+}
+.band-date {
+	padding: 4px !important;
 }
 
 .band-name:hover {

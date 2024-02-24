@@ -196,6 +196,7 @@ export function ShowDateComparer(dateData) {
 	const month = zonedDate.month;
 	const day = zonedDate.day;
 	const yesterday = zonedDate.minus({ days: 1 }).day;
+
 	// Teragram
 
 	switch (true) {

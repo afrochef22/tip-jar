@@ -46,10 +46,12 @@ export default function SelectBarBack({
 							<div
 								className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
 							>
-								{/* <AddGuestEmployee
+								<AddGuestEmployee
 									position="Bar Back"
 									addNewEmployee={addNewEmployee}
-								/> */}
+									sortedBarBacks={sortedBarBacks}
+									onClick={onClick}
+								/>
 								{sortedBarBacks
 									.filter((employee) => employee.active === true)
 									.map((employee) => (
@@ -107,32 +109,36 @@ export default function SelectBarBack({
 							{checkedBarBacksCount} selected
 						</h5>
 						<div className={`text-color ${style.scrollableContainer}`}>
-							{/* <AddGuestEmployee
+							<AddGuestEmployee
 								position="Bar Back"
 								addNewEmployee={addNewEmployee}
-							/> */}
-							{sortedBarBacks.map((employee) => (
-								<Row
-									onClick={() =>
-										onClick(employee, "Bar Back", !employee.checked)
-									}
-									className={`${style.seperationLine} ${style.clickEmployee}`}
-									key={employee.id}
-								>
-									<Col xs={8} sm={8} md={8}>
-										<Label>{employee.label}</Label>
-									</Col>
-									<Col xs={4} sm={4} md={4}>
-										<div
-											className={
-												employee.checked
-													? style.checkedCheckbox
-													: style.unCheckBox
-											}
-										></div>
-									</Col>
-								</Row>
-							))}
+								sortedBarBacks={sortedBarBacks}
+								onClick={onClick}
+							/>
+							{sortedBarBacks
+								.filter((employee) => employee.active === true)
+								.map((employee) => (
+									<Row
+										onClick={() =>
+											onClick(employee, "Bar Back", !employee.checked)
+										}
+										className={`${style.seperationLine} ${style.clickEmployee}`}
+										key={employee.id}
+									>
+										<Col xs={8} sm={8} md={8}>
+											<Label>{employee.label}</Label>
+										</Col>
+										<Col xs={4} sm={4} md={4}>
+											<div
+												className={
+													employee.checked
+														? style.checkedCheckbox
+														: style.unCheckBox
+												}
+											></div>
+										</Col>
+									</Row>
+								))}
 						</div>
 					</Col>
 				</Container>

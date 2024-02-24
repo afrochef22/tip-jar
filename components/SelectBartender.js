@@ -51,12 +51,12 @@ export default function SelectBartender({
 							<div
 								className={`text-color }  ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
 							>
-								{/* <AddGuestEmployee
+								<AddGuestEmployee
 									position="Bartender"
 									addNewEmployee={addNewEmployee}
 									sortedBartenders={sortedBartenders}
 									onClick={onClick}
-								/> */}
+								/>
 
 								{sortedBartenders
 									.filter((employee) => employee.active === true)
@@ -112,33 +112,37 @@ export default function SelectBartender({
 						<div
 							className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
 						>
-							{/* <AddGuestEmployee
+							<AddGuestEmployee
 								position="Bartender"
 								addNewEmployee={addNewEmployee}
-							/> */}
+								sortedBartenders={sortedBartenders}
+								onClick={onClick}
+							/>
 
-							{sortedBartenders.map((employee) => (
-								<Row
-									onClick={() =>
-										onClick(employee, "Bartender", !employee.checked)
-									}
-									className={`${style.seperationLine} ${style.clickEmployee}`}
-									key={employee.id}
-								>
-									<Col xs={8} sm={8} md={8}>
-										<Label>{employee.label}</Label>
-									</Col>
-									<Col xs={4} sm={4} md={4}>
-										<div
-											className={
-												employee.checked
-													? style.checkedCheckbox
-													: style.unCheckBox
-											}
-										></div>
-									</Col>
-								</Row>
-							))}
+							{sortedBartenders
+								.filter((employee) => employee.active === true)
+								.map((employee) => (
+									<Row
+										onClick={() =>
+											onClick(employee, "Bartender", !employee.checked)
+										}
+										className={`${style.seperationLine} ${style.clickEmployee}`}
+										key={employee.id}
+									>
+										<Col xs={8} sm={8} md={8}>
+											<Label>{employee.label}</Label>
+										</Col>
+										<Col xs={4} sm={4} md={4}>
+											<div
+												className={
+													employee.checked
+														? style.checkedCheckbox
+														: style.unCheckBox
+												}
+											></div>
+										</Col>
+									</Row>
+								))}
 						</div>
 					</Col>
 				</Container>
