@@ -53,7 +53,11 @@ export default function SelectBarBack({
 									onClick={onClick}
 								/>
 								{sortedBarBacks
-									.filter((employee) => employee.active === true)
+									.filter(
+										(employee) =>
+											employee.active === true ||
+											(employee.active === false && employee.checked)
+									)
 									.map((employee) => (
 										<Row
 											onClick={() =>
@@ -116,7 +120,11 @@ export default function SelectBarBack({
 								onClick={onClick}
 							/>
 							{sortedBarBacks
-								.filter((employee) => employee.active === true)
+								.filter(
+									(employee) =>
+										employee.active === true ||
+										(employee.active === false && employee.checked)
+								)
 								.map((employee) => (
 									<Row
 										onClick={() =>

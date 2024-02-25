@@ -12,10 +12,6 @@ export default function SelectNonActiveBartender({
 	addNewEmployee,
 	position,
 }) {
-	console.log("baratenders: ", sortedBartenders);
-	console.log("bar backs: ", sortedBarBacks);
-	console.log("cooks: ", sortedCooks);
-
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 875);

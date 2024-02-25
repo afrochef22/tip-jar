@@ -3,6 +3,7 @@ import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import AddGuestEmployee from "./AddGuestEmployee";
 import { on } from "events";
+import e from "cors";
 
 export default function SelectBartender({
 	onClick,
@@ -10,7 +11,6 @@ export default function SelectBartender({
 	btn,
 	addNewEmployee,
 }) {
-	console.log(sortedBartenders);
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 875);
@@ -25,6 +25,11 @@ export default function SelectBartender({
 		};
 	}, []);
 
+	const checkedFillIn = sortedBartenders.filter((bartender) => {
+		const fillIn = bartender.active === false && bartender.checked;
+		return fillIn;
+	});
+	console.log(checkedFillIn);
 	const checkedBartendersCount = sortedBartenders.filter(
 		(bartender) => bartender.checked
 	).length;
@@ -59,7 +64,11 @@ export default function SelectBartender({
 								/>
 
 								{sortedBartenders
-									.filter((employee) => employee.active === true)
+									.filter(
+										(employee) =>
+											employee.active === true ||
+											(employee.active === false && employee.checked)
+									)
 									.map((employee) => (
 										<Row
 											onClick={() =>
@@ -71,6 +80,7 @@ export default function SelectBartender({
 											<Col xs={8} sm={8} md={8}>
 												<Label>{employee.label}</Label>
 											</Col>
+
 											<Col xs={4} sm={4} md={4}>
 												<div
 													className={
@@ -120,7 +130,11 @@ export default function SelectBartender({
 							/>
 
 							{sortedBartenders
-								.filter((employee) => employee.active === true)
+								.filter(
+									(employee) =>
+										employee.active === true ||
+										(employee.active === false && employee.checked)
+								)
 								.map((employee) => (
 									<Row
 										onClick={() =>

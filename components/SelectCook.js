@@ -56,7 +56,11 @@ export default function SelectCook({
 									onClick={onClick}
 								/>
 								{sortedCooks
-									.filter((employee) => employee.active === true)
+									.filter(
+										(employee) =>
+											employee.active === true ||
+											(employee.active === false && employee.checked)
+									)
 									.map((employee) => (
 										<Row
 											onClick={() =>
@@ -116,7 +120,11 @@ export default function SelectCook({
 								onClick={onClick}
 							/>
 							{sortedCooks
-								.filter((employee) => employee.active === true)
+								.filter(
+									(employee) =>
+										employee.active === true ||
+										(employee.active === false && employee.checked)
+								)
 								.map((employee) => (
 									<Row
 										onClick={() => onClick(employee, "Cook", !employee.checked)}
