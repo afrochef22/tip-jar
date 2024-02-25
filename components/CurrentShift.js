@@ -34,9 +34,6 @@ function DayOfTheWeek(day) {
 
 function DayOfTheWeekAbbreviated(day) {
 	switch (day) {
-		case 0:
-			day = "Sun";
-			break;
 		case 1:
 			day = "Mon";
 			break;
@@ -54,6 +51,9 @@ function DayOfTheWeekAbbreviated(day) {
 			break;
 		case 6:
 			day = "Sat";
+			break;
+		case 7:
+			day = "Sun";
 			break;
 		default:
 	}
