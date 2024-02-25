@@ -8,8 +8,7 @@ export default async (req, res) => {
 		const employees = await db
 			.collection("employees")
 			.find({})
-			.sort()
-			.limit(20)
+			.limit(1000000)
 			.toArray();
 		console.log(employees);
 		res.json(employees);

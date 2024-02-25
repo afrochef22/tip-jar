@@ -101,7 +101,7 @@ export default function AddGuestEmployee({
 			tippedHours: 0,
 			tipOut: 0,
 		});
-
+		console.log("New Employee: ", newEmployee);
 		try {
 			const response = await fetch("/api/addEmployee", {
 				method: "POST",
@@ -113,7 +113,7 @@ export default function AddGuestEmployee({
 
 			if (response.ok) {
 				console.log("Employee added successfully");
-				router.push("/employees");
+
 				setNewEmployee({
 					firstName: "",
 					lastName: "",
@@ -203,6 +203,7 @@ export default function AddGuestEmployee({
 								className={style.border}
 								type="text"
 								name="position"
+								readOnly
 								value={position}
 								required={true}
 							/>

@@ -28,7 +28,7 @@ export async function getServerSideProps() {
 			.collection("employees")
 			.find({})
 			.sort()
-			.limit(20)
+			.limit(1000)
 			.toArray();
 		console.log(employees);
 		return {

@@ -16,12 +16,8 @@ export async function getServerSideProps() {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
 
-		const employees = await db
-			.collection("employees")
-			.find({})
-			.sort()
-			.limit(20)
-			.toArray();
+		const cursor = db.collection("employees").find({});
+		const employees = await cursor.toArray();
 
 		return {
 			props: { employees: JSON.parse(JSON.stringify(employees)) },

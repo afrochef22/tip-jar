@@ -46,6 +46,7 @@ export function AddEmployeeModal(args) {
 	};
 
 	const router = useRouter();
+
 	const handleAddEmployee = async (e) => {
 		e.preventDefault();
 

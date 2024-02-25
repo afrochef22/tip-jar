@@ -25,7 +25,7 @@ export async function getServerSideProps() {
 			.collection("tipBreakdown")
 			.find({})
 			.sort()
-			.limit(20)
+
 			.toArray();
 		console.log(allTipBreakdowns);
 		return {
