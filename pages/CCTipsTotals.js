@@ -42,23 +42,31 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 		);
 	});
 
+	const names = employees.map((employee) => {
+		return employee.firstName;
+	});
+	console.log(employees);
+
 	// Filter employees with tips within the date range
 	const employeesWithTipsInRange = employees.filter((employee) => {
-		return employee.tipsCollected.some((tip) => {
-			// Parse the tip date string into a Luxon DateTime object
-			const tipDate = DateTime.fromFormat(tip.date, "MM/dd/yyyy");
+		return (
+			employee.tipsCollected &&
+			employee.tipsCollected.some((tip) => {
+				// Parse the tip date string into a Luxon DateTime object
+				const tipDate = DateTime.fromFormat(tip.date, "MM/dd/yyyy");
 
-			// Ensure that tipDate is valid before comparison
-			if (!tipDate.isValid) return false;
+				// Ensure that tipDate is valid before comparison
+				if (!tipDate.isValid) return false;
 
-			// Ensure startDate and endDate are valid before using them
-			if (!startDate || !endDate) return false;
+				// Ensure startDate and endDate are valid before using them
+				if (!startDate || !endDate) return false;
 
-			// Compare the parsed tip date with the start and end dates
-			return (
-				tipDate >= startDate.startOf("day") && tipDate <= endDate.endOf("day")
-			);
-		});
+				// Compare the parsed tip date with the start and end dates
+				return (
+					tipDate >= startDate.startOf("day") && tipDate <= endDate.endOf("day")
+				);
+			})
+		);
 	});
 	console.log(employeesWithTipsInRange);
 	let sortedEmployees = employeesWithTipsInRange.sort((a, b) => {
@@ -288,16 +296,14 @@ export async function getServerSideProps() {
 		const allTipBreakdowns = await db
 			.collection("tipBreakdown")
 			.find({})
-			.sort()
-			.limit(20)
+
 			.toArray();
 		console.log(allTipBreakdowns);
 
 		const employees = await db
 			.collection("employees")
 			.find({})
-			.sort()
-			.limit(20)
+
 			.toArray();
 
 		return {

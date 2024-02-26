@@ -65,7 +65,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 								Tips per hour:
 								<span className="highlight-color">
 									{" "}
-									${tipsPerCook().toFixed(2)}
+									${breakDown.tipsPerCook.toFixed(2)}
 								</span>
 							</h4>
 						)}
@@ -117,7 +117,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						<h5>
 							Tips per hour:{" "}
 							<span className="highlight-color">
-								${tipsPerBarBack().toFixed(2)}
+								${breakDown.tipsPerBarBack.toFixed(2)}
 							</span>
 						</h5>
 					)}
@@ -172,7 +172,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						<h5>
 							Tips per hour:{" "}
 							<span className="highlight-color">
-								${tipsPerBartender().toFixed(2)}
+								${breakDown.tipsPerBartender.toFixed(2)}
 							</span>
 						</h5>
 					)}

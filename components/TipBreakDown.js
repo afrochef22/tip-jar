@@ -175,6 +175,9 @@ export default function TipBreakDown({
 			cookTips: cooksWithTipOut,
 			barBackTips: barBacksWithTipOut,
 			BartenderTips: bartendersWithTipOut,
+			tipsPerBartender: tipsPerBartender(),
+			tipsPerBarBack: tipsPerBarBack(),
+			tipsPerCook: tipsPerCook(),
 		};
 
 		setNewTipBreakdown(tipBreakdown);
@@ -183,6 +186,7 @@ export default function TipBreakDown({
 	};
 
 	const submitTipBreakdown = async () => {
+		console.log(newTipBreakdown);
 		try {
 			const response = await fetch("/api/addTipBreakDown", {
 				method: "POST",

@@ -13,6 +13,9 @@ export default async (req, res) => {
 				cookTips,
 				barBackTips,
 				BartenderTips,
+				tipsPerCook,
+				tipsPerBarBack,
+				tipsPerBartender,
 			} = req.body;
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
@@ -26,6 +29,9 @@ export default async (req, res) => {
 				cookTips,
 				barBackTips,
 				BartenderTips,
+				tipsPerCook,
+				tipsPerBarBack,
+				tipsPerBartender,
 
 				createdat: new Date(),
 			});

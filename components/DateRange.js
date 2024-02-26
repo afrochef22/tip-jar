@@ -7,19 +7,40 @@ export const getStartDate = () => {
 
 	// Define the start date of the payroll period for the current year
 	const payrollStartDate = DateTime.fromISO("2022-01-09");
-	// Find the nearest Sunday on or after the current date
-	let sunday = currentDate.startOf("week");
-	if (sunday < payrollStartDate) {
-		sunday = sunday.plus({ weeks: 1 });
-	}
 
-	// Calculate the weeks since the start of the payroll period
+	// Calculate the difference in weeks between the current date and the payroll start date
 	const weeksSinceStart = Math.floor(
-		sunday.diff(payrollStartDate, "weeks").weeks
+		currentDate.diff(payrollStartDate, "weeks").weeks
 	);
 
-	// Adjust the start date based on the number of weeks since the start of the payroll period
-	const startDate = payrollStartDate.plus({ weeks: weeksSinceStart });
+	// Calculate the current payroll start date based on the difference in weeks
+	const currentPayrollStartDate = payrollStartDate.plus({
+		weeks: weeksSinceStart,
+	});
+
+	console.log(
+		"current Payroll start date: ",
+		currentPayrollStartDate.toISODate()
+	);
+
+	// Find the nearest Sunday on or after the current date
+	let sunday = currentDate.startOf("week");
+	// console.log("intial: ", sunday.toISODate());
+
+	console.log("payroll start date: ", payrollStartDate.toISODate());
+	if (sunday > currentPayrollStartDate) {
+		sunday = sunday.minus({ weeks: 1 });
+	}
+
+	// Calculate the weeks since the start of the current payroll period
+	const weeksSincePayrollStart = Math.floor(
+		sunday.diff(currentPayrollStartDate, "weeks").weeks
+	);
+
+	// Adjust the start date based on the number of weeks since the start of the current payroll period
+	const startDate = currentPayrollStartDate.plus({
+		weeks: weeksSincePayrollStart,
+	});
 
 	return startDate.toISODate();
 };
