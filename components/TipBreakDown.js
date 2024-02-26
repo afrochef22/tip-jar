@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CurrentShift, ShiftDate } from "./CurrentShift";
 import { useRouter } from "next/router";
 import GetAllTipBreakdowns from "./GetAllTipBreakdowns";
+import ConfirmationDialog from "./ConformationDialog";
 
 console.log(GetAllTipBreakdowns);
 export default function TipBreakDown({
@@ -22,7 +23,7 @@ export default function TipBreakDown({
 	const [newTipBreakdown, setNewTipBreakdown] = useState({});
 	const [submitting, setSubmitting] = useState(false);
 	const [submitError, setSubmitError] = useState("");
-
+	const [showConfirmation, setShowConfirmation] = useState(false);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -132,8 +133,13 @@ export default function TipBreakDown({
 		});
 	};
 
+	const toggleConfirmation = () => {
+		setShowConfirmation(!showConfirmation);
+	};
+
 	const handleAddTipBreakDown = async (e) => {
 		e.preventDefault();
+		toggleConfirmation();
 		const tipBreakdownExists = allTipBreakdowns.allTipBreakdowns.some(
 			(breakdown) => {
 				return (
@@ -182,6 +188,7 @@ export default function TipBreakDown({
 
 		setNewTipBreakdown(tipBreakdown);
 		setSubmitting(true);
+
 		// Continue with the submission process
 	};
 
@@ -418,7 +425,7 @@ export default function TipBreakDown({
 					<Col>
 						<form type="submit" disabled={submitting}>
 							<Button
-								onClick={handleAddTipBreakDown}
+								onClick={toggleConfirmation}
 								className={style.centerButton}
 							>
 								{submitting ? (
@@ -429,6 +436,11 @@ export default function TipBreakDown({
 									"Submit"
 								)}
 							</Button>
+							<ConfirmationDialog
+								isOpen={showConfirmation}
+								toggle={toggleConfirmation}
+								onConfirm={handleAddTipBreakDown}
+							/>
 						</form>
 					</Col>
 				</Row>
