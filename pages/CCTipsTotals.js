@@ -13,6 +13,7 @@ import { DateTime } from "luxon";
 import { getStartDate, getEndDate } from "../components/DateRange";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import TipBreakDown from "../components/TipBreakDown";
 
 export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	const router = useRouter();
@@ -42,11 +43,6 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 		);
 	});
 
-	const names = employees.map((employee) => {
-		return employee.firstName;
-	});
-	console.log(employees);
-
 	// Filter employees with tips within the date range
 	const employeesWithTipsInRange = employees.filter((employee) => {
 		return (
@@ -68,7 +64,16 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 			})
 		);
 	});
-	console.log(employeesWithTipsInRange);
+
+	employeesWithTipsInRange.forEach((obj) => {
+		if (Array.isArray(obj.tipsCollected)) {
+			obj.tipsCollected.forEach((nestedObj) => {
+				if ("amount" in nestedObj) {
+					nestedObj.amount = Number(nestedObj.amount);
+				}
+			});
+		}
+	});
 	let sortedEmployees = employeesWithTipsInRange.sort((a, b) => {
 		const firstNameA = a.lastName;
 		const firstNameB = b.lastName;
@@ -83,17 +88,10 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 				tipDate >= startDate.startOf("day") &&
 				tipDate <= endDate.endOf("day")
 			) {
-				return total + tip.amount;
+				return total + Number(tip.amount);
 			}
-			return total;
+			return Number(total);
 		}, 0);
-	};
-
-	const handleLink = (id) => {
-		router.push({
-			pathname: `/getSelectedTipBreakDown/`,
-			query: { id: JSON.stringify(id) },
-		});
 	};
 
 	return (
@@ -232,7 +230,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 										});
 									})}
 									<td className=" bold-text">
-										${calculateTotalTips(employee).toFixed(2)}
+										${calculateTotalTips(employee)}
 									</td>
 								</tr>
 							);
@@ -273,12 +271,11 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 							})}
 							<td className=" bold-text">
 								{/* Total for the "Total Tips" column */}$
-								{employeesWithTipsInRange
-									.reduce(
-										(acc, employee) => acc + calculateTotalTips(employee),
-										0
-									)
-									.toFixed(2)}
+								{employeesWithTipsInRange.reduce(
+									(acc, employee) =>
+										Number(acc) + Number(calculateTotalTips(employee)),
+									0
+								)}
 							</td>
 						</tr>
 					</tfoot>

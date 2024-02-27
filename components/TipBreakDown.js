@@ -51,7 +51,8 @@ export default function TipBreakDown({
 		(acc, tips) => acc + tips,
 		0
 	);
-	const cooksTips = cooks.length === 0 ? 0 : (foodSalesTotal * 0.15).toFixed(2);
+
+	const cooksTips = cooks.length === 0 ? 0 : foodSalesTotal * 0.15;
 
 	const tipsPerCook = () => {
 		if (cookHours === 0) {
@@ -66,10 +67,7 @@ export default function TipBreakDown({
 	const barbackTips =
 		barBacks.length === 0
 			? 0
-			: (((totalTipsCollected - cooksTips) * barBackPercentage) / 100).toFixed(
-					2
-			  );
-
+			: ((totalTipsCollected - cooksTips) * barBackPercentage) / 100;
 	const tipsPerBarBack = () => {
 		if (barBackHours === 0) {
 			let tips = Number((barbackTips / barBacks.length).toFixed(2));
@@ -80,9 +78,7 @@ export default function TipBreakDown({
 		}
 	};
 
-	const bartenderTips = (totalTipsCollected - cooksTips - barbackTips).toFixed(
-		2
-	);
+	const bartenderTips = totalTipsCollected - cooksTips - barbackTips;
 
 	const tipsPerBartender = () => {
 		if (bartenderHours === 0) {
@@ -106,6 +102,7 @@ export default function TipBreakDown({
 			return { ...bartender, tipOut };
 		}
 	});
+
 	const barBacksWithTipOut = barBacks.map((barBack) => {
 		const id = barBack.id;
 		if (barBackHours === 0) {
@@ -116,6 +113,7 @@ export default function TipBreakDown({
 			return { ...barBack, tipOut };
 		}
 	});
+
 	const cooksWithTipOut = cooks.map((cook) => {
 		const id = cook.id;
 		if (cookHours === 0) {
@@ -124,6 +122,60 @@ export default function TipBreakDown({
 		} else {
 			let tipOut = Number((tipsPerCook() * cook.tippedHours).toFixed(2));
 			return { ...cook, tipOut };
+		}
+	});
+
+	// Calculate the total tip out amount for each type of employee
+	const totalTipOutBartenders = bartendersWithTipOut.reduce(
+		(acc, bartender) => acc + bartender.tipOut,
+		0
+	);
+	const totalTipOutBarBacks = barBacksWithTipOut.reduce(
+		(acc, barBack) => acc + barBack.tipOut,
+		0
+	);
+	const totalTipOutCooks = cooksWithTipOut.reduce(
+		(acc, cook) => acc + cook.tipOut,
+		0
+	);
+
+	// Calculate the total of all tip outs
+	const totalTipOut =
+		totalTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks;
+
+	// Calculate the rounding difference
+	const roundingDifference = totalTipsCollected - totalTipOut;
+	console.log("roundingDifference", roundingDifference);
+	// Adjust the tip out amounts for bartenders only
+	const numberOfBartenders = bartendersWithTipOut.length;
+	const adjustmentAmountPerBartender = roundingDifference / numberOfBartenders;
+
+	let adjustedBartendersWithTipOut = bartendersWithTipOut.map((bartender) => ({
+		...bartender,
+		tipOut: bartender.tipOut + adjustmentAmountPerBartender,
+	}));
+
+	// Recalculate the total tip out amount for bartenders after adjustment
+	let totalAdjustedTipOutBartenders = adjustedBartendersWithTipOut.reduce(
+		(acc, bartender) => acc + Number(bartender.tipOut),
+		0
+	);
+
+	// Adjust one bartender's tip out by the remaining difference
+	if (totalAdjustedTipOutBartenders !== totalTipOutBartenders) {
+		const randomIndex = Math.floor(
+			Math.random() * adjustedBartendersWithTipOut.length
+		);
+		console.log(randomIndex);
+		adjustedBartendersWithTipOut[randomIndex].tipOut -=
+			totalTipOutBartenders - totalAdjustedTipOutBartenders;
+	}
+
+	adjustedBartendersWithTipOut.forEach((obj) => {
+		// Check if the object has the 'tipOut' key
+		if ("tipOut" in obj) {
+			// Apply toFixed() to the 'tipOut' key and update the value in-place
+			obj.tipOut = Number(obj.tipOut).toFixed(2);
 		}
 	});
 
@@ -180,7 +232,7 @@ export default function TipBreakDown({
 			barBackPercentage: barBackPercentage,
 			cookTips: cooksWithTipOut,
 			barBackTips: barBacksWithTipOut,
-			BartenderTips: bartendersWithTipOut,
+			BartenderTips: adjustedBartendersWithTipOut,
 			tipsPerBartender: tipsPerBartender(),
 			tipsPerBarBack: tipsPerBarBack(),
 			tipsPerCook: tipsPerCook(),
@@ -366,7 +418,7 @@ export default function TipBreakDown({
 						</h5>
 					)}
 					<Row>
-						{bartendersWithTipOut.map((bartender) => (
+						{adjustedBartendersWithTipOut.map((bartender) => (
 							<Col key={bartender.id} xs={12} sm={6} md={4}>
 								<Container className={style.employeeContainer}>
 									<Row>
@@ -396,9 +448,7 @@ export default function TipBreakDown({
 										)}
 										<Col>
 											<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
-											<p className="highlight-color">
-												${bartender.tipOut.toFixed(2)}
-											</p>
+											<p className="highlight-color">${bartender.tipOut}</p>
 										</Col>
 									</Row>
 								</Container>
