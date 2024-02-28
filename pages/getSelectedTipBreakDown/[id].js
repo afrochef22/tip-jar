@@ -207,9 +207,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 										)}
 										<Col>
 											<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
-											<p className="highlight-color">
-												${bartender.tipOut.toFixed(2)}
-											</p>
+											<p className="highlight-color">${bartender.tipOut}</p>
 										</Col>
 									</Row>
 								</Container>
