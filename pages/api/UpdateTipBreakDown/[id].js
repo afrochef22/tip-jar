@@ -6,7 +6,7 @@ export default async (req, res) => {
 	const id = req.query.id;
 	console.log(req.query);
 	const data = req.body; // Assuming data is sent in the request body
-
+	console.log(data.BartenderTips);
 	if (!ObjectId.isValid(id)) {
 		return res.status(400).json({ error: "Invalid Tip breakdown ID: ", id });
 	}
@@ -43,34 +43,55 @@ export default async (req, res) => {
 				};
 			}
 
+			// Accumulate changes for cook tips
 			if (data.cookTips && Array.isArray(data.cookTips)) {
 				const updatedCookTips = data.cookTips.map((cookTip) => {
-					if (cookTip.id === cookTip.id) {
-						return { ...cookTip, tipOut: data.updatedTipOutValue };
+					if (cookTip.id === data.cookTips.id) {
+						return { ...cookTip, tipOut: cookTip.tipOut };
 					}
 					return cookTip;
 				});
 				setValues.cookTips = updatedCookTips;
 			}
 
+			// Accumulate changes for bar back tips
 			if (data.barBackTips && Array.isArray(data.barBackTips)) {
 				const updatedBarBackTips = data.barBackTips.map((barBackTip) => {
-					if (barBackTip.id === barBackTip.id) {
-						return { ...barBackTip, tipOut: data.updatedTipOutValue };
+					if (data.barBackTips.includes(barBackTip.id)) {
+						return { ...barBackTip, tipOut: barBackTip.tipOut };
 					}
 					return barBackTip;
 				});
 				setValues.barBackTips = updatedBarBackTips;
 			}
 
-			if (data.bartenderTips && Array.isArray(data.bartenderTips)) {
-				const updatedBartenderTips = data.bartenderTips.map((bartenderTip) => {
-					if (bartenderTip.id === bartenderTip.id) {
-						return { ...bartenderTip, tipOut: data.updatedTipOutValue };
+			// / Accumulate changes for bartender tips
+			if (data.BartenderTips && Array.isArray(data.BartenderTips)) {
+				// Construct an array to hold the updated bartender tips
+				const updatedBartenderTips = [];
+
+				// Iterate over the existing bartender tips
+				for (const bartenderTip of data.BartenderTips) {
+					// Find the bartender tip that matches the criteria for update
+					const existingTip = data.BartenderTips.find(
+						(tip) => tip.id === bartenderTip.id
+					);
+					if (existingTip) {
+						// If the tip exists, update only the desired property (tipOut) and keep the rest unchanged
+						const updatedBartenderTip = {
+							...existingTip,
+							tipOut: bartenderTip.tipOut,
+						};
+						// Add the updated bartender tip to the array
+						updatedBartenderTips.push(updatedBartenderTip);
+					} else {
+						// If the tip does not exist, add it as is to the updated array
+						updatedBartenderTips.push(bartenderTip);
 					}
-					return bartenderTip;
-				});
-				setValues.bartenderTips = updatedBartenderTips;
+				}
+
+				// Set the updated bartender tips in the updateDocument
+				setValues.BartenderTips = updatedBartenderTips;
 			}
 
 			updateDocument.$set = setValues; // Merge accumulated changes into updateDocument

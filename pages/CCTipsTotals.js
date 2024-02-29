@@ -230,7 +230,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 										});
 									})}
 									<td className=" bold-text">
-										${calculateTotalTips(employee)}
+										${calculateTotalTips(employee).toFixed(2)}
 									</td>
 								</tr>
 							);
