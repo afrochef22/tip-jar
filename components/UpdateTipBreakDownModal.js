@@ -207,8 +207,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		(acc, bartender) => acc + Number(bartender.tipOut),
 		0
 	);
-	let b = barBacksWithTipOut.reduce((acc, b) => acc + Number(b.tipOut));
-	let c = cooksWithTipOut.reduce((acc, b) => acc + Number(b.tipOut));
 
 	// Adjust one bartender's tip out by the remaining difference
 	if (totalAdjustedTipOutBartenders !== totalTipOutBartenders) {
