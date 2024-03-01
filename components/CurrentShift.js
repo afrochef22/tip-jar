@@ -112,7 +112,6 @@ function CurrentDate() {
 	const month = zonedDate.month;
 	const year = zonedDate.year;
 	const day = zonedDate.weekday;
-
 	const yesterdayDate = zonedDate.minus({ days: 1 }).day;
 	const lastMonth = zonedDate.minus({ months: 1 }).month;
 	const lastYear = zonedDate.minus({ years: 1 }).year;
@@ -196,15 +195,18 @@ export function ShowDateComparer(dateData) {
 	const month = zonedDate.month;
 	const day = zonedDate.day;
 	const yesterday = zonedDate.minus({ days: 1 }).day;
+	console.log(yesterday);
 
 	// Teragram
 
 	switch (true) {
 		case zonedDate.hour < 6:
 			if (day === 1) {
-				compareDate = `${DayOfTheWeekAbbreviated(yesterday)} ${MonthAbbreviated(
-					dateData.lastMonth
-				)} ${dateData.lastDayOfPrevMonth}`;
+				compareDate = `${DayOfTheWeekAbbreviated(
+					dateData.yesterday
+				)} ${MonthAbbreviated(dateData.lastMonth)} ${
+					dateData.lastDayOfPrevMonth
+				}`;
 			} else {
 				compareDate = `${DayOfTheWeekAbbreviated(
 					dateData.yesterday
