@@ -6,6 +6,7 @@ import { CurrentShift, ShiftDate } from "./CurrentShift";
 import { useRouter } from "next/router";
 import GetAllTipBreakdowns from "./GetAllTipBreakdowns";
 import ConfirmationDialog from "./ConformationDialog";
+import { Decimal } from "decimal.js";
 
 console.log(GetAllTipBreakdowns);
 export default function TipBreakDown({
@@ -55,13 +56,13 @@ export default function TipBreakDown({
 	const cooksTips = cooks.length === 0 ? 0 : foodSalesTotal * 0.15;
 
 	const tipsPerCook = () => {
+		let tips;
 		if (cookHours === 0) {
-			let tips = Number((cooksTips / cooks.length).toFixed(2));
-			return tips;
+			tips = new Decimal(cooksTips).div(cooks.length);
 		} else {
-			let tips = Number((cooksTips / cookHours).toFixed(2));
-			return tips;
+			tips = new Decimal(cooksTips).div(cookHours);
 		}
+		return tips.toNumber(); // Convert Decimal back to number for state
 	};
 
 	const barbackTips =
@@ -69,25 +70,25 @@ export default function TipBreakDown({
 			? 0
 			: ((totalTipsCollected - cooksTips) * barBackPercentage) / 100;
 	const tipsPerBarBack = () => {
+		let tips;
 		if (barBackHours === 0) {
-			let tips = Number((barbackTips / barBacks.length).toFixed(2));
-			return tips;
+			tips = new Decimal(barbackTips).div(barBacks.length);
 		} else {
-			let tips = Number((barbackTips / barBackHours).toFixed(2));
-			return tips;
+			tips = new Decimal(barbackTips).div(barBackHours);
 		}
+		return tips.toNumber(); // Convert Decimal back to number for state
 	};
 
 	const bartenderTips = totalTipsCollected - cooksTips - barbackTips;
 
 	const tipsPerBartender = () => {
+		let tips;
 		if (bartenderHours === 0) {
-			let tips = Number((bartenderTips / bartenders.length).toFixed(2));
-			return tips;
+			tips = new Decimal(bartenderTips).div(bartenders.length);
 		} else {
-			let tips = Number((bartenderTips / bartenderHours).toFixed(2));
-			return tips;
+			tips = new Decimal(bartenderTips).div(bartenderHours);
 		}
+		return tips.toNumber(); // Convert Decimal back to number for state
 	};
 
 	const bartendersWithTipOut = bartenders.map((bartender) => {

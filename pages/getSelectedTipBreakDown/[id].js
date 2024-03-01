@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "../../components/TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import UpdateTipBreakDownModal from "../../components/UpdateTipBreakDownModal";
 
 export default function getSelectedTipBreakDown({ breakDown }) {
 	console.log("breakdown: ", breakDown);
@@ -27,6 +28,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 	console.log(breakDown.cookTips);
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
+			<UpdateTipBreakDownModal breakDown={breakDown} />
 			<div className={style.backgroundColor}>
 				<Container className={` ${style.container}`}>
 					<Row>

@@ -271,11 +271,13 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 							})}
 							<td className=" bold-text">
 								{/* Total for the "Total Tips" column */}$
-								{employeesWithTipsInRange.reduce(
-									(acc, employee) =>
-										Number(acc) + Number(calculateTotalTips(employee)),
-									0
-								)}
+								{employeesWithTipsInRange
+									.reduce(
+										(acc, employee) =>
+											Number(acc) + Number(calculateTotalTips(employee)),
+										0
+									)
+									.toFixed(2)}
 							</td>
 						</tr>
 					</tfoot>
