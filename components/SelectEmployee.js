@@ -63,6 +63,12 @@ export default function SelectEmployee({ employees }) {
 	}, [allEmployees]);
 
 	const addWorkingEmployee = (selectedEmployee, position) => {
+		const workingBartender = workingEmployees.filter(
+			(bartender) => bartender.workingPosition === "Bartender"
+		);
+		if (workingBartender) {
+			setSubmitError("");
+		}
 		setWorkingEmployees((prev) => [
 			...prev,
 			{
@@ -103,6 +109,7 @@ export default function SelectEmployee({ employees }) {
 
 	const handleSelectedBand = (band) => {
 		setSelectedShow(band);
+		setSubmitError("");
 	};
 
 	const addNewEmployee = (newEmployeeData) => {
