@@ -224,7 +224,9 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 											);
 											return (
 												<td key={`${date}-${show}-${index}`}>
-													{tipForDateAndShow ? tipForDateAndShow.amount : ""}
+													{tipForDateAndShow
+														? tipForDateAndShow.amount.toFixed(2)
+														: ""}
 												</td>
 											);
 										});

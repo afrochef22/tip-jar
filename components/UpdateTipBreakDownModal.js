@@ -280,41 +280,42 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const handleUpdateBreakDown = async (e) => {
 		e.preventDefault();
 		console.log("breakdown");
-
-		try {
-			const response = await fetch(
-				`http://localhost:3000/api/UpdateTipBreakDown/${breakDown._id}`,
-				{
-					method: "PATCH",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						show: show,
-						date: date,
-						totalTips: totalTips,
-						foodSales: foodSales,
-						barBackPercentage: barBackPercentage,
-						cookTips: cooksWithTipOut,
-						barBackTips: barBacksWithTipOut,
-						bartenderTips: adjustedBartendersWithTipOut,
-						tipsPerBarBack: tipsPerBarBack,
-						tipsPerBartender: tipsPerBartender,
-						tipsPerCook: tipsPerCook,
-					}),
-				}
-			);
-			if (response.ok) {
-				console.log("Tip Breakdown updated Successfully");
-				router.push(`http://localhost:3000/CCTipsTotals`);
-			} else {
-				console.log("response not ok");
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			toggle();
-		}
+		alert("Sorry doesn't work yet");
+		// try {
+		// 	const response = await fetch(
+		// 		`http://localhost:3000/api/UpdateTipBreakDown/${breakDown._id}`,
+		// 		{
+		// 			method: "PATCH",
+		// 			headers: {
+		// 				"Content-Type": "application/json",
+		// 			},
+		// 			body: JSON.stringify({
+		// 				show: show,
+		// 				date: date,
+		// 				totalTips: totalTips,
+		// 				foodSales: foodSales,
+		// 				barBackPercentage: barBackPercentage,
+		// 				cookTips: cooksWithTipOut,
+		// 				barBackTips: barBacksWithTipOut,
+		// 				bartenderTips: adjustedBartendersWithTipOut,
+		// 				tipsPerBarBack: tipsPerBarBack,
+		// 				tipsPerBartender: tipsPerBartender,
+		// 				tipsPerCook: tipsPerCook,
+		// 			}),
+		// 		}
+		// 	);
+		// 	if (response.ok) {
+		// 		console.log("Tip Breakdown updated Successfully");
+		// 		router.push(`http://localhost:3000/CCTipsTotals`);
+		// 	} else {
+		// 		console.log("response not ok");
+		// 	}
+		// } catch (error) {
+		// 	console.log(error);
+		// } finally {
+		// 	toggle();
+		// }
+		toggle();
 	};
 	const closeBtn = (
 		<div>
