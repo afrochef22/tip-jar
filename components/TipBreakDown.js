@@ -237,6 +237,10 @@ export default function TipBreakDown({
 	};
 
 	const toggleConfirmation = () => {
+		if (bartendersWithTipOut.length <= 0) {
+			setSubmitError("Please select at least 1 bartender.");
+			return;
+		}
 		setShowConfirmation(!showConfirmation);
 	};
 
@@ -250,7 +254,6 @@ export default function TipBreakDown({
 				);
 			}
 		);
-
 		if (tipBreakdownExists) {
 			setSubmitError(
 				"Tip breakdown already exists for the selected show and date."

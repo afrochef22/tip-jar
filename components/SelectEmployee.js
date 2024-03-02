@@ -251,6 +251,19 @@ export default function SelectEmployee({ employees }) {
 			setSubmitError("Please select a show.");
 			return;
 		}
+		const workingBartender = workingEmployees.filter(
+			(bartender) => bartender.workingPosition === "Bartender"
+		);
+		if (workingBartender.length <= 0) {
+			setSubmitError(
+				<span>
+					{`Please select at least `}
+					<span className="text-color">1</span>
+					{` bartender.`}
+				</span>
+			);
+			return;
+		}
 		router.push({
 			pathname: "/creditTipCalculationPage", // Adjust the pathname based on your file structure
 			query: {
