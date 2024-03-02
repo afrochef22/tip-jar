@@ -94,12 +94,10 @@ export default function TipBreakDown({
 	const bartendersWithTipOut = bartenders.map((bartender) => {
 		const id = bartender.id;
 		if (bartenderHours === 0) {
-			let tipOut = Number(tipsPerBartender().toFixed(2));
+			let tipOut = Number(tipsPerBartender());
 			return { ...bartender, tipOut };
 		} else {
-			let tipOut = Number(
-				(tipsPerBartender() * bartender.tippedHours).toFixed(2)
-			);
+			let tipOut = Number(tipsPerBartender() * bartender.tippedHours);
 			return { ...bartender, tipOut };
 		}
 	});
@@ -107,10 +105,10 @@ export default function TipBreakDown({
 	const barBacksWithTipOut = barBacks.map((barBack) => {
 		const id = barBack.id;
 		if (barBackHours === 0) {
-			let tipOut = Number(tipsPerBarBack().toFixed(2));
+			let tipOut = Number(tipsPerBarBack());
 			return { ...barBack, tipOut };
 		} else {
-			let tipOut = Number((tipsPerBarBack() * barBack.tippedHours).toFixed(2));
+			let tipOut = Number(tipsPerBarBack() * barBack.tippedHours);
 			return { ...barBack, tipOut };
 		}
 	});
@@ -118,58 +116,110 @@ export default function TipBreakDown({
 	const cooksWithTipOut = cooks.map((cook) => {
 		const id = cook.id;
 		if (cookHours === 0) {
-			let tipOut = Number(tipsPerCook().toFixed(2));
+			let tipOut = Number(tipsPerCook());
 			return { ...cook, tipOut };
 		} else {
-			let tipOut = Number((tipsPerCook() * cook.tippedHours).toFixed(2));
+			let tipOut = Number(tipsPerCook() * cook.tippedHours);
 			return { ...cook, tipOut };
 		}
 	});
-
+	console.log(bartendersWithTipOut);
 	// Calculate the total tip out amount for each type of employee
-	const totalTipOutBartenders = bartendersWithTipOut.reduce(
+	let totalTipOutBartenders = bartendersWithTipOut.reduce(
 		(acc, bartender) => acc + bartender.tipOut,
 		0
 	);
-	const totalTipOutBarBacks = barBacksWithTipOut.reduce(
+	totalTipOutBartenders = Number(totalTipOutBartenders);
+	console.log(totalTipOutBartenders);
+
+	let totalTipOutBarBacks = barBacksWithTipOut.reduce(
 		(acc, barBack) => acc + barBack.tipOut,
 		0
 	);
-	const totalTipOutCooks = cooksWithTipOut.reduce(
+	totalTipOutBarBacks = Number(totalTipOutBarBacks.toFixed(2));
+
+	let totalTipOutCooks = cooksWithTipOut.reduce(
 		(acc, cook) => acc + cook.tipOut,
 		0
 	);
+	totalTipOutCooks = Number(totalTipOutCooks.toFixed(2));
 
 	// Calculate the total of all tip outs
 	const totalTipOut =
 		totalTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks;
-
+	console.log(totalTipOut);
+	console.log(
+		"barthenders",
+		totalTipOutBartenders,
+		"barback",
+		totalTipOutBarBacks,
+		"cooks",
+		totalTipOutCooks,
+		"=",
+		totalTipOut
+	);
 	// Calculate the rounding difference
-	const roundingDifference = totalTipsCollected - totalTipOut;
-	console.log("roundingDifference", roundingDifference);
+	let roundingDifference = Number(
+		(totalTipsCollected - totalTipOut).toFixed(2)
+	);
+	console.log(
+		"roundingDifference",
+		roundingDifference,
+		totalTipsCollected,
+		"-",
+		totalTipOut
+	);
 	// Adjust the tip out amounts for bartenders only
 	const numberOfBartenders = bartendersWithTipOut.length;
-	const adjustmentAmountPerBartender = roundingDifference / numberOfBartenders;
+	const adjustmentAmountPerBartender = Number(
+		(roundingDifference / numberOfBartenders).toFixed(2)
+	);
+	console.log(
+		"adjustment amount per bartender: ",
+		adjustmentAmountPerBartender
+	);
 
 	let adjustedBartendersWithTipOut = bartendersWithTipOut.map((bartender) => ({
 		...bartender,
-		tipOut: bartender.tipOut + adjustmentAmountPerBartender,
+		tipOut: Number(
+			(bartender.tipOut + adjustmentAmountPerBartender).toFixed(2)
+		),
 	}));
+	console.log(adjustedBartendersWithTipOut);
 
 	// Recalculate the total tip out amount for bartenders after adjustment
 	let totalAdjustedTipOutBartenders = adjustedBartendersWithTipOut.reduce(
 		(acc, bartender) => acc + Number(bartender.tipOut),
 		0
 	);
-
+	console.log(
+		"bartender total tipout vs adjusted total amount",
+		totalTipOutBartenders,
+		totalAdjustedTipOutBartenders
+	);
 	// Adjust one bartender's tip out by the remaining difference
 	if (totalAdjustedTipOutBartenders !== totalTipOutBartenders) {
+		console.log(
+			"not equal",
+			totalTipOutBartenders - totalAdjustedTipOutBartenders
+		);
+		console.log(totalTipOutBartenders, "-", totalAdjustedTipOutBartenders);
 		const randomIndex = Math.floor(
 			Math.random() * adjustedBartendersWithTipOut.length
 		);
-		console.log(randomIndex);
-		adjustedBartendersWithTipOut[randomIndex].tipOut -=
+		const remainingDifference =
 			totalTipOutBartenders - totalAdjustedTipOutBartenders;
+		console.log(remainingDifference);
+		if (remainingDifference <= 0.02 && remainingDifference >= -0.02) {
+			const adjustedDifference = Number(remainingDifference.toFixed(2));
+			console.log(adjustedDifference);
+			adjustedBartendersWithTipOut[randomIndex].tipOut += adjustedDifference;
+			console.log(
+				adjustedBartendersWithTipOut[randomIndex],
+				"+",
+				adjustedDifference
+			);
+		}
 	}
 
 	adjustedBartendersWithTipOut.forEach((obj) => {

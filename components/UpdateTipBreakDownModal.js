@@ -14,6 +14,7 @@ import {
 	Row,
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
 
 import style from "./TipBreakDown.module.css";
 
@@ -38,7 +39,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		breakDown.tipsPerBartender
 	);
 	const [tipsPerCook, setTipsPerCook] = useState(breakDown.tipsPerCook);
-	const randomIndex = Math.floor(Math.random() * barBackTipsData.length);
+
+	const router = useRouter();
 	console.log(breakDown);
 
 	const toggle = () => setModal(!modal);
@@ -166,30 +168,53 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	});
 
 	// Calculate the total tip out amount for each type of employee
-	const totalTipOutBartenders = bartendersWithTipOut.reduce(
+	let totalTipOutBartenders = bartendersWithTipOut.reduce(
 		(acc, bartender) => acc + bartender.tipOut,
 		0
 	);
-	const totalTipOutBarBacks = barBacksWithTipOut.reduce(
+	totalTipOutBartenders = Number(totalTipOutBartenders.toFixed(2));
+	console.log(totalTipOutBartenders);
+	let totalTipOutBarBacks = barBacksWithTipOut.reduce(
 		(acc, barBack) => acc + barBack.tipOut,
 		0
 	);
-	const totalTipOutCooks = cooksWithTipOut.reduce(
+	totalTipOutBarBacks = Number(totalTipOutBarBacks.toFixed(2));
+
+	let totalTipOutCooks = cooksWithTipOut.reduce(
 		(acc, cook) => acc + cook.tipOut,
 		0
 	);
+	totalTipOutCooks = Number(totalTipOutCooks.toFixed(2));
 
 	// Calculate the total of all tip outs
 	const totalTipOut =
 		totalTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks;
-
+	console.log(
+		"barthenders",
+		totalTipOutBartenders,
+		"barback",
+		totalTipOutBarBacks,
+		"cooks",
+		totalTipOutCooks,
+		"=",
+		totalTipOut
+	);
 	// Calculate the rounding difference
-	const roundingDifference = totalTips - totalTipOut;
-	console.log("roundingDifference", roundingDifference);
+	let roundingDifference = Number((totalTips - totalTipOut).toFixed(2));
+
+	console.log(
+		"roundingDifference",
+		roundingDifference,
+		totalTips,
+		"-",
+		totalTipOut
+	);
 
 	// Adjust the tip out amounts for bartenders only
 	const numberOfBartenders = bartendersWithTipOut.length;
-	const adjustmentAmountPerBartender = roundingDifference / numberOfBartenders;
+	const adjustmentAmountPerBartender = Number(
+		(roundingDifference / numberOfBartenders).toFixed(2)
+	);
 	console.log(
 		"adjustment amount per bartender: ",
 		adjustmentAmountPerBartender
@@ -198,7 +223,9 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 
 	let adjustedBartendersWithTipOut = bartendersWithTipOut.map((bartender) => ({
 		...bartender,
-		tipOut: bartender.tipOut + adjustmentAmountPerBartender,
+		tipOut: Number(
+			(bartender.tipOut + adjustmentAmountPerBartender).toFixed(2)
+		),
 	}));
 	console.log(adjustedBartendersWithTipOut);
 
@@ -208,10 +235,24 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		0
 	);
 
+	totalAdjustedTipOutBartenders = totalAdjustedTipOutBartenders;
+	console.log(totalAdjustedTipOutBartenders, totalTipOutBartenders);
+
 	// Adjust one bartender's tip out by the remaining difference
 	if (totalAdjustedTipOutBartenders !== totalTipOutBartenders) {
-		adjustedBartendersWithTipOut[randomIndex].tipOut -=
+		console.log(
+			"not equal",
+			totalTipOutBartenders - totalAdjustedTipOutBartenders
+		);
+		const randomIndex = Math.floor(Math.random() * bartenderTipsData.length);
+		const remainingDifference =
 			totalTipOutBartenders - totalAdjustedTipOutBartenders;
+
+		if (remainingDifference <= 0.02 && remainingDifference >= -0.02) {
+			const adjustedDifference = Number(remainingDifference.toFixed(2));
+			console.log(adjustedDifference);
+			adjustedBartendersWithTipOut[randomIndex].tipOut += adjustedDifference;
+		}
 	}
 
 	adjustedBartendersWithTipOut.forEach((obj) => {
@@ -222,6 +263,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		}
 	});
 
+	console.log(adjustedBartendersWithTipOut);
 	console.log(
 		totalTips,
 		totalAdjustedTipOutBartenders,
@@ -233,10 +275,50 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		totalAdjustedTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks
 	);
 
-	console.log(totalTipOutBartenders);
+	console.log(breakDown);
+
+	const handleUpdateBreakDown = async (e) => {
+		e.preventDefault();
+		console.log("breakdown");
+
+		try {
+			const response = await fetch(
+				`http://localhost:3000/api/UpdateTipBreakDown/${breakDown._id}`,
+				{
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						show: show,
+						date: date,
+						totalTips: totalTips,
+						foodSales: foodSales,
+						barBackPercentage: barBackPercentage,
+						cookTips: cooksWithTipOut,
+						barBackTips: barBacksWithTipOut,
+						bartenderTips: adjustedBartendersWithTipOut,
+						tipsPerBarBack: tipsPerBarBack,
+						tipsPerBartender: tipsPerBartender,
+						tipsPerCook: tipsPerCook,
+					}),
+				}
+			);
+			if (response.ok) {
+				console.log("Tip Breakdown updated Successfully");
+				router.push(`http://localhost:3000/CCTipsTotals`);
+			} else {
+				console.log("response not ok");
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			toggle();
+		}
+	};
 	const closeBtn = (
 		<div>
-			<Button color="primary" onClick={toggle}>
+			<Button color="primary" onClick={handleUpdateBreakDown}>
 				Update
 			</Button>{" "}
 			<Button color="secondary" onClick={toggle}>
@@ -550,7 +632,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 							</Row>
 						</div>
 						<ModalFooter>
-							<Button color="primary" onClick={toggle}>
+							<Button color="primary" onClick={handleUpdateBreakDown}>
 								Update
 							</Button>{" "}
 							<Button color="secondary" onClick={toggle}>
