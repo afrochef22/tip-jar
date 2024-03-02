@@ -9,8 +9,10 @@ export default function SelectCook({
 	btn,
 	submit,
 	addNewEmployee,
+	submitError,
 }) {
 	const [isMobile, setIsMobile] = useState(false);
+
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 875);
 	};
@@ -87,6 +89,13 @@ export default function SelectCook({
 						</Col>
 					</Row>
 					<Row className="justify-content-center mt-4 mb-1">
+						{submitError && (
+							<Row>
+								<Col className={` secondary-color  ${style.centerButton}`}>
+									<h2 className={style.error}>{submitError}</h2>
+								</Col>
+							</Row>
+						)}
 						<Button
 							onClick={() => btn("BarBack")}
 							className={`mx-2 ${style.centerButton}`}

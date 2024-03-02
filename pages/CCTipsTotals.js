@@ -31,12 +31,24 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 		setEndDate(DateTime.fromISO(e.target.value));
 	};
 
+	function parseDateWithFormats(dateString, formats) {
+		for (const format of formats) {
+			const parsed = DateTime.fromFormat(dateString, format);
+			if (parsed.isValid) {
+				return parsed;
+			}
+		}
+		return null; // Return null if none of the formats match
+	}
+	const dateFormats = ["M/d/yyyy", "MM/dd/yyyy", "MM/d/yyyy"];
+
 	const uniqueDates = [
 		...new Set(allTipBreakdowns.map((tip) => tip.date)),
 	].filter((date) => {
 		// Check if the date is not null before parsing it
 		if (!date) return false; // Skip null dates
-		const currentDate = DateTime.fromFormat(date, "MM/dd/yyyy");
+		const currentDate = parseDateWithFormats(date, dateFormats);
+		console.log(startDate.startOf("day"), endDate.endOf("day"));
 		return (
 			currentDate >= startDate.startOf("day") &&
 			currentDate <= endDate.endOf("day")
@@ -49,7 +61,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 			employee.tipsCollected &&
 			employee.tipsCollected.some((tip) => {
 				// Parse the tip date string into a Luxon DateTime object
-				const tipDate = DateTime.fromFormat(tip.date, "MM/dd/yyyy");
+				const tipDate = parseDateWithFormats(tip.date, dateFormats);
 
 				// Ensure that tipDate is valid before comparison
 				if (!tipDate.isValid) return false;
@@ -58,12 +70,14 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 				if (!startDate || !endDate) return false;
 
 				// Compare the parsed tip date with the start and end dates
+				console.log(tipDate);
 				return (
 					tipDate >= startDate.startOf("day") && tipDate <= endDate.endOf("day")
 				);
 			})
 		);
 	});
+	console.log(employeesWithTipsInRange);
 
 	employeesWithTipsInRange.forEach((obj) => {
 		if (Array.isArray(obj.tipsCollected)) {
@@ -83,7 +97,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 
 	const calculateTotalTips = (employee) => {
 		return employee.tipsCollected.reduce((total, tip) => {
-			const tipDate = DateTime.fromFormat(tip.date, "MM/dd/yyyy");
+			const tipDate = parseDateWithFormats(tip.date, dateFormats);
 			if (
 				tipDate >= startDate.startOf("day") &&
 				tipDate <= endDate.endOf("day")

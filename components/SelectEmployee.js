@@ -25,6 +25,7 @@ export default function SelectEmployee({ employees }) {
 	};
 	const [selectedShow, setSelectedShow] = useState("");
 	const [shouldNavigate, setShouldNavigate] = useState(false);
+	const [submitError, setSubmitError] = useState("");
 
 	// Use useEffect to update screen size on mount and window resize
 	useEffect(() => {
@@ -246,7 +247,10 @@ export default function SelectEmployee({ employees }) {
 
 	const handleSubmitButtonClick = () => {
 		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
-
+		if (!selectedShow) {
+			setSubmitError("Please select a show.");
+			return;
+		}
 		router.push({
 			pathname: "/creditTipCalculationPage", // Adjust the pathname based on your file structure
 			query: {
@@ -278,6 +282,7 @@ export default function SelectEmployee({ employees }) {
 							btn={handleNextBtn}
 							submit={handleSubmitButtonClick}
 							addNewEmployee={addNewEmployee}
+							submitError={submitError}
 						/>
 					) : (
 						<Container fluid>
@@ -323,12 +328,21 @@ export default function SelectEmployee({ employees }) {
 					{isMobile ? (
 						<></>
 					) : (
-						<Button
-							onClick={handleSubmitButtonClick}
-							className={`mx-2 ${style.centerButton}`}
-						>
-							Next
-						</Button>
+						<>
+							{submitError && (
+								<Row>
+									<Col className={`mx-2 secondary-color ${style.centerButton}`}>
+										<h2 className={style.error}>{submitError}</h2>
+									</Col>
+								</Row>
+							)}
+							<Button
+								onClick={handleSubmitButtonClick}
+								className={`mx-2 ${style.centerButton}`}
+							>
+								Next
+							</Button>
+						</>
 					)}
 				</Row>
 			</Container>
