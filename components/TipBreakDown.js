@@ -169,6 +169,8 @@ export default function TipBreakDown({
 		"-",
 		totalTipOut
 	);
+	const newTotalTipOutBartenders = totalTipOutBartenders + roundingDifference;
+	console.log("new total tip out for bartenders: ", newTotalTipOutBartenders);
 	// Adjust the tip out amounts for bartenders only
 	const numberOfBartenders = bartendersWithTipOut.length;
 	const adjustmentAmountPerBartender = Number(
@@ -201,26 +203,42 @@ export default function TipBreakDown({
 	if (totalAdjustedTipOutBartenders !== totalTipOutBartenders) {
 		console.log(
 			"not equal",
-			totalTipOutBartenders - totalAdjustedTipOutBartenders
+			newTotalTipOutBartenders - totalAdjustedTipOutBartenders
 		);
 		console.log(totalTipOutBartenders, "-", totalAdjustedTipOutBartenders);
 		const randomIndex = Math.floor(
 			Math.random() * adjustedBartendersWithTipOut.length
 		);
 		const remainingDifference =
-			totalTipOutBartenders - totalAdjustedTipOutBartenders;
-		console.log(remainingDifference);
-		if (remainingDifference <= 0.02 && remainingDifference >= -0.02) {
+			newTotalTipOutBartenders - totalAdjustedTipOutBartenders;
+
+		console.log("remainingDifference", remainingDifference);
+
+		if (remainingDifference <= 0.09 && remainingDifference >= -0.09) {
 			const adjustedDifference = Number(remainingDifference.toFixed(2));
-			console.log(adjustedDifference);
-			adjustedBartendersWithTipOut[randomIndex].tipOut += adjustedDifference;
-			console.log(
-				adjustedBartendersWithTipOut[randomIndex],
-				"+",
-				adjustedDifference
+			console.log("adjustedDifference", adjustedDifference);
+
+			// Calculate how many bartenders need to receive the additional tip
+			let additionalBartendersCount = Math.floor(
+				Math.abs(adjustedDifference) / 0.01
 			);
+
+			if (additionalBartendersCount > 0) {
+				// Determine the adjustment per bartender based on the sign of the adjusted difference
+				const adjustment = adjustedDifference > 0 ? 0.01 : -0.01;
+
+				// Distribute the additional tip among the bartenders
+				for (let i = 0; i < additionalBartendersCount; i++) {
+					adjustedBartendersWithTipOut[i].tipOut += adjustment;
+				}
+			}
 		}
 	}
+	console.log(
+		totalTipOutBartenders.toFixed(2),
+		"-",
+		totalAdjustedTipOutBartenders
+	);
 
 	adjustedBartendersWithTipOut.forEach((obj) => {
 		// Check if the object has the 'tipOut' key
@@ -230,6 +248,20 @@ export default function TipBreakDown({
 		}
 	});
 
+	totalAdjustedTipOutBartenders = adjustedBartendersWithTipOut.reduce(
+		(acc, bartender) => acc + Number(bartender.tipOut),
+		0
+	);
+	console.log(
+		totalTipsCollected,
+		totalAdjustedTipOutBartenders,
+		"+",
+		totalTipOutBarBacks,
+		"+",
+		totalTipOutCooks,
+		"=",
+		totalAdjustedTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks
+	);
 	const handleBackButtonClick = () => {
 		router.push({
 			pathname: "/SelectWorkingEmployee",

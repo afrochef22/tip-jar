@@ -174,6 +174,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	);
 	totalTipOutBartenders = Number(totalTipOutBartenders.toFixed(2));
 	console.log(totalTipOutBartenders);
+
 	let totalTipOutBarBacks = barBacksWithTipOut.reduce(
 		(acc, barBack) => acc + barBack.tipOut,
 		0
@@ -209,11 +210,18 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		"-",
 		totalTipOut
 	);
+	const newTotalTipOutBartenders = totalTipOutBartenders + roundingDifference;
 
 	// Adjust the tip out amounts for bartenders only
 	const numberOfBartenders = bartendersWithTipOut.length;
 	const adjustmentAmountPerBartender = Number(
 		(roundingDifference / numberOfBartenders).toFixed(2)
+	);
+	console.log(
+		"adjustment amount per bartender: ",
+		roundingDifference,
+		"/",
+		bartendersWithTipOut.length
 	);
 	console.log(
 		"adjustment amount per bartender: ",
@@ -236,22 +244,42 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	);
 
 	totalAdjustedTipOutBartenders = totalAdjustedTipOutBartenders;
-	console.log(totalAdjustedTipOutBartenders, totalTipOutBartenders);
+	console.log(
+		"total adjusted tip out bartenders",
+		totalAdjustedTipOutBartenders,
+		"new Total TipOut Bartenders",
+		newTotalTipOutBartenders
+	);
 
 	// Adjust one bartender's tip out by the remaining difference
-	if (totalAdjustedTipOutBartenders !== totalTipOutBartenders) {
+	if (totalAdjustedTipOutBartenders !== newTotalTipOutBartenders) {
 		console.log(
-			"not equal",
-			totalTipOutBartenders - totalAdjustedTipOutBartenders
+			"newTotalTipOutBartenders and totalAdjustedTipOutBartenders not equal",
+			newTotalTipOutBartenders - totalAdjustedTipOutBartenders
 		);
 		const randomIndex = Math.floor(Math.random() * bartenderTipsData.length);
 		const remainingDifference =
-			totalTipOutBartenders - totalAdjustedTipOutBartenders;
+			newTotalTipOutBartenders - totalAdjustedTipOutBartenders;
+		console.log("remainingDifference", remainingDifference);
 
-		if (remainingDifference <= 0.02 && remainingDifference >= -0.02) {
+		if (remainingDifference <= 0.09 && remainingDifference >= -0.09) {
 			const adjustedDifference = Number(remainingDifference.toFixed(2));
-			console.log(adjustedDifference);
-			adjustedBartendersWithTipOut[randomIndex].tipOut += adjustedDifference;
+			console.log("adjustedDifference", adjustedDifference);
+
+			// Calculate how many bartenders need to receive the additional tip
+			let additionalBartendersCount = Math.floor(
+				Math.abs(adjustedDifference) / 0.01
+			);
+
+			if (additionalBartendersCount > 0) {
+				// Determine the adjustment per bartender based on the sign of the adjusted difference
+				const adjustment = adjustedDifference > 0 ? 0.01 : -0.01;
+
+				// Distribute the additional tip among the bartenders
+				for (let i = 0; i < additionalBartendersCount; i++) {
+					adjustedBartendersWithTipOut[i].tipOut += adjustment;
+				}
+			}
 		}
 	}
 
@@ -262,7 +290,10 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 			obj.tipOut = Number(obj.tipOut).toFixed(2);
 		}
 	});
-
+	totalAdjustedTipOutBartenders = adjustedBartendersWithTipOut.reduce(
+		(acc, bartender) => acc + Number(bartender.tipOut),
+		0
+	);
 	console.log(adjustedBartendersWithTipOut);
 	console.log(
 		totalTips,
