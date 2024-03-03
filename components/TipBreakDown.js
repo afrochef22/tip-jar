@@ -200,23 +200,31 @@ export default function TipBreakDown({
 		totalAdjustedTipOutBartenders
 	);
 	// Adjust one bartender's tip out by the remaining difference
-	if (totalAdjustedTipOutBartenders !== totalTipOutBartenders) {
+	if (totalAdjustedTipOutBartenders !== newTotalTipOutBartenders) {
 		console.log(
-			"not equal",
+			"newTotalTipOutBartenders and totalAdjustedTipOutBartenders not equal",
 			newTotalTipOutBartenders - totalAdjustedTipOutBartenders
-		);
-		console.log(totalTipOutBartenders, "-", totalAdjustedTipOutBartenders);
-		const randomIndex = Math.floor(
-			Math.random() * adjustedBartendersWithTipOut.length
 		);
 		const remainingDifference =
 			newTotalTipOutBartenders - totalAdjustedTipOutBartenders;
-
 		console.log("remainingDifference", remainingDifference);
 
 		if (remainingDifference <= 0.09 && remainingDifference >= -0.09) {
 			const adjustedDifference = Number(remainingDifference.toFixed(2));
 			console.log("adjustedDifference", adjustedDifference);
+
+			// Create a shuffled array of indexes to simulate randomness
+			const shuffledIndexes = Array.from(
+				{ length: adjustedBartendersWithTipOut.length },
+				(_, i) => i
+			);
+			for (let i = shuffledIndexes.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[shuffledIndexes[i], shuffledIndexes[j]] = [
+					shuffledIndexes[j],
+					shuffledIndexes[i],
+				];
+			}
 
 			// Calculate how many bartenders need to receive the additional tip
 			let additionalBartendersCount = Math.floor(
@@ -228,12 +236,18 @@ export default function TipBreakDown({
 				const adjustment = adjustedDifference > 0 ? 0.01 : -0.01;
 
 				// Distribute the additional tip among the bartenders
+				let adjustedBartenders = new Set();
 				for (let i = 0; i < additionalBartendersCount; i++) {
-					adjustedBartendersWithTipOut[i].tipOut += adjustment;
+					const bartenderIndex = shuffledIndexes[i % shuffledIndexes.length];
+					if (!adjustedBartenders.has(bartenderIndex)) {
+						adjustedBartendersWithTipOut[bartenderIndex].tipOut += adjustment;
+						adjustedBartenders.add(bartenderIndex);
+					}
 				}
 			}
 		}
 	}
+
 	console.log(
 		totalTipOutBartenders.toFixed(2),
 		"-",

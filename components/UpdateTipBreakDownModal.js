@@ -257,7 +257,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 			"newTotalTipOutBartenders and totalAdjustedTipOutBartenders not equal",
 			newTotalTipOutBartenders - totalAdjustedTipOutBartenders
 		);
-		const randomIndex = Math.floor(Math.random() * bartenderTipsData.length);
 		const remainingDifference =
 			newTotalTipOutBartenders - totalAdjustedTipOutBartenders;
 		console.log("remainingDifference", remainingDifference);
@@ -265,6 +264,19 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		if (remainingDifference <= 0.09 && remainingDifference >= -0.09) {
 			const adjustedDifference = Number(remainingDifference.toFixed(2));
 			console.log("adjustedDifference", adjustedDifference);
+
+			// Create a shuffled array of indexes to simulate randomness
+			const shuffledIndexes = Array.from(
+				{ length: adjustedBartendersWithTipOut.length },
+				(_, i) => i
+			);
+			for (let i = shuffledIndexes.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[shuffledIndexes[i], shuffledIndexes[j]] = [
+					shuffledIndexes[j],
+					shuffledIndexes[i],
+				];
+			}
 
 			// Calculate how many bartenders need to receive the additional tip
 			let additionalBartendersCount = Math.floor(
@@ -276,8 +288,13 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 				const adjustment = adjustedDifference > 0 ? 0.01 : -0.01;
 
 				// Distribute the additional tip among the bartenders
+				let adjustedBartenders = new Set();
 				for (let i = 0; i < additionalBartendersCount; i++) {
-					adjustedBartendersWithTipOut[i].tipOut += adjustment;
+					const bartenderIndex = shuffledIndexes[i % shuffledIndexes.length];
+					if (!adjustedBartenders.has(bartenderIndex)) {
+						adjustedBartendersWithTipOut[bartenderIndex].tipOut += adjustment;
+						adjustedBartenders.add(bartenderIndex);
+					}
 				}
 			}
 		}

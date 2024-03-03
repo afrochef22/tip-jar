@@ -43,11 +43,15 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 					<Row>
 						<Col sm={4} xs={6}>
 							<h4>Total Tips:</h4>
-							<h2 className="highlight-color">${breakDown.totalTips}</h2>
+							<h2 className="highlight-color">
+								${breakDown.totalTips.toFixed(2)}
+							</h2>
 						</Col>
 						<Col sm={4} xs={6}>
 							<h4>Food sales:</h4>
-							<h2 className="highlight-color">${breakDown.foodSales}</h2>
+							<h2 className="highlight-color">
+								${breakDown.foodSales.toFixed(2)}
+							</h2>
 						</Col>
 						<Col sm={4} xs={12}>
 							<h4>Bar Back Percentage:</h4>
