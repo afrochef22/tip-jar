@@ -23,6 +23,7 @@ export default function SelectEmployeeDisplay({
 					sortedBartenders={sortedBartenders}
 					btn={btn}
 					addNewEmployee={addNewEmployee}
+					submitError={submitError}
 				/>
 			);
 			break;

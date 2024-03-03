@@ -10,6 +10,7 @@ export default function SelectBartender({
 	sortedBartenders,
 	btn,
 	addNewEmployee,
+	submitError,
 }) {
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
@@ -96,6 +97,13 @@ export default function SelectBartender({
 						</Col>
 					</Row>
 					<Row className="justify-content-center mt-4 mb-5">
+						{submitError && (
+							<Row>
+								<Col className={`mx-2 secondary-color ${style.centerButton}`}>
+									<h2 className={style.error}>{submitError}</h2>
+								</Col>
+							</Row>
+						)}
 						<Button
 							onClick={() => btn("BarBack")}
 							className={`mx-2 ${style.centerButton}`}
