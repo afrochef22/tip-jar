@@ -334,28 +334,25 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		console.log("breakdown");
 		// alert("Sorry doesn't work yet");
 		try {
-			const response = await fetch(
-				`http://localhost:3000/api/UpdateTipBreakDown/${breakDown._id}`,
-				{
-					method: "PATCH",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						show: show,
-						date: date,
-						totalTips: totalTips,
-						foodSales: foodSales,
-						barBackPercentage: barBackPercentage,
-						cookTips: cooksWithTipOut,
-						barBackTips: barBacksWithTipOut,
-						bartenderTips: adjustedBartendersWithTipOut,
-						tipsPerBarBack: tipsPerBarBack,
-						tipsPerBartender: tipsPerBartender,
-						tipsPerCook: tipsPerCook,
-					}),
-				}
-			);
+			const response = await fetch(`/api/UpdateTipBreakDown/${breakDown._id}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					show: show,
+					date: date,
+					totalTips: totalTips,
+					foodSales: foodSales,
+					barBackPercentage: barBackPercentage,
+					cookTips: cooksWithTipOut,
+					barBackTips: barBacksWithTipOut,
+					bartenderTips: adjustedBartendersWithTipOut,
+					tipsPerBarBack: tipsPerBarBack,
+					tipsPerBartender: tipsPerBartender,
+					tipsPerCook: tipsPerCook,
+				}),
+			});
 			if (response.ok) {
 				console.log("Tip Breakdown updated Successfully");
 				router.push(`http://localhost:3000/CCTipsTotals`);
