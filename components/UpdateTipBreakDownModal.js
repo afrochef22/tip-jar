@@ -355,7 +355,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 			});
 			if (response.ok) {
 				console.log("Tip Breakdown updated Successfully");
-				router.push(`http://localhost:3000/CCTipsTotals`);
+				router.push(`/CCTipsTotals`);
 			} else {
 				console.log("response not ok");
 			}
