@@ -50,6 +50,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	};
 
 	const handleDateChange = (e) => {
+		console.log(e.target.value);
 		const dateString = e.target.value; // Example date string in YYYY-MM-DD format
 		const parts = dateString.split("-");
 		const formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
@@ -420,7 +421,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 												name="date"
 												type="date"
 												required={true}
-												value={date}
+												placeholder={date}
 												onChange={handleDateChange}
 											/>
 										</Col>
