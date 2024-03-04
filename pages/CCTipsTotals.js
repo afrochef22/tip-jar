@@ -48,7 +48,6 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 		// Check if the date is not null before parsing it
 		if (!date) return false; // Skip null dates
 		const currentDate = parseDateWithFormats(date, dateFormats);
-		console.log(startDate.startOf("day"), endDate.endOf("day"));
 		return (
 			currentDate >= startDate.startOf("day") &&
 			currentDate <= endDate.endOf("day")
@@ -70,14 +69,12 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 				if (!startDate || !endDate) return false;
 
 				// Compare the parsed tip date with the start and end dates
-				console.log(tipDate);
 				return (
 					tipDate >= startDate.startOf("day") && tipDate <= endDate.endOf("day")
 				);
 			})
 		);
 	});
-	console.log(employeesWithTipsInRange);
 
 	employeesWithTipsInRange.forEach((obj) => {
 		if (Array.isArray(obj.tipsCollected)) {
@@ -262,7 +259,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 											(tip) => tip.date === date
 										);
 										const totalAmountForDate = tipsForDate.reduce(
-											(total, tip) => total + tip.amount,
+											(total, tip) => total + Number(tip.amount.toFixed(2)),
 											0
 										);
 										return acc + totalAmountForDate;
@@ -290,7 +287,8 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 								{employeesWithTipsInRange
 									.reduce(
 										(acc, employee) =>
-											Number(acc) + Number(calculateTotalTips(employee)),
+											Number(acc) +
+											Number(calculateTotalTips(employee).toFixed(2)),
 										0
 									)
 									.toFixed(2)}
@@ -313,7 +311,7 @@ export async function getServerSideProps() {
 			.find({})
 
 			.toArray();
-		console.log(allTipBreakdowns);
+		// console.log(allTipBreakdowns);
 
 		const employees = await db
 			.collection("employees")

@@ -27,7 +27,7 @@ export async function getServerSideProps() {
 			.sort()
 
 			.toArray();
-		console.log(allTipBreakdowns);
+		// console.log(allTipBreakdowns);
 		return {
 			props: { allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)) },
 		};

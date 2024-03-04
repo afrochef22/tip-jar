@@ -43,15 +43,11 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 					<Row>
 						<Col sm={4} xs={6}>
 							<h4>Total Tips:</h4>
-							<h2 className="highlight-color">
-								${breakDown.totalTips.toFixed(2)}
-							</h2>
+							<h2 className="highlight-color">${breakDown.totalTips}</h2>
 						</Col>
 						<Col sm={4} xs={6}>
 							<h4>Food sales:</h4>
-							<h2 className="highlight-color">
-								${breakDown.foodSales.toFixed(2)}
-							</h2>
+							<h2 className="highlight-color">${breakDown.foodSales}</h2>
 						</Col>
 						<Col sm={4} xs={12}>
 							<h4>Bar Back Percentage:</h4>
@@ -237,7 +233,7 @@ export async function getServerSideProps(id) {
 		const breakDown = await breakDownCollection.findOne({
 			_id: new ObjectId(showId), // Use showId directly
 		});
-		console.log(breakDown);
+		// console.log(breakDown);
 
 		if (!breakDown) {
 			console.log("not found");

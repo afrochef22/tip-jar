@@ -25,7 +25,7 @@ export const getStartDate = () => {
 
 	// Find the nearest Sunday on or after the current date
 	let sunday = currentDate.startOf("week");
-	// console.log("intial: ", sunday.toISODate());
+	console.log("intial: ", sunday.toISODate());
 
 	console.log("payroll start date: ", payrollStartDate.toISODate());
 	if (sunday > currentPayrollStartDate) {
@@ -42,6 +42,7 @@ export const getStartDate = () => {
 		weeks: weeksSincePayrollStart,
 	});
 
+	return currentPayrollStartDate.toISODate();
 	return startDate.toISODate();
 };
 
