@@ -418,28 +418,25 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 
 		// alert("Sorry doesn't work yet");
 		try {
-			const response = await fetch(
-				`http://localhost:3000/api/removeTipBreakDown/${breakDown._id}`,
-				{
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						show: show,
-						date: date,
-						totalTips: totalTips,
-						foodSales: foodSales,
-						barBackPercentage: barBackPercentage,
-						cookTips: cooksWithTipOut,
-						barBackTips: barBacksWithTipOut,
-						bartenderTips: adjustedBartendersWithTipOut,
-						tipsPerBarBack: tipsPerBarBack,
-						tipsPerBartender: tipsPerBartender,
-						tipsPerCook: tipsPerCook,
-					}),
-				}
-			);
+			const response = await fetch(`/api/removeTipBreakDown/${breakDown._id}`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					show: show,
+					date: date,
+					totalTips: totalTips,
+					foodSales: foodSales,
+					barBackPercentage: barBackPercentage,
+					cookTips: cooksWithTipOut,
+					barBackTips: barBacksWithTipOut,
+					bartenderTips: adjustedBartendersWithTipOut,
+					tipsPerBarBack: tipsPerBarBack,
+					tipsPerBartender: tipsPerBartender,
+					tipsPerCook: tipsPerCook,
+				}),
+			});
 			if (response.ok) {
 				console.log("Tip Breakdown deleted Successfully");
 				router.push(`/CCTipsTotals`);
