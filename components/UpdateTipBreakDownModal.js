@@ -736,7 +736,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														<NumericFormat
 															id="bartenderHours"
 															name="bartenderHours"
-															type="number"
+															type="tel"
 															inputMode="numeric"
 															pattern="[0-9]+(\.[0-9]{1,2})?"
 															step="0.01"
