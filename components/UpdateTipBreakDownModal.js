@@ -670,8 +670,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 															<Input
 																id="barBackHours"
 																name="barBackHours"
-																type="number"
-																inputMode="numeric"
+																type="text"
+																inputMode="decimal"
 																pattern="[0-9]+(\.[0-9]{1,2})?"
 																step="0.01"
 																value={barBack.tippedHours}
@@ -737,7 +737,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 															id="bartenderHours"
 															name="bartenderHours"
 															type="tel"
-															inputMode="numeric"
+															inputMode="decimal"
 															pattern="[0-9]+(\.[0-9]{1,2})?"
 															step="0.01"
 															value={bartender.tippedHours}
