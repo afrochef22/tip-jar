@@ -16,7 +16,7 @@ import {
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
-
+import { DeleteDialog } from "./ConformationDialog";
 import style from "./TipBreakDown.module.css";
 
 const UpdateTipBreakDown = ({ breakDown }, args) => {
@@ -40,6 +40,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		breakDown.tipsPerBartender
 	);
 	const [tipsPerCook, setTipsPerCook] = useState(breakDown.tipsPerCook);
+	const [showConfirmation, setShowConfirmation] = useState(false);
 
 	const router = useRouter();
 	console.log(breakDown);
@@ -368,8 +369,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		).toFixed(2)
 	);
 
-	console.log(breakDown);
-
 	const handleUpdateBreakDown = async (e) => {
 		e.preventDefault();
 		console.log("breakdown");
@@ -407,12 +406,59 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		}
 		// toggle();
 	};
+	console.log("breakDown", breakDown._id);
+
+	const toggleConfirmation = () => {
+		setShowConfirmation(!showConfirmation);
+	};
+	const handleDelete = async (e) => {
+		e.preventDefault();
+		setShowConfirmation(!showConfirmation);
+		console.log("breakDown", breakDown.id);
+
+		// alert("Sorry doesn't work yet");
+		try {
+			const response = await fetch(
+				`http://localhost:3000/api/removeTipBreakDown/${breakDown._id}`,
+				{
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						show: show,
+						date: date,
+						totalTips: totalTips,
+						foodSales: foodSales,
+						barBackPercentage: barBackPercentage,
+						cookTips: cooksWithTipOut,
+						barBackTips: barBacksWithTipOut,
+						bartenderTips: adjustedBartendersWithTipOut,
+						tipsPerBarBack: tipsPerBarBack,
+						tipsPerBartender: tipsPerBartender,
+						tipsPerCook: tipsPerCook,
+					}),
+				}
+			);
+			if (response.ok) {
+				console.log("Tip Breakdown deleted Successfully");
+				router.push(`/CCTipsTotals`);
+			} else {
+				console.log("response not ok");
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			toggle();
+		}
+	};
+
 	const closeBtn = (
 		<div>
-			<Button color="primary" onClick={handleUpdateBreakDown}>
+			<Button color="primary mb-1" onClick={handleUpdateBreakDown}>
 				Update
 			</Button>{" "}
-			<Button color="secondary" onClick={toggle}>
+			<Button color="secondary mb-1" onClick={toggle}>
 				Cancel
 			</Button>
 		</div>
@@ -600,18 +646,18 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 													) : (
 														<Col>
 															<FontAwesomeIcon icon="fa-clock" />{" "}
-															<Input
+															<NumericFormat
 																id="cookHours"
 																name="cookHours"
 																type="number"
-																inputMode="numeric"
+																inputMode="decimal"
 																pattern="[0-9]+(\.[0-9]{1,2})?"
 																step="0.01"
 																value={cook.tippedHours}
 																onChange={(e) =>
 																	setCookHours(cook.id, e.target.value)
 																}
-																className="text-center mb-3"
+																className={`${style.enterHoursInbox}`}
 															/>
 														</Col>
 													)}
@@ -667,10 +713,10 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 													) : (
 														<Col>
 															<FontAwesomeIcon icon="fa-clock" />{" "}
-															<Input
+															<NumericFormat
 																id="barBackHours"
 																name="barBackHours"
-																type="text"
+																type="number"
 																inputMode="decimal"
 																pattern="[0-9]+(\.[0-9]{1,2})?"
 																step="0.01"
@@ -678,7 +724,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 																onChange={(e) =>
 																	setBarBackHours(barBack.id, e.target.value)
 																}
-																className="text-center mb-3"
+																className={`${style.enterHoursInbox}`}
 															/>
 														</Col>
 													)}
@@ -736,7 +782,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														<NumericFormat
 															id="bartenderHours"
 															name="bartenderHours"
-															type="tel"
+															type="number"
 															inputMode="decimal"
 															pattern="[0-9]+(\.[0-9]{1,2})?"
 															step="0.01"
@@ -746,13 +792,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 															}
 															allowNegative={false}
 															className={`${style.enterHoursInbox}`}
-															renderInput={(inputProps) => (
-																<input
-																	{...inputProps}
-																	type="tel"
-																	className={`${style.enterHoursInbox}`}
-																/>
-															)}
 														/>
 													</Col>
 												)}
@@ -773,6 +812,14 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 							<Button color="secondary" onClick={toggle}>
 								Cancel
 							</Button>
+							<Button color="danger" onClick={toggleConfirmation}>
+								Delete
+							</Button>
+							<DeleteDialog
+								isOpen={showConfirmation}
+								toggle={toggle}
+								onConfirm={handleDelete}
+							/>
 						</ModalFooter>
 					</div>
 				</Container>

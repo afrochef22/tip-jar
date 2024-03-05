@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
-const ConfirmationDialog = ({ isOpen, toggle, onConfirm }) => {
+export const ConfirmationDialog = ({ isOpen, toggle, onConfirm }) => {
 	return (
 		<Modal isOpen={isOpen} toggle={toggle}>
 			<ModalHeader toggle={toggle}>Confirmation</ModalHeader>
@@ -20,4 +20,21 @@ const ConfirmationDialog = ({ isOpen, toggle, onConfirm }) => {
 	);
 };
 
-export default ConfirmationDialog;
+export const DeleteDialog = ({ isOpen, toggle, onConfirm }) => {
+	return (
+		<Modal isOpen={isOpen} toggle={toggle}>
+			<ModalHeader toggle={toggle}>Confirmation</ModalHeader>
+			<ModalBody>
+				Are you sure you want to delete? This action cannot be undone.
+			</ModalBody>
+			<ModalFooter>
+				<Button color="secondary" onClick={toggle}>
+					Cancel
+				</Button>
+				<Button color="danger" onClick={onConfirm}>
+					Delete
+				</Button>
+			</ModalFooter>
+		</Modal>
+	);
+};

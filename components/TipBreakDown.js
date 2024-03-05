@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CurrentShift, ShiftDate } from "./CurrentShift";
 import { useRouter } from "next/router";
 import GetAllTipBreakdowns from "./GetAllTipBreakdowns";
-import ConfirmationDialog from "./ConformationDialog";
+import { ConfirmationDialog } from "./ConformationDialog";
 import { Decimal } from "decimal.js";
 
 console.log(GetAllTipBreakdowns);
