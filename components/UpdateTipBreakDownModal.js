@@ -746,6 +746,13 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 															}
 															allowNegative={false}
 															className={`${style.enterHoursInbox}`}
+															renderInput={(inputProps) => (
+																<input
+																	{...inputProps}
+																	type="tel"
+																	className={`${style.enterHoursInbox}`}
+																/>
+															)}
 														/>
 													</Col>
 												)}
