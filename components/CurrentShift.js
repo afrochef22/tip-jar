@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import style from "./CurrentShift.module.css";
-import { Container, Row, Col, Label } from "reactstrap";
+import { Container, Row, Col, Label, Input } from "reactstrap";
 import { DateTime } from "luxon";
 import { CardsSkeleton } from "./skeletons";
 
@@ -199,28 +199,28 @@ export function ShowDateComparer(dateData) {
 
 	// Teragram
 
-	// switch (true) {
-	// 	case zonedDate.hour < 6:
-	// 		if (day === 1) {
-	// 			compareDate = `${DayOfTheWeekAbbreviated(
-	// 				dateData.yesterday
-	// 			)} ${MonthAbbreviated(dateData.lastMonth)} ${
-	// 				dateData.lastDayOfPrevMonth
-	// 			}`;
-	// 		} else {
-	// 			compareDate = `${DayOfTheWeekAbbreviated(
-	// 				dateData.yesterday
-	// 			)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
-	// 		}
+	switch (true) {
+		case zonedDate.hour < 6:
+			if (day === 1) {
+				compareDate = `${DayOfTheWeekAbbreviated(
+					dateData.yesterday
+				)} ${MonthAbbreviated(dateData.lastMonth)} ${
+					dateData.lastDayOfPrevMonth
+				}`;
+			} else {
+				compareDate = `${DayOfTheWeekAbbreviated(
+					dateData.yesterday
+				)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
+			}
 
-	// 		break;
+			break;
 
-	// 	default:
-	// 		compareDate = `${DayOfTheWeekAbbreviated(
-	// 			dateData.day
-	// 		)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
-	// }
-	// return compareDate;
+		default:
+			compareDate = `${DayOfTheWeekAbbreviated(
+				dateData.day
+			)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
+	}
+	return compareDate;
 
 	// Moroccan
 	switch (true) {
@@ -281,7 +281,20 @@ export function CurrentShowPerforming({
 			) : (
 				<Row className="justify-content-center">
 					{bandPerformingToday.length === 0 ? (
-						<div>No show Today</div>
+						<>
+							<h2>No show Today</h2>
+							<Container className={`${style.bandContainer} `}>
+								<Row className="justify-content-center">
+									<Col>
+										<p>Enter in Event</p>
+										<Input
+											className="mb-3"
+											onChange={(e) => handleSelectedBand(e.target.value)}
+										/>
+									</Col>
+								</Row>
+							</Container>
+						</>
 					) : (
 						bandPerformingToday.map((band) => (
 							<Col key={band} sm={4}>

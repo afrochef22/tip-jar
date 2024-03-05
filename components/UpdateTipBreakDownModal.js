@@ -53,7 +53,9 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		console.log(e.target.value);
 		const dateString = e.target.value; // Example date string in YYYY-MM-DD format
 		const parts = dateString.split("-");
-		const formattedDate = `${parts[1]}/${parts[2]}/${parts[0]}`;
+		const day = parseInt(parts[2], 10); // Convert day to integer
+		const formattedDay = day.toString(); // Convert day back to string to remove leading zero
+		const formattedDate = `${parts[1]}/${formattedDay}/${parts[0]}`;
 		setDate(formattedDate);
 	};
 
@@ -71,10 +73,34 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const handleDecrease = () => {
 		setBarBackPercentage((prevPercentage) => Math.max(prevPercentage - 1, 0));
 	};
+
+	const setCookHours = (cookId, newHours) => {
+		parseFloat(newHours);
+		const updatedCookTipsData = cookTipsData.map((cook) => {
+			if (cook.id === cookId) {
+				return { ...cook, tippedHours: Number(newHours) };
+			}
+			return cook; // Return the unchanged bartender if it's not the one to be updated
+		});
+		setCookTipsData(updatedCookTipsData);
+	};
+
+	const setBarBackHours = (barBackId, newHours) => {
+		parseFloat(newHours);
+		const updatedBarBackTipsData = barBackTipsData.map((barBack) => {
+			if (barBack.id === barBackId) {
+				return { ...barBack, tippedHours: Number(newHours) };
+			}
+			return barBack; // Return the unchanged barBack if it's not the one to be updated
+		});
+		setBarBackTipsData(updatedBarBackTipsData);
+	};
+
 	const setBartenderHours = (bartenderId, newHours) => {
+		parseFloat(newHours);
 		const updatedBartenderTipsData = bartenderTipsData.map((bartender) => {
 			if (bartender.id === bartenderId) {
-				return { ...bartender, tippedHours: newHours };
+				return { ...bartender, tippedHours: Number(newHours) };
 			}
 			return bartender; // Return the unchanged bartender if it's not the one to be updated
 		});
@@ -85,6 +111,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		.map((bartender) => bartender.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
 
+	console.log("bartenderHours", bartenderHours);
 	const barBackHours = barBackTipsData
 		.map((barBack) => barBack.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
@@ -333,7 +360,11 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		"+",
 		totalTipOutCooks,
 		"=",
-		totalAdjustedTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks
+		(
+			totalAdjustedTipOutBartenders +
+			totalTipOutBarBacks +
+			totalTipOutCooks
+		).toFixed(2)
 	);
 
 	console.log(breakDown);
@@ -538,7 +569,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 										Tips per hour:
 										<span className="highlight-color">
 											{" "}
-											${cookTipsData.toFixed(2)}
+											${tipsPerCook.toFixed(2)}
 										</span>
 									</h4>
 								)}
@@ -568,7 +599,19 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 													) : (
 														<Col>
 															<FontAwesomeIcon icon="fa-clock" />{" "}
-															<p>{cook.tippedHours} hrs</p>
+															<Input
+																id="cookHours"
+																name="cookHours"
+																type="number"
+																inputMode="numeric"
+																pattern="[0-9]+(\.[0-9]{1,2})?"
+																step="0.01"
+																value={cook.tippedHours}
+																onChange={(e) =>
+																	setCookHours(cook.id, e.target.value)
+																}
+																className="text-center mb-3"
+															/>
 														</Col>
 													)}
 													<Col>
@@ -623,7 +666,19 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 													) : (
 														<Col>
 															<FontAwesomeIcon icon="fa-clock" />{" "}
-															<p>{barBack.tippedHours} hrs</p>
+															<Input
+																id="barBackHours"
+																name="barBackHours"
+																type="number"
+																inputMode="numeric"
+																pattern="[0-9]+(\.[0-9]{1,2})?"
+																step="0.01"
+																value={barBack.tippedHours}
+																onChange={(e) =>
+																	setBarBackHours(barBack.id, e.target.value)
+																}
+																className="text-center mb-3"
+															/>
 														</Col>
 													)}
 													<Col>
@@ -680,8 +735,10 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														<Input
 															id="bartenderHours"
 															name="bartenderHours"
-															type="tel"
+															type="number"
 															inputMode="numeric"
+															pattern="[0-9]+(\.[0-9]{1,2})?"
+															step="0.01"
 															value={bartender.tippedHours}
 															onChange={(e) =>
 																setBartenderHours(bartender.id, e.target.value)

@@ -268,7 +268,7 @@ export default function SelectEmployee({ employees }) {
 	const handleSubmitButtonClick = () => {
 		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
 		if (!selectedShow) {
-			setSubmitError("Please select a show.");
+			setSubmitError("Please select a show. Or enter in an event.");
 			return;
 		}
 		const workingBartender = workingEmployees.filter(
