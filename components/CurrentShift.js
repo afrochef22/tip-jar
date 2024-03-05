@@ -301,37 +301,40 @@ export function CurrentShowPerforming({
 						bandPerformingToday.map((band) => (
 							<Col key={band} sm={4}>
 								{band ? (
-									<Container
-										className={`${style.bandContainer} ${
-											showFullDescription ? style.expanded : ""
-										}`}
-									>
-										<Row>
-											<Col sm={10} xs={10}>
-												<Label>
-													{showFullDescription ? band : band.slice(0, 18)}
-													{band.length > 18 && (
-														<span
-															className="highlight-color"
-															onClick={toggleDescription}
-														>
-															{showFullDescription ? " less" : "... more"}
-														</span>
-													)}
-												</Label>
-											</Col>
-											<Col
-												sm={2}
-												xs={2}
-												className={
-													selectedShow === band
-														? style.checkedCheckbox
-														: style.unCheckBox
-												}
-												onClick={() => handleSelectedBand(band)}
-											></Col>
-										</Row>
-									</Container>
+									<div>
+										<h3 className={style.title}>Select A Show</h3>
+										<Container
+											className={`${style.bandContainer} ${
+												showFullDescription ? style.expanded : ""
+											}`}
+										>
+											<Row>
+												<Col sm={10} xs={10}>
+													<Label>
+														{showFullDescription ? band : band.slice(0, 18)}
+														{band.length > 18 && (
+															<span
+																className="highlight-color"
+																onClick={toggleDescription}
+															>
+																{showFullDescription ? " less" : "... more"}
+															</span>
+														)}
+													</Label>
+												</Col>
+												<Col
+													sm={2}
+													xs={2}
+													className={
+														selectedShow === band
+															? style.checkedCheckbox
+															: style.unCheckBox
+													}
+													onClick={() => handleSelectedBand(band)}
+												></Col>
+											</Row>
+										</Container>
+									</div>
 								) : (
 									<p key={band}>No Show Today</p>
 								)}

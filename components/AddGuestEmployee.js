@@ -162,11 +162,11 @@ export default function AddGuestEmployee({
 						onClick={onClick}
 					/>
 					<ModalFooter>
-						<Button color="success" onClick={toggleNested}>
-							Register New Fill In
-						</Button>
+						<Button onClick={toggleNested}>Register New Fill In</Button>
 
-						<Button onClick={toggle}>Done</Button>
+						<Button color="success" onClick={toggle}>
+							Done
+						</Button>
 					</ModalFooter>
 				</ModalBody>
 
