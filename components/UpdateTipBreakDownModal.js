@@ -1,5 +1,6 @@
 import React, { useState, useEffect, memo } from "react";
 import { Decimal } from "decimal.js";
+import { NumericFormat } from "react-number-format";
 import {
 	Form,
 	FormGroup,
@@ -732,7 +733,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 												) : (
 													<Col>
 														<FontAwesomeIcon icon="fa-clock" />{" "}
-														<Input
+														<NumericFormat
 															id="bartenderHours"
 															name="bartenderHours"
 															type="number"
@@ -743,7 +744,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 															onChange={(e) =>
 																setBartenderHours(bartender.id, e.target.value)
 															}
-															className="text-center mb-3"
+															allowNegative={false}
+															className={`${style.enterHoursInbox}`}
 														/>
 													</Col>
 												)}

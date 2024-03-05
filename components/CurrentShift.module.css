@@ -37,3 +37,12 @@
 .title {
 	margin-bottom: 20px;
 }
+
+.enterEventInbox {
+	margin: auto;
+}
+
+.enterEventInboxContainer {
+	padding: auto;
+	margin: 8px;
+}

@@ -273,11 +273,13 @@ export function CurrentShowPerforming({
 	}, [bandPerformingToday, setSelectedShow]);
 	return (
 		<Container className={style.center}>
-			<h3 className={style.title}>Select A Show</h3>
 			{isLoading ? (
-				<Row className="justify-content-center">
-					<CardsSkeleton />
-				</Row>
+				<>
+					<h3 className={style.title}>Select A Show</h3>
+					<Row className="justify-content-center">
+						<CardsSkeleton />
+					</Row>
+				</>
 			) : (
 				<Row className="justify-content-center">
 					{bandPerformingToday.length === 0 ? (
@@ -285,10 +287,10 @@ export function CurrentShowPerforming({
 							<h2>No show Today</h2>
 							<Container className={`${style.bandContainer} `}>
 								<Row className="justify-content-center">
-									<Col>
+									<Col className={`${style.enterEventInboxContainer}`}>
 										<p>Enter in Event</p>
 										<Input
-											className="mb-3"
+											className={`${style.enterEventInbox}`}
 											onChange={(e) => handleSelectedBand(e.target.value)}
 										/>
 									</Col>

@@ -54,6 +54,12 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 		);
 	});
 
+	uniqueDates.sort((a, b) => {
+		const dateA = parseDateWithFormats(a, dateFormats);
+		const dateB = parseDateWithFormats(b, dateFormats);
+		return dateA - dateB;
+	});
+
 	// Filter employees with tips within the date range
 	const employeesWithTipsInRange = employees.filter((employee) => {
 		return (
