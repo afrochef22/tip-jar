@@ -3,7 +3,7 @@ import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import AddGuestEmployee from "./AddGuestEmployee";
 
-export default function SelectNonActiveBartender({
+export default function SelectNonActiveEmployee({
 	onClick,
 	sortedBartenders,
 	sortedBarBacks,
@@ -57,6 +57,23 @@ export default function SelectNonActiveBartender({
 		}
 	};
 
+	const HandleEmployeeTitle = (position) => {
+		console.log(position.position);
+		switch (position.position) {
+			case "Bartender":
+				return "Bartenders";
+				break;
+			case "Bar Back":
+				return "Bar Backs";
+				break;
+			case "Cook":
+				return "Cooks";
+				break;
+			default:
+				break;
+		}
+	};
+
 	return (
 		<div>
 			{isMobile ? (
@@ -69,8 +86,9 @@ export default function SelectNonActiveBartender({
 								className={`third-color ${style.centerTitle}`}
 								htmlFor="exampleSelect"
 							>
-								Bartenders
+								<HandleEmployeeTitle position={position} />
 							</h2>
+
 							<h5 className={`third-color ${style.centerTitle}`}>
 								{" "}
 								{checkedEmployeesCount()} selected
@@ -116,7 +134,7 @@ export default function SelectNonActiveBartender({
 							className={`third-color ${style.centerTitle}`}
 							htmlFor="exampleSelect"
 						>
-							Bartenders
+							<HandleEmployeeTitle position={position} />
 						</h2>
 						<h5 className={`third-color ${style.centerTitle}`}>
 							{" "}
