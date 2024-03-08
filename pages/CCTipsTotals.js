@@ -153,7 +153,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 			</Container>
 
 			<Container className=" table-scroll mt-4 border-box ">
-				<table bordered className="table ">
+				<table className="table ">
 					<thead className="sticky-header">
 						<tr>
 							<th className="employee-column sticky-row text-color">Date</th>

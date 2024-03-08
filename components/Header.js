@@ -11,6 +11,10 @@ import {
 } from "reactstrap";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faCalculator } from "@fortawesome/free-solid-svg-icons";
+
+library.add(faCalculator);
 
 const Header = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -43,10 +47,10 @@ const Header = () => {
 			{isMobile ? (
 				<div>
 					<Link className="navbar-link" href="/SelectWorkingEmployee">
-						Credit <FontAwesomeIcon icon=" fa-calculator" />
+						Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
 					</Link>
 					<Link className="navbar-link" href="/CashTipCalculator">
-						Cash <FontAwesomeIcon icon=" fa-calculator" />
+						Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
 					</Link>
 					<Link className="navbar-link" href="/CCTipsTotals">
 						CC Tip Totals
@@ -87,12 +91,12 @@ const Header = () => {
 				<Nav>
 					<NavItem className=" ">
 						<Link className="navbar-link" href="/SelectWorkingEmployee">
-							Credit <FontAwesomeIcon icon=" fa-calculator" />
+							Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
 						</Link>
 					</NavItem>
 					<NavItem className=" ">
 						<Link className="navbar-link" href="/CashTipCalculator">
-							Cash <FontAwesomeIcon icon=" fa-calculator" />
+							Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
 						</Link>
 					</NavItem>
 					<NavItem>
