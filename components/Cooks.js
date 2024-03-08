@@ -4,9 +4,20 @@ import { useRouter } from "next/router";
 import style from "./Bartenders.module.css";
 import { Button, Col, Container, Row } from "reactstrap";
 import { UpdateEmployeeModal } from "./UpdateEmployeeModal";
+import { DeleteDialog } from "./ConformationDialog";
+import { useState } from "react";
 
 const Cooks = ({ employees }) => {
 	const router = useRouter();
+
+	const [confirmationStates, setConfirmationStates] = useState({});
+
+	const toggleConfirmation = (id) => {
+		setConfirmationStates({
+			...confirmationStates,
+			[id]: !confirmationStates[id],
+		});
+	};
 
 	// Sort employees array by last name
 	const sortedEmployees = employees.sort((a, b) =>
@@ -58,10 +69,15 @@ const Cooks = ({ employees }) => {
 								<Col>
 									<Button
 										className={style.trash}
-										onClick={() => handleDelete(cook._id)}
+										onClick={() => toggleConfirmation(cook._id)}
 									>
 										🗑
 									</Button>
+									<DeleteDialog
+										isOpen={!!confirmationStates[cook._id]}
+										toggle={() => toggleConfirmation(cook._id)}
+										onConfirm={() => handleDelete(cook._id)}
+									/>
 								</Col>
 								<div className="seperationLine"></div>
 							</Row>

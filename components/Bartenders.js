@@ -11,9 +11,13 @@ const Bartenders = ({ employees }) => {
 	const router = useRouter();
 
 	const [showConfirmation, setShowConfirmation] = useState(false);
+	const [confirmationStates, setConfirmationStates] = useState({});
 
-	const toggleConfirmation = () => {
-		setShowConfirmation(!showConfirmation);
+	const toggleConfirmation = (id) => {
+		setConfirmationStates({
+			...confirmationStates,
+			[id]: !confirmationStates[id],
+		});
 	};
 	const toggle = () => setShowConfirmation(!showConfirmation);
 
@@ -38,6 +42,7 @@ const Bartenders = ({ employees }) => {
 		} catch (error) {
 			console.error("Error deleting Employee:", error);
 		}
+		toggle();
 	};
 	return (
 		<Container className={style.employeeList}>
@@ -66,12 +71,15 @@ const Bartenders = ({ employees }) => {
 								</Col>
 
 								<Col>
-									<Button className={style.trash} onClick={toggleConfirmation}>
+									<Button
+										className={style.trash}
+										onClick={() => toggleConfirmation(bartender._id)}
+									>
 										🗑
 									</Button>
 									<DeleteDialog
-										isOpen={showConfirmation}
-										toggle={toggle}
+										isOpen={!!confirmationStates[bartender._id]}
+										toggle={() => toggleConfirmation(bartender._id)}
 										onConfirm={() => handleDelete(bartender._id)}
 									/>
 								</Col>
