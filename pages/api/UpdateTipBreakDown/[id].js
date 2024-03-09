@@ -33,6 +33,7 @@ export default async (req, res) => {
 				data.foodSales ||
 				data.barBackPercentage
 			) {
+				console.log("data matches");
 				setValues = {
 					...(data.show && { show: data.show }),
 					...(data.date && { date: data.date }),
@@ -48,6 +49,8 @@ export default async (req, res) => {
 			if (data.cookTips && Array.isArray(data.cookTips)) {
 				const updatedCookTips = data.cookTips.map((cookTip) => {
 					if (cookTip.id === data.cookTips.id) {
+						console.log("cook matches");
+
 						return { ...cookTip, tipOut: cookTip.tipOut };
 					}
 					return cookTip;
@@ -59,6 +62,8 @@ export default async (req, res) => {
 			if (data.barBackTips && Array.isArray(data.barBackTips)) {
 				const updatedBarBackTips = data.barBackTips.map((barBackTip) => {
 					if (data.barBackTips.includes(barBackTip.id)) {
+						console.log("bar back matches");
+
 						return { ...barBackTip, tipOut: barBackTip.tipOut };
 					}
 					return barBackTip;
@@ -78,6 +83,8 @@ export default async (req, res) => {
 						(tip) => tip.id === bartenderTip.id
 					);
 					if (existingTip) {
+						console.log("bartender matches");
+
 						// If the tip exists, update only the desired property (tipOut) and keep the rest unchanged
 						const updatedBartenderTip = {
 							...existingTip,

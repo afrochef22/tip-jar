@@ -74,19 +74,7 @@ export default function AddGuestEmployee({
 		// Combine first name and last name to form the label
 		const label = `${newEmployee.firstName} ${newEmployee.lastName}`;
 		// Create the new employee object
-		const newEmployeeData = {
-			id,
-			label,
-			position: [position],
-			checked: newEmployee.checked,
-			active: false,
-			workingPosition: position,
-			tipsBroughtIn: 0,
-			tippedHours: 0,
-			tipOut: 0,
-		};
-		// Pass the new employee data to the parent component
-		addNewEmployee(newEmployeeData);
+
 		// Close the modal
 		toggleNested();
 		// Reset the form fields
@@ -113,7 +101,22 @@ export default function AddGuestEmployee({
 
 			if (response.ok) {
 				console.log("Employee added successfully");
-
+				const data = await response.json();
+				const newEmployeeData = {
+					id: data.insertedEmployeeId,
+					label,
+					position: [position],
+					checked: newEmployee.checked,
+					active: false,
+					workingPosition: position,
+					tipsBroughtIn: 0,
+					tippedHours: 0,
+					tipOut: 0,
+				};
+				// Pass the new employee data to the parent component
+				addNewEmployee(newEmployeeData);
+				console.log("data", data.insertedEmployeeId);
+				// Close the modal
 				setNewEmployee({
 					firstName: "",
 					lastName: "",

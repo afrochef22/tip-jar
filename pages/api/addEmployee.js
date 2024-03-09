@@ -12,24 +12,21 @@ export default async (req, res) => {
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
 
-			await db.collection("employees").insertOne({
+			const result = await db.collection("employees").insertOne({
 				firstName,
 				lastName,
 				position: position,
 				active,
-				tipsCollected: [
-					// {
-					// 	date: Date,
-					// 	amount: Number,
-					// 	workingPosition: String,
-					// 	show: String,
-					// 	createdat: new Date(),
-					// },
-				],
+				tipsCollected: [],
 				createdat: new Date(),
 			});
 
-			res.status(201).json({ message: "Bartender added successfully" });
+			const insertedEmployeeId = result.insertedId; // Get the _id of the inserted document
+			console.log("Inserted Employee Id:", insertedEmployeeId);
+
+			res
+				.status(201)
+				.json({ message: "Employee added successfully", insertedEmployeeId });
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: "Internal server error" });

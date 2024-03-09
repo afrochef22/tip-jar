@@ -19,6 +19,7 @@ export default async (req, res) => {
 			} = req.body;
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
+			console.log(req.body);
 
 			const tipBreakdownResult = await db.collection("tipBreakdown").insertOne({
 				show,
@@ -86,6 +87,12 @@ export default async (req, res) => {
 			for (const bartender of BartenderTips) {
 				const objectId = new ObjectId(bartender.id);
 
+				console.log(
+					"BArtender",
+					bartender.id,
+					bartender.tipOut,
+					bartender.workingPosition
+				);
 				await updateEmployeeTip(
 					objectId,
 					bartender.tipOut,
