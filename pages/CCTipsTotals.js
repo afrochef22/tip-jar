@@ -10,7 +10,11 @@ import {
 	Table,
 } from "reactstrap";
 import { DateTime } from "luxon";
-import { getStartDate, getEndDate } from "../components/DateRange";
+import {
+	getStartDate,
+	getEndDate,
+	getPayrollDates,
+} from "../components/DateRange";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import TipBreakDown from "../components/TipBreakDown";
@@ -18,8 +22,8 @@ import TipBreakDown from "../components/TipBreakDown";
 export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	const router = useRouter();
 	// Define the start and end dates for the date range (replace these with your actual start and end dates)
-	const start = getStartDate();
-	const end = getEndDate(start);
+
+	const { startDate: start, endDate: end } = getPayrollDates();
 	const [startDate, setStartDate] = useState(DateTime.fromISO(start));
 	const [endDate, setEndDate] = useState(DateTime.fromISO(end));
 

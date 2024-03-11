@@ -1,65 +1,35 @@
 import { DateTime } from "luxon";
 
 // Function to get the start date of the current bi-weekly payroll period
-export const getStartDate = () => {
+export const getPayrollDates = () => {
+	// Define the start date of the payroll period
+	let payrollStartDate = DateTime.fromISO("2022-01-09");
+
 	// Get the current date
 	const currentDate = DateTime.now();
 
-	// Define the start date of the payroll period for the current year
-	const payrollStartDate = DateTime.fromISO("2022-01-09");
+	// Calculate the end date of the current payroll period
+	let payrollEndDate = payrollStartDate.plus({ weeks: 2 }).minus({ days: 1 });
 
-	// Calculate the difference in weeks between the current date and the payroll start date
-	const weeksSinceStart = Math.floor(
-		currentDate.diff(payrollStartDate, "weeks").weeks
-	);
+	// Check if the current date is after the end of the current payroll period
+	if (currentDate > payrollEndDate) {
+		// Move the start date to the next payroll period
+		const weeksSinceLastPayroll = Math.floor(
+			currentDate.diff(payrollStartDate, "weeks").weeks
+		);
 
-	// Calculate the current payroll start date based on the difference in weeks
-	const currentPayrollStartDate = payrollStartDate.plus({
-		weeks: weeksSinceStart,
-	});
-
-	console.log(
-		"current Payroll start date: ",
-		currentPayrollStartDate.toISODate()
-	);
-
-	// Find the nearest Sunday on or after the current date
-	let sunday = currentDate.startOf("week");
-	console.log("intial: ", sunday.toISODate());
-
-	console.log("payroll start date: ", payrollStartDate.toISODate());
-	if (sunday > currentPayrollStartDate) {
-		sunday = sunday.minus({ weeks: 1 });
+		const weeksToAdd = Math.ceil((weeksSinceLastPayroll - 1) / 2) * 2; // Round up to the next even number of weeks
+		payrollStartDate = payrollStartDate.plus({ weeks: weeksToAdd });
+		payrollEndDate = payrollStartDate.plus({ weeks: 2 }).minus({ days: 1 });
 	}
 
-	// Calculate the weeks since the start of the current payroll period
-	const weeksSincePayrollStart = Math.floor(
-		sunday.diff(currentPayrollStartDate, "weeks").weeks
-	);
-
-	// Adjust the start date based on the number of weeks since the start of the current payroll period
-	const startDate = currentPayrollStartDate.plus({
-		weeks: weeksSincePayrollStart,
-	});
-
-	return currentPayrollStartDate.toISODate();
-	return startDate.toISODate();
+	return {
+		startDate: payrollStartDate.toISODate(),
+		endDate: payrollEndDate.toISODate(),
+	};
 };
 
-// Function to get the end date of the current bi-weekly payroll period
-export const getEndDate = (startDate) => {
-	// Parse the start date string
-	const parsedStartDate = DateTime.fromISO(startDate);
-
-	// Calculate the end date as two weeks after the start date
-	const endDate = parsedStartDate.plus({ weeks: 2 }).minus({ days: 1 });
-
-	return endDate.toISODate();
-};
-
-// Usage example
-const startDate = getStartDate();
-const endDate = getEndDate(startDate);
+const { startDate, endDate } = getPayrollDates();
 
 console.log("Start Date:", startDate);
 console.log("End Date:", endDate);
