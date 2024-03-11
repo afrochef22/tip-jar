@@ -102,6 +102,8 @@ export default async (req, res) => {
 				setValues.BartenderTips = updatedBartenderTips;
 			}
 
+			setValues.updatedat = new Date();
+
 			updateDocument.$set = setValues; // Merge accumulated changes into updateDocument
 
 			const result = await tipBreakDownCollection.updateOne(
@@ -192,6 +194,7 @@ export default async (req, res) => {
 								workingPosition: updatedWorkingPosition,
 								show: updatedShow,
 								tippedHours: updateTippedHours,
+								updatedat: new Date(),
 							};
 						}
 						return tip; // Return unchanged tip if tipBreakdownId doesn't match
