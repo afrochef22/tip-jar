@@ -113,9 +113,10 @@ export default function AddGuestEmployee({
 					tippedHours: 0,
 					tipOut: 0,
 				};
+
 				// Pass the new employee data to the parent component
 				addNewEmployee(newEmployeeData);
-				console.log("data", data.insertedEmployeeId);
+				console.log("data", data.insertedEmployeeId.AddGuestEmployee);
 				// Close the modal
 				setNewEmployee({
 					firstName: "",
