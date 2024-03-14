@@ -19,7 +19,7 @@ function findBandPerformingToday(html) {
 	let bandPerformingToday = [];
 
 	events.each(function () {
-		const bandName = $(this).find(".tw-name a").text().trim(); // Find the band name
+		const bandName = $(this).find(".artisteventsname a").text().trim(); // Find the band name
 		const eventDate = $(this)
 			.find(".tw-event-date")
 			.text()

@@ -337,7 +337,22 @@ export function CurrentShowPerforming({
 											</Container>
 										</div>
 									) : (
-										<p key={band}>No Show Today</p>
+										<>
+											<h2>No show Today</h2>
+											<Container className={`${style.bandContainer} `}>
+												<Row className="justify-content-center">
+													<Col className={`${style.enterEventInboxContainer}`}>
+														<p>Enter an event</p>
+														<Input
+															className={`${style.enterEventInbox}`}
+															onChange={(e) =>
+																handleSelectedBand(e.target.value)
+															}
+														/>
+													</Col>
+												</Row>
+											</Container>
+										</>
 									)}
 								</Col>
 							))}
