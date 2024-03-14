@@ -105,7 +105,7 @@ export default function TipBreakDown({
 	const barBacksWithTipOut = barBacks.map((barBack) => {
 		const id = barBack.id;
 		if (barBackHours === 0) {
-			let tipOut = Number(tipsPerBarBack());
+			let tipOut = Number(tipsPerBarBack().toFixed(2));
 			return { ...barBack, tipOut };
 		} else {
 			let tipOut = Number(tipsPerBarBack() * barBack.tippedHours);
@@ -116,13 +116,15 @@ export default function TipBreakDown({
 	const cooksWithTipOut = cooks.map((cook) => {
 		const id = cook.id;
 		if (cookHours === 0) {
-			let tipOut = Number(tipsPerCook());
+			let tipOut = Number(tipsPerCook().toFixed(2));
 			return { ...cook, tipOut };
 		} else {
 			let tipOut = Number(tipsPerCook() * cook.tippedHours);
 			return { ...cook, tipOut };
 		}
 	});
+	console.log("cooksWithTipOut", cooksWithTipOut);
+
 	console.log(bartendersWithTipOut);
 	// Calculate the total tip out amount for each type of employee
 	let totalTipOutBartenders = bartendersWithTipOut.reduce(

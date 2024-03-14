@@ -190,7 +190,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const barBacksWithTipOut = barBackTipsData.map((barBack) => {
 		const id = barBack.id;
 		if (barBackHours === 0) {
-			let tipOut = Number(getTipsPerBarBack());
+			let tipOut = Number(getTipsPerBarBack().toFixed(2));
 			return { ...barBack, tipOut };
 		} else {
 			let tipOut = Number(getTipsPerBarBack() * barBack.tippedHours);
@@ -201,7 +201,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const cooksWithTipOut = cookTipsData.map((cook) => {
 		const id = cook.id;
 		if (cookHours === 0) {
-			let tipOut = Number(getTipsPerCook());
+			let tipOut = Number(getTipsPerCook().toFixed(2));
 			return { ...cook, tipOut };
 		} else {
 			let tipOut = Number(getTipsPerCook() * cook.tippedHours);
