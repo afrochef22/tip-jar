@@ -133,7 +133,7 @@ export default function CashTipCalculator() {
 									id="CashTips"
 									name="CashTips"
 									type="tel"
-									inputMode="numeric"
+									inputMode="decimal"
 									pattern="[0-9]+(\.[0-9]{1,2})?"
 									step="0.01"
 									required
