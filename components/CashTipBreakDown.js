@@ -48,30 +48,107 @@ export default function CashTipBreakDown({
 	};
 
 	console.log(Number((bartenderTips / numberOfBartenders).toFixed(2)));
-
-	const bartendersWithTipOut = bartenders.map((bartender) => {
-		const id = bartender.id;
-		if (bartenderHours === 0) {
-			let tipOut = Number(tipsPerBartender().toFixed(2));
-			return { ...bartender, tipOut };
-		} else {
-			let tipOut = Number(
-				(tipsPerBartender() * bartender.tippedHours).toFixed(2)
-			);
-			return { ...bartender, tipOut };
-		}
-	});
 	const barBacksWithTipOut = barBacks.map((barBack) => {
 		const id = barBack.id;
 		if (barBackHours === 0) {
 			let tipOut = Number(tipsPerBarBack().toFixed(2));
 			return { ...barBack, tipOut };
 		} else {
-			let tipOut = Number((tipsPerBarBack() * barBack.tippedHours).toFixed(2));
+			let tipOut = Number((tipsPerBarBack() * barBack.hours).toFixed(2));
 			return { ...barBack, tipOut };
 		}
 	});
 
+	let bartendersWithTipOut = bartenders.map((bartender) => {
+		const id = bartender.id;
+		if (bartenderHours === 0) {
+			let tipOut = Number(tipsPerBartender().toFixed(2));
+			return { ...bartender, tipOut };
+		} else {
+			let tipOut = Number((tipsPerBartender() * bartender.hours).toFixed(2));
+			return { ...bartender, tipOut };
+		}
+	});
+
+	let totalBartendersTipout = bartendersWithTipOut.reduce(
+		(acc, bartender) => acc + Number(bartender.tipOut),
+		0
+	);
+	let totalBarBackTipout = barBacksWithTipOut.reduce(
+		(acc, barBack) => acc + Number(barBack.tipOut),
+		0
+	);
+	let NewTotalTipOut = totalBarBackTipout + totalBartendersTipout;
+	console.log("total Bartenders Tipout", NewTotalTipOut);
+
+	if (NewTotalTipOut !== tipsCollected) {
+		console.log(
+			"tipsCollected and NewTotalTipOut not equal",
+			tipsCollected - NewTotalTipOut
+		);
+		const remainingDifference = tipsCollected - NewTotalTipOut;
+		console.log("remainingDifference", remainingDifference);
+
+		if (remainingDifference <= 0.09 && remainingDifference >= -0.09) {
+			const adjustedDifference = Number(remainingDifference.toFixed(2));
+			console.log("adjustedDifference", adjustedDifference);
+
+			// Create a shuffled array of indexes to simulate randomness
+			const shuffledIndexes = Array.from(
+				{ length: bartendersWithTipOut.length },
+				(_, i) => i
+			);
+			for (let i = shuffledIndexes.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[shuffledIndexes[i], shuffledIndexes[j]] = [
+					shuffledIndexes[j],
+					shuffledIndexes[i],
+				];
+			}
+
+			// Calculate how many bartenders need to receive the additional tip
+			let additionalBartendersCount = Math.floor(
+				Math.abs(adjustedDifference) / 0.01
+			);
+
+			if (additionalBartendersCount > 0) {
+				// Determine the adjustment per bartender based on the sign of the adjusted difference
+				const adjustment = adjustedDifference > 0 ? 0.01 : -0.01;
+
+				// Distribute the additional tip among the bartenders
+				let adjustedBartenders = new Set();
+				for (let i = 0; i < additionalBartendersCount; i++) {
+					const bartenderIndex = shuffledIndexes[i % shuffledIndexes.length];
+					if (!adjustedBartenders.has(bartenderIndex)) {
+						bartendersWithTipOut[bartenderIndex].tipOut += adjustment;
+						adjustedBartenders.add(bartenderIndex);
+					}
+				}
+			}
+		}
+	}
+
+	bartendersWithTipOut.forEach((obj) => {
+		// Check if the object has the 'tipOut' key
+		if ("tipOut" in obj) {
+			// Apply toFixed() to the 'tipOut' key and update the value in-place
+			obj.tipOut = Number(obj.tipOut).toFixed(2);
+		}
+	});
+	let totalAdjustedTipOutBartenders = bartendersWithTipOut.reduce(
+		(acc, bartender) => acc + Number(bartender.tipOut),
+		0
+	);
+	console.log("bartendersWithTipOut", bartendersWithTipOut);
+	console.log(
+		tipsCollected,
+		totalAdjustedTipOutBartenders,
+		"+",
+		totalBarBackTipout,
+
+		"=",
+		totalAdjustedTipOutBartenders + totalBarBackTipout
+	);
 	return (
 		<Container className={style.topRow}>
 			<div className={style.backgroundColor}>
@@ -114,9 +191,7 @@ export default function CashTipBreakDown({
 													<Col className=" mt-2"> {barBack.name}</Col>
 													<Col className=" mt-2">
 														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
-														<p className="highlight-color">
-															${tipsPerBarBack().toFixed(2)}
-														</p>
+														<p className="highlight-color">${barBack.tipOut}</p>
 													</Col>
 												</Row>
 											) : (
@@ -128,9 +203,7 @@ export default function CashTipBreakDown({
 													</Col>
 													<Col className=" mb-4 mt-2">
 														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
-														<p className="highlight-color">
-															${(tipsPerBarBack() * barBack.hours).toFixed(2)}
-														</p>
+														<p className="highlight-color">${barBack.tipOut}</p>
 													</Col>
 												</Row>
 											)}
@@ -164,9 +237,7 @@ export default function CashTipBreakDown({
 
 												<Col className=" mt-2">
 													<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
-													<p className="highlight-color">
-														${tipsPerBartender().toFixed(2)}
-													</p>
+													<p className="highlight-color">${bartender.tipOut}</p>
 												</Col>
 											</Row>
 										) : (
@@ -178,9 +249,7 @@ export default function CashTipBreakDown({
 												</Col>
 												<Col className="mb-2 mt-2">
 													<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
-													<p className="highlight-color">
-														${(tipsPerBartender() * bartender.hours).toFixed(2)}
-													</p>
+													<p className="highlight-color">${bartender.tipOut}</p>
 												</Col>
 											</Row>
 										)}
