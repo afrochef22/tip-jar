@@ -101,7 +101,12 @@ export default async (req, res) => {
 				);
 			}
 
-			res.status(201).json({ message: "Tip Break Down added successfully" });
+			res
+				.status(201)
+				.json({
+					message: "Tip Break Down added successfully",
+					tipBreakdownId: tipBreakdownId,
+				});
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: "Internal server error" });

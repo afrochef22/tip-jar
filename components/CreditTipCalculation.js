@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import style from "./CreditTipCalculation.module.css";
 import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import StandardCreditTipCalculator from "./StandardCreditTipCalculator";
 import BartenderHourlyInput from "./BartenderHourlyInput";
@@ -22,6 +23,8 @@ export default function CreditTipCalculation({
 	selectedShow,
 }) {
 	const router = useRouter();
+	const [submitting, setSubmitting] = useState(false);
+
 	const bartenders = workingEmployees.filter(
 		(employee) => employee.workingPosition === "Bartender"
 	);
@@ -99,6 +102,7 @@ export default function CreditTipCalculation({
 
 	const handleCalculate = (e) => {
 		e.preventDefault();
+		setSubmitting(true);
 		const formData = new FormData(e.target); // Create a FormData object from the form
 		const data = {};
 		const employeeTips = {};
@@ -237,6 +241,7 @@ export default function CreditTipCalculation({
 							{/* Bar Back Percentage and Input Column */}
 							<Row className={`${style.formRow}`}>
 								<Label
+									md={7}
 									sm={8}
 									xs={7}
 									className={style.formLabel}
@@ -244,7 +249,12 @@ export default function CreditTipCalculation({
 								>
 									Bar Back Percentage
 								</Label>
-								<Col md={4} sm={2} xs={3} className="d-flex align-items-center">
+								<Col
+									md={4}
+									sm={2}
+									xs={3}
+									className="d-flex align-items-center ms-1"
+								>
 									<Input
 										id="BarBackPercentage"
 										name="BarBackPercentage"
@@ -255,7 +265,7 @@ export default function CreditTipCalculation({
 											setDefaultBarBackPercentage(e.target.value)
 										}
 									/>
-									<Col sm={3} xs={2}>
+									<Col md={1} sm={3} xs={2}>
 										<Button
 											// size="sm"
 											onClick={handleIncrease}
@@ -329,7 +339,7 @@ export default function CreditTipCalculation({
 							className={`${style.centerButton} ${style.calculateButton}`}
 							type="submit"
 						>
-							Calculate
+							{submitting ? <>Calculating...</> : "Calculate"}
 						</Button>
 					</div>
 				</Form>

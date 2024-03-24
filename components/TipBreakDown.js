@@ -28,11 +28,17 @@ export default function TipBreakDown({
 	const router = useRouter();
 
 	useEffect(() => {
+		console.log("useEffect triggered");
+
+		// Automatically submit the form when the component mounts
+		handleAddTipBreakDown({});
+	}, []); // Empty dependency array ensures this effect runs only once
+
+	useEffect(() => {
 		if (submitting) {
-			submitTipBreakdown();
-			setTimeout(() => {
-				router.push("/CCTipsTotals");
-			}, 1000);
+			submitTipBreakdown().then((responseData) => {
+				router.push(`/getSelectedTipBreakDown/${responseData}`);
+			});
 		}
 	}, [submitting, newTipBreakdown]);
 
@@ -292,8 +298,7 @@ export default function TipBreakDown({
 		setShowConfirmation(!showConfirmation);
 	};
 
-	const handleAddTipBreakDown = async (e) => {
-		e.preventDefault();
+	const handleAddTipBreakDown = () => {
 		toggleConfirmation();
 		const tipBreakdownExists = allTipBreakdowns.allTipBreakdowns.some(
 			(breakdown) => {
@@ -358,8 +363,14 @@ export default function TipBreakDown({
 			});
 
 			if (response.ok) {
-				console.log("Tip Breakdown added successfully");
+				const responseData = await response.json(); // Parse response body as JSON
+				const newTipBreakdownId = responseData.tipBreakdownId; // Assuming the server returns the ID as 'id'
+				console.log(
+					"Tip Breakdown added successfully with ID:",
+					newTipBreakdownId
+				);
 				setSubmitting(false);
+				return newTipBreakdownId;
 			} else {
 				console.log("response not ok");
 			}
@@ -565,7 +576,7 @@ export default function TipBreakDown({
 						</Col>
 					</Row>
 				)}
-				<Row>
+				{/* <Row>
 					<Col>
 						<Button
 							onClick={handleBackButtonClick}
@@ -595,7 +606,7 @@ export default function TipBreakDown({
 							/>
 						</form>
 					</Col>
-				</Row>
+				</Row> */}
 			</div>
 		</Container>
 	);
