@@ -1,9 +1,16 @@
-import NextAuth from "next-auth";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import clientPromise from "../../../lib/mongodb";
+// auth.js
 
-// For more information on each option (and a full list of options) go to
-// https://authjs.dev/reference/providers/oauth
-export default NextAuth({
-	adapter: MongoDBAdapter(clientPromise),
-});
+import passport, { use } from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+
+// Initialize Passport
+use(
+	new LocalStrategy(function (username, password, done) {
+		// Validate username and password
+		// Call done(err) if there's an error
+		// Call done(null, user) if authentication is successful
+	})
+);
+
+// Export Passport configuration
+export default passport;
