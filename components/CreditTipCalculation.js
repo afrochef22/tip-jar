@@ -339,7 +339,7 @@ export default function CreditTipCalculation({
 							className={`${style.centerButton} ${style.calculateButton}`}
 							type="submit"
 						>
-							{submitting ? <>Calculating...</> : "Calculate"}
+							{submitting ? <>Calculating....</> : "Calculate"}
 						</Button>
 					</div>
 				</Form>
