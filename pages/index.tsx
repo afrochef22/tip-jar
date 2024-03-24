@@ -1,5 +1,6 @@
 import clientPromise from "../lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import LoginBtn from "../components/LoginBtn";
 
 import Link from "next/link";
 type ConnectionStatus = {
@@ -39,9 +40,10 @@ export default function Home({
 			<div className="logo-container">
 				<h1 className="logo-text">TipJar</h1>
 			</div>
+			{/* <LoginBtn /> */}
 			<div className="login-button-container">
 				<Link className="login-button" href="/SelectWorkingEmployee">
-					Login
+					Employees Enter
 				</Link>
 			</div>
 		</div>
