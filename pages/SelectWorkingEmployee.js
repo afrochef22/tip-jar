@@ -3,10 +3,13 @@ import React from "react";
 import SelectEmployee from "../components/SelectEmployee";
 import clientPromise from "../lib/mongodb";
 
-export default function SelectWorkingEmployee({ employees }) {
+export default function SelectWorkingEmployee({ employees, allTipBreakdowns }) {
 	return (
 		<div className="background-color">
-			<SelectEmployee employees={employees} />
+			<SelectEmployee
+				employees={employees}
+				allTipBreakdowns={allTipBreakdowns}
+			/>
 		</div>
 	);
 }
@@ -21,8 +24,14 @@ export async function getServerSideProps() {
 		const cursor = db.collection("employees").find({});
 		const employees = await cursor.toArray();
 
+		const cursor2 = db.collection("tipBreakdown").find({});
+		const allTipBreakdowns = await cursor2.toArray();
+
 		return {
-			props: { employees: JSON.parse(JSON.stringify(employees)) },
+			props: {
+				employees: JSON.parse(JSON.stringify(employees)),
+				allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)),
+			},
 		};
 	} catch (err) {
 		console.error(err);

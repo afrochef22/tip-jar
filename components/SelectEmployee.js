@@ -6,9 +6,9 @@ import SelectEmployeeDisplay from "./SelectEmployeeDisplay";
 import SelectBartender from "./SelectBartender";
 import SelectBarBack from "./SelectBarBack";
 import SelectCook from "./SelectCook";
-import { CurrentShift, CurrentShowPerforming } from "./CurrentShift";
+import { CurrentShift, CurrentShowPerforming, ShiftDate } from "./CurrentShift";
 
-export default function SelectEmployee({ employees }) {
+export default function SelectEmployee({ employees, allTipBreakdowns }) {
 	const router = useRouter();
 	const [allEmployees, setAllEmployees] = useState([]);
 	const [workingEmployees, setWorkingEmployees] = useState([]);
@@ -262,6 +262,7 @@ export default function SelectEmployee({ employees }) {
 			);
 			return;
 		}
+
 		setNextBtn(position);
 	};
 
@@ -269,6 +270,15 @@ export default function SelectEmployee({ employees }) {
 		// Redirect to the TipCalculationPage and pass workingEmployees as a query parameter
 		if (!selectedShow) {
 			setSubmitError("Please select a show. Or enter in an event.");
+			return;
+		}
+		const tipBreakdownExists = allTipBreakdowns.some((breakdown) => {
+			return breakdown.show === selectedShow && breakdown.date === ShiftDate();
+		});
+		if (tipBreakdownExists) {
+			setSubmitError(
+				"Artist already exists for the selected show and date. Please select another show. Or enter in an event."
+			);
 			return;
 		}
 		const workingBartender = workingEmployees.filter(
