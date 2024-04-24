@@ -1,11 +1,10 @@
 import clientPromise from "../../lib/mongodb";
-import { userRouter } from "next/router";
 import { ObjectId } from "mongodb";
-import Link from "next/link";
-
+import { Register } from "../../components/Register";
 import React from "react";
 
-export default function getEmployee({ employee }) {
+export default function RegisterPage({ employee }) {
+	// console.log(employee);
 	if (!employee) {
 		// Handle the case when employee is not found
 		return <div>employee not found</div>;
@@ -13,8 +12,8 @@ export default function getEmployee({ employee }) {
 	console.log("test: ", employee);
 	return (
 		<div>
-			<Link href={`/RegisterPage/${employee._id}`}>Register</Link>
-			<p key={employee._id}>{employee.firstName}</p>
+			hello
+			<Register employee={employee} />
 		</div>
 	);
 }

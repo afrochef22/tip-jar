@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "../components/fontawesom";
-import { SessionProvider } from "next-auth/react";
+import { AuthProvider } from "./Providers";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -15,11 +15,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
 	const footer = isNotIndexPage ? <Footer /> : null;
 	return (
 		<div className="background-color">
-			<SessionProvider session={session}>
+			<AuthProvider>
 				{header}
 				<Component {...pageProps} />
 				{footer}
-			</SessionProvider>
+			</AuthProvider>
 		</div>
 	);
 }

@@ -277,7 +277,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 		});
 		if (tipBreakdownExists) {
 			setSubmitError(
-				"Artist already exists for the selected show and date. Please select another show. Or enter in an event."
+				"Artist already exists for the selected show and date. Please select another show or enter in an event."
 			);
 			return;
 		}
