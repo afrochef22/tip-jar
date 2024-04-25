@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "../components/fontawesom";
-import { AuthProvider } from "./Providers";
+import AuthProvider from "./Providers";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
