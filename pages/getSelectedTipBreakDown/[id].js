@@ -5,9 +5,13 @@ import { Button, Col, Container, Row } from "reactstrap";
 import style from "../../components/TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UpdateTipBreakDownModal from "../../components/UpdateTipBreakDownModal";
+import { useSession } from "next-auth/react";
+import { ShiftDate } from "../../components/CurrentShift";
 
 export default function getSelectedTipBreakDown({ breakDown }) {
-	console.log("breakdown: ", breakDown);
+	const { data: session } = useSession();
+	const shiftMatch = ShiftDate() === breakDown.date;
+
 	if (!breakDown) {
 		// Handle the case when breakDown is not found
 		return <div>Tip Breakdown not found</div>;
@@ -24,11 +28,13 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 	const cookHours = breakDown.cookTips
 		.map((cook) => cook.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
-	console.log("test: ", breakDown);
-	console.log(breakDown.cookTips);
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
-			<UpdateTipBreakDownModal breakDown={breakDown} />
+			{session || shiftMatch ? (
+				<UpdateTipBreakDownModal breakDown={breakDown} />
+			) : (
+				<></>
+			)}
 			<div className={style.backgroundColor}>
 				<Container className={` ${style.container}`}>
 					<Row>
@@ -223,7 +229,6 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 }
 
 export async function getServerSideProps(id) {
-	console.log("hi", id.query.id);
 	// Destructure query directly
 	const showId = id.query.id;
 	try {
@@ -233,7 +238,6 @@ export async function getServerSideProps(id) {
 		const breakDown = await breakDownCollection.findOne({
 			_id: new ObjectId(showId), // Use showId directly
 		});
-		// console.log(breakDown);
 
 		if (!breakDown) {
 			console.log("not found");

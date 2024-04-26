@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+
 import {
 	Navbar,
 	NavbarBrand,
@@ -18,6 +21,7 @@ library.add(faCalculator);
 
 const Header = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const { data: session } = useSession();
 
 	const handleToggle = () => {
 		setIsOpen(!isOpen);
@@ -28,6 +32,13 @@ const Header = () => {
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 760);
+	};
+
+	const router = useRouter();
+
+	const handleSignOut = async () => {
+		await signOut(); // Trigger the sign-in process
+		router.push("/");
 	};
 
 	// Use useEffect to update screen size on mount and window resize
@@ -104,6 +115,14 @@ const Header = () => {
 							CC Tip Totals
 						</Link>
 					</NavItem>
+					{session ? (
+						<NavItem>
+							<button onClick={handleSignOut}>Sign out</button>
+						</NavItem>
+					) : (
+						<></>
+					)}
+
 					{/* <NavItem>
 						<Link className="navbar-link" href="/getAllTipBreakDowns">
 							Tip Breakdown

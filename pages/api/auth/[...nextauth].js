@@ -7,6 +7,7 @@ import AzureADProvider from "next-auth/providers/azure-ad";
 import EmailProvider from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import { useRouter } from "next/router";
 
 const authOptions = {
 	// Configure one or more authentication providers
@@ -54,7 +55,7 @@ const authOptions = {
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-			callbackUrl: `${process.env.NEXTAUTH_URL}/CCTipsTotals`, // Redirect URL after successful sign-in
+			callbackUrl: `${process.env.NEXTAUTH_URL}CCTipsTotals`, // Redirect URL after successful sign-in
 		}),
 
 		// EmailProvider({

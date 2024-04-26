@@ -1,7 +1,21 @@
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Component() {
 	const { data: session } = useSession();
+	const router = useRouter();
+
+	useEffect(() => {
+		// If the user is authenticated, redirect them to the dashboard
+		if (session) {
+			router.push("/CCTipsTotals");
+		}
+	}, [session, router]);
+
+	const handleSignIn = async () => {
+		await signIn(); // Trigger the sign-in process
+	};
 	if (session) {
 		console.log("session", session);
 		return (
@@ -25,7 +39,7 @@ export default function Component() {
 			</div>
 
 			<div className="login-button-container">
-				<button className="login-button" onClick={() => signIn()}>
+				<button className="login-button" onClick={handleSignIn}>
 					Manager Sign in
 				</button>
 			</div>

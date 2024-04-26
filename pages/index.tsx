@@ -40,7 +40,7 @@ export default function Home({
 			<div className="logo-container">
 				<h1 className="logo-text">TipJar</h1>
 			</div>
-			{/* <LoginBtn /> */}
+			<LoginBtn />
 			<div className="login-button-container">
 				<Link className="login-button" href="/SelectWorkingEmployee">
 					Employees Enter
