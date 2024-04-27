@@ -20,10 +20,10 @@ export default function Component() {
 		console.log("session", session);
 		return (
 			<>
-				<div className="login-button-container">
+				{/* <div className="login-button-container">
 					Signed in as {session.user.name || session.user.email}
 					<br />
-				</div>
+				</div> */}
 				<div className="login-button-container">
 					<button className="login-button" onClick={() => signOut()}>
 						Sign out
