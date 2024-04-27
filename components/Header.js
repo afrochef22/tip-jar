@@ -38,7 +38,10 @@ const Header = () => {
 
 	const handleSignOut = async () => {
 		await signOut(); // Trigger the sign-in process
-		router.push("/");
+	};
+
+	const handleSignIn = async () => {
+		await signIn(); // Trigger the sign-in process
 	};
 
 	// Use useEffect to update screen size on mount and window resize
@@ -66,6 +69,15 @@ const Header = () => {
 					<Link className="navbar-link" href="/CCTipsTotals">
 						CC Tip Totals
 					</Link>
+					{session ? (
+						<NavItem>
+							<button onClick={handleSignOut}>Sign out</button>
+						</NavItem>
+					) : (
+						<NavItem>
+							<button onClick={handleSignIn}>Sign In</button>
+						</NavItem>
+					)}
 					{/* <Link className="navbar-link" href="/getAllTipBreakDowns">
 						Tip Breakdown
 					</Link> */}
@@ -120,7 +132,9 @@ const Header = () => {
 							<button onClick={handleSignOut}>Sign out</button>
 						</NavItem>
 					) : (
-						<></>
+						<NavItem>
+							<button onClick={handleSignIn}>Sign In</button>
+						</NavItem>
 					)}
 
 					{/* <NavItem>
