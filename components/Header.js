@@ -71,15 +71,11 @@ const Header = () => {
 					</Link>
 					{session ? (
 						<NavItem>
-							<Link className="navbar-link" onClick={handleSignOut}>
-								Sign out
-							</Link>
+							<div onClick={handleSignOut}>Sign out</div>
 						</NavItem>
 					) : (
 						<NavItem>
-							<Link className="navbar-link" onClick={handleSignIn}>
-								Sign In
-							</Link>
+							<div onClick={handleSignIn}>Sign In</div>
 						</NavItem>
 					)}
 					{/* <Link className="navbar-link" href="/getAllTipBreakDowns">
@@ -133,15 +129,11 @@ const Header = () => {
 					</NavItem>
 					{session ? (
 						<NavItem>
-							<Link className="navbar-link" onClick={handleSignOut}>
-								Sign out
-							</Link>
+							<div onClick={handleSignOut}>Sign out</div>
 						</NavItem>
 					) : (
 						<NavItem>
-							<Link className="navbar-link" onClick={handleSignIn}>
-								Sign In
-							</Link>
+							<div onClick={handleSignIn}>Sign In</div>
 						</NavItem>
 					)}
 
