@@ -395,7 +395,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 			});
 			if (response.ok) {
 				console.log("Tip Breakdown updated Successfully");
-				router.push(`/CCTipsTotals`);
+				router.push(`/getSelectedTipBreakDown/${breakDown._id}`);
 			} else {
 				console.log("response not ok");
 			}
