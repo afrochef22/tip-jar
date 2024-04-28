@@ -2,13 +2,14 @@ import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 
 export const Register = ({ employee }) => {
+	console.log(employee);
 	// State variables to store form data
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
 	// Function to handle form submission
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		// You can handle form submission logic here, such as sending data to your backend
 		console.log("Form submitted:", { username, email, password });
@@ -16,6 +17,31 @@ export const Register = ({ employee }) => {
 		setUsername("");
 		setEmail("");
 		setPassword("");
+		e.preventDefault();
+
+		try {
+			const response = await fetch(`/api/updateEmployee/${employee._id}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json", // Specify the content type
+				},
+
+				body: JSON.stringify({
+					username,
+					email,
+					password,
+				}),
+			});
+
+			if (response.ok) {
+				console.log("Employee updated successfully");
+				router.push("/CCTipsTotals");
+			} else {
+				console.log("response not ok");
+			}
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	async function handleSignInWithGoogle() {
@@ -23,7 +49,7 @@ export const Register = ({ employee }) => {
 	}
 
 	return (
-		<div className="container mt-5">
+		<div className="container mt-5 front-page">
 			<div className="row justify-content-center">
 				<div className="col-md-6">
 					<div className="card">
@@ -61,7 +87,7 @@ export const Register = ({ employee }) => {
 										required
 									/>
 								</div>
-								<div className="form-group">
+								<div className="form-group mb-3">
 									<label htmlFor="password">Password</label>
 									<input
 										type="password"
@@ -74,9 +100,10 @@ export const Register = ({ employee }) => {
 										required
 									/>
 								</div>
-								<button type="submit" className="btn btn-primary btn-block">
+								<button type="submit " className="btn btn-primary btn-block">
 									Register
 								</button>
+								<p className="mt-2">or</p>
 								<button
 									className="btn btn-success  btn-block"
 									onClick={handleSignInWithGoogle}

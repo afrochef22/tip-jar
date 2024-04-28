@@ -34,7 +34,7 @@ const authOptions = {
 						console.log("not user");
 						return null;
 					}
-					const passwordMatch = await bcrypt.compare(user.password, password);
+					const passwordMatch = await bcrypt.compare(password, user.password);
 
 					console.log(passwordMatch);
 					if (!passwordMatch) {

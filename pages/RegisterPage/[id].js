@@ -12,7 +12,6 @@ export default function RegisterPage({ employee }) {
 	console.log("test: ", employee);
 	return (
 		<div>
-			hello
 			<Register employee={employee} />
 		</div>
 	);
