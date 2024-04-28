@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Button, Col, Container, Row } from "reactstrap";
-
+import UserName from "./UserName";
 import {
 	Navbar,
 	NavbarBrand,
@@ -20,10 +20,10 @@ import { faCalculator } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faCalculator);
 
-const Header = () => {
+const Header = ({ user }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { data: session } = useSession();
-	console.log(session);
+	console.log("user", UserName());
 	const User = () => {
 		if (session) {
 			return <div>{session.user.name || session.user.email}</div>;
@@ -68,7 +68,7 @@ const Header = () => {
 				<Link className="logo" href="/">
 					TipJar
 				</Link>
-				<User />
+				<UserName />
 			</Col>
 
 			<Link className="navbar-link" href="/SelectWorkingEmployee">
