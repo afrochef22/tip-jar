@@ -23,6 +23,14 @@ library.add(faCalculator);
 const Header = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { data: session } = useSession();
+	console.log(session);
+	const User = () => {
+		if (session) {
+			return <div>{session.user.name || session.user.email}</div>;
+		} else {
+			return <></>;
+		}
+	};
 
 	const handleToggle = () => {
 		setIsOpen(!isOpen);
@@ -56,9 +64,13 @@ const Header = () => {
 
 	return (
 		<Navbar className="navbar" sticky="top" expand="md">
-			<Link className="logo" href="/">
-				TipJar
-			</Link>
+			<Col>
+				<Link className="logo" href="/">
+					TipJar
+				</Link>
+				<User />
+			</Col>
+
 			<Link className="navbar-link" href="/SelectWorkingEmployee">
 				Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
 			</Link>
@@ -77,6 +89,7 @@ const Header = () => {
 								<Link className="navbar-link " href="/CCTipsTotals">
 									CC Tip Totals
 								</Link>
+
 								{session ? (
 									<div className="navbar-link mt-1" onClick={handleSignOut}>
 										Sign out
@@ -101,6 +114,7 @@ const Header = () => {
 					<Link className="navbar-link " href="/CCTipsTotals">
 						CC Tip Totals
 					</Link>
+
 					<Nav>
 						{session ? (
 							<div className="navbar-link" onClick={handleSignOut}>
