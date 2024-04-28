@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import { Button, Col, Container, Row } from "reactstrap";
 
 import {
 	Navbar,
@@ -58,29 +59,36 @@ const Header = () => {
 			<Link className="logo" href="/">
 				TipJar
 			</Link>
+			<Link className="navbar-link" href="/SelectWorkingEmployee">
+				Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
+			</Link>
+			<Link className="navbar-link" href="/CashTipCalculator">
+				Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
+			</Link>
+
 			{isMobile ? (
 				<div>
-					<Link className="navbar-link" href="/SelectWorkingEmployee">
-						Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
-					</Link>
-					<Link className="navbar-link" href="/CashTipCalculator">
-						Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
-					</Link>
-					<Link className="navbar-link" href="/CCTipsTotals">
-						CC Tip Totals
-					</Link>
-					{session ? (
-						<NavItem>
-							<div onClick={handleSignOut}>Sign out</div>
-						</NavItem>
-					) : (
-						<NavItem>
-							<div onClick={handleSignIn}>Sign In</div>
-						</NavItem>
-					)}
-					{/* <Link className="navbar-link" href="/getAllTipBreakDowns">
-						Tip Breakdown
-					</Link> */}
+					<div className="navbar-toggler" onClick={handleToggle}>
+						<div className="bar"></div>
+						<div className="bar"></div>
+						<div className="bar"></div>
+						<div className="collapse-menue">
+							<Collapse isOpen={isOpen} navbar>
+								<Link className="navbar-link " href="/CCTipsTotals">
+									CC Tip Totals
+								</Link>
+								{session ? (
+									<div className="navbar-link mt-1" onClick={handleSignOut}>
+										Sign out
+									</div>
+								) : (
+									<div className="navbar-link mt-1" onClick={handleSignIn}>
+										Sign In
+									</div>
+								)}
+							</Collapse>
+						</div>
+					</div>
 				</div>
 			) : (
 				<></>
@@ -89,60 +97,24 @@ const Header = () => {
 			{isMobile ? (
 				<></>
 			) : (
-				// <Nav>
-				// 	<div className="navbar-toggler" onClick={handleToggle}>
-				// 		<div className="bar"></div>
-				// 		<div className="bar"></div>
-				// 		<div className="bar"></div>
-				// 		<div className="collapse-menue">
-				// 			<Collapse isOpen={isOpen} navbar>
-				// 				<NavItem className="navbar-link-mobile">
-				// 					<Link className="navbar-link" href="/SelectWorkingEmployee">
-				// 						Credit <FontAwesomeIcon icon=" fa-calculator" />
-				// 					</Link>
-				// 				</NavItem>
-
-				// 				<NavItem className="navbar-link-mobile ">
-				// 					<Link className="navbar-link" href="/CashTipCalculator">
-				// 						Cash <FontAwesomeIcon icon=" fa-calculator" />
-				// 					</Link>
-				// 				</NavItem>
-				// 			</Collapse>
-				// 		</div>
-				// 	</div>
-				// </Nav>
-				<Nav>
-					<NavItem className=" ">
-						<Link className="navbar-link" href="/SelectWorkingEmployee">
-							Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
-						</Link>
-					</NavItem>
-					<NavItem className=" ">
-						<Link className="navbar-link" href="/CashTipCalculator">
-							Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
-						</Link>
-					</NavItem>
-					<NavItem>
-						<Link className="navbar-link" href="/CCTipsTotals">
-							CC Tip Totals
-						</Link>
-					</NavItem>
-					{session ? (
-						<NavItem>
-							<div onClick={handleSignOut}>Sign out</div>
-						</NavItem>
-					) : (
-						<NavItem>
-							<div onClick={handleSignIn}>Sign In</div>
-						</NavItem>
-					)}
-
-					{/* <NavItem>
-						<Link className="navbar-link" href="/getAllTipBreakDowns">
-							Tip Breakdown
-						</Link>
-					</NavItem> */}
-				</Nav>
+				<>
+					<Link className="navbar-link " href="/CCTipsTotals">
+						CC Tip Totals
+					</Link>
+					<Nav>
+						{session ? (
+							<div className="navbar-link" onClick={handleSignOut}>
+								Sign out
+							</div>
+						) : (
+							<NavItem>
+								<div className="navbar-link" onClick={handleSignIn}>
+									Sign In
+								</div>
+							</NavItem>
+						)}
+					</Nav>
+				</>
 			)}
 		</Navbar>
 	);

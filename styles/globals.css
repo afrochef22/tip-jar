@@ -158,6 +158,7 @@ body {
 
 .navbar-link:hover {
 	color: var(--highlight) !important;
+	cursor: pointer;
 }
 
 .navbar-link-mobile {
