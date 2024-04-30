@@ -2,7 +2,6 @@ import clientPromise from "../lib/mongodb";
 import Bartenders from "../components/Bartenders";
 import BarBacks from "../components/BarBacks";
 import Cooks from "../components/Cooks";
-import UserName from "../components/UserName";
 import NonPositionedEmployee from "../components/NonPositionedEmployee";
 import { AddEmployeeModal } from "../components/addEmployeeModal";
 
@@ -16,7 +15,6 @@ export default function EmployeesPage({ employees }) {
 			<BarBacks employees={employees} />
 			<Cooks employees={employees} />
 			<NonPositionedEmployee employees={employees} />
-			<UserName employees={employees} />
 		</div>
 	);
 }

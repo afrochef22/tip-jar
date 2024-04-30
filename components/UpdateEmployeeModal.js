@@ -138,6 +138,16 @@ export function UpdateEmployeeModal(props, args) {
 						/>
 					</FormGroup>
 					<FormGroup className={style.group}>
+						<Label>Email:</Label>
+						<Input
+							className={style.border}
+							type="email"
+							name="email"
+							onChange={handleInputChange}
+							placeholder={props.data.email}
+						/>
+					</FormGroup>
+					<FormGroup className={style.group}>
 						<Label>Position:</Label>
 						<div>
 							<Label check>

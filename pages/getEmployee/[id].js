@@ -2,19 +2,23 @@ import clientPromise from "../../lib/mongodb";
 import { userRouter } from "next/router";
 import { ObjectId } from "mongodb";
 import Link from "next/link";
-
 import React from "react";
+import SendRegistrationLink from "../../components/SendRegistrationLink";
 
 export default function getEmployee({ employee }) {
 	if (!employee) {
 		// Handle the case when employee is not found
 		return <div>employee not found</div>;
 	}
-	console.log("test: ", employee);
+
 	return (
-		<div>
-			<Link href={`/RegisterPage/${employee._id}`}>Register</Link>
-			<p key={employee._id}>{employee.firstName}</p>
+		<div className="front-page">
+			<SendRegistrationLink employee={employee} />
+			<p>
+				{employee.firstName} {employee.lastName}
+			</p>
+			<p>{employee.email}</p>
+			<p>{employee.position}</p>
 		</div>
 	);
 }

@@ -3,11 +3,11 @@ import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 
 export default async (req, res) => {
+	console.log("update employee api");
 	const id = req.query.id;
-	console.log(req.query);
 	const data = req.body; // Assuming data is sent in the request body
-	console.log("password", data.password);
 	const saltRounds = 10; // Number of salt rounds for hashing
+	console.log("tokenExpiration", typeof data.tokenExpiration);
 
 	if (!ObjectId.isValid(id)) {
 		return res.status(400).json({ error: "Invalid Employee ID: ", id });
@@ -31,7 +31,22 @@ export default async (req, res) => {
 				const hashedPassword = await bcrypt.hash(data.password, saltRounds);
 				updateDocument.$set = { password: hashedPassword };
 			}
-			console.log("Up date document", updateDocument);
+			// Add token and token expiration to the update document
+			if (data.token || data.tokenExpiration) {
+				// If updateDocument.$set does not exist, create it
+				if (!updateDocument.$set) {
+					updateDocument.$set = {};
+				}
+				// Add token and token expiration to updateDocument.$set
+				if (data.token) updateDocument.$set.token = data.token;
+				if (data.tokenExpiration) {
+					console.log("tokenExpiration", data.tokenExpiration);
+					const tokenExpiration = new Date(data.tokenExpiration);
+					updateDocument.$set.tokenExpiration = tokenExpiration;
+				}
+			}
+			console.log("Up date document after token and exp", updateDocument);
+
 			// Update name, position, and active status
 			if (
 				data.firstName ||

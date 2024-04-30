@@ -23,7 +23,6 @@ library.add(faCalculator);
 const Header = ({ user }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { data: session } = useSession();
-	console.log("user", UserName());
 	const User = () => {
 		if (session) {
 			return <div>{session.user.name || session.user.email}</div>;
@@ -109,7 +108,7 @@ const Header = ({ user }) => {
 											Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
 										</Link>
 										{isSmall ? <div className="spacer"></div> : <></>}
-										<Link className="navbar-link" href="/CashTipCalculator">
+										<Link className="navbar-link" href="/employees">
 											Employees{" "}
 										</Link>
 									</>
@@ -149,7 +148,7 @@ const Header = ({ user }) => {
 							<Link className="navbar-link" href="/CashTipCalculator">
 								Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
 							</Link>
-							<Link className="navbar-link" href="/CashTipCalculator">
+							<Link className="navbar-link" href="/employees">
 								Employees{" "}
 							</Link>
 						</>
