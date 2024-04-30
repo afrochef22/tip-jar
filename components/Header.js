@@ -39,8 +39,10 @@ const Header = ({ user }) => {
 	};
 
 	const [isMobile, setIsMobile] = useState(false);
+	const [isSmall, setIsSmall] = useState(false);
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 760);
+		setIsSmall(window.innerWidth < 500);
 	};
 
 	const router = useRouter();
@@ -70,14 +72,20 @@ const Header = ({ user }) => {
 				</Link>
 				<UserName />
 			</Col>
-
-			<Link className="navbar-link" href="/SelectWorkingEmployee">
-				Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
-			</Link>
-			<Link className="navbar-link" href="/CashTipCalculator">
-				Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
-			</Link>
-
+			{session ? (
+				<Link className="navbar-link " href="/Dashboard">
+					Dashboard
+				</Link>
+			) : (
+				<>
+					<Link className="navbar-link" href="/SelectWorkingEmployee">
+						Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
+					</Link>
+					<Link className="navbar-link" href="/CashTipCalculator">
+						Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
+					</Link>
+				</>
+			)}
 			{isMobile ? (
 				<div>
 					<div className="navbar-toggler" onClick={handleToggle}>
@@ -86,17 +94,42 @@ const Header = ({ user }) => {
 						<div className="bar"></div>
 						<div className="collapse-menue">
 							<Collapse isOpen={isOpen} navbar>
-								<Link className="navbar-link " href="/CCTipsTotals">
+								<Link className="navbar-link  " href="/CCTipsTotals">
 									CC Tip Totals
 								</Link>
-
 								{session ? (
-									<div className="navbar-link mt-1" onClick={handleSignOut}>
-										Sign out
+									<>
+										<Link
+											className="navbar-link "
+											href="/SelectWorkingEmployee"
+										>
+											Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
+										</Link>
+										<Link className="navbar-link" href="/CashTipCalculator">
+											Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
+										</Link>
+										{isSmall ? <div className="spacer"></div> : <></>}
+										<Link className="navbar-link" href="/CashTipCalculator">
+											Employees{" "}
+										</Link>
+									</>
+								) : (
+									<></>
+								)}
+								{session ? (
+									<div>
+										<Button
+											className="navbar-link m-2 "
+											onClick={handleSignOut}
+										>
+											Sign out
+										</Button>
 									</div>
 								) : (
-									<div className="navbar-link mt-1" onClick={handleSignIn}>
-										Sign In
+									<div>
+										<Button className="navbar-link m-2" onClick={handleSignIn}>
+											Sign In
+										</Button>
 									</div>
 								)}
 							</Collapse>
@@ -104,27 +137,35 @@ const Header = ({ user }) => {
 					</div>
 				</div>
 			) : (
-				<></>
-			)}
-
-			{isMobile ? (
-				<></>
-			) : (
 				<>
 					<Link className="navbar-link " href="/CCTipsTotals">
 						CC Tip Totals
 					</Link>
-
+					{session ? (
+						<>
+							<Link className="navbar-link" href="/SelectWorkingEmployee">
+								Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
+							</Link>
+							<Link className="navbar-link" href="/CashTipCalculator">
+								Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
+							</Link>
+							<Link className="navbar-link" href="/CashTipCalculator">
+								Employees{" "}
+							</Link>
+						</>
+					) : (
+						<></>
+					)}
 					<Nav>
 						{session ? (
-							<div className="navbar-link" onClick={handleSignOut}>
+							<Button className="navbar-link" onClick={handleSignOut}>
 								Sign out
-							</div>
+							</Button>
 						) : (
 							<NavItem>
-								<div className="navbar-link" onClick={handleSignIn}>
+								<Button className="navbar-link" onClick={handleSignIn}>
 									Sign In
-								</div>
+								</Button>
 							</NavItem>
 						)}
 					</Nav>

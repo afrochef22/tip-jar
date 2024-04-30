@@ -373,3 +373,8 @@ body {
 .border-box {
 	border: solid 5px var(--secondary-color);
 }
+@media screen and (max-width: 600px) {
+	.spacer {
+		margin-top: 10px;
+	}
+}
