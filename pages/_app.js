@@ -10,9 +10,10 @@ import { session } from "passport";
 
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
 	const isNotIndexPage = router.pathname !== "/";
+	const isNotTokenExpiredPage = router.pathname !== "/TokenExpired";
 
-	const header = isNotIndexPage ? <Header /> : null;
-	const footer = isNotIndexPage ? <Footer /> : null;
+	const header = isNotIndexPage && isNotTokenExpiredPage ? <Header /> : null;
+	const footer = isNotIndexPage && isNotTokenExpiredPage ? <Footer /> : null;
 	return (
 		<div className="background-color">
 			<AuthProvider>

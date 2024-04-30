@@ -67,12 +67,12 @@ const BarBacks = ({ employees }) => {
 								</Col>
 
 								<Col>
-									<Button
+									{/* <Button
 										className={style.trash}
 										onClick={() => toggleConfirmation(barBacks._id)}
 									>
 										🗑
-									</Button>
+									</Button> */}
 									<DeleteDialog
 										isOpen={!!confirmationStates[barBacks._id]}
 										toggle={() => toggleConfirmation(barBacks._id)}

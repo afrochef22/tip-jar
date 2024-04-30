@@ -71,12 +71,12 @@ const Bartenders = ({ employees }) => {
 								</Col>
 
 								<Col>
-									<Button
+									{/* <Button
 										className={style.trash}
 										onClick={() => toggleConfirmation(bartender._id)}
 									>
 										🗑
-									</Button>
+									</Button> */}
 									<DeleteDialog
 										isOpen={!!confirmationStates[bartender._id]}
 										toggle={() => toggleConfirmation(bartender._id)}

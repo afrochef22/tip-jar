@@ -1,12 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export const Register = ({ employee }) => {
 	console.log(employee);
+	const router = useRouter();
+	const token = router.query.token;
 	// State variables to store form data
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+
+	useEffect(() => {
+		// Check if token is expired
+		const now = new Date();
+		const expirationTime = new Date(employee.tokenExpiration);
+
+		if (now > expirationTime) {
+			// Token expired, redirect user or display error
+			router.push("/TokenExpired");
+		}
+		if (token !== employee.token) {
+			router.push("/TokenExpired");
+		}
+	}, []);
 
 	// Function to handle form submission
 	const handleSubmit = async (e) => {

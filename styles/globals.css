@@ -119,6 +119,14 @@ body {
 	cursor: pointer;
 	text-decoration: none;
 }
+.invalid-link {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 50vh;
+	margin-left: 10px;
+	margin-right: 10px;
+}
 
 .footer {
 	background-color: #555;

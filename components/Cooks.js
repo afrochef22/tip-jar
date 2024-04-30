@@ -67,12 +67,12 @@ const Cooks = ({ employees }) => {
 								</Col>
 
 								<Col>
-									<Button
+									{/* <Button
 										className={style.trash}
 										onClick={() => toggleConfirmation(cook._id)}
 									>
 										🗑
-									</Button>
+									</Button> */}
 									<DeleteDialog
 										isOpen={!!confirmationStates[cook._id]}
 										toggle={() => toggleConfirmation(cook._id)}
