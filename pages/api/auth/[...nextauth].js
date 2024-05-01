@@ -12,6 +12,17 @@ import { useRouter } from "next/router";
 const authOptions = {
 	// Configure one or more authentication providers
 	providers: [
+		EmailProvider({
+			server: {
+				host: process.env.EMAIL_SERVER_HOST,
+				port: process.env.EMAIL_SERVER_PORT,
+				auth: {
+					user: process.env.EMAIL_SERVER_USER,
+					pass: process.env.EMAIL_SERVER_PASSWORD,
+				},
+			},
+			from: process.env.EMAIL_FROM,
+		}),
 		CredentialsProvider({
 			name: "Credentials",
 			credentials: {
@@ -21,22 +32,19 @@ const authOptions = {
 			async authorize(credentials, req) {
 				// Add logic here to look up the user from the credentials supplied
 				const { username, password } = credentials;
-				console.log(username, password);
 
 				try {
 					const client = await clientPromise;
 					const db = client.db("TeragramBallroom");
 					const employeeCollection = db.collection("employees");
 					const user = await employeeCollection.findOne({ username: username });
-					console.log(user.password);
-					console.log(password);
+
 					if (!user) {
 						console.log("not user");
 						return null;
 					}
 					const passwordMatch = await bcrypt.compare(password, user.password);
 
-					console.log(passwordMatch);
 					if (!passwordMatch) {
 						console.log("not password");
 						return null;
@@ -54,23 +62,6 @@ const authOptions = {
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 			callbackUrl: `${process.env.NEXTAUTH_URL}CCTipsTotals`, // Redirect URL after successful sign-in
 		}),
-
-		// EmailProvider({
-		// 	server: process.env.EMAIL_SERVER,
-		// 	from: process.env.EMAIL_FROM,
-		// }),
-		EmailProvider({
-			server: {
-				host: process.env.EMAIL_SERVER_HOST,
-				port: process.env.EMAIL_SERVER_PORT,
-				auth: {
-					user: process.env.EMAIL_SERVER_USER,
-					pass: process.env.EMAIL_SERVER_PASSWORD,
-				},
-			},
-			from: process.env.EMAIL_FROM,
-		}),
-		// ...add more providers here
 	],
 	session: {
 		strategy: "jwt",
@@ -82,9 +73,6 @@ const authOptions = {
 	callbacks: {
 		async signIn({ user, account, profile }) {
 			// Check if the account provider is Google
-			console.log("user: ", user);
-			console.log("account: ", account);
-			console.log("profile: ", profile);
 
 			if (account.provider === "google") {
 				console.log("is google");
@@ -120,6 +108,30 @@ const authOptions = {
 					}
 				} catch (error) {
 					console.error("Error linking Google account:", error);
+				}
+			}
+
+			if (user.email) {
+				try {
+					const client = await clientPromise;
+					const db = client.db("TeragramBallroom");
+					const employeeCollection = db.collection("employees");
+					const email = user.email;
+					// Check if the user's email exists in the database
+					const existingUser = await employeeCollection.findOne({ email });
+					if (!existingUser) {
+						console.log("User with email does not exist in the database");
+						return null; // Return null to prevent sign-in
+					}
+
+					// Return the user object to allow sign-in
+					return existingUser;
+				} catch (error) {
+					console.error(
+						"Error checking user existence in the database:",
+						error
+					);
+					return null; // Return null in case of error
 				}
 			}
 

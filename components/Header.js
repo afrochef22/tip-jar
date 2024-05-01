@@ -86,7 +86,7 @@ const Header = ({ user }) => {
 				</>
 			)}
 			{isMobile ? (
-				<div>
+				<>
 					<div className="navbar-toggler" onClick={handleToggle}>
 						<div className="bar"></div>
 						<div className="bar"></div>
@@ -134,7 +134,7 @@ const Header = ({ user }) => {
 							</Collapse>
 						</div>
 					</div>
-				</div>
+				</>
 			) : (
 				<>
 					<Link className="navbar-link " href="/CCTipsTotals">

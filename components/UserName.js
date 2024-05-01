@@ -37,7 +37,7 @@ const UserName = () => {
 				);
 				if (employeeWithEmail) {
 					setUserName(
-						`${employeeWithEmail.firstName} ${employeeWithEmail.lastName}`
+						`${employeeWithEmail.firstName} ${employeeWithEmail.lastName} `
 					); // Assuming firstName is the field you want to display
 				}
 			}
