@@ -52,7 +52,7 @@ export const Register = ({ employee }) => {
 
 			if (response.ok) {
 				console.log("Employee updated successfully");
-				router.push("/CCTipsTotals");
+				router.push("/Dashboard");
 			} else {
 				console.log("response not ok");
 			}
@@ -77,6 +77,13 @@ export const Register = ({ employee }) => {
 							</p>
 						</div>
 						<div className="card-body">
+							<button
+								className="btn btn-success  btn-block"
+								onClick={handleSignInWithGoogle}
+							>
+								Sign in with Google
+							</button>
+							<p className="mt-2">or</p>
 							<form onSubmit={handleSubmit}>
 								<div className="form-group">
 									<label htmlFor="username">Username</label>
@@ -119,13 +126,6 @@ export const Register = ({ employee }) => {
 								</div>
 								<button type="submit " className="btn btn-primary btn-block">
 									Register
-								</button>
-								<p className="mt-2">or</p>
-								<button
-									className="btn btn-success  btn-block"
-									onClick={handleSignInWithGoogle}
-								>
-									Sign in with Google
 								</button>
 							</form>
 						</div>
