@@ -9,7 +9,7 @@ export default function Component() {
 	useEffect(() => {
 		// If the user is authenticated, redirect them to the dashboard
 		if (session) {
-			router.push("/CCTipsTotals");
+			router.push("/Dashboard");
 		}
 	}, [session, router]);
 

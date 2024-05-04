@@ -17,19 +17,13 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faCalculator } from "@fortawesome/free-solid-svg-icons";
+import SessionExpirationWarning from "./SessionExpirationWarning";
 
 library.add(faCalculator);
 
 const Header = ({ user }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { data: session } = useSession();
-	const User = () => {
-		if (session) {
-			return <div>{session.user.name || session.user.email}</div>;
-		} else {
-			return <></>;
-		}
-	};
 
 	const handleToggle = () => {
 		setIsOpen(!isOpen);
@@ -70,11 +64,14 @@ const Header = ({ user }) => {
 					TipJar
 				</Link>
 				<UserName />
+				<SessionExpirationWarning />
 			</Col>
 			{session ? (
-				<Link className="navbar-link " href="/Dashboard">
-					Dashboard
-				</Link>
+				<>
+					<Link className="navbar-link " href="/Dashboard">
+						Dashboard
+					</Link>
+				</>
 			) : (
 				<>
 					<Link className="navbar-link" href="/SelectWorkingEmployee">

@@ -28,7 +28,7 @@ const UserName = () => {
 	const { data: session } = useSession();
 	const [userName, setUserName] = useState("");
 	const employees = Employees();
-
+	console.log("session", session);
 	useEffect(() => {
 		const fetchUserData = async () => {
 			if (session) {
@@ -46,7 +46,9 @@ const UserName = () => {
 		fetchUserData();
 	}, [session, employees]);
 
-	return <h6 className="third-color">{userName} </h6>;
+	return (
+		<div>{session ? <h6 className="gold-color">{userName} </h6> : <></>}</div>
+	);
 };
 
 export default UserName;

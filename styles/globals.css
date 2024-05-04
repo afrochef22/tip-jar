@@ -23,6 +23,7 @@ body {
 	--lastCol-even: rgb(35, 35, 35);
 	--lastCol-odd: rgb(35, 35, 35);
 	--thead-tfoot: #b9b9b9;
+	--gold: #ffd700;
 }
 
 /* :root {
@@ -60,6 +61,10 @@ body {
 
 .highlight-color {
 	color: var(--highlight);
+}
+
+.gold-color {
+	color: var(--gold);
 }
 
 .button-color {

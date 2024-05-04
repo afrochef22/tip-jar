@@ -10,7 +10,7 @@ export default async (req, res) => {
 			.find({})
 			.limit(1000000)
 			.toArray();
-		console.log(employees);
+		// console.log(employees);
 		res.json(employees);
 	} catch (err) {
 		console.error(err);

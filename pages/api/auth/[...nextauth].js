@@ -60,17 +60,56 @@ const authOptions = {
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-			callbackUrl: `${process.env.NEXTAUTH_URL}CCTipsTotals`, // Redirect URL after successful sign-in
+			callbackUrl: `${process.env.NEXTAUTH_URL}Dashboard`, // Redirect URL after successful sign-in
 		}),
 	],
 	session: {
 		strategy: "jwt",
-		maxAge: 6 * 60 * 60,
+		maxAge: 30 * 60,
+		// autoCommit: true,
 	},
+
 	secret: process.env.NEXTAUTH_SECRET,
 
 	adapter: MongoDBAdapter(clientPromise),
 	callbacks: {
+		async session({ session, token, user }) {
+			// Log session information for debugging
+			console.log("[...nextauth] Session:", session);
+			console.log("Token:", token);
+			console.log("User:", user);
+
+			// Parse the ISO 8601 expiration time string into a Date object
+			const expirationTimeUTC = new Date(session.expires);
+
+			// Convert the expiration time to Pacific Standard Time (PST)
+			const options = {
+				timeZone: "America/Los_Angeles",
+				timeZoneName: "short",
+			};
+			const expirationTimePST = expirationTimeUTC.toLocaleString(
+				"en-US",
+				options
+			);
+
+			// // Log the session expiry time in PST for debugging
+			console.log("[...nextauth] Session Expires (PST):", expirationTimePST);
+			// // Parse the expiration time from the token
+			// const expirationTime = token.exp;
+
+			// // Get the current time
+			// const currentTime = Math.floor(Date.now() / 1000); // Convert milliseconds to seconds
+
+			// // Check if the token has expired
+			// if (expirationTime && expirationTime < currentTime) {
+			// 	// Token has expired, log the user out or perform other actions
+			// 	console.log("Session token has expired.");
+			// 	// Example: Log the user out
+			// 	return null; // Return null to invalidate the session
+			// }
+			return session;
+		},
+
 		async signIn({ user, account, profile }) {
 			// Check if the account provider is Google
 
