@@ -1,8 +1,16 @@
 import React from "react";
 import clientPromise from "../lib/mongodb";
+import AllTipBreakDowns from "../components/AllTipBreakDowns";
 
 export default function Dashboard({ employees, allTipBreakdowns }) {
-	return <div>Dashboard</div>;
+	return (
+		<div
+			className="
+		front-page"
+		>
+			<AllTipBreakDowns allTipBreakdowns={allTipBreakdowns} />
+		</div>
+	);
 }
 
 export async function getServerSideProps() {

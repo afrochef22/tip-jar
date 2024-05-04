@@ -1,0 +1,26 @@
+.carouselContainer {
+	max-width: 1000px;
+	margin: auto;
+	margin-top: 100px;
+}
+
+/* .cardWidth {
+	margin-bottom: "20px" !important;
+	width: "15rem" !important;
+} */
+/* 
+.carouselControlPrevIcon,
+.carouselControlNextIcon {
+	background-color: gray;
+} */
+
+.carouselControlPrevIcon:after,
+.carouselControlNextIcon:after {
+	background-color: gold !important; /* Change the color of the icon inside the controls */
+}
+
+@media (max-width: 767px) {
+	.carouselContainer {
+		margin: 20px 30px 0 30px; /* Adjust the margin for mobile screens */
+	}
+}

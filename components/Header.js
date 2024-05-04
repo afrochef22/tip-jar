@@ -93,6 +93,7 @@ const Header = ({ user }) => {
 								<Link className="navbar-link  " href="/CCTipsTotals">
 									CC Tip Totals
 								</Link>
+
 								{session ? (
 									<>
 										<Link
@@ -108,9 +109,14 @@ const Header = ({ user }) => {
 										<Link className="navbar-link" href="/employees">
 											Employees{" "}
 										</Link>
+										<Link className="navbar-link  " href="/getAllTipBreakDowns">
+											Tip Breakdowns
+										</Link>
 									</>
 								) : (
-									<></>
+									<Link className="navbar-link  " href="/getAllTipBreakDowns">
+										Tip Breakdowns
+									</Link>
 								)}
 								{session ? (
 									<div>
@@ -137,6 +143,7 @@ const Header = ({ user }) => {
 					<Link className="navbar-link " href="/CCTipsTotals">
 						CC Tip Totals
 					</Link>
+
 					{session ? (
 						<>
 							<Link className="navbar-link" href="/SelectWorkingEmployee">
@@ -148,9 +155,14 @@ const Header = ({ user }) => {
 							<Link className="navbar-link" href="/employees">
 								Employees{" "}
 							</Link>
+							<Link className="navbar-link  " href="/getAllTipBreakDowns">
+								Tip Breakdowns
+							</Link>
 						</>
 					) : (
-						<></>
+						<Link className="navbar-link  " href="/getAllTipBreakDowns">
+							Tip Breakdowns
+						</Link>
 					)}
 					<Nav>
 						{session ? (
