@@ -31,9 +31,16 @@ export function UpdateEmployeeModal(props, args) {
 	});
 
 	const handleInputChange = (e) => {
-		if (e.target.name === "position") {
-			const isChecked = e.target.checked;
-			const positionValue = e.target.value;
+		const { name, value, type, checked } = e.target;
+
+		if (type === "checkbox" && name === "active") {
+			setEmployeeUpdate((prevEmployee) => ({
+				...prevEmployee,
+				[name]: checked,
+			}));
+		} else if (type === "checkbox" && name === "position") {
+			const isChecked = checked;
+			const positionValue = value;
 
 			setEmployeeUpdate((prevEmployee) => {
 				let updatedPositions;
@@ -53,16 +60,10 @@ export function UpdateEmployeeModal(props, args) {
 					position: updatedPositions,
 				};
 			});
-		} else if (e.target.name === "active") {
-			// handle active status changes
-			setEmployeeUpdate((prevEmployee) => ({
-				...prevEmployee,
-				active: e.target.checked, // Set the active status based on checkbox state
-			}));
 		} else {
 			setEmployeeUpdate((prevEmployee) => ({
 				...prevEmployee,
-				[e.target.name]: e.target.value,
+				[name]: value,
 			}));
 		}
 	};
@@ -87,12 +88,12 @@ export function UpdateEmployeeModal(props, args) {
 				headers: {
 					"Content-Type": "application/json", // Specify the content type
 				},
-
 				body: JSON.stringify({
 					firstName: employeeUpdate.firstName,
 					lastName: employeeUpdate.lastName,
 					position: employeeUpdate.position,
 					active: employeeUpdate.active,
+					email: employeeUpdate.email, // Include the email property
 				}),
 			});
 

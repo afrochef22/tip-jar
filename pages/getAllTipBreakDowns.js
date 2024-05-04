@@ -16,6 +16,15 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 	const handleCardClick = (id) => {
 		router.push(`/getSelectedTipBreakDown/${id}`);
 	};
+
+	const formatDateStringWithDayOfWeek = (dateString) => {
+		const date = new Date(dateString);
+		const options = { weekday: "long" }; // Specify the format for the day of the week
+		return `${date.toLocaleDateString(
+			undefined,
+			options
+		)} ${date.toLocaleDateString()}`;
+	};
 	const reversedAllTipBreakdowns = [...allTipBreakdowns].reverse();
 
 	return (
@@ -31,7 +40,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 							<CardBody>
 								<CardTitle tag="h5">{data.show}</CardTitle>
 								<CardSubtitle className="mb-2 " tag="h6">
-									{data.date}
+									{`${formatDateStringWithDayOfWeek(data.date)} `}
 								</CardSubtitle>
 								<CardSubtitle className="mb-2 " tag="h6">
 									Total Tips: ${data.totalTips}
