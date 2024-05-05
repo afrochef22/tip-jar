@@ -69,7 +69,7 @@ const Header = ({ user }) => {
 			{session ? (
 				<>
 					<Link className="navbar-link " href="/Dashboard">
-						Dashboard
+						Home
 					</Link>
 				</>
 			) : (
