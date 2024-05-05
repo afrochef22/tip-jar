@@ -1,14 +1,16 @@
 import React from "react";
 import clientPromise from "../lib/mongodb";
 import AllTipBreakDowns from "../components/AllTipBreakDowns";
+import TipsTotalsSpreadSheet from "../components/TipsTotalsSpreadSheet";
 
 export default function Dashboard({ employees, allTipBreakdowns }) {
 	return (
-		<div
-			className="
-		front-page"
-		>
+		<div>
 			<AllTipBreakDowns allTipBreakdowns={allTipBreakdowns} />
+			<TipsTotalsSpreadSheet
+				allTipBreakdowns={allTipBreakdowns}
+				employees={employees}
+			/>
 		</div>
 	);
 }

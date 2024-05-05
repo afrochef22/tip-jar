@@ -1,13 +1,17 @@
 .carouselContainer {
 	max-width: 1000px;
 	margin: auto;
-	margin-top: 100px;
+	margin-top: 50px;
 }
 
-/* .cardWidth {
-	margin-bottom: "20px" !important;
-	width: "15rem" !important;
-} */
+.carouselSection {
+	margin-top: 50px;
+	min-height: 600px;
+}
+
+.title {
+	text-align: center;
+}
 /* 
 .carouselControlPrevIcon,
 .carouselControlNextIcon {
@@ -22,5 +26,8 @@
 @media (max-width: 767px) {
 	.carouselContainer {
 		margin: 20px 50px 0 50px; /* Adjust the margin for mobile screens */
+	}
+	.carouselSection {
+		min-height: 550px;
 	}
 }
