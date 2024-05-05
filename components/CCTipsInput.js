@@ -19,6 +19,10 @@ export default function CCTipsInput() {
 		e.preventDefault();
 		setInputValue(inputValue.slice(0, -1));
 	};
+	const handleClrClicked = (e) => {
+		e.preventDefault();
+		setInputValue("");
+	};
 	const handleEqualsClicked = (e) => {
 		e.preventDefault();
 		try {
@@ -141,6 +145,12 @@ export default function CCTipsInput() {
 											className={`${style.operator} ${style.calculatorButton}`}
 										>
 											+
+										</button>
+										<button
+											onClick={handleClrClicked}
+											className={`${style.operator} ${style.calculatorButton}`}
+										>
+											CLR
 										</button>
 										<button
 											onClick={handleDeleteClicked}

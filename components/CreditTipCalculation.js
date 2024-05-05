@@ -343,17 +343,29 @@ export default function CreditTipCalculation({
 						/>
 					</div>
 					{isCookHoursClicked === false ? (
-						<div></div>
+						<div>
+							<StandardCreditTipCalculator employees={cooks} position="Cooks" />
+						</div>
 					) : (
 						<HourlyCookInput cooks={cooks} />
 					)}
 					{isBarBackHoursClicked === false ? (
-						<div></div>
+						<div>
+							<StandardCreditTipCalculator
+								employees={barBacks}
+								position="Bar Backs"
+							/>
+						</div>
 					) : (
 						<HourlyBarBackInput barBacks={barBacks} />
 					)}
 					{isBartenderHoursClicked === false ? (
-						<StandardCreditTipCalculator bartenders={bartenders} />
+						<div>
+							<StandardCreditTipCalculator
+								employees={bartenders}
+								position="Bartenders"
+							/>
+						</div>
 					) : (
 						<BartenderHourlyInput bartenders={bartenders} />
 					)}
