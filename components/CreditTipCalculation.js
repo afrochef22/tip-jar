@@ -124,9 +124,10 @@ export default function CreditTipCalculation({
 
 			// Check if the input value contains only numbers
 			// const isValidInput = /^\d*\.?\d+$/.test(inputValue);
-			const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
+			const isValidInput = /^\d*\.?\d{0,2}$/.test(value);
 			console.log("Is valid input:", isValidInput);
-			if (!isValidInput) {
+			if (isValidInput === false) {
+				console.log("modal should pop up");
 				setAlertMessage(
 					"Please enter a valid number for the tips. The number can't have more than 2 decimal places."
 				);
@@ -161,6 +162,11 @@ export default function CreditTipCalculation({
 				employeeHours[employeeID] = Number(value);
 			}
 		});
+
+		// If modal is opened due to invalid input, prevent further execution
+		if (!submitting) {
+			return;
+		}
 
 		setTotalTips(Number(formData.get("totalTips")));
 		console.log("totalTips", totalTips);

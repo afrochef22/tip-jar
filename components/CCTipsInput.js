@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { Row, Col, FormGroup, Label, Input, Button } from "reactstrap";
 import style from "./CreditTipCalculation.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faCalculator,
+	faDeleteLeft,
+	faEraser,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function CCTipsInput() {
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -140,25 +146,25 @@ export default function CCTipsInput() {
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked("+", e)}
-											className={`${style.operator} ${style.calculatorButton}`}
+											className={` ${style.calculatorButton}`}
 										>
 											+
 										</button>
 										<button
 											onClick={handleClrClicked}
-											className={`${style.operator} ${style.calculatorButton}`}
+											className={` ${style.calculatorButton}`}
 										>
-											CLR
+											<FontAwesomeIcon icon={faEraser} />
 										</button>
 										<button
 											onClick={handleDeleteClicked}
 											className={`${style.operator} ${style.calculatorButton}`}
 										>
-											DEL
+											<FontAwesomeIcon icon={faDeleteLeft} />
 										</button>
 										<button
 											onClick={handleEqualsClicked}
-											className={`${style.operator} ${style.calculatorButton}`}
+											className={` ${style.calculatorButton}`}
 										>
 											=
 										</button>
