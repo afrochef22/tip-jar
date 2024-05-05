@@ -49,13 +49,11 @@ export default function CCTipsInput() {
 						<Col xs={12} sm={12}>
 							<Row>
 								<Col>
-									<Input
-										className="mb-3"
+									<textarea
+										className={`${style.inputField} mb-3`}
 										name={`totalTips`}
 										id="tipsCollected"
-										// type="text"
-										// inputMode="decimal"
-										pattern="[0-9+]+(\.[0-9]{1,2})?"
+										pattern="[0-9]+(\.[0-9]{1,2})?"
 										step="0.01"
 										required
 										value={inputValue}

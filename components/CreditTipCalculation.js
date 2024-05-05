@@ -123,10 +123,16 @@ export default function CreditTipCalculation({
 			const inputValue = formData.get("totalTips");
 
 			// Check if the input value contains only numbers
-			const isValidInput = /^\d*\.?\d+$/.test(inputValue);
+			// const isValidInput = /^\d*\.?\d+$/.test(inputValue);
+			const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
+			console.log("Is valid input:", isValidInput);
 			if (!isValidInput) {
-				setAlertMessage("Please enter a valid number for the tips.");
+				setAlertMessage(
+					"Please enter a valid number for the tips. The number can't have more than 2 decimal places."
+				);
 				toggleModal(); // Open the modal to display the alert message
+				setSubmitting(false);
+
 				return;
 			}
 
