@@ -1,85 +1,52 @@
-import React from "react";
-import { Row, Col, FormGroup, Label, Input } from "reactstrap";
+import React, { useState } from "react";
+import { Row, Col, FormGroup, Label, Input, Button } from "reactstrap";
 import style from "./CreditTipCalculation.module.css";
 
 export default function StandardCreditTipCalculator({ bartenders }) {
 	return (
-		<Row className={style.container}>
-			<Col sm={4} className={style.employeeContainer}>
-				<FormGroup row>
-					<Label className={style.name} xs={12} sm={12}>
-						Enter total tips
-					</Label>
-
-					<Col xs={12} sm={12}>
-						<Row>
-							<Col>
-								<Input
-									name={`Tips`}
-									id="tipsCollected"
-									type="number"
-									inputMode="decimal"
-									pattern="[0-9]+(\.[0-9]{1,2})?"
-									step="0.01"
-									required
-									onInput={(e) => {
-										e.preventDefault();
-										const inputValue = e.target.value;
-										const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
-										if (!isValidInput) {
-											e.target.setCustomValidity(
-												"Please enter a valid number."
-											);
-										} else {
-											e.target.setCustomValidity("");
-										}
-									}}
-								/>
-							</Col>
-						</Row>
-					</Col>
-				</FormGroup>
-			</Col>
-			{bartenders.map((bartender) => (
-				<Col sm={4} key={bartender.id} className={style.employeeContainer}>
-					<FormGroup row>
+		<>
+			<Row className={style.container}>
+				<h1>Bartenders</h1>
+				{bartenders.map((bartender) => (
+					<Col sm={4} key={bartender.id} className={style.employeeContainer}>
+						{/* <FormGroup row> */}
 						<Label className={style.name} xs={12} sm={12}>
 							{bartender.label}
 						</Label>
-
-						<Col xs={12} sm={12}>
-							<Row>
-								<Col>
-									<Label for="tipsCollected">Tips Collected</Label>
-								</Col>
-								<Col>
-									<Input
-										name={`${bartender.id}Tips`}
-										id="tipsCollected"
-										type="tel"
-										inputMode="decimal"
-										pattern="[0-9]+(\.[0-9]{1,2})?"
-										step="0.01"
-										required
-										onInput={(e) => {
-											e.preventDefault();
-											const inputValue = e.target.value;
-											const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
-											if (!isValidInput) {
-												e.target.setCustomValidity(
-													"Please enter a valid number."
-												);
-											} else {
-												e.target.setCustomValidity("");
-											}
-										}}
-									/>
-								</Col>
-							</Row>
-						</Col>
-					</FormGroup>
-				</Col>
-			))}
-		</Row>
+						{/* <Col xs={12} sm={12}>
+								<Row>
+									<Col>
+										<Label for="tipsCollected">Tips Collected</Label>
+									</Col>
+									<Col>
+										<Input
+											name={`${bartender.id}Tips`}
+											id="tipsCollected"
+											type="tel"
+											inputMode="decimal"
+											pattern="[0-9]+(\.[0-9]{1,2})?"
+											step="0.01"
+											required
+											onInput={(e) => {
+												e.preventDefault();
+												const inputValue = e.target.value;
+												const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
+												if (!isValidInput) {
+													e.target.setCustomValidity(
+														"Please enter a valid number."
+													);
+												} else {
+													e.target.setCustomValidity("");
+												}
+											}}
+										/>
+									</Col>
+								</Row>
+							</Col> */}
+						{/* </FormGroup> */}
+					</Col>
+				))}
+			</Row>
+		</>
 	);
 }

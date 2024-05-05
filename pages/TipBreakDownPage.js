@@ -15,6 +15,7 @@ export default function creditTipCalculationPage(allTipBreakdowns) {
 		employeeHours,
 		employeeTipCollected,
 		selectedShow,
+		totalTips,
 	} = router.query;
 
 	const parsedBartenders = bartenders ? JSON.parse(bartenders) : [];
@@ -27,6 +28,7 @@ export default function creditTipCalculationPage(allTipBreakdowns) {
 		? JSON.parse(employeeTipCollected)
 		: [];
 	const parseSelectedShow = selectedShow ? JSON.parse(selectedShow) : "";
+	const parseTotalTips = totalTips ? JSON.parse(totalTips) : "";
 
 	return (
 		<TipBreakDown
@@ -39,6 +41,7 @@ export default function creditTipCalculationPage(allTipBreakdowns) {
 			employeeTipCollected={parsedEmployeeTipCollected}
 			selectedShow={parseSelectedShow}
 			allTipBreakdowns={allTipBreakdowns}
+			totalTips={totalTips}
 		/>
 	);
 }

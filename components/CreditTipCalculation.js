@@ -12,11 +12,13 @@ import {
 import style from "./CreditTipCalculation.module.css";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CustomAlertModal } from "./ConformationDialog";
 
 import StandardCreditTipCalculator from "./StandardCreditTipCalculator";
 import BartenderHourlyInput from "./BartenderHourlyInput";
 import HourlyBarBackInput from "./HourlyBarBackInput";
 import HourlyCookInput from "./HourlyCookInput";
+import CCTipsInput from "./CCTipsInput";
 
 export default function CreditTipCalculation({
 	workingEmployees,
@@ -24,6 +26,10 @@ export default function CreditTipCalculation({
 }) {
 	const router = useRouter();
 	const [submitting, setSubmitting] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
+	const [alertMessage, setAlertMessage] = useState("");
+
+	const toggleModal = () => setIsOpen(!isOpen);
 
 	const bartenders = workingEmployees.filter(
 		(employee) => employee.workingPosition === "Bartender"
@@ -39,7 +45,7 @@ export default function CreditTipCalculation({
 	const [foodSalesTotal, setFoodSalesTotal] = useState(0);
 	const [employeeHours, setEmployeeHours] = useState([]);
 	const [employeeTipCollected, setEmployeeTipCollected] = useState([]);
-
+	const [totalTips, setTotalTips] = useState(0);
 	const [isBartenderHoursClicked, setBartenderHoursClicked] = useState(false);
 	const [isCookHoursClicked, setCookHoursClicked] = useState(false);
 	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
@@ -49,7 +55,8 @@ export default function CreditTipCalculation({
 			barBackPercentage &&
 			foodSalesTotal !== null &&
 			employeeHours &&
-			employeeTipCollected
+			employeeTipCollected &&
+			totalTips
 		) {
 			const bartendersWithHoursAndTip = bartenders.map((bartender) => {
 				const id = bartender.id;
@@ -79,6 +86,7 @@ export default function CreditTipCalculation({
 					employeeHours: JSON.stringify(employeeHours),
 					employeeTipCollected: JSON.stringify(employeeTipCollected),
 					selectedShow: JSON.stringify(selectedShow),
+					totalTips: JSON.stringify(totalTips),
 				},
 			});
 		}
@@ -110,6 +118,17 @@ export default function CreditTipCalculation({
 		// Iterate through form data and convert it to a plain object
 		formData.forEach((value, key) => {
 			data[key] = value;
+			console.log("formData", formData);
+
+			const inputValue = formData.get("totalTips");
+
+			// Check if the input value contains only numbers
+			const isValidInput = /^\d*\.?\d+$/.test(inputValue);
+			if (!isValidInput) {
+				setAlertMessage("Please enter a valid number for the tips.");
+				toggleModal(); // Open the modal to display the alert message
+				return;
+			}
 
 			const isValidId = (id) => {
 				const regex = /^[0-9a-fA-F]{24}$/;
@@ -137,9 +156,10 @@ export default function CreditTipCalculation({
 			}
 		});
 
+		setTotalTips(Number(formData.get("totalTips")));
+		console.log("totalTips", totalTips);
 		setBarBackPercentage(Number(formData.get("BarBackPercentage")));
 		const foodSalesTotalValue = formData.get("FoodSalesTotal");
-
 		setFoodSalesTotal(
 			foodSalesTotalValue !== "" && foodSalesTotalValue !== undefined
 				? Number(foodSalesTotalValue)
@@ -313,6 +333,15 @@ export default function CreditTipCalculation({
 						)}
 						<Col md={1} sm={1} xs={1}></Col>
 					</Row>
+					<CCTipsInput />
+					<div>
+						{/* Your existing code */}
+						<CustomAlertModal
+							isOpen={isOpen}
+							toggle={toggleModal}
+							message={alertMessage}
+						/>
+					</div>
 					{isCookHoursClicked === false ? (
 						<div></div>
 					) : (
@@ -333,13 +362,13 @@ export default function CreditTipCalculation({
 							className={`${style.centerButton} ${style.backButton}`}
 							onClick={handleBackButtonClick}
 						>
-							Rest
+							Back
 						</Button>
 						<Button
 							className={`${style.centerButton} ${style.calculateButton}`}
 							type="submit"
 						>
-							{submitting ? <>Calculating....</> : "Calculate"}
+							{submitting ? <>Submitting....</> : "Submit"}
 						</Button>
 					</div>
 				</Form>

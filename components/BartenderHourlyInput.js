@@ -8,10 +8,10 @@ export default function BartenderHourlyInput({ bartenders }) {
 			{bartenders.map((bartender) => (
 				<Col sm={4} key={bartender.id} className={style.employeeContainer}>
 					<FormGroup row>
-						<Label className={style.name} xs={5} sm={5}>
+						<Label className={style.name} xs={12} sm={12}>
 							{bartender.label}
 						</Label>
-						<Label for="hoursWorked" xs={3} sm={3}>
+						<Label for="hoursWorked" xs={6} sm={6}>
 							Hours Worked
 						</Label>
 						<Col xs={4} sm={4}>
@@ -36,7 +36,7 @@ export default function BartenderHourlyInput({ bartenders }) {
 								}}
 							></Input>
 						</Col>
-						<Label for="tipsCollected" xs={6} sm={6}>
+						{/* <Label for="tipsCollected" xs={6} sm={6}>
 							Tips Collected
 						</Label>
 
@@ -61,7 +61,7 @@ export default function BartenderHourlyInput({ bartenders }) {
 									}
 								}}
 							/>
-						</Col>
+						</Col> */}
 					</FormGroup>
 				</Col>
 			))}

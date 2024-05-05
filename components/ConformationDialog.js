@@ -38,3 +38,16 @@ export const DeleteDialog = ({ isOpen, toggle, onConfirm }) => {
 		</Modal>
 	);
 };
+
+export const CustomAlertModal = ({ isOpen, toggle, message }) => {
+	return (
+		<Modal isOpen={isOpen} toggle={toggle}>
+			<ModalBody>{message}</ModalBody>
+			<ModalFooter>
+				<Button color="secondary" onClick={toggle}>
+					ok
+				</Button>
+			</ModalFooter>
+		</Modal>
+	);
+};

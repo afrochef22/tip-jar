@@ -16,7 +16,7 @@ export default function HourlyBarBackInput({ barBacks }) {
 						<Label for="hoursWorked" xs={6} sm={6}>
 							Hours Worked
 						</Label>
-						<Col xs={3} sm={4}>
+						<Col xs={4} sm={4}>
 							<Input
 								name={`${barBack.id}Hours`}
 								id="hoursWorked"

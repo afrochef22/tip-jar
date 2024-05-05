@@ -19,6 +19,7 @@ export default function TipBreakDown({
 	employeeTipCollected,
 	selectedShow,
 	allTipBreakdowns,
+	totalTips,
 }) {
 	console.log(allTipBreakdowns);
 	const [newTipBreakdown, setNewTipBreakdown] = useState({});
@@ -74,7 +75,7 @@ export default function TipBreakDown({
 	const barbackTips =
 		barBacks.length === 0
 			? 0
-			: ((totalTipsCollected - cooksTips) * barBackPercentage) / 100;
+			: ((totalTips - cooksTips) * barBackPercentage) / 100;
 	const tipsPerBarBack = () => {
 		let tips;
 		if (barBackHours === 0) {
@@ -85,7 +86,7 @@ export default function TipBreakDown({
 		return tips.toNumber(); // Convert Decimal back to number for state
 	};
 
-	const bartenderTips = totalTipsCollected - cooksTips - barbackTips;
+	const bartenderTips = totalTips - cooksTips - barbackTips;
 
 	const tipsPerBartender = () => {
 		let tips;
@@ -167,13 +168,11 @@ export default function TipBreakDown({
 		totalTipOut
 	);
 	// Calculate the rounding difference
-	let roundingDifference = Number(
-		(totalTipsCollected - totalTipOut).toFixed(2)
-	);
+	let roundingDifference = Number((totalTips - totalTipOut).toFixed(2));
 	console.log(
 		"roundingDifference",
 		roundingDifference,
-		totalTipsCollected,
+		totalTips,
 		"-",
 		totalTipOut
 	);
@@ -275,7 +274,7 @@ export default function TipBreakDown({
 		0
 	);
 	console.log(
-		totalTipsCollected,
+		totalTips,
 		totalAdjustedTipOutBartenders,
 		"+",
 		totalTipOutBarBacks,
@@ -334,7 +333,7 @@ export default function TipBreakDown({
 		const tipBreakdown = {
 			show: selectedShow,
 			date: ShiftDate(),
-			totalTips: Number(totalTipsCollected.toFixed(2)),
+			totalTips: Number(totalTips),
 			foodSales: foodSalesTotal,
 			barBackPercentage: barBackPercentage,
 			cookTips: cooksWithTipOut,
@@ -395,9 +394,7 @@ export default function TipBreakDown({
 					<Row>
 						<Col sm={4} xs={6}>
 							<h4>Total Tips:</h4>
-							<h2 className="highlight-color">
-								${totalTipsCollected.toFixed(2)}
-							</h2>
+							<h2 className="highlight-color">${totalTips}</h2>
 						</Col>
 						<Col sm={4} xs={6}>
 							<h4>Food sales:</h4>
