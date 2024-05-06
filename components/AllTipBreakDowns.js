@@ -37,7 +37,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 		const updateChunkSize = () => {
 			let newSize;
 			switch (true) {
-				case window.innerWidth < 640:
+				case window.innerWidth < 641:
 					newSize = 1;
 					break;
 				case window.innerWidth < 905:

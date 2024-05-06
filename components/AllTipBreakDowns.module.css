@@ -42,7 +42,7 @@
 @media (max-width: 905px) {
 	.carouselContainer {
 		margin: auto;
-		max-width: 700px;
+		max-width: 500px;
 	}
 	.cardWidth {
 		width: 50%;
@@ -84,6 +84,26 @@
 	.carouselContainer {
 		margin: auto; /* Adjust the margin for mobile screens */
 		max-width: 275px;
+	}
+	.carouselSection {
+		min-height: 550px;
+	}
+}
+
+@media (max-width: 350px) {
+	.carouselContainer {
+		margin: auto; /* Adjust the margin for mobile screens */
+		max-width: 250px;
+	}
+	.carouselSection {
+		min-height: 550px;
+	}
+}
+
+@media (max-width: 315px) {
+	.carouselContainer {
+		margin: auto; /* Adjust the margin for mobile screens */
+		max-width: 225px;
 	}
 	.carouselSection {
 		min-height: 550px;
