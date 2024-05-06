@@ -35,7 +35,18 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 
 	useEffect(() => {
 		const updateChunkSize = () => {
-			const newSize = window.innerWidth < 768 ? 1 : 3; // Change the chunk size based on screen width (e.g., mobile screens < 768px)
+			let newSize;
+			switch (true) {
+				case window.innerWidth < 640:
+					newSize = 1;
+					break;
+				case window.innerWidth < 905:
+					newSize = 2;
+					break;
+				default:
+					newSize = 3;
+					break;
+			}
 			setChunkSize(newSize);
 		};
 
@@ -46,6 +57,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 			window.removeEventListener("resize", updateChunkSize); // Cleanup
 		};
 	}, []);
+
 	const chunks = reversedAllTipBreakdowns.reduce((resultArray, item, index) => {
 		const chunkIndex = Math.floor(index / chunkSize);
 		if (!resultArray[chunkIndex]) {
@@ -70,7 +82,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 	const slides = chunks.map((chunk, index) => (
 		<CarouselItem key={index}>
 			<div className={`${style.carouselContainer}`}>
-				<Row xs="1" md="3">
+				<Row xs="1" sm="2" md="3">
 					{chunk.map((data) => (
 						<Col key={data._id} className={`${style.cardWidth}`}>
 							<Card onClick={() => handleCardClick(data._id)}>
