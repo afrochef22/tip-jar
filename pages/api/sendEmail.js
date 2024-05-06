@@ -22,7 +22,7 @@ export default async (req, res) => {
 		html: `
     <h1>Welcome to TipJar!</h1>
     <p>Please use the following link to set up your login:</p>
-    <a href="${registrationLink}">TipJar Register link</a>
+    <a href="${registrationLink}">TipJar Register link ${`localhost:3000/RegisterPage/${employee._id}?token=${registrationToken}`}</a>
     <p>We're excited to have you on board!</p>
 `,
 	};

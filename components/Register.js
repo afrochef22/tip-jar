@@ -6,6 +6,8 @@ export const Register = ({ employee }) => {
 	console.log(employee);
 	const router = useRouter();
 	const token = router.query.token;
+	const { data: session } = useSession();
+
 	// State variables to store form data
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
@@ -15,7 +17,9 @@ export const Register = ({ employee }) => {
 		// Check if token is expired
 		const now = new Date();
 		const expirationTime = new Date(employee.tokenExpiration);
-
+		if (session) {
+			router.push("/Dashboard");
+		}
 		if (now > expirationTime) {
 			// Token expired, redirect user or display error
 			router.push("/TokenExpired");
@@ -23,7 +27,7 @@ export const Register = ({ employee }) => {
 		if (token !== employee.token) {
 			router.push("/TokenExpired");
 		}
-	}, []);
+	}, [session]);
 
 	// Function to handle form submission
 	const handleSubmit = async (e) => {
@@ -52,7 +56,7 @@ export const Register = ({ employee }) => {
 
 			if (response.ok) {
 				console.log("Employee updated successfully");
-				router.push("/Dashboard");
+				router.push("/");
 			} else {
 				console.log("response not ok");
 			}

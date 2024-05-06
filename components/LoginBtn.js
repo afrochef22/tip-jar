@@ -1,6 +1,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { Spinner, Button } from "reactstrap";
 
 export default function Component() {
 	const { data: session } = useSession();
@@ -21,12 +22,9 @@ export default function Component() {
 		return (
 			<>
 				<div className="login-button-container">
-					Signed in as {session.user.name || session.user.email}
-					<br />
-				</div>
-				<div className="login-button-container">
 					<button className="login-button" onClick={() => signOut()}>
-						Sign out
+						<Spinner size="sm">Loading...</Spinner>
+						<span>Signing in...</span>
 					</button>
 				</div>
 			</>

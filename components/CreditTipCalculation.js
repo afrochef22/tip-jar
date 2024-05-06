@@ -8,6 +8,7 @@ import {
 	Col,
 	Container,
 	Row,
+	Spinner,
 } from "reactstrap";
 import style from "./CreditTipCalculation.module.css";
 import { useRouter } from "next/router";
@@ -396,7 +397,14 @@ export default function CreditTipCalculation({
 							className={`${style.centerButton} ${style.calculateButton}`}
 							type="submit"
 						>
-							{submitting ? <>Submitting....</> : "Submit"}
+							{submitting ? (
+								<>
+									<Spinner size="sm">Loading...</Spinner>
+									<span>Submitting....</span>
+								</>
+							) : (
+								"Submit"
+							)}
 						</Button>
 					</div>
 				</Form>
