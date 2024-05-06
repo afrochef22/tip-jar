@@ -16,11 +16,12 @@
 .title {
 	text-align: center;
 }
-/* 
-.carouselControlPrevIcon,
-.carouselControlNextIcon {
-	background-color: gray;
-} */
+
+.cardContainer {
+	width: 18rem;
+	margin: auto; /* Center horizontally */
+	margin-bottom: 20px;
+}
 
 .carouselControlPrevIcon:after,
 .carouselControlNextIcon:after {
@@ -30,6 +31,9 @@
 @media (max-width: 1200px) {
 	.carouselContainer {
 		max-width: 800px;
+	}
+	.cardContainer {
+		width: 16rem;
 	}
 }
 
@@ -45,6 +49,9 @@
 		max-width: 500px;
 	}
 	.cardWidth {
+		width: 50%;
+	}
+	.cardRow {
 		width: 50%;
 	}
 }
@@ -77,6 +84,9 @@
 		min-height: 550px;
 	}
 	.cardWidth {
+		width: 100%;
+	}
+	.cardRow {
 		width: 100%;
 	}
 }

@@ -29,13 +29,17 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 
 	return (
 		<div className={`${style.carouselContainer}`}>
-			<Row xs="1" md="3">
+			<div className={`${style.title}`}>
+				<h2>Tip Breakdowns</h2>
+				<h5>Click on a card to get more detail or edit</h5>
+			</div>
+			<Row xs={12} sm={2} md={3}>
 				{reversedAllTipBreakdowns.map((data) => (
-					<Col>
+					<Col sm={12} className={`${style.cardRow}`}>
 						<Card
 							onClick={() => handleCardClick(data._id)}
 							key={data._id}
-							style={{ width: "18rem", marginBottom: "20px" }}
+							className={`${style.cardContainer}`}
 						>
 							<CardBody>
 								<CardTitle tag="h5">{data.show}</CardTitle>

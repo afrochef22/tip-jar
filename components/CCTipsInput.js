@@ -56,6 +56,7 @@ export default function CCTipsInput() {
 							<Row>
 								<Col>
 									<textarea
+										readOnly
 										className={`${style.inputField} mb-3`}
 										name={`totalTips`}
 										id="tipsCollected"
