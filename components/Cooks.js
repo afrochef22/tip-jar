@@ -59,7 +59,8 @@ const Cooks = ({ employees }) => {
 									<p>
 										<Link
 											className="noDecoration text-color "
-											href={`/getEmployee/${cook._id}`}
+											// href={`/getEmployee/${cook._id}`}
+											href={`#`}
 										>
 											{`${cook.firstName} ${cook.lastName}`}
 										</Link>

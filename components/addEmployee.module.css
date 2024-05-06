@@ -36,6 +36,7 @@ input .requiredBorder[required] {
 	top: 50%;
 	transform: translateY(-50%);
 	z-index: 999; /* Ensure the button is above other elements */
+	margin: 100px auto 0;
 }
 @media screen and (max-width: 800px) {
 	.addEmployeeButton {
@@ -43,7 +44,7 @@ input .requiredBorder[required] {
 		top: auto;
 		transform: none;
 		z-index: auto;
-		margin: 70px auto 0;
+		margin: 100px auto 0;
 	}
 
 	.buttonContainer {
