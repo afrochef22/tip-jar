@@ -8,7 +8,11 @@ import {
 	faEraser,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function CCTipsInput() {
+export default function CCTipsInput({
+	setSubmitting,
+	setAlertMessage,
+	toggleModal,
+}) {
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 	const [inputValue, setInputValue] = useState("");
 
@@ -31,9 +35,21 @@ export default function CCTipsInput() {
 	};
 	const handleEqualsClicked = (e) => {
 		e.preventDefault();
+
 		try {
 			const result = eval(inputValue); // Evaluate the expression
 			setInputValue(result.toString()); // Update the input value with the result
+			const isValidInput = /^\d*\.?\d{0,2}$/.test(result);
+			console.log("Is valid input:", isValidInput);
+			if (isValidInput === false) {
+				console.log("modal should pop up");
+				setAlertMessage(
+					"Please enter a valid number for the tips. The number can't have more than 2 decimal places."
+				);
+				toggleModal(); // Open the modal to display the alert message
+				setSubmitting(false);
+				return;
+			}
 		} catch (error) {
 			setInputValue("Error"); // Display "Error" if there's an invalid expression
 		}

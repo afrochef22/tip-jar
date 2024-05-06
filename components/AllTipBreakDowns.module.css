@@ -5,8 +5,8 @@
 }
 
 .carouselSection {
-	margin-top: 20px;
 	min-height: 600px;
+	background-color: rgb(70, 69, 69);
 }
 
 .cardWidth {

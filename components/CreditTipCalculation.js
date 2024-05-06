@@ -112,6 +112,21 @@ export default function CreditTipCalculation({
 		e.preventDefault();
 		setSubmitting(true);
 		const formData = new FormData(e.target); // Create a FormData object from the form
+
+		const tips = formData.get("totalTips");
+		const isValidInput = /^\d*\.?\d{0,2}$/.test(tips);
+		console.log("Is valid input:", isValidInput);
+		if (isValidInput === false) {
+			console.log("modal should pop up");
+			setAlertMessage(
+				"Please enter a valid number for the tips. The number can't have more than 2 decimal places."
+			);
+			toggleModal(); // Open the modal to display the alert message
+			setSubmitting(false);
+
+			return;
+		}
+
 		const data = {};
 		const employeeTips = {};
 		const employeeHours = {};
@@ -124,18 +139,6 @@ export default function CreditTipCalculation({
 
 			// Check if the input value contains only numbers
 			// const isValidInput = /^\d*\.?\d+$/.test(inputValue);
-			const isValidInput = /^\d*\.?\d{0,2}$/.test(value);
-			console.log("Is valid input:", isValidInput);
-			if (isValidInput === false) {
-				console.log("modal should pop up");
-				setAlertMessage(
-					"Please enter a valid number for the tips. The number can't have more than 2 decimal places."
-				);
-				toggleModal(); // Open the modal to display the alert message
-				setSubmitting(false);
-
-				return;
-			}
 
 			const isValidId = (id) => {
 				const regex = /^[0-9a-fA-F]{24}$/;
@@ -164,9 +167,6 @@ export default function CreditTipCalculation({
 		});
 
 		// If modal is opened due to invalid input, prevent further execution
-		if (!submitting) {
-			return;
-		}
 
 		setTotalTips(Number(formData.get("totalTips")));
 		console.log("totalTips", totalTips);
@@ -345,7 +345,11 @@ export default function CreditTipCalculation({
 						)}
 						<Col md={1} sm={1} xs={1}></Col>
 					</Row>
-					<CCTipsInput />
+					<CCTipsInput
+						setSubmitting={setSubmitting}
+						setAlertMessage={setAlertMessage}
+						toggleModal={toggleModal}
+					/>
 					<div>
 						{/* Your existing code */}
 						<CustomAlertModal
