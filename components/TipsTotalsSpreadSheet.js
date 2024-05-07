@@ -51,12 +51,13 @@ export default function TipsTotalsSpreadSheet({ employees, allTipBreakdowns }) {
 		setPayPeriodEndDate(nextEndDate);
 	};
 
-	const handleStartDateChange = (e) => {
-		setStartDate(DateTime.fromISO(e.target.value));
-	};
-
-	const handleEndDateChange = (e) => {
-		setEndDate(DateTime.fromISO(e.target.value));
+	const formatDateStringWithDayOfWeek = (dateString) => {
+		const date = new Date(dateString);
+		const options = { weekday: "long" }; // Specify the format for the day of the week
+		return `${date.toLocaleDateString(
+			undefined,
+			options
+		)} ${date.toLocaleDateString()}`;
 	};
 
 	function parseDateWithFormats(dateString, formats) {
@@ -186,13 +187,15 @@ export default function TipsTotalsSpreadSheet({ employees, allTipBreakdowns }) {
 									),
 								];
 								return (
-									<th
-										className="band-date"
-										key={`date-${date}`}
-										colSpan={uniqueShows.length}
-									>
-										{date}
-									</th>
+									<>
+										<th
+											className="band-date"
+											key={`date-${date}`}
+											colSpan={uniqueShows.length}
+										>
+											{formatDateStringWithDayOfWeek(date)}
+										</th>
+									</>
 								);
 							})}
 							<th className="employeeTipsCol" colSpan={2} rowSpan={2}>

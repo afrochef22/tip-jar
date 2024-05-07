@@ -64,6 +64,15 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 		return dateA - dateB;
 	});
 
+	const formatDateStringWithDayOfWeek = (dateString) => {
+		const date = new Date(dateString);
+		const options = { weekday: "long" }; // Specify the format for the day of the week
+		return `${date.toLocaleDateString(
+			undefined,
+			options
+		)} ${date.toLocaleDateString()}`;
+	};
+
 	// Filter employees with tips within the date range
 	const employeesWithTipsInRange = employees.filter((employee) => {
 		return (
@@ -177,7 +186,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 										key={`date-${date}`}
 										colSpan={uniqueShows.length}
 									>
-										{date}
+										{formatDateStringWithDayOfWeek(date)}
 									</th>
 								);
 							})}
