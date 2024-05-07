@@ -67,10 +67,13 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	const formatDateStringWithDayOfWeek = (dateString) => {
 		const date = new Date(dateString);
 		const options = { weekday: "long" }; // Specify the format for the day of the week
-		return `${date.toLocaleDateString(
-			undefined,
-			options
-		)} ${date.toLocaleDateString()}`;
+		return (
+			<>
+				{date.toLocaleDateString(undefined, options)}
+				<br />
+				{date.toLocaleDateString()}
+			</>
+		);
 	};
 
 	// Filter employees with tips within the date range
