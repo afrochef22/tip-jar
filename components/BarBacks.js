@@ -59,8 +59,8 @@ const BarBacks = ({ employees }) => {
 									<p>
 										<Link
 											className="noDecoration text-color "
-											// href={`/getEmployee/${barBacks._id}`}
-											href={`#`}
+											href={`/getEmployee/${barBacks._id}`}
+											// href={`#`}
 										>
 											{`${barBacks.firstName} ${barBacks.lastName}`}
 										</Link>
