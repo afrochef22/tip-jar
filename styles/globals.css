@@ -388,22 +388,18 @@ body {
 .border-box {
 	border: solid 5px var(--secondary-color);
 }
+
+@media screen and (max-width: 850px) {
+	.employeeTipsPage {
+		font-size: 11px;
+	}
+}
 @media screen and (max-width: 600px) {
 	.spacer {
 		margin-top: 10px;
 	}
 	.employeeTipsPage {
 		margin-bottom: 50px;
-	}
-}
-.employeeTipsPage {
-	background-color: var(--third-color);
-	height: 100%;
-	min-height: 100vh;
-	font-size: 14px;
-}
-@media screen and (max-width: 850px) {
-	.employeeTipsPage {
-		font-size: 12px;
+		font-size: 10px;
 	}
 }

@@ -129,7 +129,9 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 			<Container className="">
 				<Row className="date-input-row mt-5 mb-4">
 					<Col lg={3} md={4} sm={5} xs={6}>
-						<Label for="startDate">Select Start Date</Label>
+						<Label for="startDate">
+							<h6>Select Start Date</h6>
+						</Label>
 						<Input
 							id="startDate"
 							name="startDate"
@@ -139,7 +141,9 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 						/>
 					</Col>
 					<Col lg={3} md={3} sm={5} xs={6}>
-						<Label for="endDate">Select End Date</Label>
+						<Label for="endDate">
+							<h6>Select End Date</h6>
+						</Label>
 						<Input
 							id="endDate"
 							name="endDate"
