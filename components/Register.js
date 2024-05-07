@@ -87,7 +87,7 @@ export const Register = ({ employee }) => {
 							>
 								Sign in with Google
 							</button>
-							<p className="mt-2">or</p>
+							<p className="mt-2">Or with username and password</p>
 							<form onSubmit={handleSubmit}>
 								<div className="form-group">
 									<label htmlFor="username">Username</label>
