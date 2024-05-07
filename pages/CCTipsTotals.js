@@ -167,6 +167,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 						year: "numeric",
 					})}
 				</h5>
+				<h5 className="mt-4">Click on a band name to see more detail</h5>
 			</Container>
 
 			<Container className=" table-scroll mt-4 border-box ">

@@ -140,7 +140,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 		<div className={`${style.carouselSection}`}>
 			<div className={`${style.title}`}>
 				<h2>Tip Breakdowns</h2>
-				<h5>Click on a card to get more detail or edit</h5>
+				<h5>Click on a card to see more detail or edit</h5>
 			</div>
 			<Carousel
 				activeIndex={activeIndex}
