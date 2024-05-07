@@ -391,7 +391,7 @@ body {
 
 @media screen and (max-width: 850px) {
 	.employeeTipsPage {
-		font-size: 11px;
+		font-size: 12px;
 	}
 }
 @media screen and (max-width: 600px) {
@@ -400,6 +400,6 @@ body {
 	}
 	.employeeTipsPage {
 		margin-bottom: 50px;
-		font-size: 10px;
+		font-size: 11px;
 	}
 }
