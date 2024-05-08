@@ -142,9 +142,12 @@ export default function TipsTotalsSpreadSheet({ employees, allTipBreakdowns }) {
 			return Number(total);
 		}, 0);
 	};
-
+	const scrollAllTipBreakDowns = () => {
+		const tipsSpreadsheet = document.getElementById("allTipBreakDowns");
+		tipsSpreadsheet.scrollIntoView({ behavior: "smooth" });
+	};
 	return (
-		<div className=" employeeTipsPage ">
+		<div id="tipsSpreadsheet" className=" employeeTipsPage ">
 			<Container className="">
 				<Row className="date-input-row mt-5 mb-4">
 					<h2>Pay Period Spreadsheet</h2>
@@ -327,6 +330,13 @@ export default function TipsTotalsSpreadSheet({ employees, allTipBreakdowns }) {
 					</tfoot>
 				</table>
 			</Container>
+			<Row className="justify-content-center mt-4 ">
+				<Col xs="auto">
+					<Button onClick={scrollAllTipBreakDowns}>
+						Scroll Up to Tip Breakdowns
+					</Button>
+				</Col>
+			</Row>
 		</div>
 	);
 }

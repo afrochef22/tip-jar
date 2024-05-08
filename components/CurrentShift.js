@@ -341,7 +341,7 @@ export function CurrentShowPerforming({
 
 											{session ? (
 												<div>
-													<h3 className={style.title}>Or</h3>
+													<h3 className={`${style.title} mt-3`}>Or</h3>
 
 													<Container
 														className={`mb-1 ${style.bandContainer} ${

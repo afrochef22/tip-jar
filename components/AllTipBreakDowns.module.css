@@ -8,6 +8,7 @@
 	min-height: 600px;
 	background-color: rgb(70, 69, 69);
 	padding-bottom: 20px;
+	align-content: center;
 }
 
 .cardWidth {
@@ -28,6 +29,9 @@
 .carouselControlPrevIcon:after,
 .carouselControlNextIcon:after {
 	background-color: gold !important; /* Change the color of the icon inside the controls */
+}
+.scrollButoon {
+	/* margin: auto; */
 }
 
 @media (max-width: 1200px) {

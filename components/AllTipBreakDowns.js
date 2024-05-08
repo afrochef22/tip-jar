@@ -10,10 +10,14 @@ import {
 	Carousel,
 	CarouselItem,
 	CarouselControl,
+	Button,
 } from "reactstrap";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import style from "./AllTipBreakDowns.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
 
 export default function AllTipBreakDowns({ allTipBreakdowns }) {
 	const router = useRouter();
@@ -135,9 +139,12 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 			</div>
 		</CarouselItem>
 	));
-
+	const scrollToTipsSpreadsheet = () => {
+		const tipsSpreadsheet = document.getElementById("tipsSpreadsheet");
+		tipsSpreadsheet.scrollIntoView({ behavior: "smooth" });
+	};
 	return (
-		<div className={`${style.carouselSection}`}>
+		<div id="allTipBreakDowns" className={`${style.carouselSection}`}>
 			<div className={`${style.title}`}>
 				<h2>Tip Breakdowns</h2>
 				<h5>Click on a card to see more detail or edit</h5>
@@ -149,20 +156,35 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 				interval={false}
 			>
 				{slides}
-				<CarouselControl
-					direction="prev"
-					directionText="Previous"
-					onClickHandler={previous}
-					className={`${style.carouselControlPrevIcon}`}
-				/>
-				<CarouselControl
-					dark="true"
-					direction="next"
-					directionText="Next"
-					onClickHandler={next}
-					className={`${style.carouselControlNextIcon}`}
-				/>
+				{activeIndex === 0 ? (
+					<></>
+				) : (
+					<CarouselControl
+						direction="prev"
+						directionText="Previous"
+						onClickHandler={previous}
+						className={`${style.carouselControlPrevIcon}`}
+					/>
+				)}
+				{activeIndex === slides.length - 1 ? (
+					<></>
+				) : (
+					<CarouselControl
+						dark="true"
+						direction="next"
+						directionText="Next"
+						onClickHandler={next}
+						className={`${style.carouselControlNextIcon}`}
+					/>
+				)}
 			</Carousel>
+			<Row className="justify-content-center mt-4 mb-5">
+				<Col xs="auto">
+					<Button onClick={scrollToTipsSpreadsheet}>
+						Scroll Down to Tips Spreadsheet
+					</Button>
+				</Col>
+			</Row>
 		</div>
 	);
 }
