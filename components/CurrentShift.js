@@ -3,6 +3,7 @@ import style from "./CurrentShift.module.css";
 import { Container, Row, Col, Label, Input } from "reactstrap";
 import { DateTime } from "luxon";
 import { CardsSkeleton } from "./skeletons";
+import { useSession } from "next-auth/react";
 
 function DayOfTheWeek(day) {
 	switch (day) {
@@ -248,6 +249,8 @@ export function CurrentShowPerforming({
 	setSelectedShow,
 	selectedShow,
 }) {
+	const { data: session } = useSession();
+
 	const [bandPerformingToday, setBandPerformingToday] = useState([]);
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
@@ -335,6 +338,34 @@ export function CurrentShowPerforming({
 													></Col>
 												</Row>
 											</Container>
+
+											{session ? (
+												<div>
+													<h3 className={style.title}>Or</h3>
+
+													<Container
+														className={`mb-1 ${style.bandContainer} ${
+															showFullDescription ? style.expanded : ""
+														}`}
+													>
+														<Row className="justify-content-center">
+															<Col
+																className={`${style.enterEventInboxContainer}`}
+															>
+																<p>Enter an event</p>
+																<Input
+																	className={`${style.enterEventInbox}`}
+																	onChange={(e) =>
+																		handleSelectedBand(e.target.value)
+																	}
+																/>
+															</Col>
+														</Row>
+													</Container>
+												</div>
+											) : (
+												<></>
+											)}
 										</div>
 									) : (
 										<>

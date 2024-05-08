@@ -130,6 +130,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	return (
 		<div className=" employeeTipsPage ">
 			<Container className="">
+				<h2 className="mt-5">Credit Card Tips Spreadsheet</h2>
 				<Row className="date-input-row mt-5 mb-4">
 					<Col lg={3} md={4} sm={5} xs={6}>
 						<Label for="startDate">
