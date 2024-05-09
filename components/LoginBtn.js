@@ -22,8 +22,11 @@ export default function Component() {
 		return (
 			<>
 				<div className="login-button-container">
-					<button className="login-button" onClick={() => signOut()}>
-						<Spinner size="sm">Loading...</Spinner>
+					<button className="manager-login-button" onClick={() => signOut()}>
+						<Spinner className="" size="sm">
+							Loading...
+						</Spinner>
+
 						<span>Signing in...</span>
 					</button>
 				</div>
@@ -32,12 +35,8 @@ export default function Component() {
 	}
 	return (
 		<div>
-			{/* <div className="login-button-container">
-				Not signed in <br />
-			</div> */}
-
 			<div className="login-button-container">
-				<button className="login-button" onClick={handleSignIn}>
+				<button className="manager-login-button" onClick={handleSignIn}>
 					Manager Sign in
 				</button>
 			</div>

@@ -75,9 +75,9 @@ const authOptions = {
 	callbacks: {
 		async session({ session, token, user }) {
 			// Log session information for debugging
-			console.log("[...nextauth] Session:", session);
-			console.log("Token:", token);
-			console.log("User:", user);
+			// console.log("[...nextauth] Session:", session);
+			// console.log("Token:", token);
+			// console.log("User:", user);
 
 			// Parse the ISO 8601 expiration time string into a Date object
 			const expirationTimeUTC = new Date(session.expires);
@@ -93,7 +93,7 @@ const authOptions = {
 			);
 
 			// // Log the session expiry time in PST for debugging
-			console.log("[...nextauth] Session Expires (PST):", expirationTimePST);
+			// console.log("[...nextauth] Session Expires (PST):", expirationTimePST);
 			// // Parse the expiration time from the token
 			// const expirationTime = token.exp;
 
@@ -125,7 +125,7 @@ const authOptions = {
 					const existingUser = await employeeCollection.findOne({
 						googleId: account.providerAccountId,
 					});
-					console.log("existingUser", existingUser);
+					// console.log("existingUser", existingUser);
 					if (!existingUser) {
 						console.log("not in data base");
 						// If the user's Google ID is not in the database, add it
@@ -135,6 +135,7 @@ const authOptions = {
 								$set: {
 									googleId: account.providerAccountId,
 									email: profile.email,
+									firstSignInDate: new Date(),
 								},
 							}
 						);

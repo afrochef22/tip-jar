@@ -7,7 +7,7 @@ export default async (req, res) => {
 	const id = req.query.id;
 	const data = req.body; // Assuming data is sent in the request body
 	const saltRounds = 10; // Number of salt rounds for hashing
-	console.log("tokenExpiration", typeof data.tokenExpiration);
+	// console.log("tokenExpiration", typeof data.tokenExpiration);
 
 	if (!ObjectId.isValid(id)) {
 		return res.status(400).json({ error: "Invalid Employee ID: ", id });
@@ -54,7 +54,8 @@ export default async (req, res) => {
 				Array.isArray(data.position) ||
 				data.active !== undefined ||
 				data.username ||
-				data.email
+				data.email ||
+				data.firstSignInDate
 			) {
 				// If updateDocument.$set does not exist, create it
 				if (!updateDocument.$set) {
@@ -68,6 +69,8 @@ export default async (req, res) => {
 				if (data.active !== undefined) updateDocument.$set.active = data.active;
 				if (data.username) updateDocument.$set.username = data.username;
 				if (data.email) updateDocument.$set.email = data.email;
+				if (data.firstSignInDate)
+					updateDocument.$set.firstSignInDate = data.firstSignInDate;
 			}
 			console.log("Up date document 2", updateDocument);
 

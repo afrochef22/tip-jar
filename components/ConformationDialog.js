@@ -25,7 +25,8 @@ export const DeleteDialog = ({ isOpen, toggle, onConfirm }) => {
 		<Modal isOpen={isOpen} toggle={toggle}>
 			<ModalHeader toggle={toggle}>Confirmation</ModalHeader>
 			<ModalBody>
-				Are you sure you want to delete? This action cannot be undone.
+				Are you sure you want to delete? All data will be lost. This action
+				cannot be undone.
 			</ModalBody>
 			<ModalFooter>
 				<Button color="secondary" onClick={toggle}>

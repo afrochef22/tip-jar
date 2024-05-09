@@ -113,7 +113,16 @@ body {
 	align-items: center;
 	height: 10vh; /* Set the height of the container to 100% of the viewport height */
 }
-
+.manager-login-button {
+	padding: 10px 20px;
+	font-size: 16px;
+	background-color: #147efb;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	text-decoration: none;
+}
 .login-button {
 	padding: 10px 20px;
 	font-size: 16px;

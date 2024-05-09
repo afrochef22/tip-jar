@@ -1,12 +1,22 @@
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { Button } from "reactstrap";
+import { CustomAlertModal } from "./ConformationDialog";
+import { useState } from "react";
 
 const GenerateRegistrationToken = async (employee) => {
 	const token = uuidv4();
 
 	const expiryTime = new Date();
 	expiryTime.setDate(expiryTime.getDate() + 7);
+
+	const toggleConfirmation = (id) => {
+		setConfirmationStates({
+			...confirmationStates,
+			[id]: !confirmationStates[id],
+		});
+	};
+	const toggle = () => setShowConfirmation(!showConfirmation);
 
 	try {
 		const response = await fetch(`/api/updateEmployee/${employee._id}`, {
@@ -34,6 +44,11 @@ const GenerateRegistrationToken = async (employee) => {
 };
 
 const SendRegistrationLink = ({ employee }) => {
+	const [isOpen, setIsOpen] = useState(false);
+	const toggleModal = () => setIsOpen(!isOpen);
+	const [showConfirmation, setShowConfirmation] = useState(false);
+	const [confirmationStates, setConfirmationStates] = useState({});
+	const [alertMessage, setAlertMessage] = useState("");
 	const sendEmail = async () => {
 		const registrationToken = await GenerateRegistrationToken(employee);
 		try {
@@ -43,12 +58,29 @@ const SendRegistrationLink = ({ employee }) => {
 				registrationToken: registrationToken,
 			});
 			console.log("Email sent successfully");
+			setAlertMessage("Email sent successfully");
+			toggleModal();
 		} catch (error) {
 			console.error("Error sending email:", error);
+			if (!employee.email) {
+				setAlertMessage("Enter an email for the employee and try again. ");
+				toggleModal();
+			}
 		}
 	};
 
-	return <Button onClick={sendEmail}>Send Registration Link</Button>;
+	return (
+		<>
+			<Button className="login-button" block onClick={sendEmail}>
+				Send Registration Link
+			</Button>
+			<CustomAlertModal
+				isOpen={isOpen}
+				toggle={toggleModal}
+				message={alertMessage}
+			/>
+		</>
+	);
 };
 
 export default SendRegistrationLink;

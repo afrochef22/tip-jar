@@ -51,6 +51,7 @@ export const Register = ({ employee }) => {
 					username,
 					email,
 					password,
+					firstSignInDate: new Date(),
 				}),
 			});
 
