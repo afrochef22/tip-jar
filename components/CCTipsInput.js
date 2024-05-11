@@ -7,7 +7,6 @@ import {
 	faDeleteLeft,
 	faEraser,
 } from "@fortawesome/free-solid-svg-icons";
-import ClickSound from "./ClickSound";
 
 export default function CCTipsInput({
 	setSubmitting,
@@ -101,89 +100,85 @@ export default function CCTipsInput({
 											onClick={(e) => handleButtonClicked(1, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>1</ClickSound>
+											1
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(2, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>2</ClickSound>
+											2
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(3, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>3</ClickSound>
+											3
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(4, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>4</ClickSound>
+											4
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(5, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>5</ClickSound>
+											5
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(6, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>6</ClickSound>
+											6
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(7, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>7</ClickSound>
+											7
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(8, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>8</ClickSound>
+											8
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(9, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>9</ClickSound>
+											9
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(0, e)}
 											className={`${style.number} ${style.calculatorButton}`}
 										>
-											<ClickSound>0</ClickSound>
+											0
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked(".", e)}
 											className={`${style.operator} ${style.calculatorButton}`}
 										>
-											<ClickSound>.</ClickSound>
+											.
 										</button>
 										<button
 											onClick={(e) => handleButtonClicked("+", e)}
 											className={` ${style.calculatorButton}`}
 										>
-											<ClickSound>+</ClickSound>
+											+
 										</button>
 										<button
 											onClick={handleClrClicked}
 											className={` ${style.calculatorButton}`}
 										>
-											<ClickSound>
-												<FontAwesomeIcon icon={faEraser} />
-											</ClickSound>
+											<FontAwesomeIcon icon={faEraser} />
 										</button>
 										<button
 											onClick={handleDeleteClicked}
 											className={`${style.operator} ${style.calculatorButton}`}
 										>
-											<ClickSound>
-												<FontAwesomeIcon icon={faDeleteLeft} />
-											</ClickSound>
+											<FontAwesomeIcon icon={faDeleteLeft} />
 										</button>
 										<button
 											onClick={handleEqualsClicked}
