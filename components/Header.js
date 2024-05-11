@@ -63,6 +63,7 @@ const Header = ({ user }) => {
 				<Link className="logo" href="/">
 					TipJar
 				</Link>
+
 				<UserName />
 				<SessionExpirationWarning />
 			</Col>

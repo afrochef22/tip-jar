@@ -338,34 +338,6 @@ export function CurrentShowPerforming({
 													></Col>
 												</Row>
 											</Container>
-
-											{session ? (
-												<div>
-													<h3 className={`${style.title} mt-3`}>Or</h3>
-
-													<Container
-														className={`mb-1 ${style.bandContainer} ${
-															showFullDescription ? style.expanded : ""
-														}`}
-													>
-														<Row className="justify-content-center">
-															<Col
-																className={`${style.enterEventInboxContainer}`}
-															>
-																<p>Enter an event</p>
-																<Input
-																	className={`${style.enterEventInbox}`}
-																	onChange={(e) =>
-																		handleSelectedBand(e.target.value)
-																	}
-																/>
-															</Col>
-														</Row>
-													</Container>
-												</div>
-											) : (
-												<></>
-											)}
 										</div>
 									) : (
 										<>
@@ -390,6 +362,29 @@ export function CurrentShowPerforming({
 						</>
 					)}
 				</Row>
+			)}
+			{session ? (
+				<div>
+					<h3 className={`${style.title} mt-3`}>Or</h3>
+
+					<Container
+						className={`mb-1 ${style.bandContainer} ${
+							showFullDescription ? style.expanded : ""
+						}`}
+					>
+						<Row className="justify-content-center">
+							<Col className={`${style.enterEventInboxContainer}`}>
+								<p>Enter an event</p>
+								<Input
+									className={`${style.enterEventInbox}`}
+									onChange={(e) => handleSelectedBand(e.target.value)}
+								/>
+							</Col>
+						</Row>
+					</Container>
+				</div>
+			) : (
+				<></>
 			)}
 		</Container>
 	);
