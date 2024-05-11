@@ -35,52 +35,90 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 			</div>
 			<Row xs={12} sm={2} md={3}>
 				{reversedAllTipBreakdowns.map((data) => (
-					<Col sm={12} className={`${style.cardRow}`}>
+					<Col sm={12} className={`${style.cardRow} `}>
 						<Card
 							onClick={() => handleCardClick(data._id)}
 							key={data._id}
-							className={`${style.cardContainer}`}
+							className={`${style.cardContainer}  ${style.backgroundColor}`}
 						>
 							<CardBody>
-								<CardTitle tag="h5">{data.show}</CardTitle>
+								<CardTitle
+									className={`${style.bandTitle} highlight-color`}
+									tag="h5"
+								>
+									{data.show}
+								</CardTitle>
 								<CardSubtitle className="mb-2 " tag="h6">
 									{`${formatDateStringWithDayOfWeek(data.date)} `}
 								</CardSubtitle>
 								<CardSubtitle className="mb-2 " tag="h6">
-									Total Tips: ${data.totalTips}
+									Total Tips:{" "}
+									<span className="highlight-color">${data.totalTips}</span>
 								</CardSubtitle>
+
+								<h5 className={`${style.positionTitle}`}>Cooks:</h5>
+								{data.cookTips &&
+									data.cookTips.map((cook) => (
+										<Container
+											key={cook.id}
+											className={style.employeeContainer}
+										>
+											<Row>
+												<Col xs="auto" className="text-left">
+													{cook.label}:
+												</Col>
+												<Col>
+													<span className="highlight-color text-right">
+														${cook.tipOut.toFixed(2)}
+													</span>
+												</Col>
+											</Row>
+										</Container>
+									))}
+
 								<div>
-									<h6>Cooks:</h6>
-									<ul>
-										{data.cookTips &&
-											data.cookTips.map((cook) => (
-												<li key={cook.id}>
-													{cook.label}: ${cook.tipOut.toFixed(2)}
-												</li>
-											))}
-									</ul>
-								</div>
-								<div>
-									<h6>Barbacks:</h6>
-									<ul>
+									<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
+									<Col>
 										{data.barBackTips &&
 											data.barBackTips.map((barBack) => (
-												<li key={barBack.id}>
-													{barBack.label}: ${barBack.tipOut.toFixed(2)}
-												</li>
+												<Container
+													key={barBack.id}
+													className={style.employeeContainer}
+												>
+													<Row>
+														<Col xs="auto" className="text-left">
+															{barBack.label}:
+														</Col>
+														<Col>
+															<span className="highlight-color text-right">
+																${barBack.tipOut.toFixed(2)}
+															</span>
+														</Col>
+													</Row>
+												</Container>
 											))}
-									</ul>
+									</Col>
 								</div>
 								<div>
-									<h6>Bartenders:</h6>
-									<ul>
-										{data.BartenderTips &&
-											data.BartenderTips.map((bartender) => (
-												<li key={bartender.id}>
-													{bartender.label}: ${bartender.tipOut}
-												</li>
-											))}
-									</ul>
+									<h5 className={`${style.positionTitle}`}>Bartenders:</h5>
+									{data.BartenderTips &&
+										data.BartenderTips.map((bartender) => (
+											<Container
+												key={bartender.id}
+												className={style.employeeContainer}
+											>
+												<Row className="justify-content-between">
+													<Col xs="auto" className="text-left">
+														{bartender.label}:
+													</Col>
+													<Col>
+														<span className="highlight-color text-right">
+															${bartender.tipOut}
+														</span>
+													</Col>
+												</Row>
+											</Container>
+										))}
 								</div>
 							</CardBody>
 						</Card>
