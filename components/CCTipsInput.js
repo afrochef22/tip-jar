@@ -66,9 +66,9 @@ export default function CCTipsInput({
 							Enter Tips
 						</Label>
 						<p>
-							Enter the total tip amount manually, or use the calculator by
-							clicking the number buttons and operators. Once your calculation
-							is complete, click the equal sign to get the total tip amount.
+							Enter the total tip amount manually, or use the calculator buttons
+							to add the tips together. Click the equal sign to calculate the
+							total tip amount.
 						</p>
 						<Col xs={12} sm={12}>
 							<Row>
