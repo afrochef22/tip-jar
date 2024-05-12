@@ -39,8 +39,9 @@ export default function CCTipsInput({
 
 		try {
 			const result = eval(inputValue); // Evaluate the expression
-			setInputValue(result.toString()); // Update the input value with the result
-			const isValidInput = /^\d*\.?\d{0,2}$/.test(result);
+			const roundedResult = Math.round(result * 100) / 100; // Round to two decimal places
+			setInputValue(roundedResult);
+			const isValidInput = /^\d*\.?\d{0,2}$/.test(roundedResult);
 			console.log("Is valid input:", isValidInput);
 			if (isValidInput === false) {
 				console.log("modal should pop up");

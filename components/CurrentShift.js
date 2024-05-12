@@ -363,7 +363,7 @@ export function CurrentShowPerforming({
 					)}
 				</Row>
 			)}
-			{session ? (
+			{session && bandPerformingToday.length > 0 ? (
 				<div>
 					<h3 className={`${style.title} mt-3`}>Or</h3>
 
