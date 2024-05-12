@@ -41,7 +41,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 							key={data._id}
 							className={`${style.cardContainer}  ${style.backgroundColor}`}
 						>
-							<CardBody>
+							<CardBody className={``}>
 								<CardTitle
 									className={`${style.bandTitle} highlight-color`}
 									tag="h5"
@@ -59,21 +59,20 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 								<h5 className={`${style.positionTitle}`}>Cooks:</h5>
 								{data.cookTips &&
 									data.cookTips.map((cook) => (
-										<Container
-											key={cook.id}
-											className={style.employeeContainer}
-										>
-											<Row>
-												<Col xs="auto" className="text-left">
-													{cook.label}:
-												</Col>
-												<Col>
-													<span className="highlight-color text-right">
+										<table key={cook.id} className={style.employeeContainer}>
+											<tbody>
+												<tr>
+													<td className={`${style.expand} p-2`}>
+														{cook.label}:
+													</td>
+													<td
+														className={`${style.expand} p-2 highlight-color text-right`}
+													>
 														${cook.tipOut.toFixed(2)}
-													</span>
-												</Col>
-											</Row>
-										</Container>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 									))}
 
 								<div>
@@ -81,21 +80,23 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 									<Col>
 										{data.barBackTips &&
 											data.barBackTips.map((barBack) => (
-												<Container
+												<table
 													key={barBack.id}
 													className={style.employeeContainer}
 												>
-													<Row>
-														<Col xs="auto" className="text-left">
-															{barBack.label}:
-														</Col>
-														<Col>
-															<span className="highlight-color text-right">
+													<tbody>
+														<tr>
+															<td className={`${style.expand} p-2`}>
+																{barBack.label}:
+															</td>
+															<td
+																className={`${style.expand} p-2 highlight-color text-right`}
+															>
 																${barBack.tipOut.toFixed(2)}
-															</span>
-														</Col>
-													</Row>
-												</Container>
+															</td>
+														</tr>
+													</tbody>
+												</table>
 											))}
 									</Col>
 								</div>
@@ -103,21 +104,23 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 									<h5 className={`${style.positionTitle}`}>Bartenders:</h5>
 									{data.BartenderTips &&
 										data.BartenderTips.map((bartender) => (
-											<Container
+											<table
 												key={bartender.id}
 												className={style.employeeContainer}
 											>
-												<Row className="justify-content-between">
-													<Col xs="auto" className="text-left">
-														{bartender.label}:
-													</Col>
-													<Col>
-														<span className="highlight-color text-right">
+												<tbody>
+													<tr>
+														<td className={`${style.expand} p-2`}>
+															{bartender.label}:
+														</td>
+														<td
+															className={`${style.expand} p-2 highlight-color text-right`}
+														>
 															${bartender.tipOut}
-														</span>
-													</Col>
-												</Row>
-											</Container>
+														</td>
+													</tr>
+												</tbody>
+											</table>
 										))}
 								</div>
 							</CardBody>

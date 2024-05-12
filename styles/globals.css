@@ -365,12 +365,20 @@ body {
 
 .employeeTipsPage {
 	background-color: var(--third-color);
+	margin-top: 20px;
 	height: 100%;
 	min-height: 100vh;
 	font-size: 14px;
 }
+.employeeTipsBackGroundColor {
+	background-color: #484747; /* Your desired color */
+}
 .scorllableContainer {
 	padding: 0;
+}
+
+.payPeriodContainer {
+	margin-top: 50px;
 }
 
 .date-input-row {

@@ -88,48 +88,93 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 			<div className={`${style.carouselContainer}`}>
 				<Row xs="1" sm="2" md="3">
 					{chunk.map((data) => (
-						<Col key={data._id} className={`${style.cardWidth}`}>
-							<Card onClick={() => handleCardClick(data._id)}>
-								<CardBody>
-									<CardTitle tag="h5">{data.show}</CardTitle>
+						<Col sm={12} className={`${style.cardRow} `}>
+							<Card
+								onClick={() => handleCardClick(data._id)}
+								key={data._id}
+								className={`${style.cardContainer}  ${style.backgroundColor}`}
+							>
+								<CardBody className={``}>
+									<CardTitle
+										className={`${style.bandTitle} highlight-color`}
+										tag="h5"
+									>
+										{data.show}
+									</CardTitle>
 									<CardSubtitle className="mb-2 " tag="h6">
-										{formatDateStringWithDayOfWeek(data.date)}
+										{`${formatDateStringWithDayOfWeek(data.date)} `}
 									</CardSubtitle>
 									<CardSubtitle className="mb-2 " tag="h6">
-										Total Tips: ${data.totalTips}
+										Total Tips:{" "}
+										<span className="highlight-color">${data.totalTips}</span>
 									</CardSubtitle>
+
+									<h5 className={`${style.positionTitle}`}>Cooks:</h5>
+									{data.cookTips &&
+										data.cookTips.map((cook) => (
+											<table key={cook.id} className={style.employeeContainer}>
+												<tbody>
+													<tr>
+														<td className={`${style.expand} p-2`}>
+															{cook.label}:
+														</td>
+														<td
+															className={`${style.expand} p-2 highlight-color text-right`}
+														>
+															${cook.tipOut.toFixed(2)}
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										))}
+
 									<div>
-										<h6>Cooks:</h6>
-										<ul>
-											{data.cookTips &&
-												data.cookTips.map((cook) => (
-													<li key={cook.id}>
-														{cook.label}: ${cook.tipOut.toFixed(2)}
-													</li>
-												))}
-										</ul>
-									</div>
-									<div>
-										<h6>Barbacks:</h6>
-										<ul>
+										<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
+										<Col>
 											{data.barBackTips &&
 												data.barBackTips.map((barBack) => (
-													<li key={barBack.id}>
-														{barBack.label}: ${barBack.tipOut.toFixed(2)}
-													</li>
+													<table
+														key={barBack.id}
+														className={style.employeeContainer}
+													>
+														<tbody>
+															<tr>
+																<td className={`${style.expand} p-2`}>
+																	{barBack.label}:
+																</td>
+																<td
+																	className={`${style.expand} p-2 highlight-color text-right`}
+																>
+																	${barBack.tipOut.toFixed(2)}
+																</td>
+															</tr>
+														</tbody>
+													</table>
 												))}
-										</ul>
+										</Col>
 									</div>
 									<div>
-										<h6>Bartenders:</h6>
-										<ul>
-											{data.BartenderTips &&
-												data.BartenderTips.map((bartender) => (
-													<li key={bartender.id}>
-														{bartender.label}: ${bartender.tipOut}
-													</li>
-												))}
-										</ul>
+										<h5 className={`${style.positionTitle}`}>Bartenders:</h5>
+										{data.BartenderTips &&
+											data.BartenderTips.map((bartender) => (
+												<table
+													key={bartender.id}
+													className={style.employeeContainer}
+												>
+													<tbody>
+														<tr>
+															<td className={`${style.expand} p-2`}>
+																{bartender.label}:
+															</td>
+															<td
+																className={`${style.expand} p-2 highlight-color text-right`}
+															>
+																${bartender.tipOut}
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											))}
 									</div>
 								</CardBody>
 							</Card>
@@ -178,7 +223,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 					/>
 				)}
 			</Carousel>
-			<Row className="justify-content-center mt-4 mb-5">
+			<Row className="justify-content-center mt-4 ">
 				<Col xs="auto">
 					<Button onClick={scrollToTipsSpreadsheet}>
 						Scroll Down to Tips Spreadsheet

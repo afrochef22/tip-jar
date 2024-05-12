@@ -147,10 +147,13 @@ export default function TipsTotalsSpreadSheet({ employees, allTipBreakdowns }) {
 		tipsSpreadsheet.scrollIntoView({ behavior: "smooth" });
 	};
 	return (
-		<div id="tipsSpreadsheet" className=" employeeTipsPage ">
-			<Container className="">
-				<Row className="date-input-row mt-5 mb-4">
-					<h2>Pay Period Spreadsheet</h2>
+		<div
+			id="tipsSpreadsheet"
+			className=" employeeTipsPage employeeTipsBackGroundColor "
+		>
+			<Container>
+				<Row className="date-input-row mt-5 mb-4 ">
+					<h2 className="payPeriodContainer">Pay Period Spreadsheet</h2>
 					<h5>Click on a band name to see more detail or edit</h5>
 
 					<div className="d-flex justify-content-between align-items-center mt-3">

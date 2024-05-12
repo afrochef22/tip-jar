@@ -6,7 +6,7 @@
 
 .carouselSection {
 	min-height: 600px;
-	background-color: rgb(70, 69, 69);
+	background-color: var(--third-color);
 	padding-bottom: 20px;
 	align-content: center;
 }
@@ -16,7 +16,9 @@
 }
 
 .title {
+	text-align: center;
 	padding-top: 20px;
+	padding-bottom: 10px;
 }
 .bandTitle {
 	text-align: center;
@@ -27,10 +29,21 @@
 }
 
 .cardContainer {
-	width: 18rem;
+	width: 16rem;
 	margin: auto; /* Center horizontally */
 	margin-bottom: 20px;
 	/* border: solid 5px var(--secondary-color); */
+}
+
+.expand {
+	width: 100%;
+}
+.name {
+	padding: 10px 10px 10px 10px;
+}
+
+.tip {
+	padding: 10px 10px 10px 0;
 }
 
 .carouselControlPrevIcon:after,
@@ -45,6 +58,7 @@
 }
 .backgroundColor {
 	background-color: #484747; /* Your desired color */
+
 	color: var(--text-color); /* Adjust as needed */
 
 	display: flex; /* Add display flex */
@@ -57,8 +71,8 @@
 	max-width: 350px;
 	min-width: 10%;
 	height: 90%;
-	border-radius: 10px;
-	padding: 5px;
+	border-radius: 5px;
+	padding: 10px;
 	margin: 5px 0;
 	font-size: 15px;
 }
