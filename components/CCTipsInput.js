@@ -39,6 +39,20 @@ export default function CCTipsInput({
 
 		try {
 			const result = eval(inputValue); // Evaluate the expression
+
+			// Check if there are any numbers with more than two decimal places
+			const hasInvalidDecimal = inputValue.split("+").some((num) => {
+				const decimalPart = num.split(".")[1];
+				return decimalPart && decimalPart.length > 2;
+			});
+
+			if (hasInvalidDecimal) {
+				// Alert the user that the input can only have two decimal places
+				setAlertMessage("Numbers can only have up to two decimal places.");
+				toggleModal(); // Open the modal to display the alert message
+				setSubmitting(false);
+				return;
+			}
 			const roundedResult = Math.round(result * 100) / 100; // Round to two decimal places
 			setInputValue(roundedResult);
 			const isValidInput = /^\d*\.?\d{0,2}$/.test(roundedResult);
