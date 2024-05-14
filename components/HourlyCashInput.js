@@ -4,6 +4,8 @@ import style from "./CreditTipCalculation.module.css";
 
 export function HourlyBarBackCashInput({ barBacks, updateBarBacks }) {
 	const handleBarBackHoursWorkedChange = (barBackName, hoursWorked) => {
+		const [isHoursClicked, setIsHoursClicked] = useState(true); // State to track if hours are clicked
+
 		// Find the index of the barback with the matching name
 		const index = barBacks.findIndex((barBack) => barBack.name === barBackName);
 
@@ -20,6 +22,7 @@ export function HourlyBarBackCashInput({ barBacks, updateBarBacks }) {
 			});
 		}
 	};
+
 	return (
 		<Row className={style.cashHourlyContainer}>
 			<h1>Bar Backs</h1>

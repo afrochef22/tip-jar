@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "./TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import UpdateCashTipBreakDownModal from "./UpdateCashTipBreakDownModal";
 
 export default function CashTipBreakDown({
 	numberOfBarBacks,
@@ -151,6 +152,15 @@ export default function CashTipBreakDown({
 	);
 	return (
 		<Container className={style.topRow}>
+			<UpdateCashTipBreakDownModal
+				numberOfBarBacks={numberOfBarBacks}
+				numberOfBartenders={numberOfBartenders}
+				tipsCollected={tipsCollected}
+				barBacks={barBacks}
+				bartenders={bartenders}
+				barBackPercentage={barBackPercentage}
+			/>
+
 			<div className={style.backgroundColor}>
 				<Row className={` ${style.container}`}>
 					<Col sm={6} xs={6}>
