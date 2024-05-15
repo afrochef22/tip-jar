@@ -368,7 +368,6 @@ const UpdateCashTipBreakDown = (
 						</Row>
 						{barBackHoursClicked && newBarBacks.length > 1 ? (
 							<div>
-								If you need to cancel the hours enter 0 for all the bar backs.
 								<HourlyBarBackCashInput
 									barBacks={newBarBacks}
 									updateBarBacks={setNewBarBacks}
@@ -380,7 +379,6 @@ const UpdateCashTipBreakDown = (
 						)}
 						{bartenderHoursClicked && newBartenders.length > 1 ? (
 							<div>
-								If you need to cancel the hours enter 0 for all the bartenders.
 								<HourlyBartenderCashInput
 									bartenders={newBartenders}
 									updateBartenders={setNewBartenders}
