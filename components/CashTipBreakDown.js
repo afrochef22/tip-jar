@@ -11,8 +11,9 @@ export default function CashTipBreakDown({
 	barBacks,
 	bartenders,
 	barBackPercentage,
+	isBartenderHoursClicked,
+	isBarBackHoursClicked,
 }) {
-	console.log(bartenders);
 	const bartenderHours = bartenders
 		.map((bartender) => parseFloat(bartender.hours) || 0)
 		.reduce((acc, hours) => acc + hours, 0);
@@ -159,6 +160,8 @@ export default function CashTipBreakDown({
 				barBacks={barBacks}
 				bartenders={bartenders}
 				barBackPercentage={barBackPercentage}
+				isBarBackHoursClicked={isBarBackHoursClicked}
+				isBartenderHoursClicked={isBartenderHoursClicked}
 			/>
 
 			<div className={style.backgroundColor}>
@@ -209,7 +212,7 @@ export default function CashTipBreakDown({
 													<Col className=" mt-2"> {barBack.name}</Col>
 													<Col className=" mt-2">
 														<FontAwesomeIcon icon="fa-clock" />{" "}
-														<p>{barBack.hours}</p>
+														<p>{barBack.hours} hrs</p>
 													</Col>
 													<Col className=" mb-4 mt-2">
 														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />

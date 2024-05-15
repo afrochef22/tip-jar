@@ -17,7 +17,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { DeleteDialog } from "./ConformationDialog";
-import style from "./TipBreakDown.module.css";
+import style from "./CreditTipCalculation.module.css";
 import {
 	HourlyBarBackCashInput,
 	HourlyBartenderCashInput,
@@ -31,6 +31,8 @@ const UpdateCashTipBreakDown = (
 		barBacks,
 		bartenders,
 		barBackPercentage,
+		isBarBackHoursClicked,
+		isBartenderHoursClicked,
 	},
 	args
 ) => {
@@ -51,8 +53,12 @@ const UpdateCashTipBreakDown = (
 	const toggle = () => setModal(!modal);
 	const [defaultbarBackPercentage, setDefaultBarBackPercentage] =
 		useState(barBackPercentage);
-	const [isBartenderHoursClicked, setBartenderHoursClicked] = useState(false);
-	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
+	const [bartenderHoursClicked, setBartenderHoursClicked] = useState(
+		isBartenderHoursClicked
+	);
+	const [barBackHoursClicked, setBarBackHoursClicked] = useState(
+		isBarBackHoursClicked
+	);
 	const [newTipsCollected, setNewTipsCollected] = useState(tipsCollected);
 	const [newNumberOfBartenders, setNewNumberOfBartenders] =
 		useState(numberOfBartenders);
@@ -61,32 +67,40 @@ const UpdateCashTipBreakDown = (
 	const [newBartenders, setNewBartenders] = useState(bartenders);
 	const [newBarBacks, setNewBarBacks] = useState(barBacks);
 
+	useEffect(() => {
+		if (!bartenderHoursClicked) {
+			// If the toggle is being turned off for the first time, set hours to zero for all bartenders
+			setNewBartenders((prevBartenders) =>
+				prevBartenders.map((bartender) => ({
+					...bartender,
+					hours: 0,
+				}))
+			);
+		}
+	}, [bartenderHoursClicked]);
+
+	useEffect(() => {
+		if (!barBackHoursClicked) {
+			// If the toggle is being turned off for the first time, set hours to zero for all bar backs
+			setNewBarBacks((prevBarBacks) =>
+				prevBarBacks.map((barBack) => ({
+					...barBack,
+					hours: 0,
+				}))
+			);
+		}
+	}, [barBackHoursClicked]);
+
 	const handleSwitchToggle = (position) => {
 		switch (position) {
 			case "Bartender":
-				setBartenderHoursClicked(!isBartenderHoursClicked);
-				if (!isBartenderHoursClicked) {
-					// If the hours are toggled off, set hours to null for all bartenders
-					setNewBartenders((prevBartenders) =>
-						prevBartenders.map((bartender) => ({
-							...bartender,
-							hours: 0,
-						}))
-					);
-				}
+				setBartenderHoursClicked(!bartenderHoursClicked);
+
 				break;
 
 			case "Bar Back":
-				setBarBackHoursClicked(!isBarBackHoursClicked);
-				if (!isBarBackHoursClicked) {
-					// If the hours are toggled off, set hours to null for all bar backs
-					setNewBarBacks((prevBarBacks) =>
-						prevBarBacks.map((barBack) => ({
-							...barBack,
-							hours: 0,
-						}))
-					);
-				}
+				setBarBackHoursClicked(!barBackHoursClicked);
+
 				break;
 			default:
 				break;
@@ -183,6 +197,7 @@ const UpdateCashTipBreakDown = (
 								<Row>
 									<Col xs={8}>
 										<Label for="CashTips">Cash Tips Collected</Label>
+										<Label>Original Amount: {tipsCollected}</Label>
 									</Col>
 
 									<Col>
@@ -194,7 +209,9 @@ const UpdateCashTipBreakDown = (
 											pattern="[0-9]+(\.[0-9]{1,2})?"
 											step="0.01"
 											required
-											value={isNaN(newTipsCollected) ? null : newTipsCollected}
+											placeholder={
+												isNaN(newTipsCollected) ? null : newTipsCollected
+											}
 											onChange={(e) =>
 												setNewTipsCollected(parseFloat(e.target.value))
 											}
@@ -273,7 +290,7 @@ const UpdateCashTipBreakDown = (
 											step="0.01"
 											required
 											value={
-												isNaN(newNumberOfBarBacks) ? 0 : newNumberOfBarBacks
+												isNaN(newNumberOfBarBacks) ? "" : newNumberOfBarBacks
 											}
 											onChange={(e) =>
 												handleNumberOfBarBacksChange(parseFloat(e.target.value))
@@ -311,8 +328,8 @@ const UpdateCashTipBreakDown = (
 								</Row>
 							</Col>
 						</Row>
-						<Row className={`${style.toggleContainer} `}>
-							{numberOfBarBacks <= 1 ? (
+						<Row className={style.toggleContainer}>
+							{newNumberOfBarBacks <= 1 ? (
 								<div className={style.hidden}></div>
 							) : (
 								<FormGroup switch>
@@ -320,7 +337,7 @@ const UpdateCashTipBreakDown = (
 										type="switch"
 										role="switch"
 										onChange={() => handleSwitchToggle("Bar Back")}
-										checked={isBarBackHoursClicked}
+										checked={barBackHoursClicked}
 									/>
 									<Label check>
 										Toggle to tip out{" "}
@@ -330,7 +347,7 @@ const UpdateCashTipBreakDown = (
 									<div className={style.seperationLine}></div>
 								</FormGroup>
 							)}
-							{numberOfBartenders <= 1 ? (
+							{newNumberOfBartenders <= 1 ? (
 								<div className={style.hidden}></div>
 							) : (
 								<FormGroup switch>
@@ -338,7 +355,7 @@ const UpdateCashTipBreakDown = (
 										type="switch"
 										role="switch"
 										onChange={() => handleSwitchToggle("Bartender")}
-										checked={isBartenderHoursClicked}
+										checked={bartenderHoursClicked}
 									/>
 									<Label check>
 										Toggle to tip out{" "}
@@ -349,28 +366,36 @@ const UpdateCashTipBreakDown = (
 								</FormGroup>
 							)}
 						</Row>
-						{isBarBackHoursClicked && barBacks.length > 1 ? (
-							<HourlyBarBackCashInput
-								barBacks={barBacks}
-								updateBarBacks={setNewBarBacks}
-							/>
+						{barBackHoursClicked && newBarBacks.length > 1 ? (
+							<div>
+								If you need to cancel the hours enter 0 for all the bar backs.
+								<HourlyBarBackCashInput
+									barBacks={newBarBacks}
+									updateBarBacks={setNewBarBacks}
+									isBarBackHoursClicked={barBackHoursClicked}
+								/>
+							</div>
 						) : (
 							<div></div>
 						)}
-						{isBartenderHoursClicked && bartenders.length > 1 ? (
-							<HourlyBartenderCashInput
-								bartenders={bartenders}
-								updateBartenders={setNewBartenders}
-							/>
+						{bartenderHoursClicked && newBartenders.length > 1 ? (
+							<div>
+								If you need to cancel the hours enter 0 for all the bartenders.
+								<HourlyBartenderCashInput
+									bartenders={newBartenders}
+									updateBartenders={setNewBartenders}
+									isBartenderHoursClicked={bartenderHoursClicked}
+								/>
+							</div>
 						) : (
 							<div></div>
 						)}
 						<div className={style.centerButtonContainer}>
 							<Button
 								className={`${style.centerButton} ${style.calculateButton}`}
-								type="submit"
+								onClick={handleUpdateBreakDown}
 							>
-								Calculate
+								Update
 							</Button>
 						</div>
 					</Form>

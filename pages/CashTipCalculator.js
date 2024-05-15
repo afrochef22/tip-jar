@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import {
@@ -37,14 +37,40 @@ export default function CashTipCalculator() {
 	// barBacks,
 	// bartenders
 
+	useEffect(() => {
+		if (!isBartenderHoursClicked) {
+			// If the toggle is being turned off for the first time, set hours to zero for all bartenders
+			setBartenders((prevBartenders) =>
+				prevBartenders.map((bartender) => ({
+					...bartender,
+					hours: 0,
+				}))
+			);
+		}
+	}, [isBartenderHoursClicked]);
+
+	useEffect(() => {
+		if (!isBarBackHoursClicked) {
+			// If the toggle is being turned off for the first time, set hours to zero for all bar backs
+			setBarBacks((prevBarBacks) =>
+				prevBarBacks.map((barBack) => ({
+					...barBack,
+					hours: 0,
+				}))
+			);
+		}
+	}, [isBarBackHoursClicked]);
+
 	const handleSwitchToggle = (position) => {
 		switch (position) {
 			case "Bartender":
 				setBartenderHoursClicked(!isBartenderHoursClicked);
+
 				break;
 
 			case "Bar Back":
 				setBarBackHoursClicked(!isBarBackHoursClicked);
+
 				break;
 			default:
 				break;
@@ -103,7 +129,12 @@ export default function CashTipCalculator() {
 		formData.forEach((value, key) => {
 			data;
 		});
-
+		console.log(
+			"barBackHoursClicked",
+			isBarBackHoursClicked,
+			"barBackHoursClicked",
+			isBarBackHoursClicked
+		);
 		router.push({
 			pathname: "/CashTipBreakDownPage",
 			query: {
@@ -113,6 +144,8 @@ export default function CashTipCalculator() {
 				barBacks: JSON.stringify(barBacks),
 				bartenders: JSON.stringify(bartenders),
 				barBackPercentage: JSON.stringify(defaultbarBackPercentage),
+				isBartenderHoursClicked: isBartenderHoursClicked,
+				isBarBackHoursClicked: isBarBackHoursClicked,
 			},
 		});
 	};
@@ -278,6 +311,7 @@ export default function CashTipCalculator() {
 					<HourlyBarBackCashInput
 						barBacks={barBacks}
 						updateBarBacks={setBarBacks}
+						isHoursClicked={isBarBackHoursClicked}
 					/>
 				) : (
 					<div></div>
@@ -286,6 +320,7 @@ export default function CashTipCalculator() {
 					<HourlyBartenderCashInput
 						bartenders={bartenders}
 						updateBartenders={setBartenders}
+						isHoursClicked={isBartenderHoursClicked}
 					/>
 				) : (
 					<div></div>

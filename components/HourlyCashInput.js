@@ -2,10 +2,13 @@ import React from "react";
 import { Label, Input, Col, Row, FormGroup } from "reactstrap";
 import style from "./CreditTipCalculation.module.css";
 
-export function HourlyBarBackCashInput({ barBacks, updateBarBacks }) {
+export function HourlyBarBackCashInput({
+	barBacks,
+	updateBarBacks,
+	isBarBackHoursClicked,
+}) {
 	const handleBarBackHoursWorkedChange = (barBackName, hoursWorked) => {
-		const [isHoursClicked, setIsHoursClicked] = useState(true); // State to track if hours are clicked
-
+		console.log("hoursWorked", hoursWorked);
 		// Find the index of the barback with the matching name
 		const index = barBacks.findIndex((barBack) => barBack.name === barBackName);
 
@@ -45,9 +48,10 @@ export function HourlyBarBackCashInput({ barBacks, updateBarBacks }) {
 								pattern="[0-9]+(\.[0-9]{1,2})?"
 								step="0.01"
 								required
-								onChange={(e) =>
-									handleBarBackHoursWorkedChange(barBack.name, e.target.value)
-								}
+								placeholder={barBack.hours}
+								onChange={(e) => {
+									handleBarBackHoursWorkedChange(barBack.name, e.target.value);
+								}}
 								onInput={(e) => {
 									e.preventDefault();
 									const inputValue = e.target.value;
@@ -68,7 +72,11 @@ export function HourlyBarBackCashInput({ barBacks, updateBarBacks }) {
 	);
 }
 
-export function HourlyBartenderCashInput({ bartenders, updateBartenders }) {
+export function HourlyBartenderCashInput({
+	bartenders,
+	updateBartenders,
+	isBartenderHoursClicked,
+}) {
 	const handleBartenderHoursWorkedChange = (bartenderName, hoursWorked) => {
 		// Find the index of the bartender with the matching name
 		const index = bartenders.findIndex(
@@ -109,6 +117,7 @@ export function HourlyBartenderCashInput({ bartenders, updateBartenders }) {
 								pattern="[0-9]+(\.[0-9]{1,2})?"
 								step="0.01"
 								required
+								placeholder={bartender.hours}
 								onChange={(e) =>
 									handleBartenderHoursWorkedChange(
 										bartender.name,

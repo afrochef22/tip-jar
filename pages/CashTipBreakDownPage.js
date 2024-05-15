@@ -12,8 +12,15 @@ export default function CashTipBreakDownPage() {
 		barBacks,
 		bartenders,
 		barBackPercentage,
+		isBartenderHoursClicked,
+		isBarBackHoursClicked,
 	} = router.query;
-	console.log(barBackPercentage);
+	console.log(
+		"CashTipBreakDownPage barBackHoursClicked",
+		isBarBackHoursClicked,
+		"CashTipBreakDownPage barBackHoursClicked",
+		isBarBackHoursClicked
+	);
 
 	const parsedBartenders = bartenders ? JSON.parse(bartenders) : [];
 	const parsedBarBacks = barBacks ? JSON.parse(barBacks) : [];
@@ -21,7 +28,6 @@ export default function CashTipBreakDownPage() {
 	const parsedNumberOfBartenders = parseFloat(numberOfBartenders);
 	const parsedNumberOfBarBacks = parseFloat(numberOfBarBacks);
 	const parsedBarBackPercentage = parseFloat(barBackPercentage);
-	console.log(parsedTipsCollected);
 
 	return (
 		<CashTipBreakDown
@@ -31,6 +37,8 @@ export default function CashTipBreakDownPage() {
 			barBacks={parsedBarBacks}
 			bartenders={parsedBartenders}
 			barBackPercentage={parsedBarBackPercentage}
+			isBartenderHoursClicked={isBartenderHoursClicked}
+			isBarBackHoursClicked={isBarBackHoursClicked}
 		/>
 	);
 }
