@@ -36,28 +36,19 @@ const UpdateCashTipBreakDown = (
 	},
 	args
 ) => {
-	console.log(
-		barBackPercentage,
-		numberOfBarBacks,
-		numberOfBartenders,
-		barBacks,
-		bartenders
-	);
-
 	if (tipsCollected === undefined || tipsCollected === null) {
 		return <div>Loading...</div>; // Or handle the absence of tipsCollected appropriately
 	}
 	const router = useRouter();
-
+	console.log(barBacks);
 	const [modal, setModal] = useState(false);
-	const toggle = () => setModal(!modal);
 	const [defaultbarBackPercentage, setDefaultBarBackPercentage] =
 		useState(barBackPercentage);
 	const [bartenderHoursClicked, setBartenderHoursClicked] = useState(
-		isBartenderHoursClicked
+		Boolean(isBartenderHoursClicked)
 	);
 	const [barBackHoursClicked, setBarBackHoursClicked] = useState(
-		isBarBackHoursClicked
+		Boolean(isBarBackHoursClicked)
 	);
 	const [newTipsCollected, setNewTipsCollected] = useState(tipsCollected);
 	const [newNumberOfBartenders, setNewNumberOfBartenders] =
@@ -66,18 +57,43 @@ const UpdateCashTipBreakDown = (
 		useState(numberOfBarBacks);
 	const [newBartenders, setNewBartenders] = useState(bartenders);
 	const [newBarBacks, setNewBarBacks] = useState(barBacks);
+	const [placeholder, setPlaceholder] = useState(tipsCollected);
+
+	useEffect(() => {
+		// Check if any of the bar backs have hours
+		const barBacksWithHours = barBacks.some((barBack) => barBack.hours > 0);
+		// Check if any of the bartenders have hours
+		const bartendersWithHours = bartenders.some(
+			(bartender) => bartender.hours > 0
+		);
+
+		// If either bar backs or bartenders have hours, toggle the corresponding switch
+		if (barBacksWithHours) {
+			setBarBackHoursClicked(true);
+		}
+		if (bartendersWithHours) {
+			setBartenderHoursClicked(true);
+		}
+	}, [barBacks, bartenders]);
 
 	useEffect(() => {
 		if (!bartenderHoursClicked) {
-			// If the toggle is being turned off for the first time, set hours to zero for all bartenders
 			setNewBartenders((prevBartenders) =>
 				prevBartenders.map((bartender) => ({
 					...bartender,
-					hours: 0,
+					hours: "",
 				}))
 			);
 		}
 	}, [bartenderHoursClicked]);
+	console.log("barBackHoursClicked", typeof barBackHoursClicked);
+	const toggle = () => {
+		setModal(!modal);
+		if (!modal) {
+			setPlaceholder(tipsCollected);
+			setNewTipsCollected(tipsCollected);
+		}
+	};
 
 	useEffect(() => {
 		if (!barBackHoursClicked) {
@@ -85,7 +101,7 @@ const UpdateCashTipBreakDown = (
 			setNewBarBacks((prevBarBacks) =>
 				prevBarBacks.map((barBack) => ({
 					...barBack,
-					hours: 0,
+					hours: "",
 				}))
 			);
 		}
@@ -179,10 +195,20 @@ const UpdateCashTipBreakDown = (
 			</Button>
 		</div>
 	);
+	const handleFocus = () => {
+		setPlaceholder("");
+	};
 
+	const handleBlur = () => {
+		if (!newTipsCollected) {
+			setPlaceholder(isNaN(newTipsCollected) ? null : newTipsCollected);
+		}
+	};
 	return (
 		<div>
-			<Button onClick={toggle}>Edit</Button>
+			<Button className="apple-blue-background px-5" onClick={toggle}>
+				Edit
+			</Button>
 
 			<Modal isOpen={modal} toggle={toggle} {...args} fullscreen>
 				<ModalHeader toggle={toggle} close={closeBtn}>
@@ -209,9 +235,9 @@ const UpdateCashTipBreakDown = (
 											pattern="[0-9]+(\.[0-9]{1,2})?"
 											step="0.01"
 											required
-											placeholder={
-												isNaN(newTipsCollected) ? null : newTipsCollected
-											}
+											placeholder={placeholder}
+											onFocus={handleFocus}
+											onBlur={handleBlur}
 											onChange={(e) =>
 												setNewTipsCollected(parseFloat(e.target.value))
 											}

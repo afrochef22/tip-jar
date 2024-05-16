@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Label, Input, Col, Row, FormGroup } from "reactstrap";
 import style from "./CreditTipCalculation.module.css";
 
@@ -7,8 +7,15 @@ export function HourlyBarBackCashInput({
 	updateBarBacks,
 	isBarBackHoursClicked,
 }) {
+	const [clickedInputs, setClickedInputs] = useState({});
 	const handleBarBackHoursWorkedChange = (barBackName, hoursWorked) => {
 		console.log("hoursWorked", hoursWorked);
+
+		const isValidInput = /^\d+(\.\d{1,2})?$/.test(hoursWorked);
+		if (!isValidInput) {
+			alert("Please enter a valid number with up to two decimal places.");
+			return;
+		}
 		// Find the index of the barback with the matching name
 		const index = barBacks.findIndex((barBack) => barBack.name === barBackName);
 
@@ -25,7 +32,12 @@ export function HourlyBarBackCashInput({
 			});
 		}
 	};
-
+	const handleInputClick = (bartenderName) => {
+		setClickedInputs((prevClickedInputs) => ({
+			...prevClickedInputs,
+			[bartenderName]: true,
+		}));
+	};
 	return (
 		<Row className={style.cashHourlyContainer}>
 			<h1>Bar Backs</h1>
@@ -48,10 +60,11 @@ export function HourlyBarBackCashInput({
 								pattern="[0-9]+(\.[0-9]{1,2})?"
 								step="0.01"
 								required
-								placeholder={barBack.hours}
+								placeholder={clickedInputs[barBack.name] ? "" : barBack.hours}
 								onChange={(e) => {
 									handleBarBackHoursWorkedChange(barBack.name, e.target.value);
 								}}
+								onClick={() => handleInputClick(barBack.name)}
 								onInput={(e) => {
 									e.preventDefault();
 									const inputValue = e.target.value;
@@ -77,6 +90,8 @@ export function HourlyBartenderCashInput({
 	updateBartenders,
 	isBartenderHoursClicked,
 }) {
+	const [clickedInputs, setClickedInputs] = useState({});
+
 	const handleBartenderHoursWorkedChange = (bartenderName, hoursWorked) => {
 		// Find the index of the bartender with the matching name
 		const index = bartenders.findIndex(
@@ -94,6 +109,12 @@ export function HourlyBartenderCashInput({
 				return updatedBartenders;
 			});
 		}
+	};
+	const handleInputClick = (bartenderName) => {
+		setClickedInputs((prevClickedInputs) => ({
+			...prevClickedInputs,
+			[bartenderName]: true,
+		}));
 	};
 	return (
 		<Row className={style.cashHourlyContainer}>
@@ -117,7 +138,10 @@ export function HourlyBartenderCashInput({
 								pattern="[0-9]+(\.[0-9]{1,2})?"
 								step="0.01"
 								required
-								placeholder={bartender.hours}
+								placeholder={
+									clickedInputs[bartender.name] ? "" : bartender.hours
+								}
+								onClick={() => handleInputClick(bartender.name)}
 								onChange={(e) =>
 									handleBartenderHoursWorkedChange(
 										bartender.name,
@@ -125,7 +149,6 @@ export function HourlyBartenderCashInput({
 									)
 								}
 								onInput={(e) => {
-									e.preventDefault();
 									const inputValue = e.target.value;
 									const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
 
