@@ -87,12 +87,12 @@ export default function getEmployee({ employee }) {
 								</h1>
 							</Col>
 							<Col>
-								{/* <Button
+								<Button
 									className={"editBtn"}
 									onClick={() => toggleConfirmation(employee._id)}
 								>
 									🗑
-								</Button> */}
+								</Button>
 								<DeleteDialog
 									isOpen={!!confirmationStates[employee._id]}
 									toggle={() => toggleConfirmation(employee._id)}

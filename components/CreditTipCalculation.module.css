@@ -198,9 +198,6 @@
 	background-color: #ccc;
 }
 
-.operator {
-}
-
 @media screen and (max-width: 540px) {
 	.backgroundColor {
 		background-color: var(--third-color); /* Your desired color */

@@ -24,6 +24,7 @@ body {
 	--lastCol-odd: rgb(35, 35, 35);
 	--thead-tfoot: #b9b9b9;
 	--gold: #ffd700;
+	--apple-blue: #147efb;
 }
 
 /* :root {
@@ -65,6 +66,10 @@ body {
 
 .gold-color {
 	color: var(--gold);
+}
+
+.apple-blue-background {
+	background-color: var(--apple-blue);
 }
 
 .button-color {

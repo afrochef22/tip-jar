@@ -206,7 +206,9 @@ export default function AddGuestEmployee({
 						onClick={onClick}
 					/>{" "}
 					<ModalFooter>
-						<Button onClick={toggleNested}>Register New Fill In</Button>
+						<Button className="apple-blue-background" onClick={toggleNested}>
+							Register New Fill In
+						</Button>
 
 						<Button color="success" onClick={toggle}>
 							Done
