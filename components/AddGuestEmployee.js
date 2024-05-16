@@ -20,6 +20,11 @@ import style2 from "./SelectEmployee.module.css";
 import { v4 as uuidv4 } from "uuid";
 import SelectNonActiveEmployee from "./SelectNonActiveEmployee";
 
+export const RegisterButton = ({ toggleNested }) => {
+	<Button className="apple-blue-background" onClick={toggleNested}>
+		Register New Fill In
+	</Button>;
+};
 export default function AddGuestEmployee({
 	position,
 	addNewEmployee,
@@ -195,7 +200,12 @@ export default function AddGuestEmployee({
 				</Col>
 			</Row>
 			<Modal isOpen={modal} toggle={toggle}>
-				<ModalHeader toggle={toggle}>Select Employee</ModalHeader>
+				<ModalHeader toggle={toggle}>
+					{" "}
+					<Button className="apple-blue-background " onClick={toggleNested}>
+						Register New Fill In
+					</Button>
+				</ModalHeader>
 				<ModalBody>
 					<SelectNonActiveEmployee
 						position={position}
