@@ -52,7 +52,7 @@ const Cooks = ({ employees }) => {
 							<Row>
 								<Col>
 									<Button className="editBtn">
-										<UpdateEmployeeModal data={cook} />
+										{/* <UpdateEmployeeModal data={cook} /> */}
 									</Button>
 								</Col>
 								<Col>

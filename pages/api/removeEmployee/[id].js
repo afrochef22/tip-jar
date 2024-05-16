@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 
 export default async (req, res) => {
 	const { id } = req.query;
-	console.log(req.method);
+	console.log("removeEmployee: ", req.method);
 
 	if (!ObjectId.isValid(id)) {
 		return res.status(400).json({ error: "Invalid employee ID: ", id });
@@ -13,16 +13,17 @@ export default async (req, res) => {
 		try {
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
-			const employeeCollection = db.collection("employees");
-			const employee = await employeeCollection.findOneAndDelete({
-				_id: new ObjectId(id),
-			});
+			const result = await db
+				.collection("employees")
+				.deleteOne({ _id: new ObjectId(id) });
 
-			if (!employee.value) {
+			if (result.deletedCount === 0) {
 				return res.status(404).json({ error: "Employee not found" });
 			}
 
-			res.status(200).json(employee);
+			res
+				.status(200)
+				.json({ message: "Employee deleted successfully" }, result);
 		} catch (error) {
 			console.error("Error fetching data:", error);
 			res.status(500).json({ error: "Internal Server Error" });

@@ -52,7 +52,7 @@ const BarBacks = ({ employees }) => {
 							<Row>
 								<Col>
 									<Button className="editBtn">
-										<UpdateEmployeeModal data={barBacks} />
+										{/* <UpdateEmployeeModal data={barBacks} /> */}
 									</Button>
 								</Col>
 								<Col>

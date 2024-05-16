@@ -20,7 +20,8 @@ export default function getEmployee({ employee }) {
 			[id]: !confirmationStates[id],
 		});
 	};
-	const toggle = () => setShowConfirmation(!showConfirmation);
+	// const toggle = () => setShowConfirmation(!showConfirmation);
+
 	if (!employee) {
 		// Handle the case when employee is not found
 		return <div>employee not found</div>;
@@ -53,7 +54,6 @@ export default function getEmployee({ employee }) {
 		});
 	};
 	const handleDelete = async (id) => {
-		console.log(`id: ${id}`);
 		try {
 			const response = await fetch(`/api/removeEmployee/${id}`, {
 				method: "DELETE",
@@ -67,9 +67,11 @@ export default function getEmployee({ employee }) {
 			}
 		} catch (error) {
 			console.error("Error deleting Employee:", error);
+		} finally {
+			toggleConfirmation(id);
 		}
-		toggle();
 	};
+
 	return (
 		<div className="front-page">
 			<Container className={`${style.topRow} justify-content-center`}>

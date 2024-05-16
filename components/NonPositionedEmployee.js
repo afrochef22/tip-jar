@@ -54,7 +54,7 @@ const NonPositionedEmployee = ({ employees }) => {
 							<Row>
 								<Col>
 									<Button className="editBtn">
-										<UpdateEmployeeModal data={employee} />
+										{/* <UpdateEmployeeModal data={employee} /> */}
 									</Button>
 								</Col>
 								<Col>
