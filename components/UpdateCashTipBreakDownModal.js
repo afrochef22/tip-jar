@@ -167,6 +167,34 @@ const UpdateCashTipBreakDown = (
 
 	const handleUpdateBreakDown = async (e) => {
 		e.preventDefault();
+
+		// Validate the tips collected
+		const isValidTipsCollected = /^\d+(\.\d{1,2})?$/.test(newTipsCollected);
+		if (!isValidTipsCollected) {
+			alert("Please enter a valid amount for tips collected.");
+			return;
+		}
+
+		// Validate the hours worked for bartenders and bar backs if applicable
+		if (bartenderHoursClicked) {
+			const isBartenderHoursValid = newBartenders.every((bartender) =>
+				/^\d+(\.\d{1,2})?$/.test(bartender.hours)
+			);
+			if (!isBartenderHoursValid) {
+				alert("Please enter valid hours worked for all bartenders.");
+				return;
+			}
+		}
+
+		if (barBackHoursClicked) {
+			const isBarBackHoursValid = newBarBacks.every((barBack) =>
+				/^\d+(\.\d{1,2})?$/.test(barBack.hours)
+			);
+			if (!isBarBackHoursValid) {
+				alert("Please enter valid hours worked for all bar backs.");
+				return;
+			}
+		}
 		router.push({
 			pathname: "/CashTipBreakDownPage",
 			query: {

@@ -11,11 +11,11 @@ export function HourlyBarBackCashInput({
 	const handleBarBackHoursWorkedChange = (barBackName, hoursWorked) => {
 		console.log("hoursWorked", hoursWorked);
 
-		const isValidInput = /^\d+(\.\d{1,2})?$/.test(hoursWorked);
-		if (!isValidInput) {
-			alert("Please enter a valid number with up to two decimal places.");
-			return;
-		}
+		// const isValidInput = /^\d+(\.\d{1,2})?$/.test(hoursWorked);
+		// if (!isValidInput) {
+		// 	alert("Please enter a valid number with up to two decimal places.");
+		// 	return;
+		// }
 		// Find the index of the barback with the matching name
 		const index = barBacks.findIndex((barBack) => barBack.name === barBackName);
 
@@ -65,17 +65,17 @@ export function HourlyBarBackCashInput({
 									handleBarBackHoursWorkedChange(barBack.name, e.target.value);
 								}}
 								onClick={() => handleInputClick(barBack.name)}
-								onInput={(e) => {
-									e.preventDefault();
-									const inputValue = e.target.value;
-									const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
+								// onInput={(e) => {
+								// 	e.preventDefault();
+								// 	const inputValue = e.target.value;
+								// 	const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
 
-									if (!isValidInput) {
-										e.target.setCustomValidity("Please enter a valid number.");
-									} else {
-										e.target.setCustomValidity("");
-									}
-								}}
+								// 	if (!isValidInput) {
+								// 		e.target.setCustomValidity("Please enter a valid number.");
+								// 	} else {
+								// 		e.target.setCustomValidity("");
+								// 	}
+								// }}
 							></Input>
 						</Col>
 					</FormGroup>
