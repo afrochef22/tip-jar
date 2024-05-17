@@ -76,6 +76,12 @@ export default function CashTipCalculator() {
 				break;
 		}
 	};
+	console.log(
+		"CashTipCalculator outside calculate button BartenderHoursClicked ",
+		isBartenderHoursClicked,
+		" CashTipCalculator barBackHoursClicked",
+		isBarBackHoursClicked
+	);
 
 	const handleIncrease = () => {
 		console.log("up");
@@ -130,11 +136,12 @@ export default function CashTipCalculator() {
 			data;
 		});
 		console.log(
-			"barBackHoursClicked",
-			isBarBackHoursClicked,
-			"barBackHoursClicked",
+			"CashTipCalculator BartenderHoursClicked ",
+			isBartenderHoursClicked,
+			" CashTipCalculator barBackHoursClicked",
 			isBarBackHoursClicked
 		);
+
 		router.push({
 			pathname: "/CashTipBreakDownPage",
 			query: {

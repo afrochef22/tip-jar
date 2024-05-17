@@ -151,6 +151,14 @@ export default function CashTipBreakDown({
 		"=",
 		totalAdjustedTipOutBartenders + totalBarBackTipout
 	);
+	console.log(
+		"isBartenderHoursClicked: ",
+		isBartenderHoursClicked,
+		"isBarBackHoursClicked: ",
+		isBarBackHoursClicked,
+		barBacks,
+		bartenders
+	);
 	return (
 		<Container className={style.topRow}>
 			<UpdateCashTipBreakDownModal

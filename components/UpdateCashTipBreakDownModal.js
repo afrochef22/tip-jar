@@ -36,19 +36,28 @@ const UpdateCashTipBreakDown = (
 	},
 	args
 ) => {
+	console.log(
+		"bartenderHoursClicked 1st: ",
+		isBarBackHoursClicked,
+		"barBackHoursClicked 1st: ",
+		isBarBackHoursClicked,
+		barBacks,
+		bartenders
+	);
 	if (tipsCollected === undefined || tipsCollected === null) {
 		return <div>Loading...</div>; // Or handle the absence of tipsCollected appropriately
 	}
 	const router = useRouter();
 	console.log(barBacks);
+
 	const [modal, setModal] = useState(false);
 	const [defaultbarBackPercentage, setDefaultBarBackPercentage] =
 		useState(barBackPercentage);
 	const [bartenderHoursClicked, setBartenderHoursClicked] = useState(
-		Boolean(isBartenderHoursClicked)
+		isBartenderHoursClicked === true
 	);
 	const [barBackHoursClicked, setBarBackHoursClicked] = useState(
-		Boolean(isBarBackHoursClicked)
+		isBarBackHoursClicked === true
 	);
 	const [newTipsCollected, setNewTipsCollected] = useState(tipsCollected);
 	const [newNumberOfBartenders, setNewNumberOfBartenders] =
@@ -58,7 +67,21 @@ const UpdateCashTipBreakDown = (
 	const [newBartenders, setNewBartenders] = useState(bartenders);
 	const [newBarBacks, setNewBarBacks] = useState(barBacks);
 	const [placeholder, setPlaceholder] = useState(tipsCollected);
+	const [wasBarBackHoursClicked, setWasBarBackHoursClicked] = useState(
+		isBarBackHoursClicked === true
+	);
+	const [wasBartenderHoursClicked, setWasBartenderHoursClicked] = useState(
+		isBartenderHoursClicked === true
+	);
 
+	console.log(
+		"bartenderHoursClicked: ",
+		bartenderHoursClicked,
+		"barBackHoursClicked: ",
+		barBackHoursClicked,
+		newBarBacks,
+		newBartenders
+	);
 	useEffect(() => {
 		// Check if any of the bar backs have hours
 		const barBacksWithHours = barBacks.some((barBack) => barBack.hours > 0);
@@ -77,15 +100,18 @@ const UpdateCashTipBreakDown = (
 	}, [barBacks, bartenders]);
 
 	useEffect(() => {
-		if (!bartenderHoursClicked) {
-			setNewBartenders((prevBartenders) =>
-				prevBartenders.map((bartender) => ({
-					...bartender,
+		if (!barBackHoursClicked && wasBarBackHoursClicked) {
+			// If the toggle is being turned off, set hours to an empty string for all bar backs
+			setNewBarBacks((prevBarBacks) =>
+				prevBarBacks.map((barBack) => ({
+					...barBack,
 					hours: "",
 				}))
 			);
 		}
-	}, [bartenderHoursClicked]);
+		setWasBarBackHoursClicked(barBackHoursClicked);
+	}, [barBackHoursClicked, wasBarBackHoursClicked]);
+
 	console.log("barBackHoursClicked", typeof barBackHoursClicked);
 	const toggle = () => {
 		setModal(!modal);
@@ -96,16 +122,17 @@ const UpdateCashTipBreakDown = (
 	};
 
 	useEffect(() => {
-		if (!barBackHoursClicked) {
-			// If the toggle is being turned off for the first time, set hours to zero for all bar backs
-			setNewBarBacks((prevBarBacks) =>
-				prevBarBacks.map((barBack) => ({
-					...barBack,
+		if (!bartenderHoursClicked && wasBartenderHoursClicked) {
+			// If the toggle is being turned off, set hours to an empty string for all bar backs
+			setNewBartenders((prevBartenders) =>
+				prevBartenders.map((bartender) => ({
+					...bartender,
 					hours: "",
 				}))
 			);
 		}
-	}, [barBackHoursClicked]);
+		setWasBartenderHoursClicked(bartenderHoursClicked);
+	}, [bartenderHoursClicked, wasBartenderHoursClicked]);
 
 	const handleSwitchToggle = (position) => {
 		switch (position) {
