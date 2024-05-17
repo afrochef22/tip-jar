@@ -173,7 +173,7 @@ export default function CashTipBreakDown({
 			/>
 
 			<div className={style.backgroundColor}>
-				<Row className={` ${style.container}`}>
+				<Row className={` align-items-center ${style.container}`}>
 					<Col sm={6} xs={6}>
 						<h4>
 							Total Tips:
