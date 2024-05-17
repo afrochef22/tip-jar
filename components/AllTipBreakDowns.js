@@ -88,7 +88,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 			<div className={`${style.carouselContainer}`}>
 				<Row xs="1" sm="2" md="3">
 					{chunk.map((data) => (
-						<Col sm={12} className={`${style.cardRow} `}>
+						<Col key={data._id} sm={12} className={`${style.cardRow} `}>
 							<Card
 								onClick={() => handleCardClick(data._id)}
 								key={data._id}

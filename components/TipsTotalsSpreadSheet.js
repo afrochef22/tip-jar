@@ -196,15 +196,13 @@ export default function TipsTotalsSpreadSheet({ employees, allTipBreakdowns }) {
 									),
 								];
 								return (
-									<>
-										<th
-											className="band-date"
-											key={`date-${date}`}
-											colSpan={uniqueShows.length}
-										>
-											{formatDateStringWithDayOfWeek(date)}
-										</th>
-									</>
+									<th
+										className="band-date"
+										key={`date-${date}`}
+										colSpan={uniqueShows.length}
+									>
+										{formatDateStringWithDayOfWeek(date)}
+									</th>
 								);
 							})}
 							<th className="employeeTipsCol" colSpan={2} rowSpan={2}>

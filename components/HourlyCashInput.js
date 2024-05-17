@@ -51,7 +51,7 @@ export function HourlyBarBackCashInput({
 						<Label for="hoursWorked" xs={6} sm={6}>
 							Hours Worked
 						</Label>
-						<Col xs={3} sm={5}>
+						<Col xs={4} sm={5}>
 							<Input
 								name={`${barBack.name}Hours`}
 								id="hoursWorked"
@@ -129,7 +129,7 @@ export function HourlyBartenderCashInput({
 						<Label for="hoursWorked" xs={6} sm={6}>
 							Hours Worked
 						</Label>
-						<Col xs={3} sm={5}>
+						<Col xs={4} sm={5}>
 							<Input
 								name={`${bartender.name}Hours`}
 								id="hoursWorked"
