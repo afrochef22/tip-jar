@@ -278,7 +278,10 @@ const UpdateCashTipBreakDown = (
 								<Row>
 									<Col xs={8}>
 										<Label for="CashTips">Cash Tips Collected</Label>
-										<Label>Original Amount: {tipsCollected}</Label>
+										<Label>
+											Original Amount:{" "}
+											<span className="highlight-color">{tipsCollected}</span>
+										</Label>
 									</Col>
 
 									<Col>
