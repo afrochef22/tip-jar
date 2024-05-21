@@ -33,9 +33,12 @@ const Header = ({ user }) => {
 
 	const [isMobile, setIsMobile] = useState(false);
 	const [isSmall, setIsSmall] = useState(false);
+	const [isTiny, setIsTiny] = useState(false);
+
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 760);
 		setIsSmall(window.innerWidth < 500);
+		setIsTiny(window.innerWidth < 375);
 	};
 
 	const router = useRouter();
@@ -91,10 +94,6 @@ const Header = ({ user }) => {
 						<div className="bar"></div>
 						<div className="collapse-menue">
 							<Collapse isOpen={isOpen} navbar>
-								<Link className="navbar-link  " href="/CCTipsTotals">
-									CC Tip Totals
-								</Link>
-
 								{session ? (
 									<>
 										<Link
@@ -106,18 +105,30 @@ const Header = ({ user }) => {
 										<Link className="navbar-link" href="/CashTipCalculator">
 											Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
 										</Link>
-										{isSmall ? <div className="spacer"></div> : <></>}
 										<Link className="navbar-link" href="/employees">
 											Employees{" "}
 										</Link>
+										{isSmall ? <div className="spacer"></div> : <></>}
+										<Link className="navbar-link  " href="/CCTipsTotals">
+											Tip Spreadsheet
+										</Link>
+										{isTiny ? <div className="spacer"></div> : <></>}
+
 										<Link className="navbar-link  " href="/getAllTipBreakDowns">
 											Tip Breakdowns
 										</Link>
 									</>
 								) : (
-									<Link className="navbar-link  " href="/getAllTipBreakDowns">
-										Tip Breakdowns
-									</Link>
+									<>
+										<Link className="navbar-link  " href="/CCTipsTotals">
+											Tip Spreadsheet
+										</Link>
+										{isTiny ? <div className="spacer"></div> : <></>}
+
+										<Link className="navbar-link  " href="/getAllTipBreakDowns">
+											Tip Breakdowns
+										</Link>
+									</>
 								)}
 								{session ? (
 									<div>
@@ -141,10 +152,6 @@ const Header = ({ user }) => {
 				</>
 			) : (
 				<>
-					<Link className="navbar-link " href="/CCTipsTotals">
-						CC Tip Totals
-					</Link>
-
 					{session ? (
 						<>
 							<Link className="navbar-link" href="/SelectWorkingEmployee">
@@ -156,14 +163,22 @@ const Header = ({ user }) => {
 							<Link className="navbar-link" href="/employees">
 								Employees{" "}
 							</Link>
+							<Link className="navbar-link  " href="/CCTipsTotals">
+								Tip Spreadsheet
+							</Link>
 							<Link className="navbar-link  " href="/getAllTipBreakDowns">
 								Tip Breakdowns
 							</Link>
 						</>
 					) : (
-						<Link className="navbar-link  " href="/getAllTipBreakDowns">
-							Tip Breakdowns
-						</Link>
+						<>
+							<Link className="navbar-link  " href="/CCTipsTotals">
+								Tip Spreadsheet
+							</Link>
+							<Link className="navbar-link  " href="/getAllTipBreakDowns">
+								Tip Breakdowns
+							</Link>
+						</>
 					)}
 					<Nav>
 						{session ? (
