@@ -1,0 +1,149 @@
+.pageContainer {
+	background-color: #333;
+	color: var(--text-color);
+	height: 100%;
+}
+.listContianer {
+	max-width: 1000px;
+	padding-bottom: 50px;
+}
+.expand {
+	width: 100%;
+}
+
+.table {
+	/* width: 100%; */
+	border-collapse: collapse;
+	--bs-table-bg: none;
+	margin-bottom: 0px;
+}
+.table-container {
+	max-width: 100%;
+	overflow-x: auto;
+}
+
+.container {
+	max-width: 100%;
+	margin: auto;
+	text-align: center;
+	padding: 0px;
+}
+.employee-column {
+	position: sticky;
+	left: 0;
+	/* background-color: #fff; */
+	max-width: 200px;
+	min-width: 100px;
+	z-index: 1 !important;
+}
+
+.table td,
+.table th {
+	text-align: center;
+	vertical-align: middle;
+	/* max-width: 100px; */
+}
+
+/* Style for table header cells */
+.table th {
+	/* background-color: var(--thead-tfoot); */
+	border: 2px solid #333;
+	padding: 8px;
+	text-align: center;
+	width: 150px;
+}
+.lastBand {
+	/* background-color: var(--thead-tfoot) !important; */
+	border: 2px solid #333 !important;
+	padding: 8px !important;
+	text-align: center !important;
+	width: 100px !important;
+}
+
+.table th:last-child {
+	/* background-color: black; */
+	/* color: var(--button-hover); */
+	padding: 5px;
+	text-align: center;
+}
+
+/* Style for table body cells */
+.table td {
+	border: 2px solid #333;
+	padding: 8px;
+	text-align: center;
+	width: 100px;
+}
+
+/* Style for last coloumn */
+
+.table tbody td:last-child {
+}
+
+.table tbody td:first-child {
+	/* background-color: var(--third-color); */
+}
+.table tbody tr:nth-child(odd) td:first-child {
+	/* background-color: var(--third-color); */
+}
+
+.table tbody tr:nth-child(odd) td:last-child {
+	/* background-color: var(--third-color); */
+	color: var(--button-hover);
+}
+
+.table tbody tr:nth-child(even) td:last-child {
+	/* background-color: var(--third-color); */
+	color: var(--button-hover);
+}
+
+.table tbody tr:nth-child(even) {
+	/* background-color: var(--even-row); */
+}
+.table tbody tr:nth-child(odd) {
+	/* background-color: var(--odd-row); */
+}
+
+.table tfoot:first-child {
+	/* background-color: var(--thead-tfoot); */
+}
+
+.table tfoot {
+	/* background-color: var(--thead-tfoot); */
+}
+
+.table tfoot td:first-child {
+	/* background-color: var(--thead-tfoot); */
+}
+
+.table tfoot td:last-child {
+	/* background-color: black; */
+	/* color: var(--button-hover); */
+}
+
+.totals {
+}
+
+.employeeTipsCol {
+	margin: auto;
+}
+
+.date-input-container {
+	display: flex;
+	justify-content: center;
+}
+
+.employeeList {
+	border: solid var(--secondary-color) 5px;
+	margin-top: 5%;
+	text-align: center;
+	max-width: 400px;
+	padding: 25px 0;
+	border-radius: 5%;
+}
+
+@media screen and (max-width: 800px) {
+	.employeeList {
+		margin-top: 10%;
+	}
+}

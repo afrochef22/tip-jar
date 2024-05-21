@@ -31,47 +31,7 @@ input .requiredBorder[required] {
 }
 
 .addEmployeeButton {
-	position: fixed;
 	margin-left: 10px;
-	top: 50%;
-	transform: translateY(-50%);
-	z-index: 999; /* Ensure the button is above other elements */
-	margin: 100px auto 0;
-}
-@media screen and (max-width: 800px) {
-	.addEmployeeButton {
-		left: auto;
-		top: auto;
-		transform: none;
-		z-index: auto;
-		margin: 100px auto 0;
-	}
-
-	.buttonContainer {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.background {
-		position: fixed;
-		margin: 40px 0;
-		padding-bottom: 20px;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 10%;
-		background-color: rgba(
-			57,
-			55,
-			55,
-			0.9
-		); /* Adjust the color and opacity as needed */
-		z-index: 0; /* Place the background behind other elements */
-	}
-
-	/* Add this class to the element you want to have the background effect */
-	.backgroundEffect {
-		background-attachment: fixed;
-	}
+	/* transform: translateY(-50%); */
+	margin: 10px;
 }

@@ -4,17 +4,23 @@ import BarBacks from "../components/BarBacks";
 import Cooks from "../components/Cooks";
 import NonPositionedEmployee from "../components/NonPositionedEmployee";
 import { AddEmployeeModal } from "../components/addEmployeeModal";
-
+import style from "../components/EmployeeList.module.css";
 import React from "react";
+import { Col, Row, Container } from "reactstrap";
 
 export default function EmployeesPage({ employees }) {
 	return (
-		<div>
-			<AddEmployeeModal />
-			<Bartenders employees={employees} />
-			<BarBacks employees={employees} />
-			<Cooks employees={employees} />
-			<NonPositionedEmployee employees={employees} />
+		<div className={style.pageContainer}>
+			<Container className={style.listContianer}>
+				<Row>
+					<Bartenders employees={employees} />
+					<BarBacks employees={employees} />
+				</Row>
+				<Row>
+					<Cooks employees={employees} className="mb-2" />
+					<NonPositionedEmployee employees={employees} className="mb-2" />
+				</Row>
+			</Container>
 		</div>
 	);
 }

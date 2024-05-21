@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import {
 	Form,
@@ -12,10 +12,9 @@ import {
 } from "reactstrap";
 import style from "./addEmployee.module.css";
 
-export function AddEmployeeModal(args) {
+export function AddEmployeeModal({ position, args }) {
 	const [modal, setModal] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
-
 	const toggle = () => setModal(!modal);
 
 	const [newEmployee, setNewEmployee] = useState({
@@ -30,6 +29,15 @@ export function AddEmployeeModal(args) {
 			},
 		],
 	});
+	// Update the initial position based on the passed prop
+	useEffect(() => {
+		if (position) {
+			setNewEmployee((prevEmployee) => ({
+				...prevEmployee,
+				position: [position],
+			}));
+		}
+	}, [position]);
 	const handleInputChange = (e) => {
 		if (e.target.name === "position") {
 			const selectedOptions = Array.from(
@@ -99,7 +107,7 @@ export function AddEmployeeModal(args) {
 					className={`text-color ${style.addEmployeeButton} $ `}
 					onClick={toggle}
 				>
-					Add Employee
+					Add {position}
 				</Button>
 			</div>
 			<Modal isOpen={modal} toggle={toggle} {...args}>
@@ -136,6 +144,7 @@ export function AddEmployeeModal(args) {
 									value="Bartender"
 									onChange={handleInputChange}
 									onClick={() => setAlertMessage("")}
+									checked={newEmployee.position.includes("Bartender")}
 								/>
 								Bartender
 							</Label>
@@ -147,6 +156,7 @@ export function AddEmployeeModal(args) {
 									value="Bar Back"
 									onChange={handleInputChange}
 									onClick={() => setAlertMessage("")}
+									checked={newEmployee.position.includes("Bar Back")}
 								/>
 								Bar Back
 							</Label>
@@ -158,8 +168,21 @@ export function AddEmployeeModal(args) {
 									value="Cook"
 									onChange={handleInputChange}
 									onClick={() => setAlertMessage("")}
+									checked={newEmployee.position.includes("Cook")}
 								/>
 								Cook
+							</Label>
+							<Label check>
+								<Input
+									className={style.checkBox}
+									type="checkbox"
+									name="position"
+									value="No Position"
+									onChange={handleInputChange}
+									onClick={() => setAlertMessage("")}
+									checked={newEmployee.position.includes("No Position")}
+								/>
+								No Position
 							</Label>
 						</div>
 						{alertMessage && (

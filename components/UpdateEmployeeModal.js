@@ -184,6 +184,17 @@ export function UpdateEmployeeModal(props, args) {
 								/>
 								Cook
 							</Label>
+							<Label check>
+								<Input
+									className={style.border}
+									type="checkbox"
+									name="position"
+									value="No Position"
+									onChange={handleInputChange}
+									checked={employeeUpdate.position.includes("No Position")}
+								/>
+								No Position
+							</Label>
 						</div>
 					</FormGroup>
 					<FormGroup className={style.group}>
