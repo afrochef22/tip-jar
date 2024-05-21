@@ -28,7 +28,7 @@ const UserName = () => {
 	const { data: session } = useSession();
 	const [userName, setUserName] = useState("");
 	const employees = Employees();
-	console.log("session", session);
+
 	useEffect(() => {
 		const fetchUserData = async () => {
 			if (session) {

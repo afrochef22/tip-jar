@@ -36,19 +36,10 @@ const UpdateCashTipBreakDown = (
 	},
 	args
 ) => {
-	console.log(
-		"bartenderHoursClicked 1st: ",
-		isBarBackHoursClicked,
-		"barBackHoursClicked 1st: ",
-		isBarBackHoursClicked,
-		barBacks,
-		bartenders
-	);
 	if (tipsCollected === undefined || tipsCollected === null) {
 		return <div>Loading...</div>; // Or handle the absence of tipsCollected appropriately
 	}
 	const router = useRouter();
-	console.log(barBacks);
 
 	const [modal, setModal] = useState(false);
 	const [defaultbarBackPercentage, setDefaultBarBackPercentage] =
@@ -74,14 +65,6 @@ const UpdateCashTipBreakDown = (
 		isBartenderHoursClicked === true
 	);
 
-	console.log(
-		"bartenderHoursClicked: ",
-		bartenderHoursClicked,
-		"barBackHoursClicked: ",
-		barBackHoursClicked,
-		newBarBacks,
-		newBartenders
-	);
 	useEffect(() => {
 		// Check if any of the bar backs have hours
 		const barBacksWithHours = barBacks.some((barBack) => barBack.hours > 0);
@@ -112,7 +95,6 @@ const UpdateCashTipBreakDown = (
 		setWasBarBackHoursClicked(barBackHoursClicked);
 	}, [barBackHoursClicked, wasBarBackHoursClicked]);
 
-	console.log("barBackHoursClicked", typeof barBackHoursClicked);
 	const toggle = () => {
 		setModal(!modal);
 		if (!modal) {

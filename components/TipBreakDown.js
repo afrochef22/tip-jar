@@ -251,6 +251,7 @@ export default function TipBreakDown({
 						adjustedBartenders.add(bartenderIndex);
 					}
 				}
+				console.log("adjustedBartenders", adjustedBartenders);
 			}
 		}
 	}
