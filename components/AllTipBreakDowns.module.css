@@ -4,6 +4,10 @@
 	margin-top: 20px;
 }
 
+.minHight {
+	height: 100vh;
+}
+
 .carouselSection {
 	min-height: 600px;
 	background-color: var(--third-color);
@@ -33,6 +37,11 @@
 	margin: auto; /* Center horizontally */
 	margin-bottom: 20px;
 	/* border: solid 5px var(--secondary-color); */
+}
+
+.searchBox {
+	max-width: 955px;
+	margin: auto;
 }
 
 .expand {

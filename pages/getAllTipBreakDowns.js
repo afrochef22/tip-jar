@@ -1,4 +1,6 @@
 import clientPromise from "../lib/mongodb";
+import React, { useState, useEffect } from "react";
+
 import {
 	Card,
 	CardBody,
@@ -8,15 +10,19 @@ import {
 	Row,
 	Col,
 	Container,
+	Input,
 } from "reactstrap";
 import { useRouter } from "next/router";
 import style from "../components/AllTipBreakDowns.module.css";
 export default function getAllTipBreakDown({ allTipBreakdowns }) {
+	console.log(allTipBreakdowns);
 	const router = useRouter();
+	const [reversedAllTipBreakdowns, setReversedAllTipBreakdowns] = useState(
+		[...allTipBreakdowns].reverse()
+	);
 	const handleCardClick = (id) => {
 		router.push(`/getSelectedTipBreakDown/${id}`);
 	};
-
 	const formatDateStringWithDayOfWeek = (dateString) => {
 		const date = new Date(dateString);
 		const options = { weekday: "long" }; // Specify the format for the day of the week
@@ -25,13 +31,31 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 			options
 		)} ${date.toLocaleDateString()}`;
 	};
-	const reversedAllTipBreakdowns = [...allTipBreakdowns].reverse();
 
+	const handleSearch = (e) => {
+		const searchTerm = e.target.value.toLowerCase();
+		const searchResults = allTipBreakdowns.filter(
+			(breakDown) =>
+				breakDown.show && breakDown.show.toLowerCase().includes(searchTerm)
+		);
+
+		setReversedAllTipBreakdowns([...searchResults].reverse());
+	};
+	console.log(reversedAllTipBreakdowns);
 	return (
-		<div className={`${style.carouselContainer}`}>
+		<div className={`${style.carouselContainer} ${style.minHight}`}>
 			<div className={`${style.title}`}>
 				<h2>Tip Breakdowns</h2>
 				<h5>Click on a card to get more detail or edit</h5>
+
+				<div className={style.searchBox}>
+					<Input
+						className="mb-2 mt-2"
+						type="text"
+						placeholder="🔍 Search by show name"
+						onChange={handleSearch}
+					/>
+				</div>
 			</div>
 			<Row xs={12} sm={2} md={3}>
 				{reversedAllTipBreakdowns.map((data) => (
