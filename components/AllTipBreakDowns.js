@@ -92,7 +92,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 							<Card
 								onClick={() => handleCardClick(data._id)}
 								key={data._id}
-								className={`${style.cardContainer}  ${style.backgroundColor}`}
+								className={`${style.cardContainer}  ${style.backgroundColor}  ${style.cardClick}`}
 							>
 								<CardBody className={``}>
 									<CardTitle

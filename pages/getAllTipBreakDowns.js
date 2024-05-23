@@ -43,7 +43,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 	};
 	console.log(reversedAllTipBreakdowns);
 	return (
-		<div className={`${style.carouselContainer} ${style.minHight}`}>
+		<div className={`${style.carouselContainer} ${style.minHeight}`}>
 			<div className={`${style.title}`}>
 				<h2>Tip Breakdowns</h2>
 				<h5>Click on a card to get more detail or edit</h5>
@@ -63,7 +63,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 						<Card
 							onClick={() => handleCardClick(data._id)}
 							key={data._id}
-							className={`${style.cardContainer}  ${style.backgroundColor}`}
+							className={`${style.cardContainer}  ${style.backgroundColor} ${style.cardClick}`}
 						>
 							<CardBody className={``}>
 								<CardTitle
