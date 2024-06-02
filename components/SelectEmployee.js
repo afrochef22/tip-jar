@@ -307,7 +307,11 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 			<Container fluid className={style.background}>
 				<h1 className={`${style.centerTitle} mt-5`}>
 					Credit Card Tip Calculator
+					<div>
+						<CurrentShift />
+					</div>
 				</h1>
+
 				<CurrentShowPerforming
 					handleSelectedBand={handleSelectedBand}
 					setSelectedShow={setSelectedShow}

@@ -101,8 +101,7 @@ export default function TipsTotalsSpreadSheet({ employees, allTipBreakdowns }) {
 				const tipDate = parseDateWithFormats(tip.date, dateFormats);
 
 				// Ensure that tipDate is valid before comparison
-				if (!tipDate.isValid) return false;
-
+				if (!tipDate || !tipDate.isValid) return false;
 				// Ensure startDate and endDate are valid before using them
 				if (!startDate || !endDate) return false;
 
