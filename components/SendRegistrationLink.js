@@ -17,7 +17,7 @@ const GenerateRegistrationToken = async (employee) => {
 		});
 	};
 	const toggle = () => setShowConfirmation(!showConfirmation);
-
+	console.log("employee._id", typeof employee._id);
 	try {
 		const response = await fetch(`/api/updateEmployee/${employee._id}`, {
 			method: "PATCH",

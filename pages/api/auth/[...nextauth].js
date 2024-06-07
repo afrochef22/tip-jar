@@ -65,7 +65,7 @@ const authOptions = {
 	],
 	session: {
 		strategy: "jwt",
-		maxAge: 30 * 60,
+		maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
 		// autoCommit: true,
 	},
 
@@ -74,6 +74,7 @@ const authOptions = {
 	adapter: MongoDBAdapter(clientPromise),
 	callbacks: {
 		async session({ session, token, user }) {
+			console.log("session", session, "token", token, "user", user);
 			// Log session information for debugging
 			// console.log("[...nextauth] Session:", session);
 			// console.log("Token:", token);
@@ -112,7 +113,7 @@ const authOptions = {
 
 		async signIn({ user, account, profile }) {
 			// Check if the account provider is Google
-
+			console.log("user", user, "account", account, "profile", profile);
 			if (account.provider === "google") {
 				console.log("is google");
 				try {
