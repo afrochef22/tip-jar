@@ -187,7 +187,7 @@ export default function CCTipsInput({
 											onClick={handleClrClicked}
 											className={` ${style.calculatorButton}`}
 										>
-											<FontAwesomeIcon icon={faEraser} />
+											clear{/* <FontAwesomeIcon icon={faEraser} /> */}
 										</button>
 										<button
 											onClick={handleDeleteClicked}
