@@ -55,21 +55,16 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 							<h4>Food sales:</h4>
 							<h2 className="highlight-color">${breakDown.foodSales}</h2>
 						</Col>
-						<Col sm={4} xs={12}>
-							{breakDown.barBackTips.length <= 0 ? (
-								<>
-									<h4>Bar Back Percentage:</h4>
-									<h2 className="highlight-color">No Bar Back</h2>
-								</>
-							) : (
-								<>
-									<h4>Bar Back Percentage:</h4>
-									<h2 className="highlight-color">
-										{breakDown.barBackPercentage}%
-									</h2>
-								</>
-							)}
-						</Col>
+						{breakDown.barBackTips.length <= 0 ? (
+							<></>
+						) : (
+							<Col sm={4} xs={12}>
+								<h4>Bar Back Percentage:</h4>
+								<h2 className="highlight-color">
+									{breakDown.barBackPercentage}%
+								</h2>
+							</Col>
+						)}
 					</Row>
 				</Container>
 				<div className={style.container}>
