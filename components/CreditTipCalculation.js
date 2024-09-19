@@ -171,7 +171,13 @@ export default function CreditTipCalculation({
 
 		setTotalTips(Number(formData.get("totalTips")));
 		console.log("totalTips", totalTips);
-		setBarBackPercentage(Number(formData.get("BarBackPercentage")));
+		const barBackPercentageValue = formData.get("BarBackPercentage");
+		console.log("barBackPercentageValue", barBackPercentageValue);
+		setBarBackPercentage(
+			barBackPercentageValue === null ? 15 : Number(barBackPercentageValue)
+		);
+		console.log("barBackPercentage", barBackPercentage);
+		// setBarBackPercentage(Number(formData.get("BarBackPercentage")));
 		const foodSalesTotalValue = formData.get("FoodSalesTotal");
 		setFoodSalesTotal(
 			foodSalesTotalValue !== "" && foodSalesTotalValue !== undefined
@@ -272,50 +278,54 @@ export default function CreditTipCalculation({
 						<Col md={1} sm={1} xs={1}></Col>
 						<Col md={4} sm={12}>
 							{/* Bar Back Percentage and Input Column */}
-							<Row className={`${style.formRow}`}>
-								<Label
-									md={7}
-									sm={8}
-									xs={7}
-									className={style.formLabel}
-									for="BarBackPercentage"
-								>
-									Bar Back Percentage
-								</Label>
-								<Col
-									md={4}
-									sm={2}
-									xs={3}
-									className="d-flex align-items-center ms-1"
-								>
-									<Input
-										id="BarBackPercentage"
-										name="BarBackPercentage"
-										type="tel"
-										inputMode="numeric"
-										value={defaultbarBackPercentage}
-										onChange={(e) =>
-											setDefaultBarBackPercentage(e.target.value)
-										}
-									/>
-									<Col md={1} sm={3} xs={2}>
-										<Button
-											// size="sm"
-											onClick={handleIncrease}
-											className={` ${style.percentageButton}`}
-										>
-											˄
-										</Button>
-										<Button
-											// size="sm"
-											onClick={handleDecrease}
-											className={style.percentageButton}
-										>
-											˯
-										</Button>
+							{barBacks.length < 1 ? (
+								<div></div>
+							) : (
+								<Row className={`${style.formRow}`}>
+									<Label
+										md={7}
+										sm={8}
+										xs={7}
+										className={style.formLabel}
+										for="BarBackPercentage"
+									>
+										Bar Back Percentage
+									</Label>
+									<Col
+										md={4}
+										sm={2}
+										xs={3}
+										className="d-flex align-items-center ms-1"
+									>
+										<Input
+											id="BarBackPercentage"
+											name="BarBackPercentage"
+											type="tel"
+											inputMode="numeric"
+											value={defaultbarBackPercentage}
+											onChange={(e) =>
+												setDefaultBarBackPercentage(e.target.value)
+											}
+										/>
+										<Col md={1} sm={3} xs={2}>
+											<Button
+												// size="sm"
+												onClick={handleIncrease}
+												className={` ${style.percentageButton}`}
+											>
+												˄
+											</Button>
+											<Button
+												// size="sm"
+												onClick={handleDecrease}
+												className={style.percentageButton}
+											>
+												˯
+											</Button>
+										</Col>
 									</Col>
-								</Col>
-							</Row>
+								</Row>
+							)}
 						</Col>
 						{cooks.length === 0 ? (
 							<div></div>

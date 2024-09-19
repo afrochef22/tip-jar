@@ -11,7 +11,7 @@ import { ShiftDate } from "../../components/CurrentShift";
 export default function getSelectedTipBreakDown({ breakDown }) {
 	const { data: session } = useSession();
 	const shiftMatch = ShiftDate() === breakDown.date;
-
+	console.log(breakDown);
 	if (!breakDown) {
 		// Handle the case when breakDown is not found
 		return <div>Tip Breakdown not found</div>;
@@ -56,10 +56,19 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 							<h2 className="highlight-color">${breakDown.foodSales}</h2>
 						</Col>
 						<Col sm={4} xs={12}>
-							<h4>Bar Back Percentage:</h4>
-							<h2 className="highlight-color">
-								{breakDown.barBackPercentage}%
-							</h2>
+							{breakDown.barBackTips.length <= 0 ? (
+								<>
+									<h4>Bar Back Percentage:</h4>
+									<h2 className="highlight-color">No Bar Back</h2>
+								</>
+							) : (
+								<>
+									<h4>Bar Back Percentage:</h4>
+									<h2 className="highlight-color">
+										{breakDown.barBackPercentage}%
+									</h2>
+								</>
+							)}
 						</Col>
 					</Row>
 				</Container>
