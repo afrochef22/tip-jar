@@ -61,6 +61,49 @@ function DayOfTheWeekAbbreviated(day) {
 	return day;
 }
 
+function Month(month) {
+	switch (month) {
+		case 1:
+			month = "January";
+			break;
+		case 2:
+			month = "February";
+			break;
+		case 3:
+			month = "March";
+			break;
+		case 4:
+			month = "April";
+			break;
+		case 5:
+			month = "May";
+			break;
+		case 6:
+			month = "June";
+			break;
+		case 7:
+			month = "July";
+			break;
+		case 8:
+			month = "August";
+			break;
+		case 9:
+			month = "September";
+			break;
+		case 10:
+			month = "October";
+			break;
+		case 11:
+			month = "November";
+			break;
+		case 12:
+			month = "December";
+			break;
+
+		default:
+	}
+	return month;
+}
 function MonthAbbreviated(month) {
 	switch (month) {
 		case 1:
@@ -203,23 +246,21 @@ export function ShowDateComparer(dateData) {
 	switch (true) {
 		case zonedDate.hour < 6:
 			if (day === 1) {
-				compareDate = `${DayOfTheWeekAbbreviated(
-					dateData.yesterday
-				)} ${MonthAbbreviated(dateData.lastMonth)} ${
-					dateData.lastDayOfPrevMonth
-				}`;
+				compareDate = `${DayOfTheWeekAbbreviated(dateData.yesterday)} ${Month(
+					dateData.lastMonth
+				)} ${dateData.lastDayOfPrevMonth}`;
 			} else {
-				compareDate = `${DayOfTheWeekAbbreviated(
-					dateData.yesterday
-				)} ${MonthAbbreviated(dateData.month)} ${dateData.yesterdayDate}`;
+				compareDate = `${DayOfTheWeekAbbreviated(dateData.yesterday)} ${Month(
+					dateData.month
+				)} ${dateData.yesterdayDate}`;
 			}
 
 			break;
 
 		default:
-			compareDate = `${DayOfTheWeekAbbreviated(
-				dateData.day
-			)} ${MonthAbbreviated(dateData.month)} ${dateData.date}`;
+			compareDate = `${DayOfTheWeekAbbreviated(dateData.day)} ${Month(
+				dateData.month
+			)} ${dateData.date}`;
 	}
 	return compareDate;
 

@@ -14,12 +14,12 @@ async function fetchWebsiteData(url) {
 // Function to find the band performing today
 function findBandPerformingToday(html) {
 	const $ = load(html);
-	const events = $(".eventinfo"); // Select all event info containers
+	const events = $(".twelve"); // Select all event info containers
 	const today = ShowDateComparer();
 	let bandPerformingToday = [];
 
 	events.each(function () {
-		const bandName = $(this).find(".artisteventsname a").text().trim(); // Find the band name
+		const bandName = $(this).find(".tw-name").text().trim(); // Find the band name
 		const eventDate = $(this)
 			.find(".tw-event-date")
 			.text()
