@@ -8,6 +8,7 @@ import {
 	Col,
 	Container,
 	Table,
+	Button,
 } from "reactstrap";
 import { DateTime } from "luxon";
 import {
@@ -26,6 +27,8 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	const { startDate: start, endDate: end } = getPayrollDates();
 	const [startDate, setStartDate] = useState(DateTime.fromISO(start));
 	const [endDate, setEndDate] = useState(DateTime.fromISO(end));
+	const [payPeriodStartDate, setPayPeriodStartDate] = useState(startDate);
+	const [payPeriodEndDate, setPayPeriodEndDate] = useState(endDate);
 
 	const handleStartDateChange = (e) => {
 		setStartDate(DateTime.fromISO(e.target.value));
@@ -63,6 +66,26 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 		const dateB = parseDateWithFormats(b, dateFormats);
 		return dateA - dateB;
 	});
+
+	// Function to handle previous pay period
+	const handlePreviousPayPeriod = () => {
+		const previousStartDate = payPeriodStartDate.minus({ weeks: 2 });
+		const previousEndDate = payPeriodEndDate.minus({ weeks: 2 });
+		setStartDate(previousStartDate);
+		setEndDate(previousEndDate);
+		setPayPeriodStartDate(previousStartDate);
+		setPayPeriodEndDate(previousEndDate);
+	};
+
+	// Function to handle next pay period
+	const handleNextPayPeriod = () => {
+		const nextStartDate = payPeriodStartDate.plus({ weeks: 2 });
+		const nextEndDate = payPeriodEndDate.plus({ weeks: 2 });
+		setStartDate(nextStartDate);
+		setEndDate(nextEndDate);
+		setPayPeriodStartDate(nextStartDate);
+		setPayPeriodEndDate(nextEndDate);
+	};
 
 	const formatDateStringWithDayOfWeek = (dateString) => {
 		const date = new Date(dateString);
@@ -170,9 +193,36 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 						year: "numeric",
 					})}
 				</h5>
+			</Container>
+			<Container>
+				<Row className="date-input-row mt-4 mb-4 ">
+					<div className="d-flex justify-content-between align-items-center mt-3">
+						<Button size="sm" onClick={handlePreviousPayPeriod}>
+							Previous Pay Period
+						</Button>
+						<Row>
+							<h3>Pay Period: </h3>
+							<h5 className="m-2">
+								{startDate.toLocaleString({
+									month: "2-digit",
+									day: "2-digit",
+									year: "numeric",
+								})}
+								{"  "}-{"  "}
+								{endDate.toLocaleString({
+									month: "2-digit",
+									day: "2-digit",
+									year: "numeric",
+								})}
+							</h5>
+						</Row>
+						<Button size="sm" onClick={handleNextPayPeriod}>
+							Next Pay Period
+						</Button>
+					</div>
+				</Row>
 				<h5 className="mt-4">Click on a band name to see more detail</h5>
 			</Container>
-
 			<Container className=" table-scroll mt-4 border-box ">
 				<table className="table ">
 					<thead className="sticky-header">
