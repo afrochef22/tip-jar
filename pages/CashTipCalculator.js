@@ -278,10 +278,16 @@ export default function CashTipCalculator() {
 				</Row>
 				<Row
 					className={`${style.toggleContainer} ${
-						numberOfBarBacks <= 1 ? "" : style.tipoutCashByHoursContainer
-					} ${numberOfBartenders <= 1 ? "" : style.tipoutCashByHoursContainer}`}
+						(numberOfBarBacks || null) <= 1
+							? ""
+							: style.tipoutCashByHoursContainer
+					} ${
+						(numberOfBartenders || null) <= 1
+							? ""
+							: style.tipoutCashByHoursContainer
+					}`}
 				>
-					{numberOfBarBacks <= 1 ? (
+					{(numberOfBarBacks || null) <= 1 ? (
 						<div className={style.hidden}></div>
 					) : (
 						<FormGroup switch>
@@ -299,7 +305,7 @@ export default function CashTipCalculator() {
 							<div className={style.seperationLine}></div>
 						</FormGroup>
 					)}
-					{numberOfBartenders <= 1 ? (
+					{(numberOfBartenders || null) <= 1 ? (
 						<div className={style.hidden}></div>
 					) : (
 						<FormGroup switch>
