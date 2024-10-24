@@ -276,7 +276,11 @@ export default function CashTipCalculator() {
 						</Row>
 					</Col>
 				</Row>
-				<Row className={`${style.toggleContainer} `}>
+				<Row
+					className={`${style.toggleContainer} ${
+						numberOfBarBacks <= 1 ? "" : style.tipoutCashByHoursContainer
+					} ${numberOfBartenders <= 1 ? "" : style.tipoutCashByHoursContainer}`}
+				>
 					{numberOfBarBacks <= 1 ? (
 						<div className={style.hidden}></div>
 					) : (

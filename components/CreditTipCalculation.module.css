@@ -198,6 +198,10 @@
 	background-color: #ccc;
 }
 
+.tipoutCashByHoursContainer {
+	background-color: var(--secondary-color);
+}
+
 @media screen and (max-width: 540px) {
 	.backgroundColor {
 		background-color: var(--third-color); /* Your desired color */
