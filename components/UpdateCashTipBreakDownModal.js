@@ -394,8 +394,18 @@ const UpdateCashTipBreakDown = (
 								</Row>
 							</Col>
 						</Row>
-						<Row className={style.toggleContainer}>
-							{newNumberOfBarBacks <= 1 ? (
+						<Row
+							className={`${style.toggleContainer} ${
+								(numberOfBarBacks || null) <= 1
+									? ""
+									: style.tipoutCashByHoursContainer
+							} ${
+								(numberOfBartenders || null) <= 1
+									? ""
+									: style.tipoutCashByHoursContainer
+							}`}
+						>
+							{(numberOfBarBacks || null) <= 1 ? (
 								<div className={style.hidden}></div>
 							) : (
 								<FormGroup switch>
@@ -413,7 +423,7 @@ const UpdateCashTipBreakDown = (
 									<div className={style.seperationLine}></div>
 								</FormGroup>
 							)}
-							{newNumberOfBartenders <= 1 ? (
+							{(numberOfBartenders || null) <= 1 ? (
 								<div className={style.hidden}></div>
 							) : (
 								<FormGroup switch>
