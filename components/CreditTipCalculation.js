@@ -215,65 +215,6 @@ export default function CreditTipCalculation({
 		<div className={style.background}>
 			<Container className={style.backgroundColor}>
 				<Form onSubmit={handleCalculate}>
-					<Row className={`${style.toggleContainer} `}>
-						<Col>
-							{/* Switches Column */}
-							{bartenders.length <= 1 ? (
-								<div></div>
-							) : (
-								<FormGroup switch>
-									<Input
-										type="switch"
-										role="switch"
-										onChange={() => handleSwitchToggle("Bartender")}
-										checked={isBartenderHoursClicked}
-									/>
-									<Label check>
-										Toggle to tip out{" "}
-										<span className="highlight-color">Bartender</span> by hours
-										worked.
-									</Label>
-									<div className={style.seperationLine}></div>
-								</FormGroup>
-							)}
-							{barBacks.length <= 1 ? (
-								<div></div>
-							) : (
-								<FormGroup switch>
-									<Input
-										type="switch"
-										role="switch"
-										onChange={() => handleSwitchToggle("Bar Back")}
-										checked={isBarBackHoursClicked}
-									/>
-									<Label check>
-										Toggle to tip out{" "}
-										<span className="highlight-color">Bar Back</span> by hours
-										worked.
-									</Label>
-									<div className={style.seperationLine}></div>
-								</FormGroup>
-							)}
-							{cooks.length <= 1 ? (
-								<div></div>
-							) : (
-								<FormGroup switch>
-									<Input
-										type="switch"
-										role="switch"
-										onChange={() => handleSwitchToggle("Cook")}
-										checked={isCookHoursClicked}
-									/>
-									<Label check>
-										Toggle to tip out{" "}
-										<span className="highlight-color">Cook</span> by hours
-										worked.
-									</Label>
-									<div className={style.seperationLine}></div>
-								</FormGroup>
-							)}
-						</Col>
-					</Row>
 					<Row className={style.container}>
 						<Col md={1} sm={1} xs={1}></Col>
 						<Col md={4} sm={12}>
@@ -369,6 +310,73 @@ export default function CreditTipCalculation({
 							message={alertMessage}
 						/>
 					</div>
+					<Row
+						className={`${style.toggleContainer} ${
+							bartenders.length <= 1 ? "" : style.tipoutCashByHoursContainer
+						} 
+						${barBacks.length <= 1 ? "" : style.tipoutCashByHoursContainer} 
+							${cooks.length <= 1 ? "" : style.tipoutCashByHoursContainer} 
+				
+						`}
+					>
+						<Col>
+							{/* Switches Column */}
+							{bartenders.length <= 1 ? (
+								<div></div>
+							) : (
+								<FormGroup switch>
+									<Input
+										type="switch"
+										role="switch"
+										onChange={() => handleSwitchToggle("Bartender")}
+										checked={isBartenderHoursClicked}
+									/>
+									<Label check>
+										Toggle to tip out{" "}
+										<span className="highlight-color">Bartender</span> by hours
+										worked.
+									</Label>
+									<div className={style.seperationLine}></div>
+								</FormGroup>
+							)}
+							{barBacks.length <= 1 ? (
+								<div></div>
+							) : (
+								<FormGroup switch>
+									<Input
+										type="switch"
+										role="switch"
+										onChange={() => handleSwitchToggle("Bar Back")}
+										checked={isBarBackHoursClicked}
+									/>
+									<Label check>
+										Toggle to tip out{" "}
+										<span className="highlight-color">Bar Back</span> by hours
+										worked.
+									</Label>
+									<div className={style.seperationLine}></div>
+								</FormGroup>
+							)}
+							{cooks.length <= 1 ? (
+								<div></div>
+							) : (
+								<FormGroup switch>
+									<Input
+										type="switch"
+										role="switch"
+										onChange={() => handleSwitchToggle("Cook")}
+										checked={isCookHoursClicked}
+									/>
+									<Label check>
+										Toggle to tip out{" "}
+										<span className="highlight-color">Cook</span> by hours
+										worked.
+									</Label>
+									<div className={style.seperationLine}></div>
+								</FormGroup>
+							)}
+						</Col>
+					</Row>
 					{isCookHoursClicked === false ? (
 						<div>
 							<StandardCreditTipCalculator employees={cooks} position="Cooks" />
