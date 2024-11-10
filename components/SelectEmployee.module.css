@@ -157,9 +157,10 @@
 		overflow-x: hidden;
 	}
 } */
+
 @media screen and (min-width: 400px) and (max-width: 870px) and (min-height: 850px) {
 	.scrollableContainerMobile {
-		max-height: 500px;
+		max-height: 450px;
 		overflow-y: auto;
 		overflow-x: hidden;
 	}
