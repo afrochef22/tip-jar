@@ -31,7 +31,9 @@ export default async (req, res) => {
 				data.date ||
 				data.totalTips ||
 				data.foodSales ||
-				data.barBackPercentage
+				data.barBackPercentage ||
+				data.totalBarSales ||
+				data.shiftNotes !== undefined // Check for undefined instead of falsy value
 			) {
 				console.log("data matches");
 				setValues = {
@@ -39,6 +41,8 @@ export default async (req, res) => {
 					...(data.date && { date: data.date }),
 					...(data.totalTips && { totalTips: data.totalTips }),
 					...(data.foodSales && { foodSales: data.foodSales }),
+					...(data.totalBarSales && { totalBarSales: data.totalBarSales }),
+					...(data.shiftNotes !== undefined && { shiftNotes: data.shiftNotes }), // Explicitly handle empty string
 					...(data.barBackPercentage && {
 						barBackPercentage: data.barBackPercentage,
 					}),

@@ -16,6 +16,8 @@ export default async (req, res) => {
 				tipsPerCook,
 				tipsPerBarBack,
 				tipsPerBartender,
+				totalBarSales,
+				shiftNotes,
 			} = req.body;
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
@@ -33,6 +35,8 @@ export default async (req, res) => {
 				tipsPerCook,
 				tipsPerBarBack,
 				tipsPerBartender,
+				totalBarSales,
+				shiftNotes,
 
 				createdat: new Date(),
 			});
@@ -101,12 +105,10 @@ export default async (req, res) => {
 				);
 			}
 
-			res
-				.status(201)
-				.json({
-					message: "Tip Break Down added successfully",
-					tipBreakdownId: tipBreakdownId,
-				});
+			res.status(201).json({
+				message: "Tip Break Down added successfully",
+				tipBreakdownId: tipBreakdownId,
+			});
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: "Internal server error" });

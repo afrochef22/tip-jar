@@ -37,7 +37,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 			)}
 			<div className={style.backgroundColor}>
 				<Container className={` ${style.container}`}>
-					<Row>
+					<Row className="mb-5">
 						<Col sm={6} xs={12}>
 							<h4>Show: {breakDown.show}</h4>
 						</Col>
@@ -46,19 +46,31 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						</Col>
 					</Row>
 
-					<Row>
+					<Row className="mb-5">
+						<Col sm={4} xs={6}>
+							<h4>Total Bar Sales:</h4>
+							<h2 className="highlight-color">${breakDown.totalBarSales}</h2>
+						</Col>
 						<Col sm={4} xs={6}>
 							<h4>Total Tips:</h4>
 							<h2 className="highlight-color">${breakDown.totalTips}</h2>
 						</Col>
-						<Col sm={4} xs={6}>
+						<Col sm={4} xs={12}>
 							<h4>Food sales:</h4>
 							<h2 className="highlight-color">${breakDown.foodSales}</h2>
+						</Col>
+					</Row>
+					<Row>
+						<Col sm={6} xs={12} className="mb-5">
+							<h4>Shift Notes:</h4>
+							<h2 className={`highlight-color ${style.shiftNotes}`}>
+								{breakDown.shiftNotes}
+							</h2>
 						</Col>
 						{breakDown.barBackTips.length <= 0 ? (
 							<></>
 						) : (
-							<Col sm={4} xs={12}>
+							<Col sm={6} xs={12}>
 								<h4>Bar Back Percentage:</h4>
 								<h2 className="highlight-color">
 									{breakDown.barBackPercentage}%

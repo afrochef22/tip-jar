@@ -41,6 +41,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	);
 	const [tipsPerCook, setTipsPerCook] = useState(breakDown.tipsPerCook);
 	const [showConfirmation, setShowConfirmation] = useState(false);
+	const [totalBarSales, setTotalBarSales] = useState(breakDown.totalBarSales);
+	const [shiftNotes, setShiftNotes] = useState(breakDown.shiftNotes);
 
 	const router = useRouter();
 	console.log(breakDown);
@@ -61,11 +63,23 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		setDate(formattedDate);
 	};
 
+	const handleTotalBarSalesChange = (e) => {
+		console.log(e.target.value);
+		console.log("totalBarSales", totalBarSales);
+		setTotalBarSales(e.target.value);
+	};
+	const handleShiftNotesChange = (e) => {
+		console.log(e.target.value);
+		console.log("shiftNotes", shiftNotes);
+		setShiftNotes(e.target.value);
+	};
 	const handleTotalTipChange = (e) => {
 		setTotalTips(e.target.value);
 	};
 
 	const handleFoodSalesChange = (e) => {
+		console.log(e.target.value);
+		console.log("foodSales", foodSales);
 		setFoodSales(e.target.value);
 	};
 	const handleIncrease = () => {
@@ -373,6 +387,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		e.preventDefault();
 		console.log("breakdown");
 		// alert("Sorry doesn't work yet");
+		console.log("total bar sales", totalBarSales);
+		console.log("shift notes", shiftNotes);
 		try {
 			const response = await fetch(`/api/UpdateTipBreakDown/${breakDown._id}`, {
 				method: "PATCH",
@@ -391,6 +407,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 					tipsPerBarBack: tipsPerBarBack,
 					tipsPerBartender: tipsPerBartender,
 					tipsPerCook: tipsPerCook,
+					totalBarSales: totalBarSales,
+					shiftNotes: shiftNotes,
 				}),
 			});
 			if (response.ok) {
@@ -435,6 +453,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 					tipsPerBarBack: tipsPerBarBack,
 					tipsPerBartender: tipsPerBartender,
 					tipsPerCook: tipsPerCook,
+					totalBarSales: totalBarSales,
+					shiftNotes: shiftNotes,
 				}),
 			});
 			if (response.ok) {
@@ -474,12 +494,12 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 					<div className={style.backgroundColor}>
 						<Container className={` ${style.container}`}>
 							<Row>
-								<Col md={6} sm={6} className="mb-1 mt-1">
+								<Col md={6} sm={12} className="mb-1 mt-1">
 									<Row className={`${style.formRow} `}>
-										<Label sm={3} xs={3} className={style.formLabel} for="show">
+										<Label sm={6} xs={3} className={style.formLabel} for="show">
 											<h4>Show:</h4>
 										</Label>
-										<Col sm={9} xs={9} className="d-flex align-items-center">
+										<Col sm={6} xs={12} className="d-flex align-items-center">
 											<Input
 												id="show"
 												name="show"
@@ -491,9 +511,10 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 										</Col>
 									</Row>
 								</Col>
-								<Col md={6} sm={2} className="mb-1 mt-1">
+
+								<Col md={6} sm={12} className="mb-1 mt-1">
 									<Row>
-										<Label sm={3} xs={3} className={style.formLabel} for="date">
+										<Label sm={6} xs={3} className={style.formLabel} for="date">
 											<h4>Date</h4>
 										</Label>
 										<Col sm={6} xs={9} className="d-flex align-items-center">
@@ -511,13 +532,35 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 							</Row>
 
 							<Row>
-								<Col sm={4} xs={6} className="mb-1 mt-1">
+								<Col sm={4} xs={12} className="mb-1 mt-1">
+									<Label className={style.formLabel} for="totalBarSales">
+										<h4>Total Bar Sales:</h4>
+									</Label>
+									<Row>
+										<Col sm={3} xs={3}></Col>
+										<Col sm={7} xs={6}>
+											<Input
+												id="totalBarSales"
+												name="totalBarSales"
+												type="tel"
+												inputMode="decimal"
+												pattern="[0-9]+(\.[0-9]{1,2})?"
+												step="0.01"
+												required={true}
+												value={totalBarSales}
+												onChange={handleTotalBarSalesChange}
+											/>
+										</Col>
+									</Row>
+								</Col>
+
+								<Col sm={4} xs={12} className="mb-1 mt-1">
 									<Label className={style.formLabel} for="totalTips">
 										<h4>Total Tips:</h4>
 									</Label>
 									<Row>
-										<Col sm={3} xs={1}></Col>
-										<Col sm={7} xs={9}>
+										<Col sm={3} xs={3}></Col>
+										<Col sm={7} xs={6}>
 											<Input
 												id="totalTips"
 												name="totalTips"
@@ -533,13 +576,13 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 									</Row>
 								</Col>
 
-								<Col sm={4} xs={6} className="mb-1 mt-1">
+								<Col sm={4} xs={12} className="mb-1 mt-1">
 									<Label className={style.formLabel} for="foodSales">
 										<h4>Food sales:</h4>
 									</Label>
 									<Row>
-										<Col sm={3} xs={1}></Col>
-										<Col sm={7} xs={9}>
+										<Col sm={3} xs={3}></Col>
+										<Col sm={7} xs={6}>
 											<Input
 												id="foodSales"
 												name="foodSales"
@@ -555,49 +598,86 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 									</Row>
 								</Col>
 
-								<Col md={4} sm={12} className="mb-1 mt-1">
+								<Col md={12} sm={12} className="mb-1 mt-1">
 									{/* Bar Back Percentage and Input Column */}
 									<Row className={`${style.formRow} align-items-center`}>
-										<Label
-											sm={6}
-											xs={7}
-											className={style.formLabel}
-											for="BarBackPercentage"
-										>
-											<h4 className="mb-0">Bar Back %</h4>
-										</Label>
+										<Col md={6} sm={12} className="mb-1 mt-1">
+											<Label
+												sm={12}
+												xs={12}
+												className={style.formLabel}
+												for="showNotes"
+											>
+												<h4 className="mb-0">Show Notes:</h4>
+											</Label>
+											<Row>
+												<Col sm={3} xs={1}></Col>
 
-										<Col
-											md={4}
-											sm={2}
-											xs={4}
-											className="d-flex align-items-center"
-										>
-											<Input
-												id="BarBackPercentage"
-												name="BarBackPercentage"
-												type="tel"
-												inputMode="numeric"
-												value={barBackPercentage}
-												onChange={(e) => setBarBackPercentage(e.target.value)}
-												className="text-center"
-											/>
-											<Col sm={2} xs={2}>
-												<Button
-													// size="sm"
-													onClick={handleIncrease}
-													className={` ${style.percentageButton} mb-1 ms-1`}
+												<Col
+													sm={12}
+													xs={12}
+													className={`d-flex align-items-center ${style.shiftNotesTextAerea}`}
 												>
-													˄
-												</Button>
-												<Button
-													// size="sm"
-													onClick={handleDecrease}
-													className={` ms-1 ${style.percentageButton}`}
+													<Input
+														id="shiftNotes"
+														name="shiftNotes"
+														type="text"
+														value={shiftNotes}
+														onChange={handleShiftNotesChange}
+														className={` ${style.textArea}`}
+													/>
+												</Col>
+											</Row>
+										</Col>
+
+										<Col md={6} sm={12}>
+											<Label
+												md={12}
+												sm={12}
+												xs={12}
+												className={style.formLabel}
+												for="BarBackPercentage"
+											>
+												<h4 className="mb-0">Bar Back %</h4>
+											</Label>
+											<Row>
+												<Col md={3} sm={3} xs={3}></Col>
+												<Col
+													md={6}
+													sm={6}
+													xs={6}
+													className="d-flex align-items-center"
 												>
-													˯
-												</Button>
-											</Col>
+													<Input
+														id="BarBackPercentage"
+														name="BarBackPercentage"
+														type="tel"
+														inputMode="numeric"
+														value={barBackPercentage}
+														onChange={(e) =>
+															setBarBackPercentage(e.target.value)
+														}
+														className={`text-center`}
+													/>
+
+													<Col sm={2} xs={2}>
+														<Button
+															// size="sm"
+															onClick={handleIncrease}
+															className={` ${style.percentageButton} mb-1 ms-1`}
+														>
+															˄
+														</Button>
+														<Button
+															// size="sm"
+															onClick={handleDecrease}
+															className={` ms-1 ${style.percentageButton}`}
+														>
+															˯
+														</Button>
+													</Col>
+												</Col>
+											</Row>
 										</Col>
 									</Row>
 								</Col>

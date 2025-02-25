@@ -50,6 +50,8 @@ export default function CreditTipCalculation({
 	const [isBartenderHoursClicked, setBartenderHoursClicked] = useState(false);
 	const [isCookHoursClicked, setCookHoursClicked] = useState(false);
 	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
+	const [totalBarSales, setTotalBarSales] = useState(0);
+	const [shiftNotes, setShiftNotes] = useState("");
 
 	useEffect(() => {
 		if (
@@ -76,6 +78,8 @@ export default function CreditTipCalculation({
 				return { ...cook, tippedHours };
 			});
 
+			console.log("total bar sales", totalBarSales);
+			console.log("shift notes", shiftNotes);
 			router.push({
 				pathname: "/TipBreakDownPage",
 				query: {
@@ -88,6 +92,8 @@ export default function CreditTipCalculation({
 					employeeTipCollected: JSON.stringify(employeeTipCollected),
 					selectedShow: JSON.stringify(selectedShow),
 					totalTips: JSON.stringify(totalTips),
+					totalBarSales: JSON.stringify(totalBarSales),
+					shiftNotes: JSON.stringify(shiftNotes),
 				},
 			});
 		}
@@ -186,6 +192,8 @@ export default function CreditTipCalculation({
 		);
 		setEmployeeHours(employeeHours);
 		setEmployeeTipCollected(employeeTips);
+		setTotalBarSales(Number(formData.get("BarSalesTotal")));
+		setShiftNotes(formData.get("shiftNotes"));
 	};
 
 	const handleSwitchToggle = (position) => {
@@ -269,7 +277,29 @@ export default function CreditTipCalculation({
 							)}
 						</Col>
 						{cooks.length === 0 ? (
-							<div></div>
+							<Col md={5} sm={12}>
+								<Row className={`${style.formRow} `}>
+									<Label
+										sm={8}
+										xs={8}
+										className={style.formLabel}
+										for="BarSalesTotal"
+									>
+										Enter Total Bar Sales
+									</Label>
+									<Col sm={4} xs={4}>
+										<Input
+											id="BarSalesTotal"
+											name="BarSalesTotal"
+											type="tel"
+											inputMode="decimal"
+											pattern="[0-9]+(\.[0-9]{1,2})?"
+											step="0.01"
+											required={true}
+										/>
+									</Col>
+								</Row>
+							</Col>
 						) : (
 							<Col md={5} sm={12}>
 								<Row className={`${style.formRow} `}>
@@ -277,9 +307,32 @@ export default function CreditTipCalculation({
 										sm={8}
 										xs={8}
 										className={style.formLabel}
+										for="BarSalesTotal"
+									>
+										Enter Total <span className={style.wordHighlight}>Bar</span>{" "}
+										Sales
+									</Label>
+									<Col sm={4} xs={4}>
+										<Input
+											id="BarSalesTotal"
+											name="BarSalesTotal"
+											type="tel"
+											inputMode="decimal"
+											pattern="[0-9]+(\.[0-9]{1,2})?"
+											step="0.01"
+											required={true}
+										/>
+									</Col>
+								</Row>
+								<Row className={`${style.formRow} `}>
+									<Label
+										sm={8}
+										xs={8}
+										className={style.formLabel}
 										for="FoodSalesTotal"
 									>
-										Enter Total Food Sales
+										Enter Total{" "}
+										<span className={style.wordHighlight}>Food</span> Sales
 									</Label>
 									<Col sm={4} xs={4}>
 										<Input
@@ -295,6 +348,21 @@ export default function CreditTipCalculation({
 								</Row>
 							</Col>
 						)}
+						<Row className={`${style.formRow} `}>
+							<Label sm={6} xs={8} className={style.formLabel} for="ShiftNotes">
+								Shift Notes{" "}
+							</Label>
+
+							<Col sm={6} xs={12}>
+								<Input
+									className={style.shiftNotesTextArea}
+									id="shiftNotes"
+									name="shiftNotes"
+									type="textarea"
+									required={false}
+								/>
+							</Col>
+						</Row>
 						<Col md={1} sm={1} xs={1}></Col>
 					</Row>
 					<CCTipsInput

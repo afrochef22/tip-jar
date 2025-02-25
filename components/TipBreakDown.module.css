@@ -20,7 +20,7 @@
 	width: 80%;
 	max-width: 1000px;
 	min-width: 300px;
-	height: 40%;
+	/* height: 40%; */
 	border-radius: 20px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -67,4 +67,16 @@
 .enterHoursInboxContainer {
 	padding: auto;
 	margin: 8px;
+}
+.shiftNotes {
+	font-size: 1.25rem;
+}
+
+.textArea {
+	height: 100px;
+	text-align: left; /* Align text to the left */
+	white-space: pre-wrap; /* Wrap text to the next line */
+	overflow-wrap: break-word; /* Ensure long words break to the next line */
+	padding: 10px; /* Add padding for better text alignment */
+	box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }

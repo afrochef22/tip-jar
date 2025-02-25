@@ -16,7 +16,23 @@ export default function creditTipCalculationPage(allTipBreakdowns) {
 		employeeTipCollected,
 		selectedShow,
 		totalTips,
+		totalBarSales,
+		shiftNotes,
 	} = router.query;
+
+	console.log("allTipBreakdowns", allTipBreakdowns);
+
+	console.log("bartenders", bartenders);
+	console.log("barBacks", barBacks);
+	console.log("cooks", cooks);
+	console.log("barBackPercentage", barBackPercentage);
+	console.log("foodSalesTotal", foodSalesTotal);
+	console.log("employeeHours", employeeHours);
+	console.log("employeeTipCollected", employeeTipCollected);
+	console.log("selectedShow", selectedShow);
+	console.log("totalTips", totalTips);
+	console.log("totalBarSales", totalBarSales);
+	console.log("shiftNotes", shiftNotes);
 
 	const parsedBartenders = bartenders ? JSON.parse(bartenders) : [];
 	const parsedBarBacks = barBacks ? JSON.parse(barBacks) : [];
@@ -29,6 +45,8 @@ export default function creditTipCalculationPage(allTipBreakdowns) {
 		: [];
 	const parseSelectedShow = selectedShow ? JSON.parse(selectedShow) : "";
 	const parseTotalTips = totalTips ? JSON.parse(totalTips) : "";
+	const parseTotalBarSales = totalBarSales ? JSON.parse(totalBarSales) : "";
+	const parseShiftNotes = shiftNotes ? JSON.parse(shiftNotes) : "";
 
 	return (
 		<TipBreakDown
@@ -42,6 +60,8 @@ export default function creditTipCalculationPage(allTipBreakdowns) {
 			selectedShow={parseSelectedShow}
 			allTipBreakdowns={allTipBreakdowns}
 			totalTips={totalTips}
+			totalBarSales={parseTotalBarSales}
+			shiftNotes={parseShiftNotes}
 		/>
 	);
 }

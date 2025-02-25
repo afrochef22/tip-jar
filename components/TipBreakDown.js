@@ -20,8 +20,11 @@ export default function TipBreakDown({
 	selectedShow,
 	allTipBreakdowns,
 	totalTips,
+	totalBarSales,
+	shiftNotes,
 }) {
-	console.log(allTipBreakdowns);
+	console.log("totalBarSales", totalBarSales);
+	console.log("shiftNotes", shiftNotes);
 	const [newTipBreakdown, setNewTipBreakdown] = useState({});
 	const [submitting, setSubmitting] = useState(false);
 	const [submitError, setSubmitError] = useState("");
@@ -343,6 +346,8 @@ export default function TipBreakDown({
 			tipsPerBartender: tipsPerBartender(),
 			tipsPerBarBack: tipsPerBarBack(),
 			tipsPerCook: tipsPerCook(),
+			totalBarSales: totalBarSales,
+			shiftNotes: shiftNotes,
 		};
 
 		setNewTipBreakdown(tipBreakdown);
@@ -352,7 +357,7 @@ export default function TipBreakDown({
 	};
 
 	const submitTipBreakdown = async () => {
-		console.log(newTipBreakdown);
+		console.log("newTipBreakdown", newTipBreakdown);
 		try {
 			const response = await fetch("/api/addTipBreakDown", {
 				method: "POST",
