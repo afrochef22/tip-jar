@@ -46,7 +46,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						</Col>
 					</Row>
 
-					<Row className="mb-5">
+					<Row className="mb-3">
 						<Col sm={4} xs={6}>
 							<h4>Total Bar Sales:</h4>
 							<h2 className="highlight-color">${breakDown.totalBarSales}</h2>
@@ -61,7 +61,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						</Col>
 					</Row>
 					<Row>
-						<Col sm={6} xs={12} className="mb-5">
+						<Col sm={6} xs={12} className="mb-3">
 							<h4>Shift Notes:</h4>
 							<h2 className={`highlight-color ${style.shiftNotes}`}>
 								{breakDown.shiftNotes}
