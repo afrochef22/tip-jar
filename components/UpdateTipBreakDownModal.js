@@ -621,7 +621,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 													<Input
 														id="shiftNotes"
 														name="shiftNotes"
-														type="text"
+														type="textrea"
 														value={shiftNotes}
 														onChange={handleShiftNotesChange}
 														className={` ${style.textArea}`}
