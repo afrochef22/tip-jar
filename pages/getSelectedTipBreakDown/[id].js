@@ -39,7 +39,9 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 				<Container className={` ${style.container}`}>
 					<Row className="mb-5">
 						<Col sm={6} xs={12}>
-							<h4>Show: {breakDown.show}</h4>
+							<h4>
+								Show: <span className="highlight-color"> {breakDown.show}</span>
+							</h4>
 						</Col>
 						<Col sm={6} xs={12}>
 							<h4> {breakDown.date}</h4>
@@ -47,11 +49,11 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 					</Row>
 
 					<Row className="mb-3">
-						<Col sm={4} xs={6}>
+						<Col sm={4} xs={7}>
 							<h4>Total Bar Sales:</h4>
 							<h2 className="highlight-color">${breakDown.totalBarSales}</h2>
 						</Col>
-						<Col sm={4} xs={6}>
+						<Col sm={4} xs={5}>
 							<h4>Total Tips:</h4>
 							<h2 className="highlight-color">${breakDown.totalTips}</h2>
 						</Col>
