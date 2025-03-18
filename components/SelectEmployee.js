@@ -305,9 +305,9 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 	return (
 		<div className={` ${style.backgroundColor} `}>
 			<Container fluid className={style.background}>
-				<h1 className={`${style.centerTitle} mt-5`}>
+				<h1 className={`${style.centerTitle} mt-2`}>
 					Credit Card Tip Calculator
-					<div>
+					<div className={"mt-2"}>
 						<CurrentShift />
 					</div>
 				</h1>

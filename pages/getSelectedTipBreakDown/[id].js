@@ -63,7 +63,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 								${breakDown.totalTips.toFixed(2)}
 							</h2>
 						</Col>
-						<Col className="mb-3" sm={4} xs={7}>
+						<Col className="mb-3" sm={4} xs={6}>
 							<h4>Food sales:</h4>
 							<h2 className="highlight-color">
 								${breakDown.foodSales.toFixed(2)}
@@ -72,7 +72,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						{breakDown.barBackTips.length <= 0 ? (
 							<></>
 						) : (
-							<Col className="mb-3" sm={6} xs={5}>
+							<Col className="mb-3" sm={6} xs={6}>
 								<h4>Bar Back %:</h4>
 								<h2 className="highlight-color">
 									{breakDown.barBackPercentage}%
