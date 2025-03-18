@@ -37,48 +37,54 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 			)}
 			<div className={style.backgroundColor}>
 				<Container className={` ${style.container}`}>
-					<Row className="mb-5">
-						<Col sm={6} xs={12}>
+					<Row className="mb-3">
+						<Col>
+							<h4> {breakDown.date}</h4>
+						</Col>
+					</Row>
+					<Row className="mb-3">
+						<Col>
 							<h4>
 								Show: <span className="highlight-color"> {breakDown.show}</span>
 							</h4>
 						</Col>
-						<Col sm={6} xs={12}>
-							<h4> {breakDown.date}</h4>
-						</Col>
 					</Row>
 
 					<Row className="mb-3">
-						<Col sm={4} xs={7}>
+						<Col className="mb-3" sm={4} xs={7}>
 							<h4>Total Bar Sales:</h4>
-							<h2 className="highlight-color">${breakDown.totalBarSales}</h2>
+							<h2 className="highlight-color">
+								${breakDown.totalBarSales.toFixed(2)}
+							</h2>
 						</Col>
-						<Col sm={4} xs={5}>
+						<Col className="mb-3" sm={4} xs={5}>
 							<h4>Total Tips:</h4>
-							<h2 className="highlight-color">${breakDown.totalTips}</h2>
+							<h2 className="highlight-color">
+								${breakDown.totalTips.toFixed(2)}
+							</h2>
 						</Col>
-						<Col sm={4} xs={12}>
+						<Col className="mb-3" sm={4} xs={7}>
 							<h4>Food sales:</h4>
-							<h2 className="highlight-color">${breakDown.foodSales}</h2>
+							<h2 className="highlight-color">
+								${breakDown.foodSales.toFixed(2)}
+							</h2>
 						</Col>
-					</Row>
-					<Row>
+						{breakDown.barBackTips.length <= 0 ? (
+							<></>
+						) : (
+							<Col className="mb-3" sm={6} xs={5}>
+								<h4>Bar Back %:</h4>
+								<h2 className="highlight-color">
+									{breakDown.barBackPercentage}%
+								</h2>
+							</Col>
+						)}
 						<Col sm={6} xs={12} className="mb-3">
 							<h4>Shift Notes:</h4>
 							<h2 className={`highlight-color ${style.shiftNotes}`}>
 								{breakDown.shiftNotes}
 							</h2>
 						</Col>
-						{breakDown.barBackTips.length <= 0 ? (
-							<></>
-						) : (
-							<Col sm={6} xs={12}>
-								<h4>Bar Back Percentage:</h4>
-								<h2 className="highlight-color">
-									{breakDown.barBackPercentage}%
-								</h2>
-							</Col>
-						)}
 					</Row>
 				</Container>
 				<div className={style.container}>
