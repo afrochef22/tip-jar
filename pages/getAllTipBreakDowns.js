@@ -76,8 +76,17 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 									{`${formatDateStringWithDayOfWeek(data.date)} `}
 								</CardSubtitle>
 								<CardSubtitle className="mb-2 " tag="h6">
+									Total Bar Sales:{" "}
+									<span className="highlight-color">
+										${(Number(data.totalBarSales) || 0).toFixed(2)}{" "}
+									</span>
+								</CardSubtitle>
+								<CardSubtitle className="mb-2 " tag="h6">
 									Total Tips:{" "}
-									<span className="highlight-color">${data.totalTips}</span>
+									<span className="highlight-color">
+										{" "}
+										${(Number(data.totalTips) || 0).toFixed(2)}
+									</span>
 								</CardSubtitle>
 
 								<h5 className={`${style.positionTitle}`}>Cooks:</h5>
