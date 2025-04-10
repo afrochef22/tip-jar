@@ -20,6 +20,8 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 	const [reversedAllTipBreakdowns, setReversedAllTipBreakdowns] = useState(
 		[...allTipBreakdowns].reverse()
 	);
+	const [searchValue, setSearchValue] = useState("");
+
 	const handleCardClick = (id) => {
 		router.push(`/getSelectedTipBreakDown/${id}`);
 	};
@@ -33,14 +35,22 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 	};
 
 	const handleSearch = (e) => {
-		const searchTerm = e.target.value.toLowerCase();
+		const value = e.target.value.toLowerCase();
+		setSearchValue(e.target.value); // store the actual input for the UI
+
 		const searchResults = allTipBreakdowns.filter(
 			(breakDown) =>
-				breakDown.show && breakDown.show.toLowerCase().includes(searchTerm)
+				breakDown.show && breakDown.show.toLowerCase().includes(value)
 		);
 
 		setReversedAllTipBreakdowns([...searchResults].reverse());
 	};
+
+	const handleClear = () => {
+		setSearchValue("");
+		setReversedAllTipBreakdowns([...allTipBreakdowns].reverse());
+	};
+
 	console.log(reversedAllTipBreakdowns);
 	return (
 		<div className={`${style.carouselContainer} ${style.minHeight}`}>
@@ -48,13 +58,33 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 				<h2>Tip Breakdowns</h2>
 				<h5>Click on a card to get more detail or edit</h5>
 
-				<div className={style.searchBox}>
+				<div className={style.searchBox} style={{ position: "relative" }}>
 					<Input
 						className="mb-2 mt-2"
 						type="text"
 						placeholder="🔍 Search by show name"
+						value={searchValue}
 						onChange={handleSearch}
+						style={{ paddingRight: "30px" }} // space for the button
 					/>
+					{searchValue && (
+						<button
+							onClick={handleClear}
+							style={{
+								position: "absolute",
+								right: "10px",
+								top: "50%",
+								transform: "translateY(-50%)",
+								border: "none",
+								background: "transparent",
+								cursor: "pointer",
+								fontSize: "16px",
+								color: "#999",
+							}}
+						>
+							✖️
+						</button>
+					)}
 				</div>
 			</div>
 			<Row xs={12} sm={2} md={3}>
@@ -76,7 +106,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 									{`${formatDateStringWithDayOfWeek(data.date)} `}
 								</CardSubtitle>
 								<CardSubtitle className="mb-2 " tag="h6">
-									Total Bar Sales:{" "}
+									Bar Sales:{" "}
 									<span className="highlight-color">
 										${(Number(data.totalBarSales) || 0).toFixed(2)}{" "}
 									</span>

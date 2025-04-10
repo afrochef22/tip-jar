@@ -105,7 +105,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 										{`${formatDateStringWithDayOfWeek(data.date)} `}
 									</CardSubtitle>
 									<CardSubtitle className="mb-2 " tag="h6">
-										Total Bar Sales:{" "}
+										Bar Sales:{" "}
 										<span className="highlight-color">
 											${(Number(data.totalBarSales) || 0).toFixed(2)}
 										</span>
