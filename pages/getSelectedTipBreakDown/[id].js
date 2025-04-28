@@ -44,9 +44,11 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 					</Row>
 					<Row className="mb-3">
 						<Col>
-							<h4>
-								Show: <span className="highlight-color"> {breakDown.show}</span>
-							</h4>
+							<h4>Show: </h4>
+							<div className={` ${style.showTitle} highlight-color`}>
+								{" "}
+								{breakDown.show}
+							</div>
 						</Col>
 					</Row>
 
@@ -89,7 +91,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 				</Container>
 				<div className={style.container}>
 					<h1>Cook Tips </h1>
-					<Row>
+					<Row className="gap-2">
 						{cookHours === 0 ? (
 							<></>
 						) : (
@@ -153,7 +155,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 							</span>
 						</h5>
 					)}
-					<Row>
+					<Row className="gap-2">
 						{breakDown.barBackTips.length > 0 &&
 							breakDown.barBackTips.map((barBack) => (
 								<Col key={barBack.id} xs={12} sm={6} md={4}>
@@ -208,7 +210,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 							</span>
 						</h5>
 					)}
-					<Row>
+					<Row className="gap-2">
 						{" "}
 						{breakDown.BartenderTips.map((bartender) => (
 							<Col
@@ -216,7 +218,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 								xs={12}
 								sm={6}
 								md={4}
-								className={`${style.employeeList} g-2`}
+								className={`${style.employeeList} `}
 							>
 								<Container className={`${style.employeeContainer} `}>
 									<Row className={`${style.employeeName} `}>

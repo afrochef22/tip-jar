@@ -25,6 +25,11 @@
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.showTitle {
+	font-size: 20px;
+	margin: 0;
+}
+
 .employeeContainer {
 	background-color: var(--third-color);
 	max-width: 350px;
@@ -39,11 +44,12 @@
 	align-items: center;
 	justify-content: space-between;
 	height: 100%;
-	padding: 10px 0;
+	padding: 10px 5px;
 }
 
 .employeeList {
 	gap: 1px;
+	width: 100%;
 }
 
 .centerButton {
