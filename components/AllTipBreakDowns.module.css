@@ -17,7 +17,7 @@
 }
 
 .cardWidth {
-	width: 33%;
+	width: 100%;
 }
 
 .title {
@@ -110,9 +110,9 @@
 		margin: auto;
 		max-width: 500px;
 	}
-	.cardWidth {
+	/* .cardWidth {
 		width: 50%;
-	}
+	} */
 	.cardRow {
 		width: 50%;
 	}
@@ -145,9 +145,9 @@
 	.carouselSection {
 		min-height: 550px;
 	}
-	.cardWidth {
+	/* .cardWidth {
 		width: 100%;
-	}
+	} */
 	.cardRow {
 		width: 100%;
 	}

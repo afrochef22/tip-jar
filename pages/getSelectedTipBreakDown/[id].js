@@ -105,7 +105,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 							breakDown.cookTips.map((cook) => (
 								<Col key={cook.id} xs={12} sm={6} md={4}>
 									<Container className={style.employeeContainer}>
-										<Row>
+										<Row className={style.employeeName}>
 											<Col>
 												{" "}
 												{cook.label.split(" ").map((namePart, index, parts) => (
@@ -158,7 +158,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 							breakDown.barBackTips.map((barBack) => (
 								<Col key={barBack.id} xs={12} sm={6} md={4}>
 									<Container className={style.employeeContainer}>
-										<Row>
+										<Row className={style.employeeName}>
 											<Col>
 												{" "}
 												{barBack.label
@@ -209,10 +209,17 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						</h5>
 					)}
 					<Row>
+						{" "}
 						{breakDown.BartenderTips.map((bartender) => (
-							<Col key={bartender.id} xs={12} sm={6} md={4}>
-								<Container className={style.employeeContainer}>
-									<Row>
+							<Col
+								key={bartender.id}
+								xs={12}
+								sm={6}
+								md={4}
+								className={`${style.employeeList} g-2`}
+							>
+								<Container className={`${style.employeeContainer} `}>
+									<Row className={`${style.employeeName} `}>
 										<Col>
 											{" "}
 											{bartender.label

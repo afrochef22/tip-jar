@@ -94,7 +94,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 								key={data._id}
 								className={`${style.cardContainer}  ${style.backgroundColor}  ${style.cardClick}`}
 							>
-								<CardBody className={``}>
+								<CardBody className={`${style.cardWidth}`}>
 									<CardTitle
 										className={`${style.bandTitle} highlight-color`}
 										tag="h5"
