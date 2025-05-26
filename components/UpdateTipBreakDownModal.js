@@ -382,13 +382,22 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 			totalTipOutCooks
 		).toFixed(2)
 	);
-
+	console.log("tipsPerBarBack", tipsPerBarBack);
+	console.log("tipsPerBartender", tipsPerBartender);
+	console.log("adjustedBartendersWithTipOut", adjustedBartendersWithTipOut);
+	console.log("cooksWithTipOut", cooksWithTipOut);
+	console.log("barBacksWithTipOut", barBacksWithTipOut);
 	const handleUpdateBreakDown = async (e) => {
 		e.preventDefault();
 		console.log("breakdown");
 		// alert("Sorry doesn't work yet");
 		console.log("total bar sales", totalBarSales);
 		console.log("shift notes", shiftNotes);
+		console.log("tipsPerBarBack", tipsPerBarBack);
+		console.log("tipsPerBartender", tipsPerBartender);
+		console.log("adjustedBartendersWithTipOut", adjustedBartendersWithTipOut);
+		console.log("cooksWithTipOut", cooksWithTipOut);
+		console.log("barBacksWithTipOut", barBacksWithTipOut);
 		try {
 			const response = await fetch(`/api/UpdateTipBreakDown/${breakDown._id}`, {
 				method: "PATCH",
@@ -398,16 +407,16 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 				body: JSON.stringify({
 					show: show,
 					date: date,
-					totalTips: totalTips,
-					foodSales: foodSales,
-					barBackPercentage: barBackPercentage,
+					totalTips: Number(totalTips),
+					foodSales: Number(foodSales),
+					barBackPercentage: Number(barBackPercentage),
 					cookTips: cooksWithTipOut,
 					barBackTips: barBacksWithTipOut,
 					bartenderTips: adjustedBartendersWithTipOut,
-					tipsPerBarBack: tipsPerBarBack,
-					tipsPerBartender: tipsPerBartender,
-					tipsPerCook: tipsPerCook,
-					totalBarSales: totalBarSales,
+					tipsPerBarBack: Number(tipsPerBarBack),
+					tipsPerBartender: Number(tipsPerBartender),
+					tipsPerCook: Number(tipsPerCook),
+					totalBarSales: Number(totalBarSales),
 					shiftNotes: shiftNotes,
 				}),
 			});

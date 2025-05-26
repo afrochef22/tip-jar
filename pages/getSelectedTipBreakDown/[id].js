@@ -11,7 +11,7 @@ import { ShiftDate } from "../../components/CurrentShift";
 export default function getSelectedTipBreakDown({ breakDown }) {
 	const { data: session } = useSession();
 	const shiftMatch = ShiftDate() === breakDown.date;
-	console.log(breakDown);
+	console.log("Breakdown:", breakDown.barBackTips);
 	if (!breakDown) {
 		// Handle the case when breakDown is not found
 		return <div>Tip Breakdown not found</div>;
@@ -28,6 +28,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 	const cookHours = breakDown.cookTips
 		.map((cook) => cook.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
+	console.log("Breakdown:", breakDown.totalTips);
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
 			{session || shiftMatch ? (
