@@ -180,6 +180,7 @@ function CurrentDate() {
 
 export function ShiftDate(dateData) {
 	dateData = CurrentDate();
+	console.log("dateData in ShiftDate", dateData);
 	let shiftDate = "";
 
 	if (dateData.hour < 6) {
@@ -191,9 +192,9 @@ export function ShiftDate(dateData) {
 			// If it's the first day of the month, shift started last month
 			shiftDate = `${
 				dateData.lastMonth < 10
-					? `0${dateData.lastDayOfPrevMonth}`
+					? `0${dateData.lastMonth}`
 					: `${dateData.lastMonth}`
-			}/${lastDayOfPrevMonth}/${dateData.year}`;
+			}/${dateData.lastDayOfPrevMonth}/${dateData.year}`;
 		} else {
 			// Otherwise, shift started yesterday
 			shiftDate = `${
