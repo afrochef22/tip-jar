@@ -180,15 +180,27 @@ function CurrentDate() {
 
 export function ShiftDate(dateData) {
 	dateData = CurrentDate();
+	// dateData = {
+	// 	date: 1,
+	// 	month: 12,
+	// 	year: 2025,
+	// 	day: 1,
+	// 	yesterdayDate: 30,
+	// 	lastMonth: 11,
+	// 	lastYear: 2024,
+	// 	yesterday: 7,
+	// 	hour: 5,
+	// 	lastDayOfPrevMonth: 30,
+	// };
 	console.log("dateData in ShiftDate", dateData);
 	let shiftDate = "";
 
 	if (dateData.hour < 6) {
 		// If the current hour is before 6 AM, shift started yesterday
-		if (dateData.month === 1 && dateData.yesterdayDate === 0) {
+		if (dateData.month === 1 && dateData.yesterdayDate === 31) {
 			// If it's the first day of January, shift started last year
 			shiftDate = `12/31/${dateData.lastYear}`;
-		} else if (dateData.yesterdayDate === 0) {
+		} else if (dateData.date === 1) {
 			// If it's the first day of the month, shift started last month
 			shiftDate = `${
 				dateData.lastMonth < 10
