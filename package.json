@@ -6,7 +6,7 @@
 		"start": "next start"
 	},
 	"dependencies": {
-		"@auth/mongodb-adapter": "^2.5.0",
+		"@auth/mongodb-adapter": "^3.0.0",
 		"@fortawesome/fontawesome-svg-core": "^6.5.1",
 		"@fortawesome/free-solid-svg-icons": "^6.5.1",
 		"@fortawesome/react-fontawesome": "^0.2.0",
@@ -21,7 +21,7 @@
 		"next": "latest",
 		"next-auth": "^4.24.7",
 		"node-fetch": "^3.3.2",
-		"nodemailer": "^6.9.13",
+		"nodemailer": "^7.0.7",
 		"passport": "^0.7.0",
 		"passport-local": "^1.0.0",
 		"react": "^18.2.0",
