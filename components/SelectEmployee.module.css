@@ -123,7 +123,7 @@
 	}
 }
 
-@media screen and (min-width: 990px) and(max-width: 1271px) {
+@media screen and (min-width: 990px) and (max-width: 1271px) {
 	.formContainer {
 		max-width: 500px;
 		min-width: auto;
