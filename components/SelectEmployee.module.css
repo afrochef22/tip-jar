@@ -27,7 +27,6 @@
 	max-width: 400px;
 	/* min-width: 400px; */
 	min-height: 500px;
-	max-height: 100px;
 	margin-bottom: 10%;
 	color: var(--third-color);
 	border: solid var(--primary-color) 5px;
@@ -35,6 +34,7 @@
 	border-radius: 15%;
 	margin: auto;
 	margin-bottom: 20px;
+	overflow: hidden;
 }
 
 .scrollableContainer {
@@ -85,7 +85,8 @@
 }
 
 .selectEmp {
-	width: 425px;
+	max-width: 425px;
+	width: 100%;
 	margin: auto;
 }
 
@@ -125,14 +126,13 @@
 
 @media screen and (min-width: 990px) and (max-width: 1271px) {
 	.formContainer {
-		max-width: 500px;
+		max-width: 100%;
 		min-width: auto;
 	}
 	.formContainerMobile {
-		max-width: 500px;
-		min-width: 500px;
+		max-width: 100%;
+		min-width: auto;
 		min-height: 50vh;
-		max-height: 50px;
 	}
 }
 
