@@ -8,6 +8,9 @@ export default function SelectBarBack({
 	sortedBarBacks,
 	btn,
 	addNewEmployee,
+	showCooks,
+	submit,
+	submitError,
 }) {
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
@@ -92,12 +95,19 @@ export default function SelectBarBack({
 						</Button>
 
 						<Button
-							onClick={() => btn("Cook")}
+							onClick={showCooks ? () => btn("Cook") : submit}
 							className={` ${style.centerButton}`}
 						>
-							Next
+							{showCooks ? "Next" : "Submit"}
 						</Button>
 					</Row>
+					{!showCooks && submitError && (
+						<Row className="justify-content-center">
+							<Col className={`mx-2 secondary-color ${style.centerButton}`}>
+								<h2 className={style.error}>{submitError}</h2>
+							</Col>
+						</Row>
+					)}
 				</Container>
 			) : (
 				<Container className={style.formContainer}>

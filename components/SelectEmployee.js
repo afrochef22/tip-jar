@@ -23,6 +23,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 875);
 	};
+	const [showCooks, setShowCooks] = useState(false);
 	const [selectedShow, setSelectedShow] = useState("");
 	const [shouldNavigate, setShouldNavigate] = useState(false);
 	const [submitError, setSubmitError] = useState("");
@@ -105,6 +106,24 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 			default:
 				break;
 		}
+	};
+
+	const handleToggleCooks = () => {
+		if (showCooks) {
+			// Remove any selected cooks from working employees
+			setWorkingEmployees((prev) =>
+				prev.filter((emp) => emp.workingPosition !== "Cook")
+			);
+			// Reset cook checkboxes
+			setAllEmployees((prev) =>
+				prev.map((emp) =>
+					emp.workingPosition === "Cook"
+						? { ...emp, checked: false, workingPosition: "" }
+						: emp
+				)
+			);
+		}
+		setShowCooks(!showCooks);
 	};
 
 	const handleSelectedBand = (band) => {
@@ -318,6 +337,15 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 					selectedShow={selectedShow}
 				/>
 				<h3 className={style.centerTitle}>Select Who's Working</h3>
+				<div className={style.toggleContainer}>
+					<Label className={style.toggleLabel}>Include Cooks</Label>
+					<div
+						className={`${style.toggle} ${showCooks ? style.toggleOn : ""}`}
+						onClick={handleToggleCooks}
+					>
+						<div className={style.toggleKnob} />
+					</div>
+				</div>
 				<Row className={style.centerContainer}>
 					{isMobile ? (
 						<SelectEmployeeDisplay
@@ -330,6 +358,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 							submit={handleSubmitButtonClick}
 							addNewEmployee={addNewEmployee}
 							submitError={submitError}
+							showCooks={showCooks}
 						/>
 					) : (
 						<Container fluid>
@@ -349,6 +378,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 										addNewEmployee={addNewEmployee}
 									/>
 								</Col>
+							{showCooks && (
 								<Col className={style.selectEmp}>
 									<SelectCook
 										sortedCooks={sortedCooks}
@@ -356,6 +386,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 										addNewEmployee={addNewEmployee}
 									/>
 								</Col>
+							)}
 							</Row>
 						</Container>
 					)}

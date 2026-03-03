@@ -13,6 +13,7 @@ export default function SelectEmployeeDisplay({
 	submit,
 	addNewEmployee,
 	submitError,
+	showCooks,
 }) {
 	let content;
 	switch (position) {
@@ -34,6 +35,9 @@ export default function SelectEmployeeDisplay({
 					sortedBarBacks={sortedBarBacks}
 					btn={btn}
 					addNewEmployee={addNewEmployee}
+					showCooks={showCooks}
+					submit={submit}
+					submitError={submitError}
 				/>
 			);
 			break;
