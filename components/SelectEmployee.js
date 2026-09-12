@@ -335,6 +335,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 					handleSelectedBand={handleSelectedBand}
 					setSelectedShow={setSelectedShow}
 					selectedShow={selectedShow}
+					allTipBreakdowns={allTipBreakdowns}
 				/>
 				<h3 className={style.centerTitle}>Select Who's Working</h3>
 				<div className={style.toggleContainer}>

@@ -302,12 +302,19 @@ export function CurrentShowPerforming({
 	handleSelectedBand,
 	setSelectedShow,
 	selectedShow,
+	allTipBreakdowns = [],
 }) {
 	const { data: session } = useSession();
 
 	const [bandPerformingToday, setBandPerformingToday] = useState([]);
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+
+	const cafeAfterHoursName = `Cafe After Hours - ${ShiftDate()}`;
+	const cafeAlreadySubmitted = allTipBreakdowns.some(
+		(breakdown) =>
+			breakdown.show === cafeAfterHoursName && breakdown.date === ShiftDate()
+	);
 
 	const toggleDescription = () => {
 		setShowFullDescription(!showFullDescription);
@@ -417,6 +424,41 @@ export function CurrentShowPerforming({
 					)}
 				</Row>
 			)}
+			<Row className="justify-content-center">
+				<Col sm={4}>
+					<Container
+						className={`mb-1 ${style.bandContainer} ${
+							cafeAlreadySubmitted ? style.disabledBandContainer : ""
+						}`}
+					>
+						<Row>
+							<Col sm={10} xs={10}>
+								<Label>{cafeAfterHoursName}</Label>
+								{cafeAlreadySubmitted && (
+									<div>
+										<small>Already submitted for today</small>
+									</div>
+								)}
+							</Col>
+							<Col
+								sm={2}
+								xs={2}
+								className={
+									cafeAlreadySubmitted
+										? style.disabledCheckbox
+										: selectedShow === cafeAfterHoursName
+										? style.checkedCheckbox
+										: style.unCheckBox
+								}
+								onClick={() =>
+									!cafeAlreadySubmitted &&
+									handleSelectedBand(cafeAfterHoursName)
+								}
+							></Col>
+						</Row>
+					</Container>
+				</Col>
+			</Row>
 			{session && bandPerformingToday.length > 0 ? (
 				<div>
 					<h3 className={`${style.title} mt-3`}>Or</h3>

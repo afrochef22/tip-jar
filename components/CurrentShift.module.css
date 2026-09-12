@@ -46,3 +46,15 @@
 	padding: auto;
 	margin: 8px;
 }
+
+.disabledBandContainer {
+	opacity: 0.5;
+}
+
+.disabledCheckbox {
+	height: 20px;
+	width: 20px;
+	background-color: #999;
+	border-radius: 15%;
+	cursor: not-allowed;
+}
