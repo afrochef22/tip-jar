@@ -118,7 +118,7 @@ export default function getEmployee({ employee }) {
 							</Col>
 							<Col xs={12} md={8}>
 								<span>
-									{employee.position.map((position, index) => (
+									{(employee.position || []).map((position, index) => (
 										<p
 											key={index}
 											style={{ display: "inline-block", marginRight: "10px" }}

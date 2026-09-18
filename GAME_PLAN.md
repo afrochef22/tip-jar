@@ -134,7 +134,7 @@ Check the box when done. Commit after each phase.
 
 ## Phase 4: Cleanup (low)
 
-- [ ] **4.1 Remove dead code**
+- [x] **4.1 Remove dead code**
   - `pages/api/extendSession.js` (uses nonexistent `req.session`)
   - `pages/api/auth.js` (empty passport stub, shadows `/api/auth`)
   - `components/SelectNonActiveCook.js` (empty), `components/SelectNonActiveBarBack.js`, and `NonActivePostionHandler` in `AddGuestEmployee.js:149-187`
@@ -145,7 +145,7 @@ Check the box when done. Commit after each phase.
   - `toggleConfirmation` in `UpdateCashTipBreakDownModal.js:221` (references undeclared state)
   - Unused `Bartenders` at bottom of `NonPositionedEmployee.js`
 
-- [ ] **4.2 Remove stray imports**
+- [x] **4.2 Remove stray imports**
   - `pages/_app.js:10` `session` from passport
   - `pages/api/auth/[...nextauth].js:4, 6, 10` GithubProvider, AzureADProvider, useRouter
   - `pages/api/getEmployee/[id].js:2` userRouter
@@ -160,7 +160,7 @@ Check the box when done. Commit after each phase.
 - [ ] **4.4 Strip console.log noise**
   - Nearly every file. Keep `console.error` in catch blocks.
 
-- [ ] **4.5 Small fixes**
+- [x] **4.5 Small fixes**
   - `UpdateTipBreakDownModal.js:635` `type="textrea"` -> `"textarea"`
   - `pages/getAllTipBreakDowns.js:92` move `key` to the `Col`
   - `pages/api/sendEmail.js:14` build link from `process.env.NEXTAUTH_URL`
@@ -172,7 +172,7 @@ Check the box when done. Commit after each phase.
 - [ ] **4.6 Deduplicate spreadsheet**
   - `components/TipsTotalsSpreadSheet.js` and `pages/CCTipsTotals.js` are ~340-line copies. Make `CCTipsTotals` render `TipsTotalsSpreadSheet` with a `showDateInputs` prop.
 
-- [ ] **4.7 NextAuth adapter writes to the wrong database**
+- [x] **4.7 NextAuth adapter writes to the wrong database**
   - File: `pages/api/auth/[...nextauth].js` `MongoDBAdapter(clientPromise)`
   - Problem: the adapter uses the connection string's default database, which is `test`, so `users` / `accounts` / `verification_tokens` live outside `TeragramBallroom`.
   - Fix: `MongoDBAdapter(clientPromise, { databaseName: "TeragramBallroom" })`. Existing Google users will be re-created on next sign-in; employee linking is unaffected because it keys on the employee `email`.
@@ -227,6 +227,15 @@ Check the box when done. Commit after each phase.
   - `CCTipsTotals.js` date pickers are now controlled (`value={startDate.toISODate()}`), so Previous/Next Pay Period visibly updates them, and clearing a date input no longer sets state to an invalid Luxon `DateTime` that silently broke every downstream comparison.
   - `DateRange.js`'s `getPayrollDates()` now anchors "today" to `America/Los_Angeles` instead of the server/browser's local zone, so the pay-period boundary is the same whether it runs server-side (UTC) or client-side. Removed a module-level `getPayrollDates()` call and two `console.log`s that ran as a side effect of importing the file.
   - Note: item 3.5 (cooks-absent guard in the edit modal) was already fixed as part of the Phase 2 patch.
+
+- Phase 4a done (4.1, 4.2, 4.5, 4.7 — dead code, stray imports, small fixes, NextAuth adapter database).
+  - Removed `pages/api/extendSession.js` and `pages/api/auth.js` (both dead: the former used a nonexistent `req.session`, the latter was an empty passport stub shadowing the real `/api/auth` route). Removed empty `components/SelectNonActiveCook.js` and unused `components/GetAllTipBreakdowns.js`.
+  - Removed the broken `RegisterButton` (no `return`, always rendered nothing) and its usage, and the dead `NonActivePostionHandler` in `AddGuestEmployee.js` (never called; referenced `SelectNonActiveBarBack`/`SelectNonActiveCook` without importing them). Left `components/SelectNonActiveBarBack.js` itself in place — it's a real, complete, working component, just orphaned, so removing it felt like a bigger call than clearing genuinely broken/empty stubs; it has no effect on the app since nothing imports it.
+  - Removed the dead second `Bartenders` declaration at the bottom of `NonPositionedEmployee.js`, the dead `toggleConfirmation` in `UpdateCashTipBreakDownModal.js` (referenced `showConfirmation` state that doesn't exist in that component), and the commented-out JSX blocks in `StandardCreditTipCalculator.js`, `BartenderHourlyInput.js`, `HourlyCashInput.js`.
+  - Removed stray/broken imports: `session` from `passport` in `pages/_app.js`; `on` from `events` and `e` from `cors` in `SelectBartender.js`; the nonexistent `getStartDate`/`getEndDate` from both spreadsheet files' `DateRange` import.
+  - Small fixes: `type="textrea"` → `"textarea"`; moved a `key` prop from a nested `Card` onto the actual `.map()`-returned `Col` in `getAllTipBreakDowns.js`; `crossOrigin="true"` → `"anonymous"` in `_document.js`; added the same `Number(x) || 0` display guards to `AllTipBreakDowns.js` that `getAllTipBreakDowns.js` already had; guarded `employee.position` with `|| []` in `getEmployee/[id].js` and `EmployeeList.js` for records that predate that field.
+  - `MongoDBAdapter` now passes `{ databaseName: "TeragramBallroom" }` so NextAuth's own `users`/`accounts`/`verification_tokens` collections land in the app's database instead of the connection string's default (`test`). Google users get re-created there on next sign-in; employee linking is unaffected since it keys on the employee's `email`, not the adapter's `users` collection.
+  - Noticed but not touched: `next build` now warns that the `middleware.js` convention is deprecated in favor of `proxy.js`. Left as-is since it still works and is auth-critical; worth a deliberate follow-up rather than folding into this cleanup pass.
 
 ## Follow-up requests (outside the numbered plan)
 

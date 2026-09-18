@@ -65,17 +65,6 @@ export function HourlyBarBackCashInput({
 									handleBarBackHoursWorkedChange(barBack.name, e.target.value);
 								}}
 								onClick={() => handleInputClick(barBack.name)}
-								// onInput={(e) => {
-								// 	e.preventDefault();
-								// 	const inputValue = e.target.value;
-								// 	const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
-
-								// 	if (!isValidInput) {
-								// 		e.target.setCustomValidity("Please enter a valid number.");
-								// 	} else {
-								// 		e.target.setCustomValidity("");
-								// 	}
-								// }}
 							></Input>
 						</Col>
 					</FormGroup>

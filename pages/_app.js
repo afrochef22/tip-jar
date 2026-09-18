@@ -6,7 +6,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 import "../styles/globals.css";
-import { session } from "passport";
 
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
 	const isNotIndexPage = router.pathname !== "/";

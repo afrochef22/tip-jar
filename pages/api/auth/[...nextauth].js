@@ -67,7 +67,7 @@ export const authOptions = {
 		maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
 	},
 	secret: process.env.NEXTAUTH_SECRET,
-	adapter: MongoDBAdapter(clientPromise),
+	adapter: MongoDBAdapter(clientPromise, { databaseName: "TeragramBallroom" }),
 	callbacks: {
 		// Only people already in the employees collection may sign in.
 		// Credentials sign-in was already verified against that collection.

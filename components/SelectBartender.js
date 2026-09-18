@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import AddGuestEmployee from "./AddGuestEmployee";
-import { on } from "events";
-import e from "cors";
 
 export default function SelectBartender({
 	onClick,

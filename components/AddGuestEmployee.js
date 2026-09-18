@@ -20,11 +20,6 @@ import style2 from "./SelectEmployee.module.css";
 import { v4 as uuidv4 } from "uuid";
 import SelectNonActiveEmployee from "./SelectNonActiveEmployee";
 
-export const RegisterButton = ({ toggleNested }) => {
-	<Button className="apple-blue-background" onClick={toggleNested}>
-		Register New Fill In
-	</Button>;
-};
 export default function AddGuestEmployee({
 	position,
 	addNewEmployee,
@@ -143,46 +138,6 @@ export default function AddGuestEmployee({
 			console.log(error);
 		} finally {
 			toggleNested();
-		}
-	};
-
-	const NonActivePostionHandler = (position) => {
-		console.log(typeof position.position);
-		switch (position.position) {
-			case "Bartender":
-				return (
-					<SelectNonActiveEmployee
-						position={position}
-						addNewEmployee={addNewEmployee}
-						sortedBartenders={sortedBartenders}
-						sortedBarBacks={sortedBarBacks}
-						sortedCooks={sortedCooks}
-						onClick={onClick}
-					/>
-				);
-				break;
-			case "Bar Back":
-				return (
-					<SelectNonActiveBarBack
-						position={position}
-						addNewEmployee={addNewEmployee}
-						sortedBarBacks={sortedBarBacks}
-						onClick={onClick}
-					/>
-				);
-				break;
-			case "Cook":
-				return (
-					<SelectNonActiveCook
-						position={position}
-						addNewEmployee={addNewEmployee}
-						sortedCooks={sortedCooks}
-						onClick={onClick}
-					/>
-				);
-				break;
-			default:
-				break;
 		}
 	};
 

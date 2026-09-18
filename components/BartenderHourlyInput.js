@@ -36,32 +36,6 @@ export default function BartenderHourlyInput({ bartenders }) {
 								}}
 							></Input>
 						</Col>
-						{/* <Label for="tipsCollected" xs={6} sm={6}>
-							Tips Collected
-						</Label>
-
-						<Col xs={6} sm={6}>
-							<Input
-								name={`${bartender.id}Tips`}
-								id="tipsCollected"
-								type="tel"
-								inputMode="decimal"
-								pattern="[0-9]+(\.[0-9]{1,2})?"
-								step="0.01"
-								required
-								onInput={(e) => {
-									e.preventDefault();
-									const inputValue = e.target.value;
-									const isValidInput = /^\d*\.?\d{0,2}$/.test(inputValue);
-
-									if (!isValidInput) {
-										e.target.setCustomValidity("Please enter a valid number.");
-									} else {
-										e.target.setCustomValidity("");
-									}
-								}}
-							/>
-						</Col> */}
 					</FormGroup>
 				</Col>
 			))}

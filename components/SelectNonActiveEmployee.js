@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import AddGuestEmployee from "./AddGuestEmployee";
-import { RegisterButton } from "./AddGuestEmployee";
 
 export default function SelectNonActiveEmployee({
 	onClick,
@@ -83,7 +82,6 @@ export default function SelectNonActiveEmployee({
 						className={`${style.formContainerMobile} ${style.formContainer}`}
 					>
 						<Col>
-							<RegisterButton />
 							<h2
 								className={`third-color ${style.centerTitle}`}
 								htmlFor="exampleSelect"

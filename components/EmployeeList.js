@@ -7,12 +7,12 @@ const EmployeeTable = ({ employees, position }) => {
 	console.log("employees", employees, "position", position);
 	const activeEmployee = employees.filter(
 		(employee) =>
-			employee.position.includes(position) && employee.active === true
+			(employee.position || []).includes(position) && employee.active === true
 	);
 
 	const nonActiveEmployee = employees.filter(
 		(employee) =>
-			employee.position.includes(position) && employee.active === false
+			(employee.position || []).includes(position) && employee.active === false
 	);
 
 	// Determine the maximum number of rows needed

@@ -17,6 +17,3 @@ const NonPositionedEmployee = ({ employees }) => {
 
 export default NonPositionedEmployee;
 
-const Bartenders = ({ employees }) => {
-	console.log(employees);
-};

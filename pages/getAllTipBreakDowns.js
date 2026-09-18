@@ -89,10 +89,9 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 			</div>
 			<Row xs={12} sm={2} md={3}>
 				{reversedAllTipBreakdowns.map((data) => (
-					<Col sm={12} className={`${style.cardRow} `}>
+					<Col sm={12} key={data._id} className={`${style.cardRow} `}>
 						<Card
 							onClick={() => handleCardClick(data._id)}
-							key={data._id}
 							className={`${style.cardContainer}  ${style.backgroundColor} ${style.cardClick}`}
 						>
 							<CardBody className={`${style.cardWidth}`}>

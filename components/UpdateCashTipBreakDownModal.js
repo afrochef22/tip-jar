@@ -232,10 +232,6 @@ const UpdateCashTipBreakDown = (
 		toggle();
 	};
 
-	const toggleConfirmation = () => {
-		setShowConfirmation(!showConfirmation);
-	};
-
 	const closeBtn = (
 		<div>
 			<Button color="primary mb-1" onClick={handleUpdateBreakDown}>

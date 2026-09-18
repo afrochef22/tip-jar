@@ -129,7 +129,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 														<td
 															className={`${style.expand} p-2 highlight-color text-right`}
 														>
-															${cook.tipOut.toFixed(2)}
+															${(Number(cook.tipOut) || 0).toFixed(2)}
 														</td>
 													</tr>
 												</tbody>
@@ -153,7 +153,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 																<td
 																	className={`${style.expand} p-2 highlight-color text-right`}
 																>
-																	${barBack.tipOut.toFixed(2)}
+																	${(Number(barBack.tipOut) || 0).toFixed(2)}
 																</td>
 															</tr>
 														</tbody>
@@ -177,7 +177,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 															<td
 																className={`${style.expand} p-2 highlight-color text-right`}
 															>
-																${bartender.tipOut}
+																${(Number(bartender.tipOut) || 0).toFixed(2)}
 															</td>
 														</tr>
 													</tbody>

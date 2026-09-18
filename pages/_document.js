@@ -11,7 +11,7 @@ class MyDocument extends Document {
 					<link
 						rel="preconnect"
 						href="https://fonts.gstatic.com"
-						crossOrigin="true"
+						crossOrigin="anonymous"
 					/>
 					<link
 						href="https://fonts.googleapis.com/css2?family=Italiana&display=swap"

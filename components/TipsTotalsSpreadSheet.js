@@ -10,11 +10,7 @@ import {
 	Button,
 } from "reactstrap";
 import { DateTime } from "luxon";
-import {
-	getStartDate,
-	getEndDate,
-	getPayrollDates,
-} from "../components/DateRange";
+import { getPayrollDates } from "../components/DateRange";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import TipBreakDown from "../components/TipBreakDown";
