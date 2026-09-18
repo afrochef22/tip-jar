@@ -66,7 +66,10 @@
 .border {
 	border: solid 2px var(--secondary-color);
 }
-.backgroundColor {
+/* Compound selector so this reliably beats Bootstrap's .card default
+   (background-color: var(--bs-card-bg), which is white) instead of
+   depending on which stylesheet happens to load last. */
+.cardContainer.backgroundColor {
 	background-color: #484747; /* Your desired color */
 
 	color: var(--text-color); /* Adjust as needed */
