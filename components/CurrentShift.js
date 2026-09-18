@@ -43,10 +43,17 @@ export function CurrentShowPerforming({
 		fetch("/api/FindBandPerformingToday")
 			.then((response) => response.json())
 			.then((data) => {
-				setBandPerformingToday(data.bandPerformingToday);
-				setIsLoading(false);
+				setBandPerformingToday(
+					Array.isArray(data?.bandPerformingToday)
+						? data.bandPerformingToday
+						: []
+				);
 			})
-			.catch((error) => console.error("Error fetching data:", error));
+			.catch((error) => {
+				console.error("Error fetching data:", error);
+				setBandPerformingToday([]);
+			})
+			.finally(() => setIsLoading(false));
 	}, []);
 	useEffect(() => {
 		if (bandPerformingToday.length === 1) {

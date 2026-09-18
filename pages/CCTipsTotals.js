@@ -31,10 +31,12 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	const [payPeriodEndDate, setPayPeriodEndDate] = useState(endDate);
 
 	const handleStartDateChange = (e) => {
+		if (!e.target.value) return; // ignore the input being cleared
 		setStartDate(DateTime.fromISO(e.target.value));
 	};
 
 	const handleEndDateChange = (e) => {
+		if (!e.target.value) return;
 		setEndDate(DateTime.fromISO(e.target.value));
 	};
 
@@ -154,6 +156,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 							name="startDate"
 							placeholder="date placeholder"
 							type="date"
+							value={startDate.isValid ? startDate.toISODate() : ""}
 							onChange={handleStartDateChange}
 						/>
 					</Col>
@@ -166,6 +169,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 							name="endDate"
 							placeholder="date placeholder"
 							type="date"
+							value={endDate.isValid ? endDate.toISODate() : ""}
 							onChange={handleEndDateChange}
 						/>
 					</Col>

@@ -909,7 +909,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 							</Button>
 							<DeleteDialog
 								isOpen={showConfirmation}
-								toggle={toggle}
+								toggle={toggleConfirmation}
 								onConfirm={handleDelete}
 							/>
 						</ModalFooter>

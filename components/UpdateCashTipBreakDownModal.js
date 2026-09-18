@@ -98,8 +98,18 @@ const UpdateCashTipBreakDown = (
 	const toggle = () => {
 		setModal(!modal);
 		if (!modal) {
+			// Opening: resync every field from the current props, so a stale
+			// edit from a previous open (or a first-render race on refresh)
+			// never lingers.
 			setPlaceholder(tipsCollected);
 			setNewTipsCollected(tipsCollected);
+			setNewNumberOfBartenders(numberOfBartenders);
+			setNewNumberOfBarBacks(numberOfBarBacks);
+			setNewBartenders(bartenders);
+			setNewBarBacks(barBacks);
+			setDefaultBarBackPercentage(barBackPercentage);
+			setBartenderHoursClicked(isBartenderHoursClicked === true);
+			setBarBackHoursClicked(isBarBackHoursClicked === true);
 		}
 	};
 
@@ -166,12 +176,16 @@ const UpdateCashTipBreakDown = (
 	// Update bartenders array when the number of bartenders changes
 	const handleNumberOfBartendersChange = (value) => {
 		setNewNumberOfBartenders(value);
-		setNewBartenders(generateBartendersArray(value));
+		if (Number.isInteger(value) && value >= 1) {
+			setNewBartenders(generateBartendersArray(value));
+		}
 	};
 
 	const handleNumberOfBarBacksChange = (value) => {
 		setNewNumberOfBarBacks(value);
-		setNewBarBacks(generateBarBacksArray(value));
+		if (Number.isInteger(value) && value >= 1) {
+			setNewBarBacks(generateBarBacksArray(value));
+		}
 	};
 
 	const handleUpdateBreakDown = async (e) => {
@@ -352,14 +366,17 @@ const UpdateCashTipBreakDown = (
 											name="barBackNumber"
 											type="tel"
 											inputMode="numeric"
-											pattern="[0-9]+(\.[0-9]{1,2})?"
-											step="0.01"
+											pattern="[1-9][0-9]*"
+											min="1"
+											step="1"
 											required
 											value={
 												isNaN(newNumberOfBarBacks) ? "" : newNumberOfBarBacks
 											}
 											onChange={(e) =>
-												handleNumberOfBarBacksChange(parseFloat(e.target.value))
+												handleNumberOfBarBacksChange(
+													parseInt(e.target.value, 10)
+												)
 											}
 										></Input>
 									</Col>
@@ -376,8 +393,9 @@ const UpdateCashTipBreakDown = (
 											name="bartenderNumber"
 											type="tel"
 											inputMode="numeric"
-											pattern="[0-9]+(\.[0-9]{1,2})?"
-											step="0.01"
+											pattern="[1-9][0-9]*"
+											min="1"
+											step="1"
 											required
 											value={
 												isNaN(newNumberOfBartenders)
@@ -386,7 +404,7 @@ const UpdateCashTipBreakDown = (
 											}
 											onChange={(e) =>
 												handleNumberOfBartendersChange(
-													parseFloat(e.target.value)
+													parseInt(e.target.value, 10)
 												)
 											}
 										></Input>

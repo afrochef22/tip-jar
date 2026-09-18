@@ -22,6 +22,11 @@ export default function CashTipBreakDownPage() {
 		isBarBackHoursClicked
 	);
 
+	// router.query is empty on the very first client render before Next.js
+	// has parsed the URL, which would otherwise seed CashTipBreakDown (and the
+	// edit modal's initial state) with NaN/[] for one frame.
+	if (!router.isReady) return null;
+
 	const parsedBartenders = bartenders ? JSON.parse(bartenders) : [];
 	const parsedBarBacks = barBacks ? JSON.parse(barBacks) : [];
 	const parsedTipsCollected = parseFloat(tipsCollected);

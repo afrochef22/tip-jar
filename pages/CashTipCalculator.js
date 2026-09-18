@@ -117,12 +117,16 @@ export default function CashTipCalculator() {
 	// Update bartenders array when the number of bartenders changes
 	const handleNumberOfBartendersChange = (value) => {
 		setNumberOfBartenders(value);
-		setBartenders(generateBartendersArray(value));
+		if (Number.isInteger(value) && value >= 1) {
+			setBartenders(generateBartendersArray(value));
+		}
 	};
 
 	const handleNumberOfBarBacksChange = (value) => {
 		setNumberOfBarBacks(value);
-		setBarBacks(generateBarBacksArray(value));
+		if (Number.isInteger(value) && value >= 1) {
+			setBarBacks(generateBarBacksArray(value));
+		}
 	};
 
 	const handleCalculate = (e) => {
@@ -244,11 +248,12 @@ export default function CashTipCalculator() {
 									name="barBackNumber"
 									type="tel"
 									inputMode="numeric"
-									pattern="[0-9]+(\.[0-9]{1,2})?"
-									step="0.01"
+									pattern="[1-9][0-9]*"
+									min="1"
+									step="1"
 									required
 									onChange={(e) =>
-										handleNumberOfBarBacksChange(parseFloat(e.target.value))
+										handleNumberOfBarBacksChange(parseInt(e.target.value, 10))
 									}
 								></Input>
 							</Col>
@@ -265,11 +270,14 @@ export default function CashTipCalculator() {
 									name="bartenderNumber"
 									type="tel"
 									inputMode="numeric"
-									pattern="[0-9]+(\.[0-9]{1,2})?"
-									step="0.01"
+									pattern="[1-9][0-9]*"
+									min="1"
+									step="1"
 									required
 									onChange={(e) =>
-										handleNumberOfBartendersChange(parseFloat(e.target.value))
+										handleNumberOfBartendersChange(
+											parseInt(e.target.value, 10)
+										)
 									}
 								></Input>
 							</Col>

@@ -92,7 +92,7 @@ Check the box when done. Commit after each phase.
 
 ## Phase 3: UI bugs (medium)
 
-- [ ] **3.1 Band fetch failure crashes page**
+- [x] **3.1 Band fetch failure crashes page**
   - File: `components/CurrentShift.js:323-338`
   - Fix: `setBandPerformingToday(data.bandPerformingToday || [])`, and `setIsLoading(false)` in both `.catch` and `.finally`. Show the "Enter an event" input whenever the list is empty, regardless of session.
 
@@ -100,33 +100,33 @@ Check the box when done. Commit after each phase.
   - File: `components/CCTipsInput.js:22, 31, 57`
   - Fix: `setInputValue(String(roundedResult))`. Depends on 1.6.
 
-- [ ] **3.3 Cash edit modal shows stale values**
+- [x] **3.3 Cash edit modal shows stale values**
   - File: `components/UpdateCashTipBreakDownModal.js:45-66`
   - Problem: state seeded from first-render props. On refresh `router.query` is empty on first render.
   - Fix: in `toggle()`, when opening, reset all `new*` state from current props. In `pages/CashTipBreakDownPage.js`, render nothing until `router.isReady`.
 
-- [ ] **3.4 Delete confirmation closes the whole edit modal**
+- [x] **3.4 Delete confirmation closes the whole edit modal**
   - File: `components/UpdateTipBreakDownModal.js:905-910`
   - Fix: pass `toggle={toggleConfirmation}` to `DeleteDialog`. In `handleDelete`, set `showConfirmation` false before closing.
 
-- [ ] **3.5 Edit modal ignores cooks-absent case**
+- [x] **3.5 Edit modal ignores cooks-absent case**
   - File: `components/UpdateTipBreakDownModal.js:140`
   - Fix: `const cooksTips = cookTipsData.length === 0 ? 0 : foodSales * 0.15;`
 
-- [ ] **3.6 Edit modal shows stale data after update**
+- [x] **3.6 Edit modal shows stale data after update**
   - File: `components/UpdateTipBreakDownModal.js:25-46`
   - Problem: `useState(breakDown.x)` never re-syncs after `router.push` refetches.
   - Fix: add a `useEffect` on `breakDown._id`/`breakDown.updatedat` that resets state, or key the modal by `breakDown.updatedat` in the parent.
 
-- [ ] **3.7 Session warning timer leak**
+- [x] **3.7 Session warning timer leak**
   - File: `components/SessionExpirationWarning.js:6, 22, 88-107, 431`
   - Fix: delete the render-body `setInterval` (lines 102-107). Remove the nonexistent `refreshSession` import and `expires` destructure. Make the modal `isOpen={showWarning}` and have both buttons set it false. `handleStaySignedIn` should call `useSession().update()` (next-auth v4.22+) to extend the JWT.
 
-- [ ] **3.8 Validate staff counts in cash calculator**
+- [x] **3.8 Validate staff counts in cash calculator**
   - Files: `pages/CashTipCalculator.js:247, 268`, `components/UpdateCashTipBreakDownModal.js:355, 380`
   - Fix: `pattern="[1-9][0-9]*"`, `min="1"`, `parseInt`. Reject 0 with a message.
 
-- [ ] **3.9 Edge cases in date handling**
+- [x] **3.9 Edge cases in date handling**
   - Files: `pages/CCTipsTotals.js:33-39`, `components/DateRange.js:9`
   - Fix: ignore `onChange` when `e.target.value` is empty. Use `DateTime.now().setZone("America/Los_Angeles")` in `getPayrollDates`. Make the two date inputs controlled so the Prev/Next buttons update them.
 
@@ -215,3 +215,15 @@ Check the box when done. Commit after each phase.
   - `getServerSideProps` catch blocks in `Dashboard.js`, `employees.js`, `getAllTipBreakDowns.js`, `TipBreakDownPage.js` now return `{ props: { ...: [] } }` instead of `undefined`.
   - New `scripts/migrate-tipout-numbers.js` (dry-run by default, `--apply` to write) converts string `tipOut`/`amount` values to numbers. Ran it against production: **448 tipBreakdown docs / 1396 values** and **17 employee docs / 1361 values** were converted; a follow-up dry run confirmed 0 remaining string values.
   - Minor cleanup while in these files: removed the unused `GetAllTipBreakdowns` import/log from `TipBreakDown.js`, the dead `data` object in `CreditTipCalculation.js`'s form handler, and now-unused `useEffect` imports in both.
+
+- Phase 3 done.
+  - `CurrentShift.js`: a failed or malformed `/api/FindBandPerformingToday` response now falls back to `[]` and always clears the loading spinner via `.finally()`, instead of leaving the page stuck loading forever.
+  - `CashTipBreakDownPage.js` renders `null` until `router.isReady`, so the cash breakdown view (and the edit modal it seeds) never mounts with a one-frame `NaN`/empty snapshot of the query string on a hard refresh.
+  - `UpdateCashTipBreakDownModal.js`'s `toggle()` now resyncs every field (counts, staff arrays, percentage, hours-toggle switches) from current props on open, not just tips collected, so reopening the modal never shows a previous edit's leftovers.
+  - `UpdateTipBreakDownModal.js`: the delete confirmation dialog's Cancel button now closes only the confirmation (`toggleConfirmation`) instead of the whole edit modal (`toggle`), which used to leave `showConfirmation` stuck `true` for next time.
+  - `getSelectedTipBreakDown/[id].js` now keys `UpdateTipBreakDownModal` on `breakDown.updatedat` (falling back to `_id`), forcing it to remount with fresh state after a save, instead of keeping stale `useState` values from before the update.
+  - `SessionExpirationWarning.js` rewritten: removed the render-body `setInterval` that leaked a new timer on every render, the nonexistent `refreshSession` import and `expires` destructure, and the dead `modal`/`swr` plumbing. One effect now polls every 30s, shows the warning inside 5 minutes of expiry, and signs out immediately once actually expired. "Stay Signed In" calls `useSession().update()` to refresh the session instead of a no-op bare `mutate()` from `swr`.
+  - Staff-count inputs (`CashTipCalculator.js`, `UpdateCashTipBreakDownModal.js`) now require a whole number of at least 1 (`pattern="[1-9][0-9]*"`, `min="1"`, `parseInt`), and the change handlers no longer regenerate the staff array for 0 or invalid input, so a 0-count no longer sets up a later divide-by-zero.
+  - `CCTipsTotals.js` date pickers are now controlled (`value={startDate.toISODate()}`), so Previous/Next Pay Period visibly updates them, and clearing a date input no longer sets state to an invalid Luxon `DateTime` that silently broke every downstream comparison.
+  - `DateRange.js`'s `getPayrollDates()` now anchors "today" to `America/Los_Angeles` instead of the server/browser's local zone, so the pay-period boundary is the same whether it runs server-side (UTC) or client-side. Removed a module-level `getPayrollDates()` call and two `console.log`s that ran as a side effect of importing the file.
+  - Note: item 3.5 (cooks-absent guard in the edit modal) was already fixed as part of the Phase 2 patch.

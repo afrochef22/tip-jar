@@ -34,7 +34,13 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
 			{session || shiftMatch ? (
-				<UpdateTipBreakDownModal breakDown={breakDown} />
+				// Keying on the data that changes after a save forces the modal
+				// to remount (and re-run its useState initializers) instead of
+				// keeping stale local state from a previous edit.
+				<UpdateTipBreakDownModal
+					key={breakDown.updatedat || breakDown._id}
+					breakDown={breakDown}
+				/>
 			) : (
 				<></>
 			)}
