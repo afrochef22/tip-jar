@@ -153,7 +153,7 @@ Check the box when done. Commit after each phase.
   - `components/SelectBartender.js:5-6` `on` from events, `e` from cors
   - `getStartDate`, `getEndDate` in `TipsTotalsSpreadSheet.js` and `CCTipsTotals.js` (do not exist)
 
-- [ ] **4.3 Remove unused dependencies**
+- [x] **4.3 Remove unused dependencies**
   - `react-router-dom`, `passport`, `passport-local`, `cors`, `tailwindcss`, `node-fetch` (Node 18+ has global fetch)
   - Pin `next` to an exact major instead of `latest`.
 
@@ -236,6 +236,14 @@ Check the box when done. Commit after each phase.
   - Small fixes: `type="textrea"` → `"textarea"`; moved a `key` prop from a nested `Card` onto the actual `.map()`-returned `Col` in `getAllTipBreakDowns.js`; `crossOrigin="true"` → `"anonymous"` in `_document.js`; added the same `Number(x) || 0` display guards to `AllTipBreakDowns.js` that `getAllTipBreakDowns.js` already had; guarded `employee.position` with `|| []` in `getEmployee/[id].js` and `EmployeeList.js` for records that predate that field.
   - `MongoDBAdapter` now passes `{ databaseName: "TeragramBallroom" }` so NextAuth's own `users`/`accounts`/`verification_tokens` collections land in the app's database instead of the connection string's default (`test`). Google users get re-created there on next sign-in; employee linking is unaffected since it keys on the employee's `email`, not the adapter's `users` collection.
   - Noticed but not touched: `next build` now warns that the `middleware.js` convention is deprecated in favor of `proxy.js`. Left as-is since it still works and is auth-critical; worth a deliberate follow-up rather than folding into this cleanup pass.
+
+- Phase 4b done (4.3 — unused dependencies).
+  - `pages/api/FindBandPerformingToday.js` now uses the global `fetch` (Node 18+) instead of a dynamic `import("node-fetch")`. Verified live against the real venue site through the running dev server.
+  - Removed from `package.json`: `react-router-dom`, `passport`, `passport-local`, `cors`, `tailwindcss`, `node-fetch` (all confirmed zero usages after Phase 4a). Also removed `swr` and `react-select`, which turned out to be fully unused too — `swr` only because the Phase 3 `SessionExpirationWarning` rewrite removed its one call site; `react-select` was never used anywhere. Pinned `next` to `^16.1.1` instead of `latest`.
+  - Ran `npm install` (122 packages removed) and a safe `npm audit fix` (no `--force`), which took vulnerabilities from 26 down to 9. The remaining 9 all need a major-version bump (`bcrypt` 5→6, `uuid` 9→14) or have no fix at all (`@auth/core`, `cookie`) — left alone since `bcrypt` is on the password-hashing path and `uuid` generates registration tokens, both worth a deliberate, tested upgrade rather than a silent one in a cleanup pass.
+  - Found and removed 3 dead `@tailwind base/components/utilities;` lines at the top of `styles/globals.css`: there's no `tailwind.config.js` or `postcss.config.js` anywhere in the repo, so these never did anything even before `tailwindcss` was removed from `package.json` — Turbopack just started warning about the unknown at-rule where the previous bundler had silently ignored it.
+  - `npm install` also let Next.js auto-migrate `tsconfig.json`'s `moduleResolution` from `node` to `bundler` (its own recommended setting for the resolved Next 16.3.5); left as applied.
+  - `npm install` briefly took down the dev server that was running throughout this session (it depended on packages that had just been removed from `node_modules`); restarted it and confirmed it comes back up clean on port 3000.
 
 ## Follow-up requests (outside the numbered plan)
 

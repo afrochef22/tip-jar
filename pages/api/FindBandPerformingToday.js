@@ -6,8 +6,8 @@ const websiteUrl = "https://teragramballroom.com/";
 
 // Function to fetch the HTML content of the website
 async function fetchWebsiteData(url) {
-	const fetch = await import("node-fetch");
-	const response = await fetch.default(url);
+	// Node 18+ has fetch built in, so no need for the node-fetch package.
+	const response = await fetch(url);
 	return await response.text();
 }
 
