@@ -10,13 +10,14 @@ Ordered roughly by how much it matters. Check items off as they're done.
 
 ---
 
-## 1. Deleting an employee orphans their tip history (real bug)
+## 1. Deleting an employee with real history erases them from past payroll totals (real bug)
 
-- [ ] **Fix `removeEmployee` to clean up references, the same way the employee-merge script does**
+- [ ] **Make `removeEmployee` refuse to hard-delete anyone with tip history; steer to deactivating instead**
   - File: `pages/api/removeEmployee/[id].js`
-  - Problem: deleting an employee just does `deleteOne` on the `employees` collection. Every `tipBreakdown` document where that employee appears in `cookTips`/`barBackTips`/`BartenderTips` still has their old `id`, now pointing at nobody. This is the same shape of problem that created the Adrian Sandoval/Will Munroe/Schuyler Grimsman duplicates, just from the delete side instead of the create side.
-  - Fix: before deleting, either (a) refuse to delete an employee who has any `tipBreakdown` references or non-empty `tipsCollected`, and require deactivating instead of deleting, or (b) allow it but strip/flag the dangling `id` in those historical records so it's clear the person is gone rather than silently broken. (a) is safer for a tool tracking real pay history — recommend that as the default, with a manager override if they really mean to delete someone who was only ever a one-off mistake (e.g., a fill-in typo with zero paid shifts).
-  - Verify: try to delete an employee with tip history, confirm it's refused with a clear message; delete one with none, confirm it still works.
+  - Corrected understanding (the first draft of this item had the mechanism wrong): each shift's breakdown record (`tipBreakdown`) already stores the employee's name, position, and tip amount directly, so it stays fully accurate forever no matter what happens to the employee document later — that part was never broken.
+  - The real problem is the payroll spreadsheet (`CCTipsTotals`, and the Dashboard's pay-period view). It builds its totals by reading `tipsCollected` off every employee's own document (`employees.find({})` with no filter on `active`). A *deactivated* employee still shows up correctly in past pay periods, exactly as it should. But if the employee document is *deleted* outright, their entire tip history vanishes from that spreadsheet along with it — so someone who quit and had their record deleted would silently disappear from last month's payroll totals, even though the shift-by-shift detail pages still show their name.
+  - Fix: in `removeEmployee`, check the employee's `tipsCollected` before deleting. If it's non-empty, reject the delete (409) with a message telling the manager to deactivate instead (`active: false`) — which the app already fully supports and which keeps the person correctly in all historical views. Only allow a hard delete when `tipsCollected` is empty (a genuine mistake, like a fill-in typo that was never actually paid out).
+  - Verify: try to delete an employee with tip history, confirm it's refused and told to deactivate instead; deactivate them and confirm they still appear correctly in a past pay period's spreadsheet total; delete an employee with zero tip history and confirm that still works.
 
 ---
 
