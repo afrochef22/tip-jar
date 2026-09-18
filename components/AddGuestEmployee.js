@@ -17,7 +17,6 @@ import {
 import style from "./addEmployee.module.css";
 import style2 from "./SelectEmployee.module.css";
 
-import { v4 as uuidv4 } from "uuid";
 import SelectNonActiveEmployee from "./SelectNonActiveEmployee";
 
 export default function AddGuestEmployee({
@@ -47,6 +46,7 @@ export default function AddGuestEmployee({
 	const toggleNested = () => {
 		setNestedModal(!nestedModal);
 		setCloseAll(false);
+		setAlertMessage("");
 	};
 	const toggleAll = () => {
 		setNestedModal(!nestedModal);
@@ -62,32 +62,11 @@ export default function AddGuestEmployee({
 		});
 	};
 
-	function generateRandomId() {
-		return uuidv4();
-	}
-
 	const handleAddEmployee = async (e) => {
 		e.preventDefault();
-		// Generate a random ID
-		const id = generateRandomId();
 		// Combine first name and last name to form the label
 		const label = `${newEmployee.firstName} ${newEmployee.lastName}`;
-		// Create the new employee object
 
-		// Close the modal
-		toggleNested();
-		// Reset the form fields
-		setNewEmployee({
-			firstName: "",
-			lastName: "",
-			position: [""],
-			checked: true,
-			active: false,
-			workingPosition: position,
-			tipsBroughtIn: 0,
-			tippedHours: 0,
-			tipOut: 0,
-		});
 		try {
 			const response = await fetch("/api/addEmployee", {
 				method: "POST",
@@ -113,7 +92,7 @@ export default function AddGuestEmployee({
 
 				// Pass the new employee data to the parent component
 				addNewEmployee(newEmployeeData);
-				// Close the modal
+				// Reset the form and close the modal
 				setNewEmployee({
 					firstName: "",
 					lastName: "",
@@ -127,11 +106,16 @@ export default function AddGuestEmployee({
 					],
 				});
 				setAlertMessage(""); // Clear the alert message
+				toggleNested();
 			} else {
+				const body = await response.json().catch(() => ({}));
+				setAlertMessage(
+					body.message || "Could not add employee. Please try again."
+				);
 			}
 		} catch (error) {
-		} finally {
-			toggleNested();
+			console.error(error);
+			setAlertMessage("Could not reach the server. Please try again.");
 		}
 	};
 
@@ -213,6 +197,9 @@ export default function AddGuestEmployee({
 								required={true}
 							/>
 						</FormGroup>
+						{alertMessage && (
+							<div className={style.alertMessage}>{alertMessage}</div>
+						)}
 
 						<ModalFooter>
 							<Button type="submit" color="primary">

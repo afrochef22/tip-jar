@@ -3,6 +3,10 @@ import { getApiSession } from "../../lib/auth";
 
 const POSITIONS = ["Bartender", "Bar Back", "Cook", "No Position"];
 
+// Escapes a string for safe use inside a RegExp, so a name containing
+// characters like "." or "+" is matched literally.
+const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 export default async (req, res) => {
 	if (req.method !== "POST") {
 		return res.status(405).json({ message: "Method not allowed" });
@@ -32,13 +36,31 @@ export default async (req, res) => {
 		return res.status(401).json({ message: "Sign in required" });
 	}
 
+	const trimmedFirstName = firstName.trim();
+	const trimmedLastName = lastName.trim();
+
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
+		const employees = db.collection("employees");
 
-		const result = await db.collection("employees").insertOne({
-			firstName: firstName.trim(),
-			lastName: lastName.trim(),
+		// Same person, different capitalization/spacing should still count
+		// as a duplicate (this is how "Adrian Sandoval" ended up as two
+		// separate records for the same real employee).
+		const existing = await employees.findOne({
+			firstName: { $regex: `^${escapeRegExp(trimmedFirstName)}$`, $options: "i" },
+			lastName: { $regex: `^${escapeRegExp(trimmedLastName)}$`, $options: "i" },
+		});
+		if (existing) {
+			return res.status(409).json({
+				message: `${trimmedFirstName} ${trimmedLastName} is already in the system.`,
+				existingEmployeeId: existing._id,
+			});
+		}
+
+		const result = await employees.insertOne({
+			firstName: trimmedFirstName,
+			lastName: trimmedLastName,
 			position,
 			active: Boolean(active),
 			tipsCollected: [],

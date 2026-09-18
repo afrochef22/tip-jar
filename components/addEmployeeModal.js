@@ -87,11 +87,14 @@ export function AddEmployeeModal({ position, args }) {
 					],
 				});
 				setAlertMessage(""); // Clear the alert message
+				toggle();
 			} else {
+				const body = await response.json().catch(() => ({}));
+				setAlertMessage(body.message || "Could not add employee. Please try again.");
 			}
 		} catch (error) {
-		} finally {
-			toggle();
+			console.error(error);
+			setAlertMessage("Could not reach the server. Please try again.");
 		}
 	};
 
