@@ -169,7 +169,7 @@ Check the box when done. Commit after each phase.
   - `components/AllTipBreakDowns.js:132, 156` add the same `Number(x) || 0` guards already added to `getAllTipBreakDowns.js`
   - `pages/getEmployee/[id].js:121`, `components/EmployeeList.js:9, 15` guard `employee.position || []`
 
-- [ ] **4.6 Deduplicate spreadsheet**
+- [x] **4.6 Deduplicate spreadsheet**
   - `components/TipsTotalsSpreadSheet.js` and `pages/CCTipsTotals.js` are ~340-line copies. Make `CCTipsTotals` render `TipsTotalsSpreadSheet` with a `showDateInputs` prop.
 
 - [x] **4.7 NextAuth adapter writes to the wrong database**
@@ -250,6 +250,13 @@ Check the box when done. Commit after each phase.
   - Caught and fixed one real mistake from that manual pass: removing a comment sandwiched between two statements in `pages/api/UpdateTipBreakDown/[id].js` ate the wrong newline and merged `updatedTipAmount = Number(barBack.tipOut);` and the following line onto one physical line (still valid JS, caught by reviewing the diff rather than the build, since it doesn't need a newline between statements).
   - Normalized a handful of resulting double-blank-lines back to single blank lines in the 5 files where a removed `console.log` had blank lines on both sides.
   - Verified with `git diff`: every changed file is purely subtractive (0 insertions across all 27 touched files) aside from the merged-line fix, and a search confirmed no removed line contains anything other than blank lines or parts of a `console.log(...)` call.
+
+- Phase 4d done (4.6 — deduplicate the spreadsheet).
+  - `components/TipsTotalsSpreadSheet.js` and `pages/CCTipsTotals.js` were ~330-line near-copies (same date-range state, same filtering/sorting/total-calculation logic, byte-identical `thead`/`tbody`/`tfoot`), differing only in the header above the table: the Dashboard carousel version has no manual date pickers and a "Scroll Up" button; the standalone page has Start/End date inputs and no scroll button.
+  - Merged into one `TipsTotalsSpreadSheet` component taking a `variant` prop (`"dashboard"` default, or `"page"`). All state, date math, and the table are written once; each variant's distinct header is kept as its own explicit JSX block copied verbatim from the original, rather than trying to force both into one parametrized structure that could shift layout.
+  - `pages/CCTipsTotals.js` is now an 11-line wrapper: fetch the data, render `<TipsTotalsSpreadSheet variant="page" .../>`. `pages/Dashboard.js` needed no change since the default variant matches what it already rendered.
+  - Verified by diffing the extracted `className`/text strings from both original files against the merged file: every literal string from both originals is still present, and nothing was added or altered — only net line reduction (net -312 lines) from removing the duplication. Also confirmed live against the running dev server that `/CCTipsTotals` shows its own title and date pickers and none of the Dashboard-only elements.
+  - Also dropped `FormGroup`, `Table`, `useRouter`, and a `TipBreakDown` import that neither original file actually used.
 
 ## Follow-up requests (outside the numbered plan)
 
