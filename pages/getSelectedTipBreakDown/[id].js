@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "../../components/TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import UpdateTipBreakDownModal from "../../components/UpdateTipBreakDownModal";
 import { useSession } from "next-auth/react";
 import { ShiftDate } from "../../components/CurrentShift";
@@ -127,14 +128,14 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 												<></>
 											) : (
 												<Col>
-													<FontAwesomeIcon icon="fa-clock" />{" "}
+													<FontAwesomeIcon icon={faClock} />{" "}
 													<p>{cook.tippedHours} hrs</p>
 												</Col>
 											)}
 											<Col>
-												<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+												<FontAwesomeIcon icon={faSackDollar} />{" "}
 												<p className="highlight-color">
-													${cook.tipOut.toFixed(2)}
+													${(Number(cook.tipOut) || 0).toFixed(2)}
 												</p>
 											</Col>
 										</Row>
@@ -182,14 +183,14 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 												<></>
 											) : (
 												<Col>
-													<FontAwesomeIcon icon="fa-clock" />{" "}
+													<FontAwesomeIcon icon={faClock} />{" "}
 													<p>{barBack.tippedHours} hrs</p>
 												</Col>
 											)}
 											<Col>
-												<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+												<FontAwesomeIcon icon={faSackDollar} />{" "}
 												<p className="highlight-color">
-													${barBack.tipOut.toFixed(2)}
+													${(Number(barBack.tipOut) || 0).toFixed(2)}
 												</p>
 											</Col>
 										</Row>
@@ -243,13 +244,15 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 											<></>
 										) : (
 											<Col>
-												<FontAwesomeIcon icon="fa-clock" />{" "}
+												<FontAwesomeIcon icon={faClock} />{" "}
 												<p>{bartender.tippedHours} hrs</p>
 											</Col>
 										)}
 										<Col>
-											<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
-											<p className="highlight-color">${bartender.tipOut}</p>
+											<FontAwesomeIcon icon={faSackDollar} />{" "}
+											<p className="highlight-color">
+											${(Number(bartender.tipOut) || 0).toFixed(2)}
+										</p>
 										</Col>
 									</Row>
 								</Container>

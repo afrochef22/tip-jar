@@ -15,6 +15,7 @@ import {
 	Row,
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { DeleteDialog } from "./ConformationDialog";
 import style from "./TipBreakDown.module.css";
@@ -731,7 +732,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														<></>
 													) : (
 														<Col>
-															<FontAwesomeIcon icon="fa-clock" />{" "}
+															<FontAwesomeIcon icon={faClock} />{" "}
 															<NumericFormat
 																id="cookHours"
 																name="cookHours"
@@ -748,7 +749,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														</Col>
 													)}
 													<Col>
-														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+														<FontAwesomeIcon icon={faSackDollar} />{" "}
 														<p className="highlight-color">
 															${cook.tipOut.toFixed(2)}
 														</p>
@@ -798,7 +799,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														<></>
 													) : (
 														<Col>
-															<FontAwesomeIcon icon="fa-clock" />{" "}
+															<FontAwesomeIcon icon={faClock} />{" "}
 															<NumericFormat
 																id="barBackHours"
 																name="barBackHours"
@@ -815,7 +816,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														</Col>
 													)}
 													<Col>
-														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+														<FontAwesomeIcon icon={faSackDollar} />{" "}
 														<p className="highlight-color">
 															${barBack.tipOut.toFixed(2)}
 														</p>
@@ -864,7 +865,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 													<></>
 												) : (
 													<Col>
-														<FontAwesomeIcon icon="fa-clock" />{" "}
+														<FontAwesomeIcon icon={faClock} />{" "}
 														<NumericFormat
 															id="bartenderHours"
 															name="bartenderHours"
@@ -882,7 +883,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 													</Col>
 												)}
 												<Col>
-													<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+													<FontAwesomeIcon icon={faSackDollar} />{" "}
 													<p className="highlight-color">${bartender.tipOut}</p>
 												</Col>
 											</Row>

@@ -15,11 +15,8 @@ import {
 } from "reactstrap";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
 import { faCalculator } from "@fortawesome/free-solid-svg-icons";
 import SessionExpirationWarning from "./SessionExpirationWarning";
-
-library.add(faCalculator);
 
 const Header = ({ user }) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -79,10 +76,10 @@ const Header = ({ user }) => {
 			) : (
 				<>
 					<Link className="navbar-link" href="/SelectWorkingEmployee">
-						Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
+						Credit <FontAwesomeIcon icon={faCalculator} />
 					</Link>
 					<Link className="navbar-link" href="/CashTipCalculator">
-						Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
+						Cash <FontAwesomeIcon icon={faCalculator} />
 					</Link>
 				</>
 			)}
@@ -100,10 +97,10 @@ const Header = ({ user }) => {
 											className="navbar-link "
 											href="/SelectWorkingEmployee"
 										>
-											Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
+											Credit <FontAwesomeIcon icon={faCalculator} />
 										</Link>
 										<Link className="navbar-link" href="/CashTipCalculator">
-											Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
+											Cash <FontAwesomeIcon icon={faCalculator} />
 										</Link>
 										<Link className="navbar-link" href="/employees">
 											Employees{" "}
@@ -155,10 +152,10 @@ const Header = ({ user }) => {
 					{session ? (
 						<>
 							<Link className="navbar-link" href="/SelectWorkingEmployee">
-								Credit <FontAwesomeIcon icon={["fas", "calculator"]} />
+								Credit <FontAwesomeIcon icon={faCalculator} />
 							</Link>
 							<Link className="navbar-link" href="/CashTipCalculator">
-								Cash <FontAwesomeIcon icon={["fas", "calculator"]} />
+								Cash <FontAwesomeIcon icon={faCalculator} />
 							</Link>
 							<Link className="navbar-link" href="/employees">
 								Employees{" "}

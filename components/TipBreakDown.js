@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "./TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faClock,
+	faSackDollar,
+	faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import { CurrentShift, ShiftDate } from "./CurrentShift";
 import { useRouter } from "next/router";
 import GetAllTipBreakdowns from "./GetAllTipBreakdowns";
@@ -449,12 +454,12 @@ export default function TipBreakDown({
 												<></>
 											) : (
 												<Col>
-													<FontAwesomeIcon icon="fa-clock" />{" "}
+													<FontAwesomeIcon icon={faClock} />{" "}
 													<p>{cook.tippedHours} hrs</p>
 												</Col>
 											)}
 											<Col>
-												<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+												<FontAwesomeIcon icon={faSackDollar} />{" "}
 												<p className="highlight-color">
 													${cook.tipOut.toFixed(2)}
 												</p>
@@ -504,12 +509,12 @@ export default function TipBreakDown({
 												<></>
 											) : (
 												<Col>
-													<FontAwesomeIcon icon="fa-clock" />{" "}
+													<FontAwesomeIcon icon={faClock} />{" "}
 													<p>{barBack.tippedHours} hrs</p>
 												</Col>
 											)}
 											<Col>
-												<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+												<FontAwesomeIcon icon={faSackDollar} />{" "}
 												<p className="highlight-color">
 													${barBack.tipOut.toFixed(2)}
 												</p>
@@ -558,12 +563,12 @@ export default function TipBreakDown({
 											<></>
 										) : (
 											<Col>
-												<FontAwesomeIcon icon="fa-clock" />{" "}
+												<FontAwesomeIcon icon={faClock} />{" "}
 												<p>{bartender.tippedHours} hrs</p>
 											</Col>
 										)}
 										<Col>
-											<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />{" "}
+											<FontAwesomeIcon icon={faSackDollar} />{" "}
 											<p className="highlight-color">${bartender.tipOut}</p>
 										</Col>
 									</Row>
@@ -596,7 +601,7 @@ export default function TipBreakDown({
 							>
 								{submitting ? (
 									<>
-										<FontAwesomeIcon icon="spinner" spin /> Submitting...
+										<FontAwesomeIcon icon={faSpinner} spin /> Submitting...
 									</>
 								) : (
 									"Submit"

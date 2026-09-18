@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "./TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import UpdateCashTipBreakDownModal from "./UpdateCashTipBreakDownModal";
 
 export default function CashTipBreakDown({
@@ -237,7 +238,7 @@ export default function CashTipBreakDown({
 												<Row>
 													<Col className=" mt-2"> {barBack.name}</Col>
 													<Col className=" mt-2">
-														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
+														<FontAwesomeIcon icon={faSackDollar} />
 														<p className="highlight-color">${barBack.tipOut}</p>
 													</Col>
 												</Row>
@@ -245,11 +246,11 @@ export default function CashTipBreakDown({
 												<Row>
 													<Col className=" mt-2"> {barBack.name}</Col>
 													<Col className=" mt-2">
-														<FontAwesomeIcon icon="fa-clock" />{" "}
+														<FontAwesomeIcon icon={faClock} />{" "}
 														<p>{barBack.hours} hrs</p>
 													</Col>
 													<Col className=" mb-4 mt-2">
-														<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
+														<FontAwesomeIcon icon={faSackDollar} />
 														<p className="highlight-color">${barBack.tipOut}</p>
 													</Col>
 												</Row>
@@ -283,7 +284,7 @@ export default function CashTipBreakDown({
 												<Col className=" mt-2"> {bartender.name}</Col>
 
 												<Col className=" mt-2">
-													<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
+													<FontAwesomeIcon icon={faSackDollar} />
 													<p className="highlight-color">${bartender.tipOut}</p>
 												</Col>
 											</Row>
@@ -291,11 +292,11 @@ export default function CashTipBreakDown({
 											<Row>
 												<Col className=" mt-2"> {bartender.name}</Col>
 												<Col className=" mt-2">
-													<FontAwesomeIcon icon="fa-clock" />{" "}
+													<FontAwesomeIcon icon={faClock} />{" "}
 													<p>{bartender.hours} hrs</p>
 												</Col>
 												<Col className="mb-2 mt-2">
-													<FontAwesomeIcon icon="fa-solid fa-sack-dollar" />
+													<FontAwesomeIcon icon={faSackDollar} />
 													<p className="highlight-color">${bartender.tipOut}</p>
 												</Col>
 											</Row>
