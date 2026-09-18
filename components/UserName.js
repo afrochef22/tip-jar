@@ -1,10 +1,11 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-const Employees = () => {
+const Employees = (enabled) => {
 	const [employees, setEmployees] = useState([]);
 
 	useEffect(() => {
+		if (!enabled) return;
 		const fetchEmployees = async () => {
 			try {
 				const response = await fetch("/api/getEmployees");
@@ -19,7 +20,7 @@ const Employees = () => {
 		};
 
 		fetchEmployees();
-	}, []);
+	}, [enabled]);
 
 	return employees;
 };
@@ -27,7 +28,7 @@ const Employees = () => {
 const UserName = () => {
 	const { data: session } = useSession();
 	const [userName, setUserName] = useState("");
-	const employees = Employees();
+	const employees = Employees(Boolean(session));
 
 	useEffect(() => {
 		const fetchUserData = async () => {

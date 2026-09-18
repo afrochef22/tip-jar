@@ -33,7 +33,7 @@ export default function getEmployee({ employee }) {
 	const formattedFirstSignInDate = firstSignInDate.toLocaleDateString();
 
 	const isRegistrationLink = () => {
-		if (employee.token && employee.firstSignInDate) {
+		if (employee.firstSignInDate) {
 			return <p>Registered on {formattedFirstSignInDate}</p>;
 		}
 		if (employee.token) {

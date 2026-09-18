@@ -19,6 +19,12 @@ export default function RegisterPage({ employee }) {
 
 export async function getServerSideProps(data) {
 	const id = data.query.id;
+	const token = data.query.token;
+	const expired = { redirect: { destination: "/TokenExpired", permanent: false } };
+
+	if (!ObjectId.isValid(id) || typeof token !== "string" || !token) {
+		return expired;
+	}
 
 	try {
 		const client = await clientPromise;
@@ -29,14 +35,22 @@ export async function getServerSideProps(data) {
 		});
 
 		if (!employee) {
-			// Return a 404 status for not found
-			return {
-				notFound: true,
-			};
+			return { notFound: true };
 		}
 
+		const expiresAt = employee.tokenExpiration
+			? new Date(employee.tokenExpiration)
+			: null;
+		const tokenValid =
+			employee.token === token && expiresAt && expiresAt > new Date();
+		if (!tokenValid) {
+			return expired;
+		}
+
+		// Never ship the password hash to the browser.
+		const { password, ...safeEmployee } = employee;
 		return {
-			props: { employee: JSON.parse(JSON.stringify(employee)) },
+			props: { employee: JSON.parse(JSON.stringify(safeEmployee)) },
 		};
 	} catch (error) {
 		console.error("Error fetching data:", error);

@@ -1,5 +1,5 @@
 import { load } from "cheerio";
-import { ShowDateComparer } from "../../components/CurrentShift";
+import { ShowDateComparer } from "../../lib/shiftDate";
 // URL of the website with the list of bands and dates
 const websiteUrl = "https://teragramballroom.com/";
 // const websiteUrl = "https://themoroccan.com/";

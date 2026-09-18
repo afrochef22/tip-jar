@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 export const Register = ({ employee }) => {
-	console.log(employee);
 	const router = useRouter();
 	const token = router.query.token;
 	const { data: session } = useSession();
@@ -12,33 +11,25 @@ export const Register = ({ employee }) => {
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [error, setError] = useState("");
+
+	// The server already validated the token before rendering this page.
+	// A signed-in session whose email matches this employee means the link
+	// was consumed by a Google sign-in, so move on.
+	const sessionEmail = session?.user?.email?.toLowerCase() ?? null;
+	const linkEmail = employee.email?.toLowerCase() ?? null;
+	const signedInAsSomeoneElse = Boolean(sessionEmail && sessionEmail !== linkEmail);
 
 	useEffect(() => {
-		// Check if token is expired
-		const now = new Date();
-		const expirationTime = new Date(employee.tokenExpiration);
-		if (session) {
+		if (sessionEmail && sessionEmail === linkEmail) {
 			router.push("/Dashboard");
 		}
-		if (now > expirationTime) {
-			// Token expired, redirect user or display error
-			router.push("/TokenExpired");
-		}
-		if (token !== employee.token) {
-			router.push("/TokenExpired");
-		}
-	}, [session]);
+	}, [sessionEmail, linkEmail, router]);
 
 	// Function to handle form submission
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// You can handle form submission logic here, such as sending data to your backend
-		console.log("Form submitted:", { username, email, password });
-		// Clear form fields after submission
-		setUsername("");
-		setEmail("");
-		setPassword("");
-		e.preventDefault();
+		setError("");
 
 		try {
 			const response = await fetch(`/api/updateEmployee/${employee._id}`, {
@@ -47,27 +38,26 @@ export const Register = ({ employee }) => {
 					"Content-Type": "application/json", // Specify the content type
 				},
 
-				body: JSON.stringify({
-					username,
-					email,
-					password,
-					firstSignInDate: new Date(),
-				}),
+				body: JSON.stringify({ token, username, email, password }),
 			});
 
 			if (response.ok) {
-				console.log("Employee updated successfully");
 				router.push("/");
+			} else if (response.status === 409) {
+				setError("That username is already taken. Please choose another.");
+			} else if (response.status === 401) {
+				router.push("/TokenExpired");
 			} else {
-				console.log("response not ok");
+				setError("Registration failed. Please try again.");
 			}
 		} catch (error) {
-			console.log(error);
+			console.error(error);
+			setError("Could not reach the server. Please try again.");
 		}
 	};
 
 	async function handleSignInWithGoogle() {
-		await signIn("google");
+		await signIn("google", { callbackUrl: "/Dashboard" });
 	}
 
 	return (
@@ -82,6 +72,28 @@ export const Register = ({ employee }) => {
 							</p>
 						</div>
 						<div className="card-body">
+							{signedInAsSomeoneElse && (
+								<div className="alert alert-warning">
+									You are signed in as <strong>{session.user.email}</strong>,
+									but this link was sent to{" "}
+									<strong>{employee.email || "a different address"}</strong>.
+									To use Google, sign out and pick that account. Otherwise set
+									a username and password below.
+									<div className="mt-2">
+										<button
+											type="button"
+											className="btn btn-outline-secondary btn-sm"
+											onClick={() => signOut({ redirect: false })}
+										>
+											Sign out
+										</button>
+									</div>
+								</div>
+							)}
+							<p className="small text-muted">
+								Signing in with Google works with the Google account for{" "}
+								<strong>{employee.email || "the email this link was sent to"}</strong>.
+							</p>
 							<button
 								className="btn btn-success  btn-block"
 								onClick={handleSignInWithGoogle}
@@ -89,6 +101,7 @@ export const Register = ({ employee }) => {
 								Sign in with Google
 							</button>
 							<p className="mt-2">Or with username and password</p>
+							{error && <p className="text-danger">{error}</p>}
 							<form onSubmit={handleSubmit}>
 								<div className="form-group">
 									<label htmlFor="username">Username</label>
@@ -129,7 +142,7 @@ export const Register = ({ employee }) => {
 										required
 									/>
 								</div>
-								<button type="submit " className="btn btn-primary btn-block">
+								<button type="submit" className="btn btn-primary btn-block">
 									Register
 								</button>
 							</form>

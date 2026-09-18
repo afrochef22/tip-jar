@@ -1,37 +1,56 @@
 import clientPromise from "../../lib/mongodb";
-// import cors from "cors";
+import { getApiSession } from "../../lib/auth";
 
-// const corsMiddleware = cors({ origin: true });
+const POSITIONS = ["Bartender", "Bar Back", "Cook", "No Position"];
 
 export default async (req, res) => {
-	// await corsMiddleware(req, res);
+	if (req.method !== "POST") {
+		return res.status(405).json({ message: "Method not allowed" });
+	}
 
-	if (req.method === "POST") {
-		try {
-			const { firstName, lastName, position, active } = req.body;
-			const client = await clientPromise;
-			const db = client.db("TeragramBallroom");
+	const { firstName, lastName, position, active } = req.body ?? {};
 
-			const result = await db.collection("employees").insertOne({
-				firstName,
-				lastName,
-				position: position,
-				active,
-				tipsCollected: [],
-				createdat: new Date(),
-			});
+	if (
+		typeof firstName !== "string" ||
+		typeof lastName !== "string" ||
+		!firstName.trim() ||
+		!lastName.trim()
+	) {
+		return res.status(400).json({ message: "First and last name are required" });
+	}
+	if (
+		!Array.isArray(position) ||
+		!position.every((p) => POSITIONS.includes(p))
+	) {
+		return res.status(400).json({ message: "Invalid position" });
+	}
 
-			const insertedEmployeeId = result.insertedId; // Get the _id of the inserted document
-			console.log("Inserted Employee Id:", insertedEmployeeId);
+	// Managers can create any employee. Logged-out staff may only register a
+	// fill-in for the current shift, which is always inactive.
+	const session = await getApiSession(req, res);
+	if (!session && active !== false) {
+		return res.status(401).json({ message: "Sign in required" });
+	}
 
-			res
-				.status(201)
-				.json({ message: "Employee added successfully", insertedEmployeeId });
-		} catch (error) {
-			console.error(error);
-			res.status(500).json({ message: "Internal server error" });
-		}
-	} else {
-		res.status(405).json({ message: "Method not allowed" });
+	try {
+		const client = await clientPromise;
+		const db = client.db("TeragramBallroom");
+
+		const result = await db.collection("employees").insertOne({
+			firstName: firstName.trim(),
+			lastName: lastName.trim(),
+			position,
+			active: Boolean(active),
+			tipsCollected: [],
+			createdat: new Date(),
+		});
+
+		res.status(201).json({
+			message: "Employee added successfully",
+			insertedEmployeeId: result.insertedId,
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Internal server error" });
 	}
 };

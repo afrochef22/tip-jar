@@ -19,16 +19,15 @@ export default function CCTipsInput({
 	const handleButtonClicked = (value, e) => {
 		e.preventDefault();
 
-		setInputValue(inputValue + value);
+		setInputValue(String(inputValue) + String(value));
 	};
-	console.log(inputValue);
 	const handleOpenPopup = (e) => {
 		e.preventDefault();
 		setIsPopupOpen(true);
 	};
 	const handleDeleteClicked = (e) => {
 		e.preventDefault();
-		setInputValue(inputValue.slice(0, -1));
+		setInputValue(String(inputValue).slice(0, -1));
 	};
 	const handleClrClicked = (e) => {
 		e.preventDefault();
@@ -37,38 +36,27 @@ export default function CCTipsInput({
 	const handleEqualsClicked = (e) => {
 		e.preventDefault();
 
-		try {
-			const result = eval(inputValue); // Evaluate the expression
+		// The input is only ever digits, "." and "+", so sum the terms directly.
+		const terms = String(inputValue)
+			.split("+")
+			.map((t) => t.trim())
+			.filter((t) => t !== "");
 
-			// Check if there are any numbers with more than two decimal places
-			const hasInvalidDecimal = inputValue.split("+").some((num) => {
-				const decimalPart = num.split(".")[1];
-				return decimalPart && decimalPart.length > 2;
-			});
+		if (terms.length === 0) return;
 
-			if (hasInvalidDecimal) {
-				// Alert the user that the input can only have two decimal places
-				setAlertMessage("Numbers can only have up to two decimal places.");
-				toggleModal(); // Open the modal to display the alert message
-				setSubmitting(false);
-				return;
-			}
-			const roundedResult = Math.round(result * 100) / 100; // Round to two decimal places
-			setInputValue(roundedResult);
-			const isValidInput = /^\d*\.?\d{0,2}$/.test(roundedResult);
-			console.log("Is valid input:", isValidInput);
-			if (isValidInput === false) {
-				console.log("modal should pop up");
-				setAlertMessage(
-					"Please enter a valid number for the tips. The number can't have more than 2 decimal places."
-				);
-				toggleModal(); // Open the modal to display the alert message
-				setSubmitting(false);
-				return;
-			}
-		} catch (error) {
-			setInputValue("Error"); // Display "Error" if there's an invalid expression
+		const invalid = terms.some((t) => t === "." || !/^\d*\.?\d{0,2}$/.test(t));
+		if (invalid) {
+			setAlertMessage("Numbers can only have up to two decimal places.");
+			toggleModal();
+			setSubmitting(false);
+			return;
 		}
+
+		const totalCents = terms.reduce(
+			(sum, t) => sum + Math.round(Number(t) * 100),
+			0
+		);
+		setInputValue((totalCents / 100).toFixed(2));
 	};
 
 	return (

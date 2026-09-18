@@ -1,19 +1,16 @@
-import BarBacks from "../../../components/BarBacks";
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getApiSession } from "../../../lib/auth";
+import { ShiftDate } from "../../../lib/shiftDate";
 
 export default async (req, res) => {
 	const id = req.query.id;
-	console.log(req.query);
-	const data = req.body; // Assuming data is sent in the request body
-	console.log("Bartender Tips", data.bartenderTips);
+	const data = req.body ?? {};
 	if (!ObjectId.isValid(id)) {
 		return res.status(400).json({ error: "Invalid Tip breakdown ID: ", id });
 	}
 
 	if (req.method === "PATCH") {
-		console.log("Received PATCH request with data:", data);
-
 		try {
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
@@ -22,6 +19,24 @@ export default async (req, res) => {
 
 			const objectId = new ObjectId(id);
 			const filter = { _id: objectId };
+
+			const existing = await tipBreakDownCollection.findOne(filter);
+			if (!existing) {
+				return res.status(404).json({ error: "Breakdown not found" });
+			}
+
+			// Managers can edit any breakdown. Logged-out staff may only edit the
+			// current shift, and may not move it to another date.
+			const session = await getApiSession(req, res);
+			if (!session) {
+				const today = ShiftDate();
+				const movingDate = data.date !== undefined && data.date !== today;
+				if (existing.date !== today || movingDate) {
+					return res
+						.status(401)
+						.json({ error: "Sign in required to edit a past shift" });
+				}
+			}
 
 			let updateDocument = {};
 			let setValues = {}; // Accumulate changes here

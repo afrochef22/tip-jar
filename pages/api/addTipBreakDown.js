@@ -1,119 +1,98 @@
 import clientPromise from "../../lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getApiSession } from "../../lib/auth";
+import { ShiftDate } from "../../lib/shiftDate";
+
+const toIdList = (list) => (Array.isArray(list) ? list : []);
 
 export default async (req, res) => {
-	if (req.method === "POST") {
-		try {
-			const {
-				show,
-				date,
-				totalTips,
-				foodSales,
-				barBackPercentage,
-				cookTips,
-				barBackTips,
-				BartenderTips,
-				tipsPerCook,
-				tipsPerBarBack,
-				tipsPerBartender,
-				totalBarSales,
-				shiftNotes,
-			} = req.body;
-			const client = await clientPromise;
-			const db = client.db("TeragramBallroom");
-			console.log(req.body);
+	if (req.method !== "POST") {
+		return res.status(405).json({ message: "Method not allowed" });
+	}
 
-			const tipBreakdownResult = await db.collection("tipBreakdown").insertOne({
-				show,
-				date,
-				totalTips,
-				foodSales,
-				barBackPercentage,
-				cookTips,
-				barBackTips,
-				BartenderTips,
-				tipsPerCook,
-				tipsPerBarBack,
-				tipsPerBartender,
-				totalBarSales,
-				shiftNotes,
+	const {
+		show,
+		date,
+		totalTips,
+		foodSales,
+		barBackPercentage,
+		cookTips,
+		barBackTips,
+		BartenderTips,
+		tipsPerCook,
+		tipsPerBarBack,
+		tipsPerBartender,
+		totalBarSales,
+		shiftNotes,
+	} = req.body ?? {};
 
-				createdat: new Date(),
-			});
+	if (typeof show !== "string" || !show.trim() || typeof date !== "string") {
+		return res.status(400).json({ message: "Show and date are required" });
+	}
 
-			const tipBreakdownId = tipBreakdownResult.insertedId;
+	// Managers can submit any date. Logged-out staff may only submit the
+	// current shift.
+	const session = await getApiSession(req, res);
+	if (!session && date !== ShiftDate()) {
+		return res
+			.status(401)
+			.json({ message: "Sign in required to submit a past shift" });
+	}
 
-			// Update employees' tip information
-			const updateEmployeeTip = async (employeeId, tipOut, workingPosition) => {
-				await db.collection("employees").updateOne(
-					{ _id: employeeId },
-					{
-						$addToSet: {
-							tipsCollected: {
-								date,
-								amount: tipOut,
-								workingPosition,
-								show,
-								tipBreakdownId: tipBreakdownId.toString(), // Convert ObjectId to string
-							},
+	const cooks = toIdList(cookTips);
+	const barBacks = toIdList(barBackTips);
+	const bartenders = toIdList(BartenderTips);
+	const everyone = [...cooks, ...barBacks, ...bartenders];
+	if (everyone.some((e) => !ObjectId.isValid(e?.id))) {
+		return res.status(400).json({ message: "Invalid employee id in tips" });
+	}
+
+	try {
+		const client = await clientPromise;
+		const db = client.db("TeragramBallroom");
+
+		const tipBreakdownResult = await db.collection("tipBreakdown").insertOne({
+			show,
+			date,
+			totalTips,
+			foodSales,
+			barBackPercentage,
+			cookTips: cooks,
+			barBackTips: barBacks,
+			BartenderTips: bartenders,
+			tipsPerCook,
+			tipsPerBarBack,
+			tipsPerBartender,
+			totalBarSales,
+			shiftNotes,
+			createdat: new Date(),
+		});
+
+		const tipBreakdownId = tipBreakdownResult.insertedId;
+
+		for (const employee of everyone) {
+			await db.collection("employees").updateOne(
+				{ _id: new ObjectId(employee.id) },
+				{
+					$addToSet: {
+						tipsCollected: {
+							date,
+							amount: employee.tipOut,
+							workingPosition: employee.workingPosition,
+							show,
+							tipBreakdownId: tipBreakdownId.toString(),
 						},
-					}
-				);
-			};
-
-			// Update tip information for cooks
-			for (const cook of cookTips) {
-				const objectId = new ObjectId(cook.id);
-
-				console.log(objectId, cook.tipOut, cook.workingPosition);
-				await updateEmployeeTip(
-					objectId,
-					cook.tipOut,
-					cook.workingPosition,
-					tipBreakdownId
-				);
-			}
-
-			// Update tip information for bar backs
-			for (const barBack of barBackTips) {
-				const objectId = new ObjectId(barBack.id);
-
-				console.log(barBack.id, barBack.tipOut, barBack.workingPosition);
-				await updateEmployeeTip(
-					objectId,
-					barBack.tipOut,
-					barBack.workingPosition,
-					tipBreakdownId
-				);
-			}
-
-			// Update tip information for bartenders
-			for (const bartender of BartenderTips) {
-				const objectId = new ObjectId(bartender.id);
-
-				console.log(
-					"BArtender",
-					bartender.id,
-					bartender.tipOut,
-					bartender.workingPosition
-				);
-				await updateEmployeeTip(
-					objectId,
-					bartender.tipOut,
-					bartender.workingPosition,
-					tipBreakdownId
-				);
-			}
-
-			res.status(201).json({
-				message: "Tip Break Down added successfully",
-				tipBreakdownId: tipBreakdownId,
-			});
-		} catch (error) {
-			console.error(error);
-			res.status(500).json({ message: "Internal server error" });
+					},
+				}
+			);
 		}
-	} else {
-		res.status(405).json({ message: "Method not allowed" });
+
+		res.status(201).json({
+			message: "Tip Break Down added successfully",
+			tipBreakdownId,
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Internal server error" });
 	}
 };

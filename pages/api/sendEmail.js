@@ -1,39 +1,71 @@
 import nodemailer from "nodemailer";
+import { ObjectId } from "mongodb";
+import { randomUUID } from "crypto";
+import clientPromise from "../../lib/mongodb";
+import { requireSession } from "../../lib/auth";
 
-export default async (req, res) => {
-	const { employee, to, registrationToken } = req.body; // Destructure the employee data and recipient email from the request body
-	// Create a transporter
+const LINK_TTL_DAYS = 7;
 
-	const transporter = nodemailer.createTransport({
-		service: "Gmail",
-		auth: {
-			user: process.env.EMAIL_SERVER_USER,
-			pass: process.env.EMAIL_SERVER_PASSWORD,
-		},
-	});
-	const registrationLink = `https://tip-jar-delta.vercel.app/RegisterPage/${employee._id}?token=${registrationToken}`;
+// Generates a fresh single-use registration token for an employee, stores it,
+// and emails them the registration link. Managers only.
+export default requireSession(async (req, res) => {
+	if (req.method !== "POST") {
+		return res.status(405).json({ success: false, error: "Method not allowed" });
+	}
 
-	const registrationLink2 = `localhost:3000/RegisterPage/${employee._id}?token=${registrationToken}`;
-	// Define email options
-	const mailOptions = {
-		from: process.env.EMAIL_FROM,
-		to: to,
-		subject: "Registration Link",
-		html: `
+	const { employeeId } = req.body ?? {};
+	if (!ObjectId.isValid(employeeId)) {
+		return res.status(400).json({ success: false, error: "Invalid employee id" });
+	}
+
+	try {
+		const client = await clientPromise;
+		const employees = client.db("TeragramBallroom").collection("employees");
+		const employee = await employees.findOne({ _id: new ObjectId(employeeId) });
+
+		if (!employee) {
+			return res.status(404).json({ success: false, error: "Employee not found" });
+		}
+		if (!employee.email) {
+			return res
+				.status(400)
+				.json({ success: false, error: "Employee has no email address" });
+		}
+
+		const token = randomUUID();
+		const tokenExpiration = new Date();
+		tokenExpiration.setDate(tokenExpiration.getDate() + LINK_TTL_DAYS);
+		await employees.updateOne(
+			{ _id: employee._id },
+			{ $set: { token, tokenExpiration } }
+		);
+
+		const baseUrl = (process.env.NEXTAUTH_URL || "").replace(/\/$/, "");
+		const registrationLink = `${baseUrl}/RegisterPage/${employee._id}?token=${token}`;
+
+		const transporter = nodemailer.createTransport({
+			service: "Gmail",
+			auth: {
+				user: process.env.EMAIL_SERVER_USER,
+				pass: process.env.EMAIL_SERVER_PASSWORD,
+			},
+		});
+
+		await transporter.sendMail({
+			from: process.env.EMAIL_FROM,
+			to: employee.email,
+			subject: "Registration Link",
+			html: `
     <h1>Welcome to TipJar!</h1>
     <p>Please use the following link to set up your login:</p>
     <a href="${registrationLink}">TipJar Register link</a>
-    <p>We're excited to have you on board!</p>
+    <p>This link expires in ${LINK_TTL_DAYS} days.</p>
 `,
-	};
+		});
 
-	// Send email
-	try {
-		// Send email
-		await transporter.sendMail(mailOptions);
-		res.status(200).json({ success: true });
+		res.status(200).json({ success: true, tokenExpiration });
 	} catch (error) {
 		console.error("Error sending email:", error);
 		res.status(500).json({ success: false, error: "Failed to send email" });
 	}
-};
+});
