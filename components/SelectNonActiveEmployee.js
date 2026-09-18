@@ -58,7 +58,6 @@ export default function SelectNonActiveEmployee({
 	};
 
 	const HandleEmployeeTitle = (position) => {
-		console.log(position.position);
 		switch (position.position) {
 			case "Bartender":
 				return "Bartenders";

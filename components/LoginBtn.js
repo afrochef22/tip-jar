@@ -18,7 +18,6 @@ export default function Component() {
 		await signIn(); // Trigger the sign-in process
 	};
 	if (session) {
-		console.log("session", session);
 		return (
 			<>
 				<div className="login-button-container">

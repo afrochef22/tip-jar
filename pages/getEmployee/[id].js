@@ -60,7 +60,6 @@ export default function getEmployee({ employee }) {
 			});
 
 			if (response.ok) {
-				console.log("Employee deleted successfully");
 				router.push("/employees");
 			} else {
 				console.error("Failed to delete Employee");

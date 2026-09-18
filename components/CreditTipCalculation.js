@@ -46,17 +46,14 @@ export default function CreditTipCalculation({
 	const [isCookHoursClicked, setCookHoursClicked] = useState(false);
 	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
 
-
 	const [defaultbarBackPercentage, setDefaultBarBackPercentage] = useState(15);
 	const handleIncrease = () => {
-		console.log("up");
 		setDefaultBarBackPercentage((prevPercentage) =>
 			Math.min(prevPercentage + 1, 100)
 		);
 	};
 
 	const handleDecrease = () => {
-		console.log("down");
 
 		setDefaultBarBackPercentage((prevPercentage) =>
 			Math.max(prevPercentage - 1, 0)
@@ -70,9 +67,7 @@ export default function CreditTipCalculation({
 
 		const tips = formData.get("totalTips");
 		const isValidInput = /^\d*\.?\d{0,2}$/.test(tips);
-		console.log("Is valid input:", isValidInput);
 		if (isValidInput === false) {
-			console.log("modal should pop up");
 			setAlertMessage(
 				"Please enter a valid number for the tips. The number can't have more than 2 decimal places."
 			);

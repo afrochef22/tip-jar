@@ -29,7 +29,6 @@ export default function CashTipCalculator() {
 	const [numberOfBarBacks, setNumberOfBarBacks] = useState(1);
 	const [bartenders, setBartenders] = useState([]);
 	const [barBacks, setBarBacks] = useState([]);
-	// console.log(defaultbarBackPercentage);
 	// numberOfBarBacks,
 	// numberOfBartenders,
 	// isBarBackHoursClicked,
@@ -76,22 +75,14 @@ export default function CashTipCalculator() {
 				break;
 		}
 	};
-	console.log(
-		"CashTipCalculator outside calculate button BartenderHoursClicked ",
-		isBartenderHoursClicked,
-		" CashTipCalculator barBackHoursClicked",
-		isBarBackHoursClicked
-	);
 
 	const handleIncrease = () => {
-		console.log("up");
 		setDefaultBarBackPercentage((prevPercentage) =>
 			Math.min(prevPercentage + 1, 100)
 		);
 	};
 
 	const handleDecrease = () => {
-		console.log("down");
 
 		setDefaultBarBackPercentage((prevPercentage) =>
 			Math.max(prevPercentage - 1, 0)
@@ -139,12 +130,6 @@ export default function CashTipCalculator() {
 		formData.forEach((value, key) => {
 			data;
 		});
-		console.log(
-			"CashTipCalculator BartenderHoursClicked ",
-			isBartenderHoursClicked,
-			" CashTipCalculator barBackHoursClicked",
-			isBarBackHoursClicked
-		);
 
 		router.push({
 			pathname: "/CashTipBreakDownPage",

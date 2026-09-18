@@ -9,7 +9,6 @@ export default function SelectNonActiveBarBack({
 	btn,
 	addNewEmployee,
 }) {
-	console.log(sortedBarBacks);
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
 		setIsMobile(window.innerWidth < 875);

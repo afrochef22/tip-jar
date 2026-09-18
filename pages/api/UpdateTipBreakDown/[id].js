@@ -66,11 +66,6 @@ export default async (req, res) => {
 				updateDocument
 			);
 
-			console.log(
-				`${result.matchedCount} document(s) matched the filter criteria.`
-			);
-			console.log(`${result.modifiedCount} document(s) were modified.`);
-
 			// Update employees if necessary
 			// Fetch the employees who need to be updated based on the changes in the tip breakdown
 			// Convert the provided ID to ObjectId type
@@ -78,8 +73,6 @@ export default async (req, res) => {
 			const relevantEmployees = await employeeCollection
 				.find({ "tipsCollected.tipBreakdownId": id })
 				.toArray();
-
-			// console.log("relevantEmployees", relevantEmployees);
 
 			// Update each relevant employee
 			for (const employee of relevantEmployees) {
@@ -117,7 +110,6 @@ export default async (req, res) => {
 								);
 								if (barBack) {
 									updatedTipAmount = Number(barBack.tipOut);
-									// console.log("Updated bar back tip amount:", updatedTipAmount);
 									updatedDate = data.date ?? tip.date;
 									updatedShow = data.show ?? tip.show;
 									updatedWorkingPosition = barBack.workingPosition;
@@ -130,10 +122,6 @@ export default async (req, res) => {
 								);
 								if (bartender) {
 									updatedTipAmount = Number(bartender.tipOut);
-									// console.log(
-									// 	"Updated bartender tip amount:",
-									// 	updatedTipAmount
-									// );
 									updatedDate = data.date ?? tip.date;
 									updatedShow = data.show ?? tip.show;
 									updatedWorkingPosition = bartender.workingPosition;
@@ -154,8 +142,6 @@ export default async (req, res) => {
 						}
 						return tip; // Return unchanged tip if tipBreakdownId doesn't match
 					});
-
-					// console.log("updatedTips", updatedTips);
 
 					// Update the employee document with the updated tips
 					await employeeCollection.updateOne(

@@ -157,7 +157,7 @@ Check the box when done. Commit after each phase.
   - `react-router-dom`, `passport`, `passport-local`, `cors`, `tailwindcss`, `node-fetch` (Node 18+ has global fetch)
   - Pin `next` to an exact major instead of `latest`.
 
-- [ ] **4.4 Strip console.log noise**
+- [x] **4.4 Strip console.log noise**
   - Nearly every file. Keep `console.error` in catch blocks.
 
 - [x] **4.5 Small fixes**
@@ -244,6 +244,12 @@ Check the box when done. Commit after each phase.
   - Found and removed 3 dead `@tailwind base/components/utilities;` lines at the top of `styles/globals.css`: there's no `tailwind.config.js` or `postcss.config.js` anywhere in the repo, so these never did anything even before `tailwindcss` was removed from `package.json` — Turbopack just started warning about the unknown at-rule where the previous bundler had silently ignored it.
   - `npm install` also let Next.js auto-migrate `tsconfig.json`'s `moduleResolution` from `node` to `bundler` (its own recommended setting for the resolved Next 16.3.5); left as applied.
   - `npm install` briefly took down the dev server that was running throughout this session (it depended on packages that had just been removed from `node_modules`); restarted it and confirmed it comes back up clean on port 3000.
+
+- Phase 4c done (4.4 — console.log noise).
+  - Wrote a paren/string/comment-aware script (kept at hand, not committed) that removed 124 standalone `console.log(...)` statements across 24 files, including multi-line calls, without touching `console.error`. It flagged 9 occurrences it wouldn't touch automatically; all 9 turned out to be already-commented-out `// console.log(...)` debris, which were then removed by hand along with the rest.
+  - Caught and fixed one real mistake from that manual pass: removing a comment sandwiched between two statements in `pages/api/UpdateTipBreakDown/[id].js` ate the wrong newline and merged `updatedTipAmount = Number(barBack.tipOut);` and the following line onto one physical line (still valid JS, caught by reviewing the diff rather than the build, since it doesn't need a newline between statements).
+  - Normalized a handful of resulting double-blank-lines back to single blank lines in the 5 files where a removed `console.log` had blank lines on both sides.
+  - Verified with `git diff`: every changed file is purely subtractive (0 insertions across all 27 touched files) aside from the merged-line fix, and a search confirmed no removed line contains anything other than blank lines or parts of a `console.log(...)` call.
 
 ## Follow-up requests (outside the numbered plan)
 

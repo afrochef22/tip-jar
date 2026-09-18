@@ -15,7 +15,6 @@ import {
 import { useRouter } from "next/router";
 import style from "../components/AllTipBreakDowns.module.css";
 export default function getAllTipBreakDown({ allTipBreakdowns }) {
-	console.log(allTipBreakdowns);
 	const router = useRouter();
 	const [reversedAllTipBreakdowns, setReversedAllTipBreakdowns] = useState(
 		[...allTipBreakdowns].reverse()
@@ -51,7 +50,6 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 		setReversedAllTipBreakdowns([...allTipBreakdowns].reverse());
 	};
 
-	console.log(reversedAllTipBreakdowns);
 	return (
 		<div className={`${style.carouselContainer} ${style.minHeight}`}>
 			<div className={`${style.title}`}>

@@ -284,7 +284,6 @@ export async function getServerSideProps(id) {
 		});
 
 		if (!breakDown) {
-			console.log("not found");
 		}
 		return {
 			props: { breakDown: JSON.parse(JSON.stringify(breakDown)) },

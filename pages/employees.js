@@ -36,7 +36,6 @@ export async function getServerSideProps() {
 			.sort()
 			.limit(1000)
 			.toArray();
-		// console.log(employees);
 		return {
 			props: { employees: JSON.parse(JSON.stringify(employees)) },
 		};

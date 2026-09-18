@@ -9,7 +9,6 @@ export function HourlyBarBackCashInput({
 }) {
 	const [clickedInputs, setClickedInputs] = useState({});
 	const handleBarBackHoursWorkedChange = (barBackName, hoursWorked) => {
-		console.log("hoursWorked", hoursWorked);
 
 		// const isValidInput = /^\d+(\.\d{1,2})?$/.test(hoursWorked);
 		// if (!isValidInput) {
@@ -22,7 +21,6 @@ export function HourlyBarBackCashInput({
 		if (index !== -1) {
 			// Update the hours worked for the bartender at the found index
 			updateBarBacks((prevBarBacks) => {
-				console.log(prevBarBacks);
 				const updatedBarBacks = [...prevBarBacks];
 				updatedBarBacks[index] = {
 					...updatedBarBacks[index],

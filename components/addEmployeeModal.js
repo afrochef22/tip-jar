@@ -73,7 +73,6 @@ export function AddEmployeeModal({ position, args }) {
 			});
 
 			if (response.ok) {
-				console.log("Employee added successfully");
 				router.push("/employees");
 				setNewEmployee({
 					firstName: "",
@@ -89,10 +88,8 @@ export function AddEmployeeModal({ position, args }) {
 				});
 				setAlertMessage(""); // Clear the alert message
 			} else {
-				console.log("response not ok");
 			}
 		} catch (error) {
-			console.log(error);
 		} finally {
 			toggle();
 		}

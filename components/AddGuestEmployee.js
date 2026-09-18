@@ -54,7 +54,6 @@ export default function AddGuestEmployee({
 	};
 
 	const handleInputChange = (e) => {
-		console.log(e.target);
 		setNewEmployee({
 			...newEmployee,
 			[e.target.name]: e.target.value,
@@ -89,7 +88,6 @@ export default function AddGuestEmployee({
 			tippedHours: 0,
 			tipOut: 0,
 		});
-		console.log("New Employee: ", newEmployee);
 		try {
 			const response = await fetch("/api/addEmployee", {
 				method: "POST",
@@ -100,7 +98,6 @@ export default function AddGuestEmployee({
 			});
 
 			if (response.ok) {
-				console.log("Employee added successfully");
 				const data = await response.json();
 				const newEmployeeData = {
 					id: data.insertedEmployeeId,
@@ -116,7 +113,6 @@ export default function AddGuestEmployee({
 
 				// Pass the new employee data to the parent component
 				addNewEmployee(newEmployeeData);
-				console.log("data", data.insertedEmployeeId.AddGuestEmployee);
 				// Close the modal
 				setNewEmployee({
 					firstName: "",
@@ -132,10 +128,8 @@ export default function AddGuestEmployee({
 				});
 				setAlertMessage(""); // Clear the alert message
 			} else {
-				console.log("response not ok");
 			}
 		} catch (error) {
-			console.log(error);
 		} finally {
 			toggleNested();
 		}

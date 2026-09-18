@@ -381,7 +381,6 @@ export async function getServerSideProps() {
 			.find({})
 
 			.toArray();
-		// console.log(allTipBreakdowns);
 
 		const employees = await db
 			.collection("employees")

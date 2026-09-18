@@ -98,13 +98,10 @@ export function UpdateEmployeeModal(props, args) {
 			});
 
 			if (response.ok) {
-				console.log("Employee updated successfully");
 				router.push("/employees");
 			} else {
-				console.log("response not ok");
 			}
 		} catch (error) {
-			console.log(error);
 		} finally {
 			toggle();
 		}

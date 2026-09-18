@@ -4,7 +4,6 @@ import style from "./EmployeeList.module.css";
 import { AddEmployeeModal } from "./addEmployeeModal";
 
 const Bartenders = ({ employees }) => {
-	console.log(employees);
 
 	return (
 		<Container className={style.employeeList}>

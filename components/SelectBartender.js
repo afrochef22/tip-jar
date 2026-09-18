@@ -28,7 +28,6 @@ export default function SelectBartender({
 		const fillIn = bartender.active === false && bartender.checked;
 		return fillIn;
 	});
-	console.log(checkedFillIn);
 	const checkedBartendersCount = sortedBartenders.filter(
 		(bartender) => bartender.checked
 	).length;

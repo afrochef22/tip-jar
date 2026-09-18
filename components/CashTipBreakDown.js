@@ -18,7 +18,6 @@ export default function CashTipBreakDown({
 	const bartenderHours = bartenders
 		.map((bartender) => parseFloat(bartender.hours) || 0)
 		.reduce((acc, hours) => acc + hours, 0);
-	console.log("bartenderHours", bartenderHours);
 
 	const barBackHours = barBacks
 		.map((barBack) => parseFloat(barBack.hours) || 0)
@@ -39,22 +38,18 @@ export default function CashTipBreakDown({
 	};
 
 	const bartenderTips = (tipsCollected - barbackTips).toFixed(2);
-	console.log("bartenderTips", bartenderTips);
 
 	const tipsPerBartender = () => {
 		if (bartenderHours === 0) {
 			let tips = Number((bartenderTips / numberOfBartenders).toFixed(2));
-			console.log("tipsPerBartender", tips);
 			return tips;
 		} else {
 			let tips = Number((bartenderTips / bartenderHours).toFixed(2));
-			console.log("tipsPerBartender per hour", tips);
 
 			return tips;
 		}
 	};
 
-	console.log(Number((bartenderTips / numberOfBartenders).toFixed(2)));
 	const barBacksWithTipOut = barBacks.map((barBack) => {
 		const id = barBack.id;
 		if (barBackHours === 0) {
@@ -76,35 +71,22 @@ export default function CashTipBreakDown({
 			return { ...bartender, tipOut };
 		}
 	});
-	console.log("bartendersWithTipOut", bartendersWithTipOut);
 
 	let totalBartendersTipout = bartendersWithTipOut.reduce(
 		(acc, bartender) => acc + Number(bartender.tipOut),
 		0
-	);
-	console.log(
-		"bartender total tipout vs adjusted total amount",
-		bartenderTips,
-		totalBartendersTipout
 	);
 	let totalBarBackTipout = barBacksWithTipOut.reduce(
 		(acc, barBack) => acc + Number(barBack.tipOut),
 		0
 	);
 	let NewTotalTipOut = totalBarBackTipout + totalBartendersTipout;
-	console.log("total Bartenders Tipout", NewTotalTipOut);
 
 	if (NewTotalTipOut !== tipsCollected) {
-		console.log(
-			"tipsCollected and NewTotalTipOut not equal",
-			tipsCollected - NewTotalTipOut
-		);
 		const remainingDifference = tipsCollected - NewTotalTipOut;
-		console.log("remainingDifference", remainingDifference);
 
 		if (remainingDifference <= 0.09 && remainingDifference >= -0.09) {
 			const adjustedDifference = Number(remainingDifference.toFixed(2));
-			console.log("adjustedDifference", adjustedDifference);
 
 			// Create a shuffled array of indexes to simulate randomness
 			const shuffledIndexes = Array.from(
@@ -118,16 +100,13 @@ export default function CashTipBreakDown({
 					shuffledIndexes[i],
 				];
 			}
-			console.log("shuffledIndexes", shuffledIndexes);
 			// Calculate how many bartenders need to receive the additional tip
 			let additionalBartendersCount = Math.floor(
 				Math.abs(adjustedDifference) / 0.01
 			);
-			console.log("additionalBartendersCount", additionalBartendersCount);
 			if (additionalBartendersCount > 0) {
 				// Determine the adjustment per bartender based on the sign of the adjusted difference
 				const adjustment = adjustedDifference > 0 ? 0.01 : -0.01;
-				console.log("adjustment", adjustment);
 
 				// Use a map to track bartender indexes and their adjustments
 				let adjustments = {};
@@ -136,7 +115,6 @@ export default function CashTipBreakDown({
 
 				for (let i = 0; i < additionalBartendersCount; i++) {
 					const bartenderIndex = shuffledIndexes[i % shuffledIndexes.length];
-					console.log(bartenderIndex);
 					if (!adjustments[bartenderIndex]) {
 						adjustments[bartenderIndex] = 0;
 					}
@@ -150,12 +128,9 @@ export default function CashTipBreakDown({
 						adjustments[bartenderIndex];
 				}
 
-				console.log("adjustments", adjustments);
 			}
 		}
 	}
-
-	console.log(bartenderTips, "-", totalBartendersTipout);
 
 	bartendersWithTipOut.forEach((obj) => {
 		// Check if the object has the 'tipOut' key
@@ -167,24 +142,6 @@ export default function CashTipBreakDown({
 	let totalAdjustedTipOutBartenders = bartendersWithTipOut.reduce(
 		(acc, bartender) => acc + Number(bartender.tipOut),
 		0
-	);
-	console.log("bartendersWithTipOut", bartendersWithTipOut);
-	console.log(
-		tipsCollected,
-		totalAdjustedTipOutBartenders,
-		"+",
-		totalBarBackTipout,
-
-		"=",
-		totalAdjustedTipOutBartenders + totalBarBackTipout
-	);
-	console.log(
-		"isBartenderHoursClicked: ",
-		isBartenderHoursClicked,
-		"isBarBackHoursClicked: ",
-		isBarBackHoursClicked,
-		barBacks,
-		bartenders
 	);
 	return (
 		<Container className={style.topRow}>

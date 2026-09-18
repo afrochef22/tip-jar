@@ -4,12 +4,10 @@ import { Register } from "../../components/Register";
 import React from "react";
 
 export default function RegisterPage({ employee }) {
-	// console.log(employee);
 	if (!employee) {
 		// Handle the case when employee is not found
 		return <div>employee not found</div>;
 	}
-	console.log("test: ", employee);
 	return (
 		<div>
 			<Register employee={employee} />

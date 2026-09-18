@@ -143,14 +143,12 @@ const UpdateCashTipBreakDown = (
 	};
 
 	const handleIncrease = () => {
-		console.log("up");
 		setDefaultBarBackPercentage((prevPercentage) =>
 			Math.min(prevPercentage + 1, 100)
 		);
 	};
 
 	const handleDecrease = () => {
-		console.log("down");
 
 		setDefaultBarBackPercentage((prevPercentage) =>
 			Math.max(prevPercentage - 1, 0)

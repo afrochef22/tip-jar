@@ -15,12 +15,6 @@ export default function CashTipBreakDownPage() {
 		isBartenderHoursClicked,
 		isBarBackHoursClicked,
 	} = router.query;
-	console.log(
-		"CashTipBreakDownPage barBackHoursClicked",
-		isBarBackHoursClicked,
-		"CashTipBreakDownPage barBackHoursClicked",
-		isBarBackHoursClicked
-	);
 
 	// router.query is empty on the very first client render before Next.js
 	// has parsed the URL, which would otherwise seed CashTipBreakDown (and the

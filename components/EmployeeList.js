@@ -4,7 +4,6 @@ import style from "./EmployeeList.module.css";
 
 const EmployeeTable = ({ employees, position }) => {
 	// Filter active and non-active bartenders
-	console.log("employees", employees, "position", position);
 	const activeEmployee = employees.filter(
 		(employee) =>
 			(employee.position || []).includes(position) && employee.active === true

@@ -71,7 +71,6 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 		return resultArray;
 	}, []);
 	const [activeIndex, setActiveIndex] = useState(0);
-	console.log(chunks);
 	const next = () => {
 		const nextIndex =
 			activeIndex === chunks.length - 1 ? activeIndex : activeIndex + 1;

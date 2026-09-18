@@ -46,7 +46,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const [shiftNotes, setShiftNotes] = useState(breakDown.shiftNotes);
 
 	const router = useRouter();
-	console.log(breakDown);
 
 	const toggle = () => setModal(!modal);
 
@@ -55,7 +54,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	};
 
 	const handleDateChange = (e) => {
-		console.log(e.target.value);
 		const dateString = e.target.value; // Example date string in YYYY-MM-DD format
 		const parts = dateString.split("-");
 		const day = parseInt(parts[2], 10); // Convert day to integer
@@ -65,13 +63,9 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	};
 
 	const handleTotalBarSalesChange = (e) => {
-		console.log(e.target.value);
-		console.log("totalBarSales", totalBarSales);
 		setTotalBarSales(e.target.value);
 	};
 	const handleShiftNotesChange = (e) => {
-		console.log(e.target.value);
-		console.log("shiftNotes", shiftNotes);
 		setShiftNotes(e.target.value);
 	};
 	const handleTotalTipChange = (e) => {
@@ -79,8 +73,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	};
 
 	const handleFoodSalesChange = (e) => {
-		console.log(e.target.value);
-		console.log("foodSales", foodSales);
 		setFoodSales(e.target.value);
 	};
 	const handleIncrease = () => {
@@ -128,7 +120,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		.map((bartender) => bartender.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
 
-	console.log("bartenderHours", bartenderHours);
 	const barBackHours = barBackTipsData
 		.map((barBack) => barBack.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
@@ -233,7 +224,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		0
 	);
 	totalTipOutBartenders = Number(totalTipOutBartenders.toFixed(2));
-	console.log(totalTipOutBartenders);
 
 	let totalTipOutBarBacks = barBacksWithTipOut.reduce(
 		(acc, barBack) => acc + barBack.tipOut,
@@ -250,26 +240,9 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	// Calculate the total of all tip outs
 	const totalTipOut =
 		totalTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks;
-	console.log(
-		"barthenders",
-		totalTipOutBartenders,
-		"barback",
-		totalTipOutBarBacks,
-		"cooks",
-		totalTipOutCooks,
-		"=",
-		totalTipOut
-	);
 	// Calculate the rounding difference
 	let roundingDifference = Number((totalTips - totalTipOut).toFixed(2));
 
-	console.log(
-		"roundingDifference",
-		roundingDifference,
-		totalTips,
-		"-",
-		totalTipOut
-	);
 	const newTotalTipOutBartenders = totalTipOutBartenders + roundingDifference;
 
 	// Adjust the tip out amounts for bartenders only
@@ -277,17 +250,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const adjustmentAmountPerBartender = Number(
 		(roundingDifference / numberOfBartenders).toFixed(2)
 	);
-	console.log(
-		"adjustment amount per bartender: ",
-		roundingDifference,
-		"/",
-		bartendersWithTipOut.length
-	);
-	console.log(
-		"adjustment amount per bartender: ",
-		adjustmentAmountPerBartender
-	);
-	console.log(bartendersWithTipOut);
 
 	let adjustedBartendersWithTipOut = bartendersWithTipOut.map((bartender) => ({
 		...bartender,
@@ -295,7 +257,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 			(bartender.tipOut + adjustmentAmountPerBartender).toFixed(2)
 		),
 	}));
-	console.log(adjustedBartendersWithTipOut);
 
 	// Recalculate the total tip out amount for bartenders after adjustment
 	let totalAdjustedTipOutBartenders = adjustedBartendersWithTipOut.reduce(
@@ -304,26 +265,14 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	);
 
 	totalAdjustedTipOutBartenders = totalAdjustedTipOutBartenders;
-	console.log(
-		"total adjusted tip out bartenders",
-		totalAdjustedTipOutBartenders,
-		"new Total TipOut Bartenders",
-		newTotalTipOutBartenders
-	);
 
 	// Adjust one bartender's tip out by the remaining difference
 	if (totalAdjustedTipOutBartenders !== newTotalTipOutBartenders) {
-		console.log(
-			"newTotalTipOutBartenders and totalAdjustedTipOutBartenders not equal",
-			newTotalTipOutBartenders - totalAdjustedTipOutBartenders
-		);
 		const remainingDifference =
 			newTotalTipOutBartenders - totalAdjustedTipOutBartenders;
-		console.log("remainingDifference", remainingDifference);
 
 		if (remainingDifference <= 0.09 && remainingDifference >= -0.09) {
 			const adjustedDifference = Number(remainingDifference.toFixed(2));
-			console.log("adjustedDifference", adjustedDifference);
 
 			// Create a shuffled array of indexes to simulate randomness
 			const shuffledIndexes = Array.from(
@@ -371,37 +320,9 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		(acc, bartender) => acc + Number(bartender.tipOut),
 		0
 	);
-	console.log(adjustedBartendersWithTipOut);
-	console.log(
-		totalTips,
-		totalAdjustedTipOutBartenders,
-		"+",
-		totalTipOutBarBacks,
-		"+",
-		totalTipOutCooks,
-		"=",
-		(
-			totalAdjustedTipOutBartenders +
-			totalTipOutBarBacks +
-			totalTipOutCooks
-		).toFixed(2)
-	);
-	console.log("tipsPerBarBack", tipsPerBarBack);
-	console.log("tipsPerBartender", tipsPerBartender);
-	console.log("adjustedBartendersWithTipOut", adjustedBartendersWithTipOut);
-	console.log("cooksWithTipOut", cooksWithTipOut);
-	console.log("barBacksWithTipOut", barBacksWithTipOut);
 	const handleUpdateBreakDown = async (e) => {
 		e.preventDefault();
-		console.log("breakdown");
 		// alert("Sorry doesn't work yet");
-		console.log("total bar sales", totalBarSales);
-		console.log("shift notes", shiftNotes);
-		console.log("tipsPerBarBack", tipsPerBarBack);
-		console.log("tipsPerBartender", tipsPerBartender);
-		console.log("adjustedBartendersWithTipOut", adjustedBartendersWithTipOut);
-		console.log("cooksWithTipOut", cooksWithTipOut);
-		console.log("barBacksWithTipOut", barBacksWithTipOut);
 		try {
 			const response = await fetch(`/api/UpdateTipBreakDown/${breakDown._id}`, {
 				method: "PATCH",
@@ -425,19 +346,15 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 				}),
 			});
 			if (response.ok) {
-				console.log("Tip Breakdown updated Successfully");
 				router.push(`/getSelectedTipBreakDown/${breakDown._id}`);
 			} else {
-				console.log("response not ok");
 			}
 		} catch (error) {
-			console.log(error);
 		} finally {
 			toggle();
 		}
 		// toggle();
 	};
-	console.log("breakDown", breakDown._id);
 
 	const toggleConfirmation = () => {
 		setShowConfirmation(!showConfirmation);
@@ -445,7 +362,6 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const handleDelete = async (e) => {
 		e.preventDefault();
 		setShowConfirmation(!showConfirmation);
-		console.log("breakDown", breakDown.id);
 
 		// alert("Sorry doesn't work yet");
 		try {
@@ -471,13 +387,10 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 				}),
 			});
 			if (response.ok) {
-				console.log("Tip Breakdown deleted Successfully");
 				router.push(`/CCTipsTotals`);
 			} else {
-				console.log("response not ok");
 			}
 		} catch (error) {
-			console.log(error);
 		} finally {
 			toggle();
 		}
