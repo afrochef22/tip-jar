@@ -42,5 +42,6 @@ export async function getServerSideProps() {
 		};
 	} catch (err) {
 		console.error(err);
+		return { props: { employees: [] } };
 	}
 }

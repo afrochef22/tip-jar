@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import style from "./TipBreakDown.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,11 +9,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { CurrentShift, ShiftDate } from "./CurrentShift";
 import { useRouter } from "next/router";
-import GetAllTipBreakdowns from "./GetAllTipBreakdowns";
 import { ConfirmationDialog } from "./ConformationDialog";
 import { Decimal } from "decimal.js";
 
-console.log(GetAllTipBreakdowns);
 export default function TipBreakDown({
 	bartenders,
 	barBacks,
@@ -30,26 +28,11 @@ export default function TipBreakDown({
 }) {
 	console.log("totalBarSales", totalBarSales);
 	console.log("shiftNotes", shiftNotes);
-	const [newTipBreakdown, setNewTipBreakdown] = useState({});
 	const [submitting, setSubmitting] = useState(false);
 	const [submitError, setSubmitError] = useState("");
 	const [showConfirmation, setShowConfirmation] = useState(false);
 	const router = useRouter();
 
-	useEffect(() => {
-		console.log("useEffect triggered");
-
-		// Automatically submit the form when the component mounts
-		handleAddTipBreakDown({});
-	}, []); // Empty dependency array ensures this effect runs only once
-
-	useEffect(() => {
-		if (submitting) {
-			submitTipBreakdown().then((responseData) => {
-				router.push(`/getSelectedTipBreakDown/${responseData}`);
-			});
-		}
-	}, [submitting, newTipBreakdown]);
 
 	const bartenderHours = bartenders
 		.map((bartender) => bartender.tippedHours || 0)
@@ -77,7 +60,8 @@ export default function TipBreakDown({
 		} else {
 			tips = new Decimal(cooksTips).div(cookHours);
 		}
-		return tips.toNumber(); // Convert Decimal back to number for state
+		const n = tips.toNumber();
+		return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
 	};
 
 	const barbackTips =
@@ -91,7 +75,8 @@ export default function TipBreakDown({
 		} else {
 			tips = new Decimal(barbackTips).div(barBackHours);
 		}
-		return tips.toNumber(); // Convert Decimal back to number for state
+		const n = tips.toNumber();
+		return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
 	};
 
 	const bartenderTips = totalTips - cooksTips - barbackTips;
@@ -103,7 +88,8 @@ export default function TipBreakDown({
 		} else {
 			tips = new Decimal(bartenderTips).div(bartenderHours);
 		}
-		return tips.toNumber(); // Convert Decimal back to number for state
+		const n = tips.toNumber();
+		return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
 	};
 
 	const bartendersWithTipOut = bartenders.map((bartender) => {
@@ -123,7 +109,7 @@ export default function TipBreakDown({
 			let tipOut = Number(tipsPerBarBack().toFixed(2));
 			return { ...barBack, tipOut };
 		} else {
-			let tipOut = Number(tipsPerBarBack() * barBack.tippedHours);
+			let tipOut = Number((tipsPerBarBack() * barBack.tippedHours).toFixed(2));
 			return { ...barBack, tipOut };
 		}
 	});
@@ -134,7 +120,7 @@ export default function TipBreakDown({
 			let tipOut = Number(tipsPerCook().toFixed(2));
 			return { ...cook, tipOut };
 		} else {
-			let tipOut = Number(tipsPerCook() * cook.tippedHours);
+			let tipOut = Number((tipsPerCook() * cook.tippedHours).toFixed(2));
 			return { ...cook, tipOut };
 		}
 	});
@@ -274,7 +260,7 @@ export default function TipBreakDown({
 		// Check if the object has the 'tipOut' key
 		if ("tipOut" in obj) {
 			// Apply toFixed() to the 'tipOut' key and update the value in-place
-			obj.tipOut = Number(obj.tipOut).toFixed(2);
+			obj.tipOut = Number(Number(obj.tipOut).toFixed(2));
 		}
 	});
 
@@ -293,100 +279,85 @@ export default function TipBreakDown({
 		totalAdjustedTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks
 	);
 	const handleBackButtonClick = () => {
-		router.push({
-			pathname: "/SelectWorkingEmployee",
-		});
+		router.back();
+	};
+
+	const shiftDate = ShiftDate();
+
+	const validate = () => {
+		if (!selectedShow) return "Please select a show.";
+		if (bartendersWithTipOut.length <= 0) {
+			return "Please select at least 1 bartender.";
+		}
+		const exists = (allTipBreakdowns || []).some(
+			(breakdown) =>
+				breakdown.show === selectedShow && breakdown.date === shiftDate
+		);
+		if (exists) {
+			return "Tip breakdown already exists for the selected show and date.";
+		}
+		return "";
 	};
 
 	const toggleConfirmation = () => {
-		if (bartendersWithTipOut.length <= 0) {
-			setSubmitError("Please select at least 1 bartender.");
-			return;
+		if (!showConfirmation) {
+			const problem = validate();
+			if (problem) {
+				setSubmitError(problem);
+				return;
+			}
+			setSubmitError("");
 		}
 		setShowConfirmation(!showConfirmation);
 	};
 
-	const handleAddTipBreakDown = () => {
-		toggleConfirmation();
-		const tipBreakdownExists = allTipBreakdowns.allTipBreakdowns.some(
-			(breakdown) => {
-				return (
-					breakdown.show === selectedShow && breakdown.date === ShiftDate()
-				);
-			}
-		);
-		if (tipBreakdownExists) {
-			setSubmitError(
-				"Tip breakdown already exists for the selected show and date."
-			);
+	const handleAddTipBreakDown = async () => {
+		setShowConfirmation(false);
+		if (submitting) return;
+		const problem = validate();
+		if (problem) {
+			setSubmitError(problem);
 			return;
 		}
+		setSubmitError("");
+		setSubmitting(true);
 
-		// Ensure that all required fields are filled out
-		if (!selectedShow) {
-			setSubmitError("Please select a show.");
-			return;
-		}
-
-		// Ensure that other fields have valid values before submission
-		if (bartendersWithTipOut.length <= 0) {
-			setSubmitError("Please select at least 1 bartender.");
-			return;
-		}
-		if (!employeeTipCollected) {
-			setSubmitError("Please fill out all fields.");
-			return;
-		}
-
-		// If the tip breakdown doesn't exist, proceed with submitting it
 		const tipBreakdown = {
 			show: selectedShow,
-			date: ShiftDate(),
+			date: shiftDate,
 			totalTips: Number(totalTips),
-			foodSales: foodSalesTotal,
-			barBackPercentage: barBackPercentage,
+			foodSales: Number(foodSalesTotal) || 0,
+			barBackPercentage: Number(barBackPercentage) || 0,
 			cookTips: cooksWithTipOut,
 			barBackTips: barBacksWithTipOut,
 			BartenderTips: adjustedBartendersWithTipOut,
 			tipsPerBartender: tipsPerBartender(),
 			tipsPerBarBack: tipsPerBarBack(),
 			tipsPerCook: tipsPerCook(),
-			totalBarSales: totalBarSales,
-			shiftNotes: shiftNotes,
+			totalBarSales: Number(totalBarSales) || 0,
+			shiftNotes: shiftNotes || "",
 		};
 
-		setNewTipBreakdown(tipBreakdown);
-		setSubmitting(true);
-
-		// Continue with the submission process
-	};
-
-	const submitTipBreakdown = async () => {
-		console.log("newTipBreakdown", newTipBreakdown);
 		try {
 			const response = await fetch("/api/addTipBreakDown", {
 				method: "POST",
-				headers: {
-					"Content-Type": "application/json", // Specify the content type
-				},
-				body: JSON.stringify(newTipBreakdown),
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(tipBreakdown),
 			});
-
-			if (response.ok) {
-				const responseData = await response.json(); // Parse response body as JSON
-				const newTipBreakdownId = responseData.tipBreakdownId; // Assuming the server returns the ID as 'id'
-				console.log(
-					"Tip Breakdown added successfully with ID:",
-					newTipBreakdownId
-				);
-				setSubmitting(false);
-				return newTipBreakdownId;
-			} else {
-				console.log("response not ok");
+			const body = await response.json().catch(() => ({}));
+			if (response.ok && body.tipBreakdownId) {
+				// replace() so the browser Back button does not land here again.
+				router.replace(`/getSelectedTipBreakDown/${body.tipBreakdownId}`);
+				return;
 			}
+			setSubmitError(
+				body.message || "Could not save the tip breakdown. Please try again."
+			);
 		} catch (error) {
-			console.log(error);
+			console.error(error);
+			setSubmitError("Could not reach the server. Please try again.");
 		}
+		setSubmitting(false);
 	};
 
 	return (
@@ -405,7 +376,9 @@ export default function TipBreakDown({
 					<Row>
 						<Col sm={4} xs={6}>
 							<h4>Total Tips:</h4>
-							<h2 className="highlight-color">${totalTips}</h2>
+							<h2 className="highlight-color">
+								${Number(totalTips).toFixed(2)}
+							</h2>
 						</Col>
 						<Col sm={4} xs={6}>
 							<h4>Food sales:</h4>
@@ -569,7 +542,9 @@ export default function TipBreakDown({
 										)}
 										<Col>
 											<FontAwesomeIcon icon={faSackDollar} />{" "}
-											<p className="highlight-color">${bartender.tipOut}</p>
+											<p className="highlight-color">
+												${Number(bartender.tipOut).toFixed(2)}
+											</p>
 										</Col>
 									</Row>
 								</Container>
@@ -584,37 +559,37 @@ export default function TipBreakDown({
 						</Col>
 					</Row>
 				)}
-				{/* <Row>
-					<Col>
+				<Row className="justify-content-center mt-3">
+					<Col xs="auto">
 						<Button
 							onClick={handleBackButtonClick}
 							className={style.centerButton}
+							disabled={submitting}
 						>
-							Reset
+							Back
 						</Button>
 					</Col>
-					<Col>
-						<form type="submit" disabled={submitting}>
-							<Button
-								onClick={toggleConfirmation}
-								className={style.centerButton}
-							>
-								{submitting ? (
-									<>
-										<FontAwesomeIcon icon={faSpinner} spin /> Submitting...
-									</>
-								) : (
-									"Submit"
-								)}
-							</Button>
-							<ConfirmationDialog
-								isOpen={showConfirmation}
-								toggle={toggleConfirmation}
-								onConfirm={handleAddTipBreakDown}
-							/>
-						</form>
+					<Col xs="auto">
+						<Button
+							onClick={toggleConfirmation}
+							className={style.centerButton}
+							disabled={submitting}
+						>
+							{submitting ? (
+								<>
+									<FontAwesomeIcon icon={faSpinner} spin /> Submitting...
+								</>
+							) : (
+								"Submit"
+							)}
+						</Button>
+						<ConfirmationDialog
+							isOpen={showConfirmation}
+							toggle={toggleConfirmation}
+							onConfirm={handleAddTipBreakDown}
+						/>
 					</Col>
-				</Row> */}
+				</Row>
 			</div>
 		</Container>
 	);

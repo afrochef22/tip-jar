@@ -137,7 +137,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		.map((cook) => cook.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
 
-	const cooksTips = foodSales * 0.15;
+	const cooksTips = cookTipsData.length === 0 ? 0 : foodSales * 0.15;
 
 	// Function to calculate tips per cook using Decimal
 	const getTipsPerCook = () => {
@@ -147,7 +147,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		} else {
 			tips = new Decimal(cooksTips).div(cookHours);
 		}
-		return tips.toNumber(); // Convert Decimal back to number for state
+		const n = tips.toNumber();
+		return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
 	};
 	const calculatedCookTips = getTipsPerCook();
 	useEffect(() => {
@@ -166,7 +167,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		} else {
 			tips = new Decimal(barbackTips).div(barBackHours);
 		}
-		return tips.toNumber(); // Convert Decimal back to number for state
+		const n = tips.toNumber();
+		return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
 	};
 
 	const calculatedBarBackTips = getTipsPerBarBack();
@@ -183,7 +185,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		} else {
 			tips = new Decimal(bartenderTips).div(bartenderHours);
 		}
-		return tips.toNumber(); // Convert Decimal back to number for state
+		const n = tips.toNumber();
+		return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
 	};
 
 	const calculatedBartenderTips = getTipsPerBartender();
@@ -208,7 +211,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 			let tipOut = Number(getTipsPerBarBack().toFixed(2));
 			return { ...barBack, tipOut };
 		} else {
-			let tipOut = Number(getTipsPerBarBack() * barBack.tippedHours);
+			let tipOut = Number((getTipsPerBarBack() * barBack.tippedHours).toFixed(2));
 			return { ...barBack, tipOut };
 		}
 	});
@@ -219,7 +222,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 			let tipOut = Number(getTipsPerCook().toFixed(2));
 			return { ...cook, tipOut };
 		} else {
-			let tipOut = Number(getTipsPerCook() * cook.tippedHours);
+			let tipOut = Number((getTipsPerCook() * cook.tippedHours).toFixed(2));
 			return { ...cook, tipOut };
 		}
 	});
@@ -361,7 +364,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		// Check if the object has the 'tipOut' key
 		if ("tipOut" in obj) {
 			// Apply toFixed() to the 'tipOut' key and update the value in-place
-			obj.tipOut = Number(obj.tipOut).toFixed(2);
+			obj.tipOut = Number(Number(obj.tipOut).toFixed(2));
 		}
 	});
 	totalAdjustedTipOutBartenders = adjustedBartendersWithTipOut.reduce(
@@ -884,7 +887,9 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 												)}
 												<Col>
 													<FontAwesomeIcon icon={faSackDollar} />{" "}
-													<p className="highlight-color">${bartender.tipOut}</p>
+													<p className="highlight-color">
+														${Number(bartender.tipOut).toFixed(2)}
+													</p>
 												</Col>
 											</Row>
 										</Container>

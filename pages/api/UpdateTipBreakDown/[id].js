@@ -38,92 +38,28 @@ export default async (req, res) => {
 				}
 			}
 
-			let updateDocument = {};
-			let setValues = {}; // Accumulate changes here
-
-			if (
-				data.show ||
-				data.date ||
-				data.totalTips ||
-				data.foodSales ||
-				data.barBackPercentage ||
-				data.totalBarSales ||
-				data.shiftNotes !== undefined // Check for undefined instead of falsy value
-			) {
-				console.log("data matches");
-				setValues = {
-					...(data.show && { show: data.show }),
-					...(data.date && { date: data.date }),
-					...(data.totalTips && { totalTips: data.totalTips }),
-					...(data.foodSales && { foodSales: data.foodSales }),
-					...(data.totalBarSales && { totalBarSales: data.totalBarSales }),
-					...(data.shiftNotes !== undefined && { shiftNotes: data.shiftNotes }), // Explicitly handle empty string
-					...(data.barBackPercentage && {
-						barBackPercentage: data.barBackPercentage,
-					}),
-				};
-			}
-
-			// Accumulate changes for cook tips
-			if (data.cookTips && Array.isArray(data.cookTips)) {
-				const updatedCookTips = data.cookTips.map((cookTip) => {
-					if (cookTip.id === data.cookTips.id) {
-						console.log("cook matches");
-
-						return { ...cookTip, tipOut: cookTip.tipOut };
-					}
-					return cookTip;
-				});
-				setValues.cookTips = updatedCookTips;
-			}
-
-			// Accumulate changes for bar back tips
-			if (data.barBackTips && Array.isArray(data.barBackTips)) {
-				const updatedBarBackTips = data.barBackTips.map((barBackTip) => {
-					if (data.barBackTips.includes(barBackTip.id)) {
-						console.log("bar back matches");
-
-						return { ...barBackTip, tipOut: barBackTip.tipOut };
-					}
-					return barBackTip;
-				});
-				setValues.barBackTips = updatedBarBackTips;
-			}
-
-			// // / Accumulate changes for bartender tips
-			if (data.bartenderTips && Array.isArray(data.bartenderTips)) {
-				// Construct an array to hold the updated bartender tips
-				const updatedBartenderTips = [];
-
-				// Iterate over the existing bartender tips
-				for (const bartenderTip of data.bartenderTips) {
-					// Find the bartender tip that matches the criteria for update
-					const existingTip = data.bartenderTips.find(
-						(tip) => tip.id === bartenderTip.id
-					);
-					if (existingTip) {
-						console.log("bartender matches");
-
-						// If the tip exists, update only the desired property (tipOut) and keep the rest unchanged
-						const updatedBartenderTip = {
-							...existingTip,
-							tipOut: bartenderTip.tipOut,
-						};
-						// Add the updated bartender tip to the array
-						updatedBartenderTips.push(updatedBartenderTip);
-					} else {
-						// If the tip does not exist, add it as is to the updated array
-						updatedBartenderTips.push(bartenderTip);
-					}
-				}
-
-				// Set the updated bartender tips in the updateDocument
-				setValues.BartenderTips = updatedBartenderTips;
-			}
-
+			// Copy only the fields that were sent. 0 and "" are valid values.
+			const setValues = {};
+			const copy = (key, transform = (v) => v) => {
+				if (data[key] !== undefined) setValues[key] = transform(data[key]);
+			};
+			copy("show");
+			copy("date");
+			copy("shiftNotes");
+			copy("totalTips", Number);
+			copy("foodSales", Number);
+			copy("barBackPercentage", Number);
+			copy("totalBarSales", Number);
+			copy("tipsPerCook", Number);
+			copy("tipsPerBarBack", Number);
+			copy("tipsPerBartender", Number);
+			if (Array.isArray(data.cookTips)) setValues.cookTips = data.cookTips;
+			if (Array.isArray(data.barBackTips)) setValues.barBackTips = data.barBackTips;
+			if (Array.isArray(data.bartenderTips))
+				setValues.BartenderTips = data.bartenderTips;
 			setValues.updatedat = new Date();
 
-			updateDocument.$set = setValues; // Merge accumulated changes into updateDocument
+			const updateDocument = { $set: setValues };
 
 			const result = await tipBreakDownCollection.updateOne(
 				filter,
@@ -163,43 +99,43 @@ export default async (req, res) => {
 							// Check if the tip belongs to cookTips, barBackTips, or bartenderTips
 							if (tip.workingPosition === "Cook") {
 								// Find the corresponding cook tip and update the tip amount
-								const cook = data.cookTips.find(
+								const cook = (data.cookTips ?? []).find(
 									(cook) => cook.id === employee._id.toString()
 								);
 
 								if (cook) {
-									updatedTipAmount = cook.tipOut;
-									updatedDate = data.date;
-									updatedShow = data.show;
+									updatedTipAmount = Number(cook.tipOut);
+									updatedDate = data.date ?? tip.date;
+									updatedShow = data.show ?? tip.show;
 									updatedWorkingPosition = cook.workingPosition;
 									updateTippedHours = cook.tippedHours;
 								}
 							} else if (tip.workingPosition === "Bar Back") {
 								// Find the corresponding bar back tip and update the tip amount
-								const barBack = data.barBackTips.find(
+								const barBack = (data.barBackTips ?? []).find(
 									(barBack) => barBack.id === employee._id.toString()
 								);
 								if (barBack) {
-									updatedTipAmount = barBack.tipOut;
+									updatedTipAmount = Number(barBack.tipOut);
 									// console.log("Updated bar back tip amount:", updatedTipAmount);
-									updatedDate = data.date;
-									updatedShow = data.show;
+									updatedDate = data.date ?? tip.date;
+									updatedShow = data.show ?? tip.show;
 									updatedWorkingPosition = barBack.workingPosition;
 									updateTippedHours = barBack.tippedHours;
 								}
 							} else if (tip.workingPosition === "Bartender") {
 								// Find the corresponding bartender tip and update the tip amount
-								const bartender = data.bartenderTips.find(
+								const bartender = (data.bartenderTips ?? []).find(
 									(bartender) => bartender.id === employee._id.toString()
 								);
 								if (bartender) {
-									updatedTipAmount = bartender.tipOut;
+									updatedTipAmount = Number(bartender.tipOut);
 									// console.log(
 									// 	"Updated bartender tip amount:",
 									// 	updatedTipAmount
 									// );
-									updatedDate = data.date;
-									updatedShow = data.show;
+									updatedDate = data.date ?? tip.date;
+									updatedShow = data.show ?? tip.show;
 									updatedWorkingPosition = bartender.workingPosition;
 									updateTippedHours = bartender.tippedHours;
 								}

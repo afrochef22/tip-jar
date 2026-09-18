@@ -51,6 +51,14 @@ export default async (req, res) => {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
 
+		const duplicate = await db.collection("tipBreakdown").findOne({ show, date });
+		if (duplicate) {
+			return res.status(409).json({
+				message: "A tip breakdown for this show and date already exists.",
+				tipBreakdownId: duplicate._id,
+			});
+		}
+
 		const tipBreakdownResult = await db.collection("tipBreakdown").insertOne({
 			show,
 			date,
@@ -77,7 +85,7 @@ export default async (req, res) => {
 					$addToSet: {
 						tipsCollected: {
 							date,
-							amount: employee.tipOut,
+							amount: Number(employee.tipOut) || 0,
 							workingPosition: employee.workingPosition,
 							show,
 							tipBreakdownId: tipBreakdownId.toString(),

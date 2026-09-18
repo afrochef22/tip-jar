@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
 	Button,
 	Form,
@@ -42,62 +42,10 @@ export default function CreditTipCalculation({
 		(employee) => employee.workingPosition === "Cook"
 	);
 
-	const [barBackPercentage, setBarBackPercentage] = useState(0);
-	const [foodSalesTotal, setFoodSalesTotal] = useState(0);
-	const [employeeHours, setEmployeeHours] = useState([]);
-	const [employeeTipCollected, setEmployeeTipCollected] = useState([]);
-	const [totalTips, setTotalTips] = useState(0);
 	const [isBartenderHoursClicked, setBartenderHoursClicked] = useState(false);
 	const [isCookHoursClicked, setCookHoursClicked] = useState(false);
 	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
-	const [totalBarSales, setTotalBarSales] = useState(0);
-	const [shiftNotes, setShiftNotes] = useState("");
 
-	useEffect(() => {
-		if (
-			barBackPercentage &&
-			foodSalesTotal !== null &&
-			employeeHours &&
-			employeeTipCollected &&
-			totalTips
-		) {
-			const bartendersWithHoursAndTip = bartenders.map((bartender) => {
-				const id = bartender.id;
-				const tippedHours = employeeHours[id] || 0; // Get hours for the current bartender
-				const tipsBroughtIn = employeeTipCollected[id];
-				return { ...bartender, tippedHours, tipsBroughtIn };
-			});
-			const barBacksWithHours = barBacks.map((barBack) => {
-				const id = barBack.id;
-				const tippedHours = employeeHours[id] || 0; // Get hours for the current barBack
-				return { ...barBack, tippedHours };
-			});
-			const cooksWithHours = cooks.map((cook) => {
-				const id = cook.id;
-				const tippedHours = employeeHours[id] || 0; // Get hours for the current cook
-				return { ...cook, tippedHours };
-			});
-
-			console.log("total bar sales", totalBarSales);
-			console.log("shift notes", shiftNotes);
-			router.push({
-				pathname: "/TipBreakDownPage",
-				query: {
-					bartenders: JSON.stringify(bartendersWithHoursAndTip),
-					barBacks: JSON.stringify(barBacksWithHours),
-					cooks: JSON.stringify(cooksWithHours),
-					barBackPercentage: JSON.stringify(barBackPercentage),
-					foodSalesTotal: JSON.stringify(foodSalesTotal),
-					employeeHours: JSON.stringify(employeeHours),
-					employeeTipCollected: JSON.stringify(employeeTipCollected),
-					selectedShow: JSON.stringify(selectedShow),
-					totalTips: JSON.stringify(totalTips),
-					totalBarSales: JSON.stringify(totalBarSales),
-					shiftNotes: JSON.stringify(shiftNotes),
-				},
-			});
-		}
-	}, [barBackPercentage, foodSalesTotal, employeeHours, employeeTipCollected]);
 
 	const [defaultbarBackPercentage, setDefaultBarBackPercentage] = useState(15);
 	const handleIncrease = () => {
@@ -134,14 +82,10 @@ export default function CreditTipCalculation({
 			return;
 		}
 
-		const data = {};
 		const employeeTips = {};
 		const employeeHours = {};
-		// Iterate through form data and convert it to a plain object
+		// Iterate through form data and pull out the per-employee tip/hours fields
 		formData.forEach((value, key) => {
-			data[key] = value;
-			console.log("formData", formData);
-
 			const inputValue = formData.get("totalTips");
 
 			// Check if the input value contains only numbers
@@ -173,27 +117,40 @@ export default function CreditTipCalculation({
 			}
 		});
 
-		// If modal is opened due to invalid input, prevent further execution
-
-		setTotalTips(Number(formData.get("totalTips")));
-		console.log("totalTips", totalTips);
+		const totalTips = Number(formData.get("totalTips"));
 		const barBackPercentageValue = formData.get("BarBackPercentage");
-		console.log("barBackPercentageValue", barBackPercentageValue);
-		setBarBackPercentage(
-			barBackPercentageValue === null ? 15 : Number(barBackPercentageValue)
-		);
-		console.log("barBackPercentage", barBackPercentage);
-		// setBarBackPercentage(Number(formData.get("BarBackPercentage")));
+		const barBackPercentage =
+			barBackPercentageValue === null ? 15 : Number(barBackPercentageValue);
 		const foodSalesTotalValue = formData.get("FoodSalesTotal");
-		setFoodSalesTotal(
-			foodSalesTotalValue !== "" && foodSalesTotalValue !== undefined
-				? Number(foodSalesTotalValue)
-				: null
-		);
-		setEmployeeHours(employeeHours);
-		setEmployeeTipCollected(employeeTips);
-		setTotalBarSales(Number(formData.get("BarSalesTotal")));
-		setShiftNotes(formData.get("shiftNotes"));
+		const foodSalesTotal = foodSalesTotalValue ? Number(foodSalesTotalValue) : 0;
+		const totalBarSales = Number(formData.get("BarSalesTotal")) || 0;
+		const shiftNotes = formData.get("shiftNotes") ?? "";
+
+		const withHours = (employee) => ({
+			...employee,
+			tippedHours: employeeHours[employee.id] || 0,
+		});
+		const bartendersWithHoursAndTip = bartenders.map((bartender) => ({
+			...withHours(bartender),
+			tipsBroughtIn: employeeTips[bartender.id],
+		}));
+
+		router.push({
+			pathname: "/TipBreakDownPage",
+			query: {
+				bartenders: JSON.stringify(bartendersWithHoursAndTip),
+				barBacks: JSON.stringify(barBacks.map(withHours)),
+				cooks: JSON.stringify(cooks.map(withHours)),
+				barBackPercentage: JSON.stringify(barBackPercentage),
+				foodSalesTotal: JSON.stringify(foodSalesTotal),
+				employeeHours: JSON.stringify(employeeHours),
+				employeeTipCollected: JSON.stringify(employeeTips),
+				selectedShow: JSON.stringify(selectedShow),
+				totalTips: JSON.stringify(totalTips),
+				totalBarSales: JSON.stringify(totalBarSales),
+				shiftNotes: JSON.stringify(shiftNotes),
+			},
+		});
 	};
 
 	const handleSwitchToggle = (position) => {

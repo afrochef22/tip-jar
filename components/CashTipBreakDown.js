@@ -161,7 +161,7 @@ export default function CashTipBreakDown({
 		// Check if the object has the 'tipOut' key
 		if ("tipOut" in obj) {
 			// Apply toFixed() to the 'tipOut' key and update the value in-place
-			obj.tipOut = Number(obj.tipOut).toFixed(2);
+			obj.tipOut = Number(Number(obj.tipOut).toFixed(2));
 		}
 	});
 	let totalAdjustedTipOutBartenders = bartendersWithTipOut.reduce(
@@ -239,7 +239,7 @@ export default function CashTipBreakDown({
 													<Col className=" mt-2"> {barBack.name}</Col>
 													<Col className=" mt-2">
 														<FontAwesomeIcon icon={faSackDollar} />
-														<p className="highlight-color">${barBack.tipOut}</p>
+														<p className="highlight-color">${Number(barBack.tipOut).toFixed(2)}</p>
 													</Col>
 												</Row>
 											) : (
@@ -251,7 +251,7 @@ export default function CashTipBreakDown({
 													</Col>
 													<Col className=" mb-4 mt-2">
 														<FontAwesomeIcon icon={faSackDollar} />
-														<p className="highlight-color">${barBack.tipOut}</p>
+														<p className="highlight-color">${Number(barBack.tipOut).toFixed(2)}</p>
 													</Col>
 												</Row>
 											)}
@@ -285,7 +285,7 @@ export default function CashTipBreakDown({
 
 												<Col className=" mt-2">
 													<FontAwesomeIcon icon={faSackDollar} />
-													<p className="highlight-color">${bartender.tipOut}</p>
+													<p className="highlight-color">${Number(bartender.tipOut).toFixed(2)}</p>
 												</Col>
 											</Row>
 										) : (
@@ -297,7 +297,7 @@ export default function CashTipBreakDown({
 												</Col>
 												<Col className="mb-2 mt-2">
 													<FontAwesomeIcon icon={faSackDollar} />
-													<p className="highlight-color">${bartender.tipOut}</p>
+													<p className="highlight-color">${Number(bartender.tipOut).toFixed(2)}</p>
 												</Col>
 											</Row>
 										)}

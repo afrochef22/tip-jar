@@ -4,7 +4,7 @@ import clientPromise from "../lib/mongodb";
 import { useRouter } from "next/router";
 import TipBreakDown from "../components/TipBreakDown";
 
-export default function creditTipCalculationPage(allTipBreakdowns) {
+export default function TipBreakDownPage({ allTipBreakdowns }) {
 	const router = useRouter();
 	const {
 		bartenders,
@@ -20,32 +20,19 @@ export default function creditTipCalculationPage(allTipBreakdowns) {
 		shiftNotes,
 	} = router.query;
 
-	console.log("allTipBreakdowns", allTipBreakdowns);
-
-	console.log("bartenders", bartenders);
-	console.log("barBacks", barBacks);
-	console.log("cooks", cooks);
-	console.log("barBackPercentage", barBackPercentage);
-	console.log("foodSalesTotal", foodSalesTotal);
-	console.log("employeeHours", employeeHours);
-	console.log("employeeTipCollected", employeeTipCollected);
-	console.log("selectedShow", selectedShow);
-	console.log("totalTips", totalTips);
-	console.log("totalBarSales", totalBarSales);
-	console.log("shiftNotes", shiftNotes);
 
 	const parsedBartenders = bartenders ? JSON.parse(bartenders) : [];
 	const parsedBarBacks = barBacks ? JSON.parse(barBacks) : [];
 	const parsedCooks = cooks ? JSON.parse(cooks) : [];
-	const parsedBarBackPercentage = parseFloat(barBackPercentage);
-	const parsedFoodSalesTotal = parseFloat(foodSalesTotal);
+	const parsedBarBackPercentage = Number(barBackPercentage) || 0;
+	const parsedFoodSalesTotal = Number(foodSalesTotal) || 0;
 	const parsedEmployeeHours = employeeHours ? JSON.parse(employeeHours) : [];
 	const parsedEmployeeTipCollected = employeeTipCollected
 		? JSON.parse(employeeTipCollected)
 		: [];
 	const parseSelectedShow = selectedShow ? JSON.parse(selectedShow) : "";
-	const parseTotalTips = totalTips ? JSON.parse(totalTips) : "";
-	const parseTotalBarSales = totalBarSales ? JSON.parse(totalBarSales) : "";
+	const parseTotalTips = totalTips ? Number(JSON.parse(totalTips)) || 0 : 0;
+	const parseTotalBarSales = totalBarSales ? Number(JSON.parse(totalBarSales)) || 0 : 0;
 	const parseShiftNotes = shiftNotes ? JSON.parse(shiftNotes) : "";
 
 	return (
@@ -59,7 +46,7 @@ export default function creditTipCalculationPage(allTipBreakdowns) {
 			employeeTipCollected={parsedEmployeeTipCollected}
 			selectedShow={parseSelectedShow}
 			allTipBreakdowns={allTipBreakdowns}
-			totalTips={totalTips}
+			totalTips={parseTotalTips}
 			totalBarSales={parseTotalBarSales}
 			shiftNotes={parseShiftNotes}
 		/>
@@ -73,15 +60,13 @@ export async function getServerSideProps() {
 
 		const allTipBreakdowns = await db
 			.collection("tipBreakdown")
-			.find({})
-			.sort()
-			.limit(20)
+			.find({}, { projection: { show: 1, date: 1 } })
 			.toArray();
-		console.log(allTipBreakdowns);
 		return {
 			props: { allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)) },
 		};
 	} catch (err) {
 		console.error(err);
+		return { props: { allTipBreakdowns: [] } };
 	}
 }

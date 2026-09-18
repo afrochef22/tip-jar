@@ -44,47 +44,47 @@ Check the box when done. Commit after each phase.
 
 ## Phase 2: Data integrity (high)
 
-- [ ] **2.1 Stop duplicate breakdowns on refresh / Back**
+- [x] **2.1 Stop duplicate breakdowns on refresh / Back**
   - Files: `components/TipBreakDown.js:39-44, 311`, `pages/TipBreakDownPage.js:74-79`
   - Problem: page auto-submits on mount. Duplicate check only sees 20 oldest records because of `.sort().limit(20)`.
   - Fix: remove `.limit(20)`. Better: move the duplicate check server-side into `addTipBreakDown` (`findOne({ show, date })`, return 409). Also stop auto-submitting on mount: re-enable the Submit button and confirmation dialog (currently commented out at lines 587-617) so refresh does not resubmit.
   - Verify: submit a breakdown, press browser Back, confirm no second record in `tipBreakdown`.
 
-- [ ] **2.2 Handle failed submit**
+- [x] **2.2 Handle failed submit**
   - File: `components/TipBreakDown.js:46-52, 364-390`
   - Problem: on a non-OK response the code pushes `/getSelectedTipBreakDown/undefined`.
   - Fix: only navigate when an id comes back. Set `submitError` and `setSubmitting(false)` otherwise.
 
-- [ ] **2.3 Guard detail page against missing fields**
+- [x] **2.3 Guard detail page against missing fields**
   - Files: `pages/getSelectedTipBreakDown/[id].js:14, 61, 67, 73`, `pages/api/removeTipBreakDown/[id].js:37`
   - Fix: move the `!breakDown` return above the `ShiftDate()` line. Use `(Number(x) || 0).toFixed(2)` for `totalBarSales`, `totalTips`, `foodSales`. Default `cookTips`, `barBackTips`, `BartenderTips` to `[]` in the API.
   - Verify: open `/getSelectedTipBreakDown/notanid` and an old record. No crash.
 
-- [ ] **2.4 Allow zero values on edit**
+- [x] **2.4 Allow zero values on edit**
   - File: `pages/api/UpdateTipBreakDown/[id].js:29-49`
   - Problem: truthiness checks drop 0 for `totalTips`, `foodSales`, `barBackPercentage`, `totalBarSales`.
   - Fix: use `!== undefined` checks. Delete the no-op cook/barback/bartender remapping at lines 53-107 and just assign the arrays.
   - Verify: edit a breakdown, set food sales to 0, reopen, confirm 0 persisted.
 
-- [ ] **2.5 Allow 0% bar back and $0 tips in credit calculator**
+- [x] **2.5 Allow 0% bar back and $0 tips in credit calculator**
   - File: `components/CreditTipCalculation.js:56-63`
   - Problem: effect only navigates when `barBackPercentage && totalTips` are truthy. Submit spinner hangs.
   - Fix: navigate directly inside `handleCalculate` instead of via the effect. Delete the effect. Use `!== null` checks.
   - Verify: set bar back % to 0, submit, page advances.
 
-- [ ] **2.6 Store bartender tipOut as a number**
+- [x] **2.6 Store bartender tipOut as a number**
   - Files: `components/TipBreakDown.js:273-279`, `components/UpdateTipBreakDownModal.js:360-366`, `components/CashTipBreakDown.js:160-166`
   - Problem: `.toFixed(2)` converts to string before saving. Cooks and bar backs are numbers.
   - Fix: `obj.tipOut = Number(Number(obj.tipOut).toFixed(2))`. Then remove the prop-mutating workaround in `TipsTotalsSpreadSheet.js:116-124` and `CCTipsTotals.js:123-131` and use `Number(tip.amount)` where read.
   - Optional migration: one-off script to convert existing string amounts.
 
-- [ ] **2.7 Spreadsheet links point to wrong breakdown**
+- [x] **2.7 Spreadsheet links point to wrong breakdown**
   - Files: `components/TipsTotalsSpreadSheet.js:225-229`, `pages/CCTipsTotals.js:269-273`
   - Problem: `showIdMap` ignores date, so a band on two nights links both columns to the later record.
   - Fix: filter by `tip.date === date` before building the map.
   - Verify: create two breakdowns with the same show name on different dates, click each column header.
 
-- [ ] **2.8 Return proper responses on API/SSR errors**
+- [x] **2.8 Return proper responses on API/SSR errors**
   - Files: `pages/api/getEmployees.js:15`, `pages/api/removeEmployee/[id].js:26`, `pages/Dashboard.js`, `pages/employees.js`, `pages/TipBreakDownPage.js`, `pages/getAllTipBreakDowns.js`
   - Fix: `res.status(500).json(...)` in the catch. Drop the extra `result` arg. Return `{ props: { ... : [] } }` or `{ notFound: true }` from every `getServerSideProps` catch.
 
@@ -203,3 +203,15 @@ Check the box when done. Commit after each phase.
   - Registration tokens are now generated and stored by `/api/sendEmail`; the client no longer writes them. The link is single-use and validated server-side.
   - `1.3` username uniqueness returns 409; `Register.js` shows the message.
   - Registration links are also consumed by a Google sign-in (the sign-in callback clears `token`/`tokenExpiration`), and `RegisterPage` validates the token server-side so a used link redirects to `/TokenExpired` before rendering.
+
+- Phase 2 done.
+  - `TipBreakDown.js` no longer auto-submits on mount; Submit/Back buttons and the confirmation dialog are back, and a failed submit shows an error instead of navigating to `/undefined`. Fixed a real bug found along the way: the duplicate-show check read `allTipBreakdowns.allTipBreakdowns` (always undefined), so it never actually caught duplicates client-side.
+  - `addTipBreakDown` API now also rejects a duplicate `{show, date}` server-side (409) as a second line of defense, and coerces `tipOut` to a number when writing `tipsCollected`.
+  - `UpdateTipBreakDown` API now copies fields with `!== undefined` instead of truthiness, so 0 and empty string survive an edit. Removed the dead no-op remap of `cookTips`/`barBackTips`/`bartenderTips`.
+  - `getSelectedTipBreakDown/[id].js` checks `!breakDown` before touching any field, defaults the three tip arrays to `[]`, and formats all dollar amounts with `Number(x) || 0`.
+  - `CreditTipCalculation.js`: removed the effect that gated navigation on `barBackPercentage && totalTips` being truthy (blocked 0% bar back and $0 tips); `handleCalculate` now builds the query and pushes directly.
+  - Bartender `tipOut` is now stored as a `Number` everywhere it's written (`TipBreakDown.js`, `UpdateTipBreakDownModal.js`, `CashTipBreakDown.js`), matching cooks/bar backs. Removed the prop-mutating `forEach` workaround in both spreadsheet files; reads now do `Number(...)` inline.
+  - `showIdMap` in both spreadsheet files now filters by `tip.date === date` before mapping show name to id, so a repeat show name on a different date links to the right breakdown.
+  - `getServerSideProps` catch blocks in `Dashboard.js`, `employees.js`, `getAllTipBreakDowns.js`, `TipBreakDownPage.js` now return `{ props: { ...: [] } }` instead of `undefined`.
+  - New `scripts/migrate-tipout-numbers.js` (dry-run by default, `--apply` to write) converts string `tipOut`/`amount` values to numbers. Ran it against production: **448 tipBreakdown docs / 1396 values** and **17 employee docs / 1361 values** were converted; a follow-up dry run confirmed 0 remaining string values.
+  - Minor cleanup while in these files: removed the unused `GetAllTipBreakdowns` import/log from `TipBreakDown.js`, the dead `data` object in `CreditTipCalculation.js`'s form handler, and now-unused `useEffect` imports in both.

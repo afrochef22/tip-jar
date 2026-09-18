@@ -11,25 +11,26 @@ import { ShiftDate } from "../../components/CurrentShift";
 
 export default function getSelectedTipBreakDown({ breakDown }) {
 	const { data: session } = useSession();
-	const shiftMatch = ShiftDate() === breakDown.date;
-	console.log("Breakdown:", breakDown.barBackTips);
 	if (!breakDown) {
-		// Handle the case when breakDown is not found
 		return <div>Tip Breakdown not found</div>;
 	}
+	const shiftMatch = ShiftDate() === breakDown.date;
+	const cookTips = breakDown.cookTips ?? [];
+	const barBackTips = breakDown.barBackTips ?? [];
+	const bartenderTips = breakDown.BartenderTips ?? [];
+	const money = (v) => (Number(v) || 0).toFixed(2);
 
-	const bartenderHours = breakDown.BartenderTips.map(
+	const bartenderHours = bartenderTips.map(
 		(bartender) => bartender.tippedHours || 0
 	).reduce((acc, tippedHours) => acc + tippedHours, 0);
 
-	const barBackHours = breakDown.barBackTips
+	const barBackHours = barBackTips
 		.map((barBack) => barBack.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
 
-	const cookHours = breakDown.cookTips
+	const cookHours = cookTips
 		.map((cook) => cook.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
-	console.log("Breakdown:", breakDown.totalTips);
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
 			{session || shiftMatch ? (
@@ -58,22 +59,22 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						<Col className="mb-3" sm={4} xs={7}>
 							<h4>Total Bar Sales:</h4>
 							<h2 className="highlight-color">
-								${breakDown.totalBarSales.toFixed(2)}
+								${money(breakDown.totalBarSales)}
 							</h2>
 						</Col>
 						<Col className="mb-3" sm={4} xs={5}>
 							<h4>Total Tips:</h4>
 							<h2 className="highlight-color">
-								${breakDown.totalTips.toFixed(2)}
+								${money(breakDown.totalTips)}
 							</h2>
 						</Col>
 						<Col className="mb-3" sm={4} xs={6}>
 							<h4>Food sales:</h4>
 							<h2 className="highlight-color">
-								${breakDown.foodSales.toFixed(2)}
+								${money(breakDown.foodSales)}
 							</h2>
 						</Col>
-						{breakDown.barBackTips.length <= 0 ? (
+						{barBackTips.length <= 0 ? (
 							<></>
 						) : (
 							<Col className="mb-3" sm={6} xs={6}>
@@ -101,12 +102,12 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 								Tips per hour:
 								<span className="highlight-color">
 									{" "}
-									${breakDown.tipsPerCook.toFixed(2)}
+									${money(breakDown.tipsPerCook)}
 								</span>
 							</h4>
 						)}
-						{breakDown.cookTips.length > 0 &&
-							breakDown.cookTips.map((cook) => (
+						{cookTips.length > 0 &&
+							cookTips.map((cook) => (
 								<Col key={cook.id} xs={12} sm={6} md={4}>
 									<Container className={style.employeeContainer}>
 										<Row className={style.employeeName}>
@@ -153,13 +154,13 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						<h5>
 							Tips per hour:{" "}
 							<span className="highlight-color">
-								${breakDown.tipsPerBarBack.toFixed(2)}
+								${money(breakDown.tipsPerBarBack)}
 							</span>
 						</h5>
 					)}
 					<Row className="gap-2">
-						{breakDown.barBackTips.length > 0 &&
-							breakDown.barBackTips.map((barBack) => (
+						{barBackTips.length > 0 &&
+							barBackTips.map((barBack) => (
 								<Col key={barBack.id} xs={12} sm={6} md={4}>
 									<Container className={style.employeeContainer}>
 										<Row className={style.employeeName}>
@@ -208,13 +209,13 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 						<h5>
 							Tips per hour:{" "}
 							<span className="highlight-color">
-								${breakDown.tipsPerBartender.toFixed(2)}
+								${money(breakDown.tipsPerBartender)}
 							</span>
 						</h5>
 					)}
 					<Row className="gap-2">
 						{" "}
-						{breakDown.BartenderTips.map((bartender) => (
+						{bartenderTips.map((bartender) => (
 							<Col
 								key={bartender.id}
 								xs={12}
@@ -251,8 +252,8 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 										<Col>
 											<FontAwesomeIcon icon={faSackDollar} />{" "}
 											<p className="highlight-color">
-											${(Number(bartender.tipOut) || 0).toFixed(2)}
-										</p>
+												${(Number(bartender.tipOut) || 0).toFixed(2)}
+											</p>
 										</Col>
 									</Row>
 								</Container>

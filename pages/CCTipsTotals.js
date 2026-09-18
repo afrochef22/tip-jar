@@ -120,15 +120,6 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 		);
 	});
 
-	employeesWithTipsInRange.forEach((obj) => {
-		if (Array.isArray(obj.tipsCollected)) {
-			obj.tipsCollected.forEach((nestedObj) => {
-				if ("amount" in nestedObj) {
-					nestedObj.amount = Number(nestedObj.amount);
-				}
-			});
-		}
-	});
 	let sortedEmployees = employeesWithTipsInRange.sort((a, b) => {
 		const firstNameA = a.lastName;
 		const firstNameB = b.lastName;
@@ -267,7 +258,9 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 								// Create an object to map each show name to its corresponding ID
 								let showIdMap = {};
 								allTipBreakdowns
-									.filter((tip) => uniqueShows.includes(tip.show))
+									.filter(
+										(tip) => tip.date === date && uniqueShows.includes(tip.show)
+									)
 									.forEach((tip) => {
 										showIdMap[tip.show] = tip._id;
 									});
@@ -313,7 +306,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 											return (
 												<td key={`${date}-${show}-${index}`}>
 													{tipForDateAndShow
-														? tipForDateAndShow.amount.toFixed(2)
+														? Number(tipForDateAndShow.amount).toFixed(2)
 														: ""}
 												</td>
 											);
@@ -336,7 +329,7 @@ export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 											(tip) => tip.date === date
 										);
 										const totalAmountForDate = tipsForDate.reduce(
-											(total, tip) => total + Number(tip.amount.toFixed(2)),
+											(total, tip) => total + Number(Number(tip.amount).toFixed(2)),
 											0
 										);
 										return acc + totalAmountForDate;
