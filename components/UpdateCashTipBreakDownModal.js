@@ -183,7 +183,7 @@ const UpdateCashTipBreakDown = (
 
 	const handleNumberOfBarBacksChange = (value) => {
 		setNewNumberOfBarBacks(value);
-		if (Number.isInteger(value) && value >= 1) {
+		if (Number.isInteger(value) && value >= 0) {
 			setNewBarBacks(generateBarBacksArray(value));
 		}
 	};
@@ -366,8 +366,8 @@ const UpdateCashTipBreakDown = (
 											name="barBackNumber"
 											type="tel"
 											inputMode="numeric"
-											pattern="[1-9][0-9]*"
-											min="1"
+											pattern="[0-9]+"
+											min="0"
 											step="1"
 											required
 											value={

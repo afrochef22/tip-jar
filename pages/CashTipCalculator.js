@@ -124,7 +124,7 @@ export default function CashTipCalculator() {
 
 	const handleNumberOfBarBacksChange = (value) => {
 		setNumberOfBarBacks(value);
-		if (Number.isInteger(value) && value >= 1) {
+		if (Number.isInteger(value) && value >= 0) {
 			setBarBacks(generateBarBacksArray(value));
 		}
 	};
@@ -248,8 +248,8 @@ export default function CashTipCalculator() {
 									name="barBackNumber"
 									type="tel"
 									inputMode="numeric"
-									pattern="[1-9][0-9]*"
-									min="1"
+									pattern="[0-9]+"
+									min="0"
 									step="1"
 									required
 									onChange={(e) =>
