@@ -53,16 +53,10 @@ export default function TipsTotalsSpreadSheet({
 		setPayPeriodEndDate(nextEndDate);
 	};
 
+	// "Thu 10/15" - the year is in the pay period row above the table.
 	const formatDateStringWithDayOfWeek = (dateString) => {
-		const date = new Date(dateString);
-		const options = { weekday: "long" }; // Specify the format for the day of the week
-		return (
-			<>
-				{date.toLocaleDateString(undefined, options)}
-				<br />
-				{date.toLocaleDateString()}
-			</>
-		);
+		const date = parseDateWithFormats(dateString, dateFormats);
+		return date ? date.toFormat("ccc M/d") : dateString;
 	};
 
 	function parseDateWithFormats(dateString, formats) {
