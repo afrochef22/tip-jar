@@ -22,8 +22,10 @@ save/delete failures, and page size/speed. What's left:
   - Password hashes were in the same public page data. bcrypt makes them slow to crack, not impossible.
 - [ ] **Open the Dashboard once while signed in and confirm it looks normal**
   - It now loads less breakdown data and couldn't be checked without a sign-in.
-- [ ] **Decide whether every signed-in user should be a manager**
-  - There are no roles: anyone who completes registration can see and edit everything, including payroll and employees. Fine if only managers ever get registration links; worth a `role` field if staff do.
+- [x] **Decide whether every signed-in user should be a manager**
+  - Decided 2026-10-23: fine for now that every registered user can see and edit everything. Revisit with a `role` field if staff ever get registration links.
+- [x] **Sign-in checked on the live site**
+  - 2026-10-23: password, Google and email-link sign-in all confirmed working.
 - [ ] **Happy Hour can only be submitted once per day**
   - Kept on purpose (one button). On a night with two happy hours (e.g. 10/20: "Happy Hour Cafe" and "Happy Hour Main"), the second has to be typed into "Enter an event", which logged-out staff only see on nights with no show.
 - [ ] **Load the spreadsheet one pay period at a time** (later, if it feels slow)
