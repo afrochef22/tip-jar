@@ -86,7 +86,7 @@ export default function SelectBarBack({
 							</div>
 						</Col>
 					</Row>
-					<Row className="justify-content-center mt-4 mb-1">
+					<Row className={`justify-content-center mt-4 mb-1 ${style.stickyActions}`}>
 						<Button
 							onClick={() => btn("Bartender")}
 							className={`${style.centerButton}`}

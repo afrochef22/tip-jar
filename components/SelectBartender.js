@@ -93,7 +93,7 @@ export default function SelectBartender({
 							</div>
 						</Col>
 					</Row>
-					<Row className="justify-content-center mt-4 mb-5">
+					<Row className={`justify-content-center mt-4 mb-5 ${style.stickyActions}`}>
 						{submitError && (
 							<Row>
 								<Col className={`mx-2 secondary-color ${style.centerButton}`}>

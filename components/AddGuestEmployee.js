@@ -123,13 +123,10 @@ export default function AddGuestEmployee({
 		<div>
 			<Row
 				onClick={toggle}
-				className={`${style2.seperationLine} ${style.clickEmployee}`}
+				className={`${style2.seperationLine} ${style.clickEmployee} ${style2.clickEmployee}`}
 			>
-				<Col xs={8} sm={8} md={8}>
-					<Label className="highlight-color">+ Fill In</Label>
-				</Col>
-				<Col xs={4} sm={4} md={4}>
-					<div className={style2.unCheckBox}></div>
+				<Col xs={12}>
+					<Label className="highlight-color">+ Add a fill-in</Label>
 				</Col>
 			</Row>
 			<Modal isOpen={modal} toggle={toggle}>

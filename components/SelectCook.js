@@ -88,7 +88,7 @@ export default function SelectCook({
 							</div>
 						</Col>
 					</Row>
-					<Row className="justify-content-center mt-4 mb-1">
+					<Row className={`justify-content-center mt-4 mb-1 ${style.stickyActions}`}>
 						{submitError && (
 							<Row>
 								<Col className={` secondary-color  ${style.centerButton}`}>
