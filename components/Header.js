@@ -41,7 +41,7 @@ const Header = ({ user }) => {
 	const router = useRouter();
 
 	const handleSignOut = async () => {
-		await signOut(); // Trigger the sign-in process
+		await signOut({ callbackUrl: "/" });
 	};
 
 	const handleSignIn = async () => {

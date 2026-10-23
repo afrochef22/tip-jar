@@ -24,7 +24,7 @@ const SessionExpirationWarning = (args) => {
 			const timeUntilExpiration = new Date(current.expires).getTime() - Date.now();
 
 			if (timeUntilExpiration <= 0) {
-				await signOut();
+				await signOut({ callbackUrl: "/" });
 				return;
 			}
 			setShowWarning(timeUntilExpiration <= WARNING_THRESHOLD_MS);
@@ -48,7 +48,7 @@ const SessionExpirationWarning = (args) => {
 	};
 
 	const handleSignOut = () => {
-		signOut();
+		signOut({ callbackUrl: "/" });
 	};
 
 	return (

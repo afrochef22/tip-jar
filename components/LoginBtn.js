@@ -21,7 +21,7 @@ export default function Component() {
 		return (
 			<>
 				<div className="login-button-container">
-					<button className="manager-login-button" onClick={() => signOut()}>
+					<button className="manager-login-button" onClick={() => signOut({ callbackUrl: "/" })}>
 						<Spinner className="" size="sm">
 							Loading...
 						</Spinner>
