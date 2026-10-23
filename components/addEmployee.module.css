@@ -35,3 +35,59 @@ input .requiredBorder[required] {
 	/* transform: translateY(-50%); */
 	margin: 10px;
 }
+
+/* Edit employee window (dark, like the other edit windows). */
+.editBody {
+	color: var(--text-color);
+	padding: 20px;
+}
+.chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+.chip {
+	min-height: 44px;
+	padding: 8px 14px;
+	font-size: 16px;
+	border-radius: 22px;
+	border: 1px solid #777;
+	background-color: transparent;
+	color: var(--text-color);
+}
+.chipOn {
+	background-color: var(--button-green);
+	border-color: var(--button-green);
+	font-weight: 600;
+}
+.activeSwitch {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding-left: 0;
+	margin: 4px 0 8px;
+}
+.activeSwitch input {
+	margin: 4px 0 0 !important;
+	width: 2.6em !important;
+	height: 1.4em !important;
+	flex-shrink: 0;
+}
+.activeSwitch label {
+	font-size: 17px;
+}
+.switchHint {
+	display: block;
+	font-size: 14px;
+	opacity: 0.7;
+}
+.editFooter {
+	border-top: 1px solid #555;
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 10px;
+	padding: 16px 20px;
+}
+.editFooter > * {
+	margin: 0;
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import {
 	Form,
@@ -8,96 +8,70 @@ import {
 	Input,
 	Modal,
 	ModalHeader,
+	ModalBody,
 	ModalFooter,
 } from "reactstrap";
+import form from "./CreditTipForm.module.css";
+import edit from "./TipBreakDown.module.css";
 import style from "./addEmployee.module.css";
 
-export function UpdateEmployeeModal(props, args) {
-	const [modal, setModal] = useState(false);
+const POSITIONS = ["Bartender", "Bar Back", "Cook", "No Position"];
 
+// Filled in from the employee each time the window opens, so Cancel throws
+// away anything typed.
+const fromEmployee = (data) => ({
+	firstName: data.firstName ?? "",
+	lastName: data.lastName ?? "",
+	email: data.email ?? "",
+	position: data.position ?? [],
+	active: data.active !== false,
+});
+
+export function UpdateEmployeeModal({ data }) {
+	const [modal, setModal] = useState(false);
 	const [saveError, setSaveError] = useState("");
+	const [employeeUpdate, setEmployeeUpdate] = useState(fromEmployee(data));
+	const router = useRouter();
+
 	const toggle = () => {
+		if (!modal) setEmployeeUpdate(fromEmployee(data));
 		setSaveError("");
 		setModal(!modal);
 	};
 
-	const [employeeUpdate, setEmployeeUpdate] = useState({
-		firstName: "",
-		lastName: "",
-		position: [],
-		active: "",
-		tipsCollected: [
-			{
-				amount: Number,
-				date: Date,
-			},
-		],
-	});
-
 	const handleInputChange = (e) => {
-		const { name, value, type, checked } = e.target;
-
-		if (type === "checkbox" && name === "active") {
-			setEmployeeUpdate((prevEmployee) => ({
-				...prevEmployee,
-				[name]: checked,
-			}));
-		} else if (type === "checkbox" && name === "position") {
-			const isChecked = checked;
-			const positionValue = value;
-
-			setEmployeeUpdate((prevEmployee) => {
-				let updatedPositions;
-
-				if (isChecked) {
-					// Checkbox is being selected
-					updatedPositions = [...prevEmployee.position, positionValue];
-				} else {
-					// Checkbox is being deselected
-					updatedPositions = prevEmployee.position.filter(
-						(position) => position !== positionValue
-					);
-				}
-
-				return {
-					...prevEmployee,
-					position: updatedPositions,
-				};
-			});
-		} else {
-			setEmployeeUpdate((prevEmployee) => ({
-				...prevEmployee,
-				[name]: value,
-			}));
-		}
+		const { name, value } = e.target;
+		setEmployeeUpdate((prev) => ({ ...prev, [name]: value }));
 	};
 
-	useEffect(() => {
-		// Set initial state when employee data changes
-		setEmployeeUpdate({
-			firstName: props.data.firstName,
-			lastName: props.data.lastName,
-			position: props.data.position, // Pre-populate positions
-			active: props.data.active,
-		});
-	}, [props.data]);
+	const togglePosition = (position) => {
+		setEmployeeUpdate((prev) => ({
+			...prev,
+			position: prev.position.includes(position)
+				? prev.position.filter((p) => p !== position)
+				: [...prev.position, position],
+		}));
+	};
 
-	const router = useRouter();
 	const handleUpdateEmployee = async (e) => {
 		e.preventDefault();
+		if (employeeUpdate.position.length === 0) {
+			setSaveError("Pick at least one position.");
+			return;
+		}
 
 		try {
-			const response = await fetch(`/api/updateEmployee/${props.data._id}`, {
+			const response = await fetch(`/api/updateEmployee/${data._id}`, {
 				method: "PATCH",
 				headers: {
-					"Content-Type": "application/json", // Specify the content type
+					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
 					firstName: employeeUpdate.firstName,
 					lastName: employeeUpdate.lastName,
 					position: employeeUpdate.position,
 					active: employeeUpdate.active,
-					email: employeeUpdate.email, // Include the email property
+					email: employeeUpdate.email,
 				}),
 			});
 
@@ -117,113 +91,104 @@ export function UpdateEmployeeModal(props, args) {
 	return (
 		<div>
 			<div onClick={toggle}>✏️</div>
-			<Modal isOpen={modal} toggle={toggle} {...args}>
-				<ModalHeader toggle={toggle}>
-					Edit {props.data.firstName} {props.data.lastName} info.
+			<Modal isOpen={modal} toggle={toggle} centered contentClassName={edit.editModal}>
+				<ModalHeader toggle={toggle} className={edit.editHeader}>
+					Edit {data.firstName} {data.lastName}
 				</ModalHeader>
 				<Form onSubmit={handleUpdateEmployee}>
-					<FormGroup className={style.group}>
-						<Label>First Name:</Label>
-						<Input
-							className={style.border}
-							type="text"
-							name="firstName"
-							onChange={handleInputChange}
-							placeholder={props.data.firstName}
-						/>
-					</FormGroup>
-					<FormGroup className={style.group}>
-						<Label>Last Name:</Label>
-						<Input
-							className={style.border}
-							type="text"
-							name="lastName"
-							onChange={handleInputChange}
-							placeholder={props.data.lastName}
-						/>
-					</FormGroup>
-					<FormGroup className={style.group}>
-						<Label>Email:</Label>
-						<Input
-							className={style.border}
-							type="email"
-							name="email"
-							onChange={handleInputChange}
-							placeholder={props.data.email}
-						/>
-					</FormGroup>
-					<FormGroup className={style.group}>
-						<Label>Position:</Label>
-						<div>
-							<Label check>
-								<Input
-									className={style.border}
-									type="checkbox"
-									name="position"
-									value="Bartender"
-									onChange={handleInputChange}
-									checked={employeeUpdate.position.includes("Bartender")}
-								/>
-								Bartender
+					<ModalBody className={style.editBody}>
+						<FormGroup className={form.field}>
+							<Label for="firstName" className={form.label}>
+								First name
 							</Label>
-							<Label check>
-								<Input
-									className={style.border}
-									type="checkbox"
-									name="position"
-									value="Bar Back"
-									onChange={handleInputChange}
-									checked={employeeUpdate.position.includes("Bar Back")}
-								/>
-								Bar Back
+							<Input
+								id="firstName"
+								name="firstName"
+								type="text"
+								required
+								value={employeeUpdate.firstName}
+								onChange={handleInputChange}
+							/>
+						</FormGroup>
+						<FormGroup className={form.field}>
+							<Label for="lastName" className={form.label}>
+								Last name
 							</Label>
-							<Label check>
-								<Input
-									className={style.border}
-									type="checkbox"
-									name="position"
-									value="Cook"
-									onChange={handleInputChange}
-									checked={employeeUpdate.position.includes("Cook")}
-								/>
-								Cook
+							<Input
+								id="lastName"
+								name="lastName"
+								type="text"
+								required
+								value={employeeUpdate.lastName}
+								onChange={handleInputChange}
+							/>
+						</FormGroup>
+						<FormGroup className={form.field}>
+							<Label for="email" className={form.label}>
+								Email <span className={form.optional}>(optional)</span>
 							</Label>
-							<Label check>
-								<Input
-									className={style.border}
-									type="checkbox"
-									name="position"
-									value="No Position"
-									onChange={handleInputChange}
-									checked={employeeUpdate.position.includes("No Position")}
-								/>
-								No Position
-							</Label>
+							<Input
+								id="email"
+								name="email"
+								type="email"
+								autoCapitalize="none"
+								placeholder="name@example.com"
+								value={employeeUpdate.email}
+								onChange={handleInputChange}
+							/>
+						</FormGroup>
+						<div className={form.field}>
+							<div className={form.label}>Positions</div>
+							<div className={style.chips}>
+								{POSITIONS.map((position) => {
+									const on = employeeUpdate.position.includes(position);
+									return (
+										<button
+											key={position}
+											type="button"
+											aria-pressed={on}
+											className={`${style.chip} ${on ? style.chipOn : ""}`}
+											onClick={() => togglePosition(position)}
+										>
+											{on ? "✓ " : ""}
+											{position}
+										</button>
+									);
+								})}
+							</div>
 						</div>
-					</FormGroup>
-					<FormGroup className={style.group}>
-						<Label>Active:</Label>
-						<div>
-							<Label check>
-								<Input
-									className={style.border}
-									type="checkbox"
-									name="active"
-									// value="Bartender"
-									onChange={handleInputChange}
-									checked={employeeUpdate.active}
-								/>
+						<FormGroup switch className={style.activeSwitch}>
+							<Input
+								type="switch"
+								role="switch"
+								id="active"
+								checked={employeeUpdate.active}
+								onChange={() =>
+									setEmployeeUpdate((prev) => ({ ...prev, active: !prev.active }))
+								}
+							/>
+							<Label check for="active">
+								{employeeUpdate.active ? "Active" : "Back up"}
+								<span className={style.switchHint}>
+									{employeeUpdate.active
+										? "Shows in the who's working list"
+										: "Only shows as a fill-in"}
+								</span>
 							</Label>
-						</div>
-					</FormGroup>
+						</FormGroup>
 
-					{saveError && <div className={style.alertMessage}>{saveError}</div>}
-					<ModalFooter>
-						<Button type="submit" color="primary">
-							Update
-						</Button>{" "}
-						<Button color="secondary" onClick={toggle}>
+						{saveError && (
+							<div className={`${edit.notice} ${edit.noticeDanger}`} role="alert">
+								{saveError}
+							</div>
+						)}
+					</ModalBody>
+					<ModalFooter className={style.editFooter}>
+						<Button type="button" className={form.backButton} onClick={toggle}>
 							Cancel
+						</Button>
+						<Button type="submit" className={form.primaryButton}>
+							Save changes
 						</Button>
 					</ModalFooter>
 				</Form>
