@@ -30,13 +30,50 @@
 	margin: 0;
 }
 
+/* One payout per line: name on the left, hours and amount on the right.
+   Long names wrap onto a second line; hours and amounts never wrap. */
 .employeeContainer {
 	background-color: var(--third-color);
 	max-width: 350px;
 	min-width: 10%;
-	height: 100%;
 	border-radius: 10px;
-	padding: 5px;
+	padding: 10px 14px;
+	margin-bottom: 6px;
+}
+.employeeContainer :global(.row) {
+	align-items: center;
+	flex-wrap: nowrap;
+	margin: 0;
+	flex: 1 1 auto;
+	padding: 0;
+}
+.employeeContainer :global(.col) {
+	margin: 0 !important; /* beats Bootstrap mt-2/mb-4 on the cash page */
+	padding: 0 4px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	text-align: left;
+	flex: 0 0 auto;
+	width: auto; /* Bootstrap makes every column in a row full width */
+	white-space: nowrap;
+}
+.employeeContainer :global(.col):first-child {
+	display: block; /* lets the name wrap inside the column */
+	flex: 1 1 auto;
+	min-width: 0;
+	white-space: normal;
+	overflow-wrap: break-word; /* splits a word only if it can't fit at all */
+	padding-right: 10px;
+}
+.employeeContainer p {
+	margin: 0;
+}
+/* Hours boxes in the edit window. */
+.employeeContainer input {
+	width: 3.25em;
+	padding: 4px 2px;
+	text-align: center;
 }
 
 .employeeName {

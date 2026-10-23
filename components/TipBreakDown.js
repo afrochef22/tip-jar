@@ -214,18 +214,7 @@ export default function TipBreakDown({
 									<Container className={style.employeeContainer}>
 										<Row>
 											<Col>
-												{" "}
-												{cook.label.split(" ").map((namePart, index, parts) => (
-													<div key={index}>
-														{index === 0 ? (
-															<div>{namePart}</div> // Display the first name on top
-														) : index === 1 ? (
-															<div style={{ marginTop: "5px" }}>
-																{parts.slice(1).join(" ")}
-															</div> // Join the remaining parts for last name(s)
-														) : null}
-													</div>
-												))}
+												<span>{cook.label}</span>
 											</Col>
 											{cookHours === 0 ? (
 												<></>
@@ -267,20 +256,7 @@ export default function TipBreakDown({
 									<Container className={style.employeeContainer}>
 										<Row>
 											<Col>
-												{" "}
-												{barBack.label
-													.split(" ")
-													.map((namePart, index, parts) => (
-														<div key={index}>
-															{index === 0 ? (
-																<div>{namePart}</div> // Display the first name on top
-															) : index === 1 ? (
-																<div style={{ marginTop: "5px" }}>
-																	{parts.slice(1).join(" ")}
-																</div> // Join the remaining parts for last name(s)
-															) : null}
-														</div>
-													))}
+												<span>{barBack.label}</span>
 											</Col>
 											{barBackHours === 0 ? (
 												<></>
@@ -321,20 +297,7 @@ export default function TipBreakDown({
 								<Container className={style.employeeContainer}>
 									<Row>
 										<Col>
-											{" "}
-											{bartender.label
-												.split(" ")
-												.map((namePart, index, parts) => (
-													<div key={index}>
-														{index === 0 ? (
-															<div>{namePart}</div> // Display the first name on top
-														) : index === 1 ? (
-															<div style={{ marginTop: "5px" }}>
-																{parts.slice(1).join(" ")}
-															</div> // Join the remaining parts for last name(s)
-														) : null}
-													</div>
-												))}
+											<span>{bartender.label}</span>
 										</Col>
 										{bartenderHours === 0 ? (
 											<></>
