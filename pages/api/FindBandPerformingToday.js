@@ -1,5 +1,6 @@
 import { ShowDateComparer } from "../../lib/shiftDate";
 import { parseVenueShows, showsOn } from "../../lib/venueShows.mjs";
+import { reportError } from "../../lib/alert";
 // URL of the website with the list of bands and dates
 const websiteUrl = "https://teragramballroom.com/";
 
@@ -21,7 +22,7 @@ export default async function handler(req, res) {
 			// The site always lists upcoming shows, so none at all means its
 			// layout changed. Tell the shift screen instead of "No show Today",
 			// and only cache briefly so a fix shows up quickly.
-			console.error("Show lookup: no shows found on the venue site; its layout may have changed");
+			await reportError("Show lookup (venue site layout changed)", new Error("No shows found on teragramballroom.com; its layout may have changed"));
 			res.setHeader("Cache-Control", "public, s-maxage=300");
 			return res.status(200).json({ bandPerformingToday: [], lookupBroken: true });
 		}
@@ -33,7 +34,7 @@ export default async function handler(req, res) {
 		);
 		res.status(200).json({ bandPerformingToday: showsOn(shows, ShowDateComparer()) });
 	} catch (error) {
-		console.error("Error fetching website data:", error);
+		await reportError("Show lookup (venue site unreachable)", error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 }

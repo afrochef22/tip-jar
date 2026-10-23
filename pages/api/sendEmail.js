@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { randomUUID } from "crypto";
 import clientPromise from "../../lib/mongodb";
 import { requireSession } from "../../lib/auth";
+import { reportError } from "../../lib/alert";
 
 const LINK_TTL_DAYS = 7;
 
@@ -65,7 +66,7 @@ export default requireSession(async (req, res) => {
 
 		res.status(200).json({ success: true, tokenExpiration });
 	} catch (error) {
-		console.error("Error sending email:", error);
+		await reportError("sendEmail (registration link)", error);
 		res.status(500).json({ success: false, error: "Failed to send email" });
 	}
 });

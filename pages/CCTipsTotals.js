@@ -2,6 +2,7 @@ import clientPromise from "../lib/mongodb";
 import { PUBLIC_EMPLOYEE_TIP_FIELDS } from "../lib/employeeFields";
 import { BREAKDOWN_SUMMARY_FIELDS } from "../lib/breakdownFields";
 import TipsTotalsSpreadSheet from "../components/TipsTotalsSpreadSheet";
+import { reportError } from "../lib/alert";
 
 export default function CCTipsTotals({ employees, allTipBreakdowns }) {
 	return (
@@ -34,7 +35,7 @@ export async function getServerSideProps() {
 			},
 		};
 	} catch (err) {
-		console.error(err);
+		await reportError("CCTipsTotals page", err);
 		return { props: { allTipBreakdowns: [], employees: [] } };
 	}
 }

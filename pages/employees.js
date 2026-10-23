@@ -8,6 +8,7 @@ import { AddEmployeeModal } from "../components/addEmployeeModal";
 import style from "../components/EmployeeList.module.css";
 import React from "react";
 import { Col, Row, Container } from "reactstrap";
+import { reportError } from "../lib/alert";
 
 export default function EmployeesPage({ employees }) {
 	return (
@@ -41,7 +42,7 @@ export async function getServerSideProps() {
 			props: { employees: JSON.parse(JSON.stringify(employees)) },
 		};
 	} catch (err) {
-		console.error(err);
+		await reportError("Employees page", err);
 		return { props: { employees: [] } };
 	}
 }

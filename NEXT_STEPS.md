@@ -70,7 +70,8 @@ save/delete failures, and page size/speed. What's left:
 
 ## 4. No error visibility once deployed
 
-- [ ] **Add basic error monitoring (e.g. Sentry) or at minimum confirm someone actually reads Vercel's logs**
+- [x] **Add basic error monitoring (e.g. Sentry) or at minimum confirm someone actually reads Vercel's logs**
+  - Done 2026-10-23: email alerts via `lib/alert.js` (`reportError`) to `ALERT_EMAIL`, using the existing Gmail sender. At most one email per kind of error per hour (tracked in a self-expiring `alerts` collection, with an in-memory fallback when the database is the thing that's down). `instrumentation.js` reports uncaught server errors. Needs `ALERT_EMAIL` set in Vercel.
   - Every failure path in this app ends at `console.error`, which on Vercel only surfaces in deployment logs. If the database has a bad moment during a Friday night shift, staff sees a generic error screen and nobody finds out unless someone happens to go looking afterward.
   - Minimal version: wire up a free-tier Sentry project for the API routes (a few lines in each `catch` block, or a wrapper like the `requireSession` helper already used for auth). Bigger version: proper structured logging plus an alert.
   - Decision needed: is this worth the setup for an app this size, or is "check the Dashboard the next morning" good enough given how the venue operates?

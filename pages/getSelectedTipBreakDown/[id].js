@@ -8,6 +8,7 @@ import { faClock, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import UpdateTipBreakDownModal from "../../components/UpdateTipBreakDownModal";
 import { useSession } from "next-auth/react";
 import { ShiftDate } from "../../components/CurrentShift";
+import { reportError } from "../../lib/alert";
 
 export default function getSelectedTipBreakDown({ breakDown }) {
 	const { data: session } = useSession();
@@ -289,7 +290,7 @@ export async function getServerSideProps(id) {
 			props: { breakDown: JSON.parse(JSON.stringify(breakDown)) },
 		};
 	} catch (error) {
-		console.error("Error fetching data:", error);
+		await reportError("Breakdown detail page", error);
 		return {
 			props: {
 				breakDown: null,

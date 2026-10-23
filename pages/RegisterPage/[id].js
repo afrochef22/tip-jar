@@ -2,6 +2,7 @@ import clientPromise from "../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Register } from "../../components/Register";
 import React from "react";
+import { reportError } from "../../lib/alert";
 
 export default function RegisterPage({ employee }) {
 	if (!employee) {
@@ -51,7 +52,7 @@ export async function getServerSideProps(data) {
 			props: { employee: JSON.parse(JSON.stringify(safeEmployee)) },
 		};
 	} catch (error) {
-		console.error("Error fetching data:", error);
+		await reportError("Registration page", error);
 		// Return a 500 status for internal server error
 		return {
 			props: {

@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import { reportError } from "../../../lib/alert";
 
 async function employeesCollection() {
 	const client = await clientPromise;
@@ -52,7 +53,7 @@ export const authOptions = {
 						email: user.email ?? null,
 					};
 				} catch (error) {
-					console.error("Credentials sign-in error:", error);
+					await reportError("Password sign-in", error);
 					return null;
 				}
 			},
@@ -99,7 +100,7 @@ export const authOptions = {
 				}
 				return true;
 			} catch (error) {
-				console.error("Error checking employee during sign-in:", error);
+				await reportError("Sign-in employee check", error);
 				return false;
 			}
 		},

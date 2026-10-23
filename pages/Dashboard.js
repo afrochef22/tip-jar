@@ -4,6 +4,7 @@ import { PUBLIC_EMPLOYEE_TIP_FIELDS } from "../lib/employeeFields";
 import { BREAKDOWN_CARD_FIELDS } from "../lib/breakdownFields";
 import AllTipBreakDowns from "../components/AllTipBreakDowns";
 import TipsTotalsSpreadSheet from "../components/TipsTotalsSpreadSheet";
+import { reportError } from "../lib/alert";
 
 export default function Dashboard({ employees, allTipBreakdowns }) {
 	return (
@@ -41,7 +42,7 @@ export async function getServerSideProps() {
 			},
 		};
 	} catch (err) {
-		console.error(err);
+		await reportError("Dashboard page", err);
 		return { props: { allTipBreakdowns: [], employees: [] } };
 	}
 }

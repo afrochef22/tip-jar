@@ -3,6 +3,7 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import LoginBtn from "../components/LoginBtn";
 
 import Link from "next/link";
+import { reportError } from "../lib/alert";
 type ConnectionStatus = {
 	isConnected: boolean;
 };
@@ -25,7 +26,7 @@ export const getServerSideProps: GetServerSideProps<
 			props: { isConnected: true },
 		};
 	} catch (e) {
-		console.error(e);
+		await reportError("Home page", e);
 		return {
 			props: { isConnected: false },
 		};

@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { getApiSession } from "../../../lib/auth";
 import { tooManyShiftWrites } from "../../../lib/rateLimit";
 import { ShiftDate } from "../../../lib/shiftDate";
+import { reportError } from "../../../lib/alert";
 
 export default async (req, res) => {
 	const { id } = req.query;
@@ -56,7 +57,7 @@ export default async (req, res) => {
 
 		res.status(200).json({ message: "Tip Breakdown deleted successfully" });
 	} catch (error) {
-		console.error("Error deleting tip breakdown:", error);
+		await reportError("removeTipBreakDown", error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 };

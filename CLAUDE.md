@@ -38,3 +38,5 @@ No linter is configured. The credit tip split lives in `lib/tipSplit.mjs` and is
 ## Environment Variables
 
 Required in `.env.local`: `MONGODB_URI`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, Google OAuth credentials, and email server config for the Email provider.
+
+Optional: `ALERT_EMAIL` (set in Vercel) gets an email when a server error happens, at most one per kind of error per hour. Server-side catch blocks call `reportError` from `lib/alert.js` instead of `console.error`; `instrumentation.js` covers uncaught errors.

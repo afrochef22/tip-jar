@@ -2,6 +2,7 @@ import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import { getApiSession } from "../../../lib/auth";
+import { reportError } from "../../../lib/alert";
 
 const SALT_ROUNDS = 10;
 const POSITIONS = ["Bartender", "Bar Back", "Cook", "No Position"];
@@ -118,7 +119,7 @@ export default async (req, res) => {
 		await employees.updateOne(filter, update);
 		res.status(200).json({ message: "Employee updated successfully" });
 	} catch (error) {
-		console.error("Error updating employee:", error);
+		await reportError("updateEmployee", error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 };

@@ -1,5 +1,6 @@
 import clientPromise from "../../lib/mongodb";
 import { requireSession } from "../../lib/auth";
+import { reportError } from "../../lib/alert";
 
 export default requireSession(async (req, res) => {
 	try {
@@ -12,7 +13,7 @@ export default requireSession(async (req, res) => {
 			.toArray();
 		res.json(employees);
 	} catch (err) {
-		console.error(err);
+		await reportError("getEmployees", err);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });

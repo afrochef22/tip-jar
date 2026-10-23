@@ -16,6 +16,7 @@ import {
 } from "reactstrap";
 import { useRouter } from "next/router";
 import style from "../components/AllTipBreakDowns.module.css";
+import { reportError } from "../lib/alert";
 
 // Rendering every breakdown at once makes the page slow to load on a phone.
 const PAGE_SIZE = 30;
@@ -221,7 +222,7 @@ export async function getServerSideProps() {
 			props: { allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)) },
 		};
 	} catch (err) {
-		console.error(err);
+		await reportError("getAllTipBreakDowns page", err);
 		return { props: { allTipBreakdowns: [] } };
 	}
 }

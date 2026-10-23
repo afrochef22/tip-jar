@@ -1,6 +1,7 @@
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { requireSession } from "../../../lib/auth";
+import { reportError } from "../../../lib/alert";
 
 export default requireSession(async (req, res) => {
 	const id = req.query.id;
@@ -29,7 +30,7 @@ export default requireSession(async (req, res) => {
 
 		res.status(200).json(employee);
 	} catch (error) {
-		console.error("Error fetching data:", error);
+		await reportError("getEmployee", error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });

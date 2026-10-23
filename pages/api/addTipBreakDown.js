@@ -4,6 +4,7 @@ import { getApiSession } from "../../lib/auth";
 import { tooManyShiftWrites } from "../../lib/rateLimit";
 import { ShiftDate } from "../../lib/shiftDate";
 import { cleanShowName, isSameShow, showKey } from "../../lib/showKey";
+import { reportError } from "../../lib/alert";
 
 const toIdList = (list) => (Array.isArray(list) ? list : []);
 
@@ -118,7 +119,7 @@ export default async (req, res) => {
 				message: "A tip breakdown for this show and date was just submitted.",
 			});
 		}
-		console.error(error);
+		await reportError("addTipBreakDown (saving a shift)", error);
 		res.status(500).json({ message: "Internal server error" });
 	}
 };

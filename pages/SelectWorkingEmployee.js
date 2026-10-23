@@ -5,6 +5,7 @@ import clientPromise from "../lib/mongodb";
 import { PUBLIC_EMPLOYEE_FIELDS } from "../lib/employeeFields";
 import { BREAKDOWN_SUMMARY_FIELDS } from "../lib/breakdownFields";
 import { ShiftDate } from "../lib/shiftDate";
+import { reportError } from "../lib/alert";
 
 export default function SelectWorkingEmployee({ employees, allTipBreakdowns }) {
 	return (
@@ -42,7 +43,7 @@ export async function getServerSideProps() {
 			},
 		};
 	} catch (err) {
-		console.error(err);
+		await reportError("Shift screen (SelectWorkingEmployee)", err);
 		return {
 			props: { employees: [], allTipBreakdowns: [] },
 		};

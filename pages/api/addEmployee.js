@@ -1,5 +1,6 @@
 import clientPromise from "../../lib/mongodb";
 import { getApiSession } from "../../lib/auth";
+import { reportError } from "../../lib/alert";
 
 const POSITIONS = ["Bartender", "Bar Back", "Cook", "No Position"];
 
@@ -72,7 +73,7 @@ export default async (req, res) => {
 			insertedEmployeeId: result.insertedId,
 		});
 	} catch (error) {
-		console.error(error);
+		await reportError("addEmployee", error);
 		res.status(500).json({ message: "Internal server error" });
 	}
 };

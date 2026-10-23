@@ -1,6 +1,7 @@
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { requireSession } from "../../../lib/auth";
+import { reportError } from "../../../lib/alert";
 
 export default requireSession(async (req, res) => {
 	const { id } = req.query;
@@ -44,7 +45,7 @@ export default requireSession(async (req, res) => {
 
 		res.status(200).json({ message: "Employee deleted successfully" });
 	} catch (error) {
-		console.error("Error deleting employee:", error);
+		await reportError("removeEmployee", error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });

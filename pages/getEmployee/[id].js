@@ -9,6 +9,7 @@ import style from "../../components/TipBreakDown.module.css";
 import { Button, Col, Container, Row } from "reactstrap";
 import { UpdateEmployeeModal } from "../../components/UpdateEmployeeModal";
 import { DeleteDialog } from "../../components/ConformationDialog";
+import { reportError } from "../../lib/alert";
 
 export default function getEmployee({ employee }) {
 	const router = useRouter();
@@ -179,7 +180,7 @@ export async function getServerSideProps(data) {
 			props: { employee: JSON.parse(JSON.stringify(employee)) },
 		};
 	} catch (error) {
-		console.error("Error fetching data:", error);
+		await reportError("Employee page", error);
 		// Return a 500 status for internal server error
 		return {
 			props: {

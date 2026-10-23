@@ -4,6 +4,7 @@ import { getApiSession } from "../../../lib/auth";
 import { tooManyShiftWrites } from "../../../lib/rateLimit";
 import { ShiftDate } from "../../../lib/shiftDate";
 import { cleanShowName, isSameShow, showKey } from "../../../lib/showKey";
+import { reportError } from "../../../lib/alert";
 
 export default async (req, res) => {
 	const id = req.query.id;
@@ -185,7 +186,7 @@ export default async (req, res) => {
 					error: "A tip breakdown for this show and date already exists.",
 				});
 			}
-			console.error("Error updating data:", error);
+			await reportError("UpdateTipBreakDown (editing a shift)", error);
 			res.status(500).json({ error: "Internal Server Error" });
 		}
 	} else {

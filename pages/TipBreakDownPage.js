@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import TipBreakDown from "../components/TipBreakDown";
 import { BREAKDOWN_SUMMARY_FIELDS } from "../lib/breakdownFields";
 import { ShiftDate } from "../lib/shiftDate";
+import { reportError } from "../lib/alert";
 
 export default function TipBreakDownPage({ allTipBreakdowns }) {
 	const router = useRouter();
@@ -68,7 +69,7 @@ export async function getServerSideProps() {
 			props: { allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)) },
 		};
 	} catch (err) {
-		console.error(err);
+		await reportError("Tip breakdown review page", err);
 		return { props: { allTipBreakdowns: [] } };
 	}
 }
