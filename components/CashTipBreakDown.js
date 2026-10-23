@@ -120,6 +120,11 @@ export default function CashTipBreakDown({
 					)}
 				</div>
 
+				{split.leftover > 0 && (
+					<div className="alert alert-warning" role="alert">
+						There is an extra ${split.leftover.toFixed(2)} left over.
+					</div>
+				)}
 				<div className={style.container}>
 					<h1>Bartender Tips </h1>
 					{bartenderHours === 0 ? (
@@ -165,12 +170,6 @@ export default function CashTipBreakDown({
 						))}
 					</Row>
 				</div>
-				{split.leftover > 0 && (
-					<div className="alert alert-warning" role="alert">
-						No bar back is working, so ${split.leftover.toFixed(2)} is left over
-						after giving every bartender whole dollars.
-					</div>
-				)}
 			</div>
 		</Container>
 	);
