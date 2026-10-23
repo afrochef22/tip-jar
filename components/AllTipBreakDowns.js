@@ -13,7 +13,7 @@ import {
 	Button,
 } from "reactstrap";
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import style from "./AllTipBreakDowns.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -80,6 +80,25 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 	const previous = () => {
 		const nextIndex = activeIndex === 0 ? activeIndex : activeIndex - 1;
 		setActiveIndex(nextIndex);
+	};
+
+	// reactstrap only wires up swiping when the carousel has indicators, so
+	// handle it here. Mostly-vertical drags are left alone so the page scrolls.
+	const SWIPE_THRESHOLD = 40;
+	const touchStart = useRef(null);
+	const handleTouchStart = (e) => {
+		const touch = e.changedTouches[0];
+		touchStart.current = { x: touch.screenX, y: touch.screenY };
+	};
+	const handleTouchEnd = (e) => {
+		if (!touchStart.current) return;
+		const touch = e.changedTouches[0];
+		const dx = touch.screenX - touchStart.current.x;
+		const dy = touch.screenY - touchStart.current.y;
+		touchStart.current = null;
+		if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy)) return;
+		if (dx < 0) next();
+		else previous();
 	};
 
 	// Only the visible slide and its neighbours get their cards drawn. Drawing
@@ -206,35 +225,37 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 				<h2>Tip Breakdowns</h2>
 				<h5>Click on a card to see more detail or edit</h5>
 			</div>
-			<Carousel
-				activeIndex={activeIndex}
-				next={next}
-				previous={previous}
-				interval={false}
-			>
-				{slides}
-				{activeIndex === 0 ? (
-					<></>
-				) : (
-					<CarouselControl
-						direction="prev"
-						directionText="Previous"
-						onClickHandler={previous}
-						className={`${style.carouselControlPrevIcon}`}
-					/>
-				)}
-				{activeIndex === slides.length - 1 ? (
-					<></>
-				) : (
-					<CarouselControl
-						dark="true"
-						direction="next"
-						directionText="Next"
-						onClickHandler={next}
-						className={`${style.carouselControlNextIcon}`}
-					/>
-				)}
-			</Carousel>
+			<div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+				<Carousel
+					activeIndex={activeIndex}
+					next={next}
+					previous={previous}
+					interval={false}
+				>
+					{slides}
+					{activeIndex === 0 ? (
+						<></>
+					) : (
+						<CarouselControl
+							direction="prev"
+							directionText="Previous"
+							onClickHandler={previous}
+							className={`${style.carouselControlPrevIcon}`}
+						/>
+					)}
+					{activeIndex === slides.length - 1 ? (
+						<></>
+					) : (
+						<CarouselControl
+							dark="true"
+							direction="next"
+							directionText="Next"
+							onClickHandler={next}
+							className={`${style.carouselControlNextIcon}`}
+						/>
+					)}
+				</Carousel>
+			</div>
 			<Row className="justify-content-center mt-4 ">
 				<Col xs="auto">
 					<Button onClick={scrollToTipsSpreadsheet}>
