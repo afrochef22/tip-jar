@@ -82,113 +82,118 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 		setActiveIndex(nextIndex);
 	};
 
+	// Only the visible slide and its neighbours get their cards drawn. Drawing
+	// every breakdown on each arrow tap froze the page for over a second on
+	// phones; neighbours are kept so the slide animation still has content.
 	const slides = chunks.map((chunk, index) => (
 		<CarouselItem key={index}>
-			<div className={`${style.carouselContainer}`}>
-				<Row xs="1" sm="2" md="3">
-					{chunk.map((data) => (
-						<Col key={data._id} sm={12} className={`${style.cardRow} `}>
-							<Card
-								onClick={() => handleCardClick(data._id)}
-								key={data._id}
-								className={`${style.cardContainer}  ${style.backgroundColor}  ${style.cardClick}`}
-							>
-								<CardBody className={`${style.cardWidth}`}>
-									<CardTitle
-										className={`${style.bandTitle} highlight-color`}
-										tag="h5"
-									>
-										{data.show}
-									</CardTitle>
-									<CardSubtitle className="mb-2 " tag="h6">
-										{`${formatDateStringWithDayOfWeek(data.date)} `}
-									</CardSubtitle>
-									<CardSubtitle className="mb-2 " tag="h6">
-										Bar Sales:{" "}
-										<span className="highlight-color">
-											${(Number(data.totalBarSales) || 0).toFixed(2)}
-										</span>
-									</CardSubtitle>
-									<CardSubtitle className="mb-2 " tag="h6">
-										Total Tips:{" "}
-										<span className="highlight-color">
-											${(Number(data.totalTips) || 0).toFixed(2)}
-										</span>
-									</CardSubtitle>
+			{Math.abs(index - activeIndex) <= 1 && (
+				<div className={`${style.carouselContainer}`}>
+					<Row xs="1" sm="2" md="3">
+						{chunk.map((data) => (
+							<Col key={data._id} sm={12} className={`${style.cardRow} `}>
+								<Card
+									onClick={() => handleCardClick(data._id)}
+									key={data._id}
+									className={`${style.cardContainer}  ${style.backgroundColor}  ${style.cardClick}`}
+								>
+									<CardBody className={`${style.cardWidth}`}>
+										<CardTitle
+											className={`${style.bandTitle} highlight-color`}
+											tag="h5"
+										>
+											{data.show}
+										</CardTitle>
+										<CardSubtitle className="mb-2 " tag="h6">
+											{`${formatDateStringWithDayOfWeek(data.date)} `}
+										</CardSubtitle>
+										<CardSubtitle className="mb-2 " tag="h6">
+											Bar Sales:{" "}
+											<span className="highlight-color">
+												${(Number(data.totalBarSales) || 0).toFixed(2)}
+											</span>
+										</CardSubtitle>
+										<CardSubtitle className="mb-2 " tag="h6">
+											Total Tips:{" "}
+											<span className="highlight-color">
+												${(Number(data.totalTips) || 0).toFixed(2)}
+											</span>
+										</CardSubtitle>
 
-									<h5 className={`${style.positionTitle}`}>Cooks:</h5>
-									{data.cookTips &&
-										data.cookTips.map((cook) => (
-											<table key={cook.id} className={style.employeeContainer}>
-												<tbody>
-													<tr>
-														<td className={`${style.expand} p-2`}>
-															{cook.label}:
-														</td>
-														<td
-															className={`${style.expand} p-2 highlight-color text-right`}
-														>
-															${(Number(cook.tipOut) || 0).toFixed(2)}
-														</td>
-													</tr>
-												</tbody>
-											</table>
-										))}
-
-									<div>
-										<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
-										<Col>
-											{data.barBackTips &&
-												data.barBackTips.map((barBack) => (
-													<table
-														key={barBack.id}
-														className={style.employeeContainer}
-													>
-														<tbody>
-															<tr>
-																<td className={`${style.expand} p-2`}>
-																	{barBack.label}:
-																</td>
-																<td
-																	className={`${style.expand} p-2 highlight-color text-right`}
-																>
-																	${(Number(barBack.tipOut) || 0).toFixed(2)}
-																</td>
-															</tr>
-														</tbody>
-													</table>
-												))}
-										</Col>
-									</div>
-									<div>
-										<h5 className={`${style.positionTitle}`}>Bartenders:</h5>
-										{data.BartenderTips &&
-											data.BartenderTips.map((bartender) => (
-												<table
-													key={bartender.id}
-													className={style.employeeContainer}
-												>
+										<h5 className={`${style.positionTitle}`}>Cooks:</h5>
+										{data.cookTips &&
+											data.cookTips.map((cook) => (
+												<table key={cook.id} className={style.employeeContainer}>
 													<tbody>
 														<tr>
 															<td className={`${style.expand} p-2`}>
-																{bartender.label}:
+																{cook.label}:
 															</td>
 															<td
 																className={`${style.expand} p-2 highlight-color text-right`}
 															>
-																${(Number(bartender.tipOut) || 0).toFixed(2)}
+																${(Number(cook.tipOut) || 0).toFixed(2)}
 															</td>
 														</tr>
 													</tbody>
 												</table>
 											))}
-									</div>
-								</CardBody>
-							</Card>
-						</Col>
-					))}
-				</Row>
-			</div>
+
+										<div>
+											<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
+											<Col>
+												{data.barBackTips &&
+													data.barBackTips.map((barBack) => (
+														<table
+															key={barBack.id}
+															className={style.employeeContainer}
+														>
+															<tbody>
+																<tr>
+																	<td className={`${style.expand} p-2`}>
+																		{barBack.label}:
+																	</td>
+																	<td
+																		className={`${style.expand} p-2 highlight-color text-right`}
+																	>
+																		${(Number(barBack.tipOut) || 0).toFixed(2)}
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													))}
+											</Col>
+										</div>
+										<div>
+											<h5 className={`${style.positionTitle}`}>Bartenders:</h5>
+											{data.BartenderTips &&
+												data.BartenderTips.map((bartender) => (
+													<table
+														key={bartender.id}
+														className={style.employeeContainer}
+													>
+														<tbody>
+															<tr>
+																<td className={`${style.expand} p-2`}>
+																	{bartender.label}:
+																</td>
+																<td
+																	className={`${style.expand} p-2 highlight-color text-right`}
+																>
+																	${(Number(bartender.tipOut) || 0).toFixed(2)}
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												))}
+										</div>
+									</CardBody>
+								</Card>
+							</Col>
+						))}
+					</Row>
+				</div>
+			)}
 		</CarouselItem>
 	));
 	const scrollToTipsSpreadsheet = () => {
