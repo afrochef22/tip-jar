@@ -317,11 +317,7 @@ export default function CreditTipCalculation({
 						</Row>
 						<Col md={1} sm={1} xs={1}></Col>
 					</Row>
-					<CCTipsInput
-						setSubmitting={setSubmitting}
-						setAlertMessage={setAlertMessage}
-						toggleModal={toggleModal}
-					/>
+					<CCTipsInput />
 					<div>
 						{/* Your existing code */}
 						<CustomAlertModal
