@@ -335,7 +335,10 @@ export default function TipsTotalsSpreadSheet({
 							/>
 						</Col>
 					</Row>
-					<h5 className="mt-2">Click on a band name to see more detail</h5>
+					<h5 className="mt-2">
+						<span className="pointer-only">Click</span>
+						<span className="touch-only">Tap</span> on a band name to see more detail
+					</h5>
 				</Container>
 				{table}
 			</div>
@@ -351,7 +354,11 @@ export default function TipsTotalsSpreadSheet({
 				<Row className="date-input-row mt-5 mb-4 ">
 					<h2 className="payPeriodContainer">Pay Period Spreadsheet</h2>
 					{payPeriodNav}
-					<h5>Click on a band name to see more detail or edit</h5>
+					<h5>
+						<span className="pointer-only">Click</span>
+						<span className="touch-only">Tap</span> on a band name to see more
+						detail or edit
+					</h5>
 				</Row>
 			</Container>
 			{table}

@@ -537,3 +537,16 @@ body {
 .table th.lastBand {
 	max-width: none;
 }
+
+/* "Click" on computers, "Tap" on phones and tablets (by input device). */
+.touch-only {
+	display: none;
+}
+@media (hover: none) and (pointer: coarse) {
+	.touch-only {
+		display: inline;
+	}
+	.pointer-only {
+		display: none;
+	}
+}

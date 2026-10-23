@@ -64,7 +64,11 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 		<div className={`${style.carouselContainer} ${style.minHeight}`}>
 			<div className={`${style.title}`}>
 				<h2>Tip Breakdowns</h2>
-				<h5>Click on a card to get more detail or edit</h5>
+				<h5>
+					<span className="pointer-only">Click</span>
+					<span className="touch-only">Tap</span> on a card to get more detail or
+					edit
+				</h5>
 
 				<div className={style.searchBox} style={{ position: "relative" }}>
 					<Input
