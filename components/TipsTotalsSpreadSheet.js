@@ -248,14 +248,18 @@ export default function TipsTotalsSpreadSheet({
 										),
 									];
 									return uniqueShows.map((show, index) => {
-										const tipForDateAndShow = employee.tipsCollected.find(
+										// Someone who worked two positions in one show (e.g. bar
+										// back and bartender) has two tips here; show their sum.
+										const tipsForDateAndShow = employee.tipsCollected.filter(
 											(tip) => tip.date === date && tip.show === show
+										);
+										const cellTotal = tipsForDateAndShow.reduce(
+											(total, tip) => total + Number(tip.amount),
+											0
 										);
 										return (
 											<td key={`${date}-${show}-${index}`}>
-												{tipForDateAndShow
-													? Number(tipForDateAndShow.amount).toFixed(2)
-													: ""}
+												{tipsForDateAndShow.length > 0 ? cellTotal.toFixed(2) : ""}
 											</td>
 										);
 									});
