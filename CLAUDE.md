@@ -11,8 +11,10 @@ Tip Jar is a Next.js (Pages Router) application for managing tip distribution at
 - `npm run dev` — Start development server
 - `npm run build` — Production build
 - `npm start` — Start production server
+- `npm test` — Run the tests in `tests/` with Node's built-in test runner (no extra packages)
+- `npm run backup` — Save every database collection to `backups/<timestamp>/` (gitignored)
 
-No test runner or linter is configured.
+No linter is configured. The credit tip split lives in `lib/tipSplit.mjs` and is shared by `TipBreakDown` and `UpdateTipBreakDownModal`; change it there and run `npm test`.
 
 ## Architecture
 

@@ -10,7 +10,7 @@ import {
 import { CurrentShift, ShiftDate } from "./CurrentShift";
 import { useRouter } from "next/router";
 import { ConfirmationDialog } from "./ConformationDialog";
-import { Decimal } from "decimal.js";
+import { splitCreditTips } from "../lib/tipSplit.mjs";
 import { isSameShow } from "../lib/showKey";
 
 export default function TipBreakDown({
@@ -49,178 +49,22 @@ export default function TipBreakDown({
 		0
 	);
 
-	const cooksTips = cooks.length === 0 ? 0 : foodSalesTotal * 0.15;
-
-	const tipsPerCook = () => {
-		let tips;
-		if (cookHours === 0) {
-			tips = new Decimal(cooksTips).div(cooks.length);
-		} else {
-			tips = new Decimal(cooksTips).div(cookHours);
-		}
-		const n = tips.toNumber();
-		return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
-	};
-
-	const barbackTips =
-		barBacks.length === 0
-			? 0
-			: ((totalTips - cooksTips) * barBackPercentage) / 100;
-	const tipsPerBarBack = () => {
-		let tips;
-		if (barBackHours === 0) {
-			tips = new Decimal(barbackTips).div(barBacks.length);
-		} else {
-			tips = new Decimal(barbackTips).div(barBackHours);
-		}
-		const n = tips.toNumber();
-		return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
-	};
-
-	const bartenderTips = totalTips - cooksTips - barbackTips;
-
-	const tipsPerBartender = () => {
-		let tips;
-		if (bartenderHours === 0) {
-			tips = new Decimal(bartenderTips).div(bartenders.length);
-		} else {
-			tips = new Decimal(bartenderTips).div(bartenderHours);
-		}
-		const n = tips.toNumber();
-		return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
-	};
-
-	const bartendersWithTipOut = bartenders.map((bartender) => {
-		const id = bartender.id;
-		if (bartenderHours === 0) {
-			let tipOut = Number(tipsPerBartender());
-			return { ...bartender, tipOut };
-		} else {
-			let tipOut = Number(tipsPerBartender() * bartender.tippedHours);
-			return { ...bartender, tipOut };
-		}
+	const split = splitCreditTips({
+		totalTips,
+		foodSalesTotal,
+		barBackPercentage,
+		bartenders,
+		barBacks,
+		cooks,
 	});
+	const tipsPerCook = () => split.tipsPerCook;
+	const tipsPerBarBack = () => split.tipsPerBarBack;
+	const tipsPerBartender = () => split.tipsPerBartender;
+	const cooksWithTipOut = split.cooks;
+	const barBacksWithTipOut = split.barBacks;
+	const adjustedBartendersWithTipOut = split.bartenders;
+	const totalAdjustedTipOutBartenders = split.totalTipOutBartenders;
 
-	const barBacksWithTipOut = barBacks.map((barBack) => {
-		const id = barBack.id;
-		if (barBackHours === 0) {
-			let tipOut = Number(tipsPerBarBack().toFixed(2));
-			return { ...barBack, tipOut };
-		} else {
-			let tipOut = Number((tipsPerBarBack() * barBack.tippedHours).toFixed(2));
-			return { ...barBack, tipOut };
-		}
-	});
-
-	const cooksWithTipOut = cooks.map((cook) => {
-		const id = cook.id;
-		if (cookHours === 0) {
-			let tipOut = Number(tipsPerCook().toFixed(2));
-			return { ...cook, tipOut };
-		} else {
-			let tipOut = Number((tipsPerCook() * cook.tippedHours).toFixed(2));
-			return { ...cook, tipOut };
-		}
-	});
-
-	// Calculate the total tip out amount for each type of employee
-	let totalTipOutBartenders = bartendersWithTipOut.reduce(
-		(acc, bartender) => acc + bartender.tipOut,
-		0
-	);
-	totalTipOutBartenders = Number(totalTipOutBartenders);
-
-	let totalTipOutBarBacks = barBacksWithTipOut.reduce(
-		(acc, barBack) => acc + barBack.tipOut,
-		0
-	);
-	totalTipOutBarBacks = Number(totalTipOutBarBacks.toFixed(2));
-
-	let totalTipOutCooks = cooksWithTipOut.reduce(
-		(acc, cook) => acc + cook.tipOut,
-		0
-	);
-	totalTipOutCooks = Number(totalTipOutCooks.toFixed(2));
-
-	// Calculate the total of all tip outs
-	const totalTipOut =
-		totalTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks;
-	// Calculate the rounding difference
-	let roundingDifference = Number((totalTips - totalTipOut).toFixed(2));
-	const newTotalTipOutBartenders = totalTipOutBartenders + roundingDifference;
-	// Adjust the tip out amounts for bartenders only
-	const numberOfBartenders = bartendersWithTipOut.length;
-	const adjustmentAmountPerBartender = Number(
-		(roundingDifference / numberOfBartenders).toFixed(2)
-	);
-
-	let adjustedBartendersWithTipOut = bartendersWithTipOut.map((bartender) => ({
-		...bartender,
-		tipOut: Number(
-			(bartender.tipOut + adjustmentAmountPerBartender).toFixed(2)
-		),
-	}));
-
-	// Recalculate the total tip out amount for bartenders after adjustment
-	let totalAdjustedTipOutBartenders = adjustedBartendersWithTipOut.reduce(
-		(acc, bartender) => acc + Number(bartender.tipOut),
-		0
-	);
-	// Adjust one bartender's tip out by the remaining difference
-	if (totalAdjustedTipOutBartenders !== newTotalTipOutBartenders) {
-		const remainingDifference =
-			newTotalTipOutBartenders - totalAdjustedTipOutBartenders;
-
-		if (remainingDifference <= 0.09 && remainingDifference >= -0.09) {
-			const adjustedDifference = Number(remainingDifference.toFixed(2));
-
-			// Create a shuffled array of indexes to simulate randomness
-			const shuffledIndexes = Array.from(
-				{ length: adjustedBartendersWithTipOut.length },
-				(_, i) => i
-			);
-			for (let i = shuffledIndexes.length - 1; i > 0; i--) {
-				const j = Math.floor(Math.random() * (i + 1));
-				[shuffledIndexes[i], shuffledIndexes[j]] = [
-					shuffledIndexes[j],
-					shuffledIndexes[i],
-				];
-			}
-
-			// Calculate how many bartenders need to receive the additional tip
-			let additionalBartendersCount = Math.floor(
-				Math.abs(adjustedDifference) / 0.01
-			);
-
-			if (additionalBartendersCount > 0) {
-				// Determine the adjustment per bartender based on the sign of the adjusted difference
-				const adjustment = adjustedDifference > 0 ? 0.01 : -0.01;
-
-				// Distribute the additional tip among the bartenders
-				let adjustedBartenders = new Set();
-				for (let i = 0; i < additionalBartendersCount; i++) {
-					const bartenderIndex = shuffledIndexes[i % shuffledIndexes.length];
-					if (!adjustedBartenders.has(bartenderIndex)) {
-						adjustedBartendersWithTipOut[bartenderIndex].tipOut += adjustment;
-						adjustedBartenders.add(bartenderIndex);
-					}
-				}
-			}
-		}
-	}
-
-	adjustedBartendersWithTipOut.forEach((obj) => {
-		// Check if the object has the 'tipOut' key
-		if ("tipOut" in obj) {
-			// Apply toFixed() to the 'tipOut' key and update the value in-place
-			obj.tipOut = Number(Number(obj.tipOut).toFixed(2));
-		}
-	});
-
-	totalAdjustedTipOutBartenders = adjustedBartendersWithTipOut.reduce(
-		(acc, bartender) => acc + Number(bartender.tipOut),
-		0
-	);
 	const handleBackButtonClick = () => {
 		router.back();
 	};

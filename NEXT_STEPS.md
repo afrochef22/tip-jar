@@ -96,7 +96,9 @@ save/delete failures, and page size/speed. What's left:
 
 ## 7. No automated tests
 
-- [ ] **At least cover the tip-splitting math**
+- [x] **At least cover the tip-splitting math** (credit tips done 2026-10-23)
+  - Done: the credit split moved to `lib/tipSplit.mjs` (one copy instead of two) with tests in `tests/tipSplit.test.mjs` (`npm test`), including 20,000 random shifts that must add up to the exact total. Found and fixed: the new-breakdown page was a cent off the total on about 1 in 235 shifts. Also fixed: the odd cent was picked with `Math.random()` on both server and browser, which caused React hydration errors on the review page; it is now stable per shift.
+  - Still open: `CashTipBreakDown.js` has its own similar copy with no tests. Also, if cooks' 15% of food sales is more than the credit tips, bartenders come out negative; nothing warns about it.
   - `CLAUDE.md` documents "no test runner configured" as the current state, but that's worth revisiting: the rounding/distribution logic in `TipBreakDown.js`, `UpdateTipBreakDownModal.js`, and `CashTipBreakDown.js` is the one place in this app where a silent bug costs someone real money, and it's also the most complex calculation in the codebase (decimal rounding, redistributing leftover cents across bartenders).
   - Minimal version: pull the calculation logic into pure functions (it's mostly already separable) and add a handful of Jest/Vitest tests for the common cases — even split, uneven split, zero bar backs, zero cooks, single employee, rounding edge cases.
   - This is the biggest effort item on this list. Worth doing incrementally rather than all at once.
