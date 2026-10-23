@@ -107,6 +107,17 @@ export default function CashTipBreakDown({
 								</Col>
 							))}
 					</Row>
+					{split.barBackExtra > 0 && (
+						<p className="mt-2 mb-0">
+							Includes{" "}
+							<span className="highlight-color">
+								${split.barBackExtra.toFixed(2)}
+							</span>{" "}
+							extra on top of the {barBackPercentage}% share ($
+							{split.barBackShare.toFixed(2)}), left over from paying bartenders
+							in whole dollars.
+						</p>
+					)}
 				</div>
 
 				<div className={style.container}>

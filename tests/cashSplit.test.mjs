@@ -86,3 +86,9 @@ test("20,000 random shifts: exact total, whole-dollar bartenders, equal on even 
 		}
 	}
 });
+
+test("reports how much extra the bar backs get", () => {
+	const r = split({ tipsCollected: 523, barBackPercentage: 15, bartenders: people("", "", ""), barBacks: people("") });
+	assert.equal(r.barBackShare, 78.45);
+	assert.equal(r.barBackExtra, 0.55);
+});
