@@ -135,33 +135,23 @@ export default function TipsTotalsSpreadSheet({
 		}, 0);
 	};
 
-	const dateRangeDisplay = (
-		<>
-			{startDate.toLocaleString({
-				month: "2-digit",
-				day: "2-digit",
-				year: "numeric",
-			})}
-			{"  "}-{"  "}
-			{endDate.toLocaleString({
-				month: "2-digit",
-				day: "2-digit",
-				year: "numeric",
-			})}
-		</>
-	);
+	// "10/11 - 10/24/2026", or with both years when the range crosses one.
+	const sameYear = startDate.year === endDate.year;
+	const dateRangeDisplay = `${startDate.toFormat(sameYear ? "M/d" : "M/d/yyyy")} - ${endDate.toFormat("M/d/yyyy")}`;
+	const isPayPeriod =
+		startDate.hasSame(payPeriodStartDate, "day") && endDate.hasSame(payPeriodEndDate, "day");
 
 	const payPeriodNav = (
-		<div className="d-flex justify-content-between align-items-center mt-3">
-			<Button size="sm" onClick={handlePreviousPayPeriod}>
-				Previous Pay Period
+		<div className="pay-period-nav">
+			<Button onClick={handlePreviousPayPeriod} aria-label="Previous pay period">
+				‹ Prev
 			</Button>
-			<Row>
-				<h3>Pay Period: </h3>
-				<h5 className="m-2">{dateRangeDisplay}</h5>
-			</Row>
-			<Button size="sm" onClick={handleNextPayPeriod}>
-				Next Pay Period
+			<div className="pay-period-label">
+				<div className="pay-period-title">{isPayPeriod ? "Pay period" : "Custom dates"}</div>
+				<div className="pay-period-dates">{dateRangeDisplay}</div>
+			</div>
+			<Button onClick={handleNextPayPeriod} aria-label="Next pay period">
+				Next ›
 			</Button>
 		</div>
 	);
@@ -323,11 +313,13 @@ export default function TipsTotalsSpreadSheet({
 			<div className=" employeeTipsPage ">
 				<Container className="">
 					<h2 className="mt-5">Credit Card Tips Spreadsheet</h2>
-					<Row className="date-input-row mt-5 mb-4">
-						<Col lg={3} md={4} sm={5} xs={6}>
-							<Label for="startDate">
-								<h6>Select Start Date</h6>
-							</Label>
+					{payPeriodNav}
+					<Row className="date-input-row custom-dates mb-4">
+						<Col xs={12}>
+							<div className="custom-dates-title">Or pick dates</div>
+						</Col>
+						<Col xs={6}>
+							<Label for="startDate">From</Label>
 							<Input
 								id="startDate"
 								name="startDate"
@@ -337,10 +329,8 @@ export default function TipsTotalsSpreadSheet({
 								onChange={handleStartDateChange}
 							/>
 						</Col>
-						<Col lg={3} md={3} sm={5} xs={6}>
-							<Label for="endDate">
-								<h6>Select End Date</h6>
-							</Label>
+						<Col xs={6}>
+							<Label for="endDate">To</Label>
 							<Input
 								id="endDate"
 								name="endDate"
@@ -351,12 +341,7 @@ export default function TipsTotalsSpreadSheet({
 							/>
 						</Col>
 					</Row>
-					<h3>Current Date Range: </h3>
-					<h5 className="m-2">{dateRangeDisplay}</h5>
-				</Container>
-				<Container>
-					<Row className="date-input-row mt-4 mb-4 ">{payPeriodNav}</Row>
-					<h5 className="mt-4">Click on a band name to see more detail</h5>
+					<h5 className="mt-2">Click on a band name to see more detail</h5>
 				</Container>
 				{table}
 			</div>
@@ -371,8 +356,8 @@ export default function TipsTotalsSpreadSheet({
 			<Container>
 				<Row className="date-input-row mt-5 mb-4 ">
 					<h2 className="payPeriodContainer">Pay Period Spreadsheet</h2>
-					<h5>Click on a band name to see more detail or edit</h5>
 					{payPeriodNav}
+					<h5>Click on a band name to see more detail or edit</h5>
 				</Row>
 			</Container>
 			{table}

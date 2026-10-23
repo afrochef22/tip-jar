@@ -480,7 +480,60 @@ body {
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	white-space: normal;
-	overflow-wrap: break-word;
 	line-height: 1.2;
 	min-width: 70px;
+}
+
+/* Spreadsheet: ‹ Prev | Pay period dates | Next › */
+.pay-period-nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	width: 100%;
+	max-width: 560px;
+	margin: 20px auto;
+}
+.pay-period-nav .btn {
+	min-height: 48px;
+	min-width: 92px;
+	font-size: 17px;
+	border-radius: 10px;
+}
+.pay-period-label {
+	text-align: center;
+}
+.pay-period-title {
+	font-size: 14px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	opacity: 0.75;
+}
+.pay-period-dates {
+	font-size: 20px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+.custom-dates {
+	max-width: 560px;
+	margin: 0 auto;
+	padding: 12px 4px 16px;
+	border-top: 1px solid #555;
+	text-align: left;
+}
+.custom-dates-title {
+	font-size: 14px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	opacity: 0.75;
+	margin-bottom: 6px;
+	text-align: center;
+}
+.custom-dates label {
+	font-size: 15px;
+	margin-bottom: 4px;
+}
+/* Let a show column grow past 100px when one word (FIGHTMASTER) needs it. */
+.table th.lastBand {
+	max-width: none;
 }
