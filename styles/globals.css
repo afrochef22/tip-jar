@@ -447,3 +447,27 @@ body {
 	text-align: center;
 	border-top: none;
 }
+
+/* Spreadsheet: keep the Employee Total Tips column on screen at the right
+   edge while the shows scroll sideways (names already stay on the left). */
+.table thead tr:first-child th:last-child,
+.table tbody td:last-child,
+.table tfoot td:last-child {
+	position: sticky;
+	right: 0;
+	z-index: 2;
+	min-width: 90px;
+	box-shadow: -4px 0 6px rgba(0, 0, 0, 0.25);
+}
+
+/* With collapsed borders, sticky cells leave their borders behind and the
+   gap shows the scrolled cells. Separate 1px borders on each cell look the
+   same (2px between cells) and move with the sticky columns. */
+.table-scroll .table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+.table-scroll .table th,
+.table-scroll .table td {
+	border: 1px solid #333 !important;
+}

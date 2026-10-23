@@ -192,7 +192,7 @@ export default function TipsTotalsSpreadSheet({
 								</th>
 							);
 						})}
-						<th className="employeeTipsCol" colSpan={2} rowSpan={2}>
+						<th className="employeeTipsCol" rowSpan={2}>
 							Employee Total Tips
 						</th>
 					</tr>
