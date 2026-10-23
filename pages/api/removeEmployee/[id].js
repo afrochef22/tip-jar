@@ -16,9 +16,27 @@ export default requireSession(async (req, res) => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
-		const result = await db
-			.collection("employees")
-			.deleteOne({ _id: new ObjectId(id) });
+		const employees = db.collection("employees");
+
+		// Payroll totals are built from each employee's tipsCollected, so
+		// deleting someone who has been paid would erase them from past pay
+		// periods. Only allow deleting records with no tip history (mistakes);
+		// everyone else gets deactivated instead.
+		const employee = await employees.findOne(
+			{ _id: new ObjectId(id) },
+			{ projection: { tipsCollected: 1 } }
+		);
+		if (!employee) {
+			return res.status(404).json({ error: "Employee not found" });
+		}
+		if (Array.isArray(employee.tipsCollected) && employee.tipsCollected.length > 0) {
+			return res.status(409).json({
+				error:
+					"This employee has tip history, so deleting them would remove them from past payroll totals. Edit them and uncheck Active instead.",
+			});
+		}
+
+		const result = await employees.deleteOne({ _id: new ObjectId(id) });
 
 		if (result.deletedCount === 0) {
 			return res.status(404).json({ error: "Employee not found" });
