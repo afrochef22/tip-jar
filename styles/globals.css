@@ -471,3 +471,16 @@ body {
 .table-scroll .table td {
 	border: 1px solid #333 !important;
 }
+
+/* Show names in the spreadsheet header wrap onto up to 3 lines instead of
+   being cut to 8 letters; anything longer ends in "…" (full name on hover). */
+.band-name-text {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	white-space: normal;
+	overflow-wrap: break-word;
+	line-height: 1.2;
+	min-width: 70px;
+}

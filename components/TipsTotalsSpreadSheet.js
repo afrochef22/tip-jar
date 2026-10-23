@@ -222,11 +222,12 @@ export default function TipsTotalsSpreadSheet({
 								<th className="lastBand table-hover" key={`show-${date}-${index}`}>
 									<Link
 										className="noDecoration band-name"
+										title={show}
 										href={{
 											pathname: `/getSelectedTipBreakDown/${showIdMap[show]}`,
 										}}
 									>
-										{show.length > 10 ? show.substring(0, 8) + "..." : show}
+										<span className="band-name-text">{show}</span>
 									</Link>
 								</th>
 							));
