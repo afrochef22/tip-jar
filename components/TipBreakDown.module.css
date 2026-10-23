@@ -158,6 +158,20 @@
 	border: 1px solid var(--gold);
 }
 
+/* Say "tap" on touch screens and "click" with a mouse. Done in CSS so the
+   server and browser render the same HTML. */
+.touchOnly {
+	display: none;
+}
+@media (hover: none) and (pointer: coarse) {
+	.touchOnly {
+		display: inline;
+	}
+	.pointerOnly {
+		display: none !important;
+	}
+}
+
 /* Edit window: dark header and footer to match the page, form fields in one
    card like the credit tip form. */
 .editHeader {

@@ -163,6 +163,12 @@ export default function TipBreakDown({
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
 			<div className={style.backgroundColor}>
+				<div className={`${style.notice} ${style.noticeWarning}`} role="status">
+					<strong>Not saved yet.</strong> These tips won&apos;t be saved until you{" "}
+					<span className={style.pointerOnly}>click</span>
+					<span className={style.touchOnly}>tap</span> Submit at the bottom of
+					this page.
+				</div>
 				<Container className={` ${style.container}`}>
 					<Row>
 						<Col sm={6} xs={12}>
