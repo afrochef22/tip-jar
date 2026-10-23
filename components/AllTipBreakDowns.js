@@ -13,6 +13,7 @@ import {
 	Button,
 } from "reactstrap";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import style from "./AllTipBreakDowns.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -33,7 +34,22 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 		)} ${date.toLocaleDateString()}`;
 	};
 
-	const reversedAllTipBreakdowns = [...allTipBreakdowns].reverse();
+	// The Dashboard only shows the most recent shows; older ones are on the
+	// Tip Breakdowns page, which has search. Newest show date first; shows on
+	// the same date keep newest-entered first.
+	const RECENT_COUNT = 10;
+	const showTime = (date) => {
+		const [month, day, year] = String(date).split("/").map(Number);
+		return new Date(year, month - 1, day).getTime() || 0;
+	};
+	const recentTipBreakdowns = [...allTipBreakdowns]
+		.reverse()
+		.sort((a, b) => showTime(b.date) - showTime(a.date))
+		.slice(0, RECENT_COUNT);
+	const cards =
+		allTipBreakdowns.length > RECENT_COUNT
+			? [...recentTipBreakdowns, { _id: "see-all", seeAll: true }]
+			: recentTipBreakdowns;
 
 	const [chunkSize, setChunkSize] = useState(3);
 
@@ -62,7 +78,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 		};
 	}, []);
 
-	const chunks = reversedAllTipBreakdowns.reduce((resultArray, item, index) => {
+	const chunks = cards.reduce((resultArray, item, index) => {
 		const chunkIndex = Math.floor(index / chunkSize);
 		if (!resultArray[chunkIndex]) {
 			resultArray[chunkIndex] = []; // start a new chunk
@@ -109,107 +125,123 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 			{Math.abs(index - activeIndex) <= 1 && (
 				<div className={`${style.carouselContainer}`}>
 					<Row xs="1" sm="2" md="3">
-						{chunk.map((data) => (
-							<Col key={data._id} sm={12} className={`${style.cardRow} `}>
-								<Card
-									onClick={() => handleCardClick(data._id)}
-									key={data._id}
-									className={`${style.cardContainer}  ${style.backgroundColor}  ${style.cardClick}`}
-								>
-									<CardBody className={`${style.cardWidth}`}>
-										<CardTitle
-											className={`${style.bandTitle} highlight-color`}
-											tag="h5"
-										>
-											{data.show}
-										</CardTitle>
-										<CardSubtitle className="mb-2 " tag="h6">
-											{`${formatDateStringWithDayOfWeek(data.date)} `}
-										</CardSubtitle>
-										<CardSubtitle className="mb-2 " tag="h6">
-											Bar Sales:{" "}
-											<span className="highlight-color">
-												${(Number(data.totalBarSales) || 0).toFixed(2)}
-											</span>
-										</CardSubtitle>
-										<CardSubtitle className="mb-2 " tag="h6">
-											Total Tips:{" "}
-											<span className="highlight-color">
-												${(Number(data.totalTips) || 0).toFixed(2)}
-											</span>
-										</CardSubtitle>
+						{chunk.map((data) =>
+							data.seeAll ? (
+								<Col key={data._id} sm={12} className={`${style.cardRow} `}>
+									<Card
+										className={`${style.cardContainer} ${style.backgroundColor}`}
+									>
+										<CardBody className={`${style.cardWidth} ${style.seeAllBody}`}>
+											<h5>Looking for an older show?</h5>
+											<p>The Tip Breakdowns page has every show, with search.</p>
+											<Link href="/getAllTipBreakDowns" className="btn btn-success">
+												See all tip breakdowns →
+											</Link>
+										</CardBody>
+									</Card>
+								</Col>
+							) : (
+								<Col key={data._id} sm={12} className={`${style.cardRow} `}>
+									<Card
+										onClick={() => handleCardClick(data._id)}
+										key={data._id}
+										className={`${style.cardContainer}  ${style.backgroundColor}  ${style.cardClick}`}
+									>
+										<CardBody className={`${style.cardWidth}`}>
+											<CardTitle
+												className={`${style.bandTitle} highlight-color`}
+												tag="h5"
+											>
+												{data.show}
+											</CardTitle>
+											<CardSubtitle className="mb-2 " tag="h6">
+												{`${formatDateStringWithDayOfWeek(data.date)} `}
+											</CardSubtitle>
+											<CardSubtitle className="mb-2 " tag="h6">
+												Bar Sales:{" "}
+												<span className="highlight-color">
+													${(Number(data.totalBarSales) || 0).toFixed(2)}
+												</span>
+											</CardSubtitle>
+											<CardSubtitle className="mb-2 " tag="h6">
+												Total Tips:{" "}
+												<span className="highlight-color">
+													${(Number(data.totalTips) || 0).toFixed(2)}
+												</span>
+											</CardSubtitle>
 
-										<h5 className={`${style.positionTitle}`}>Cooks:</h5>
-										{data.cookTips &&
-											data.cookTips.map((cook) => (
-												<table key={cook.id} className={style.employeeContainer}>
-													<tbody>
-														<tr>
-															<td className={`${style.expand} p-2`}>
-																{cook.label}:
-															</td>
-															<td
-																className={`${style.expand} p-2 highlight-color text-right`}
-															>
-																${(Number(cook.tipOut) || 0).toFixed(2)}
-															</td>
-														</tr>
-													</tbody>
-												</table>
-											))}
-
-										<div>
-											<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
-											<Col>
-												{data.barBackTips &&
-													data.barBackTips.map((barBack) => (
-														<table
-															key={barBack.id}
-															className={style.employeeContainer}
-														>
-															<tbody>
-																<tr>
-																	<td className={`${style.expand} p-2`}>
-																		{barBack.label}:
-																	</td>
-																	<td
-																		className={`${style.expand} p-2 highlight-color text-right`}
-																	>
-																		${(Number(barBack.tipOut) || 0).toFixed(2)}
-																	</td>
-																</tr>
-															</tbody>
-														</table>
-													))}
-											</Col>
-										</div>
-										<div>
-											<h5 className={`${style.positionTitle}`}>Bartenders:</h5>
-											{data.BartenderTips &&
-												data.BartenderTips.map((bartender) => (
-													<table
-														key={bartender.id}
-														className={style.employeeContainer}
-													>
+											<h5 className={`${style.positionTitle}`}>Cooks:</h5>
+											{data.cookTips &&
+												data.cookTips.map((cook) => (
+													<table key={cook.id} className={style.employeeContainer}>
 														<tbody>
 															<tr>
 																<td className={`${style.expand} p-2`}>
-																	{bartender.label}:
+																	{cook.label}:
 																</td>
 																<td
 																	className={`${style.expand} p-2 highlight-color text-right`}
 																>
-																	${(Number(bartender.tipOut) || 0).toFixed(2)}
+																	${(Number(cook.tipOut) || 0).toFixed(2)}
 																</td>
 															</tr>
 														</tbody>
 													</table>
 												))}
-										</div>
-									</CardBody>
-								</Card>
-							</Col>
-						))}
+
+											<div>
+												<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
+												<Col>
+													{data.barBackTips &&
+														data.barBackTips.map((barBack) => (
+															<table
+																key={barBack.id}
+																className={style.employeeContainer}
+															>
+																<tbody>
+																	<tr>
+																		<td className={`${style.expand} p-2`}>
+																			{barBack.label}:
+																		</td>
+																		<td
+																			className={`${style.expand} p-2 highlight-color text-right`}
+																		>
+																			${(Number(barBack.tipOut) || 0).toFixed(2)}
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														))}
+												</Col>
+											</div>
+											<div>
+												<h5 className={`${style.positionTitle}`}>Bartenders:</h5>
+												{data.BartenderTips &&
+													data.BartenderTips.map((bartender) => (
+														<table
+															key={bartender.id}
+															className={style.employeeContainer}
+														>
+															<tbody>
+																<tr>
+																	<td className={`${style.expand} p-2`}>
+																		{bartender.label}:
+																	</td>
+																	<td
+																		className={`${style.expand} p-2 highlight-color text-right`}
+																	>
+																		${(Number(bartender.tipOut) || 0).toFixed(2)}
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													))}
+											</div>
+										</CardBody>
+									</Card>
+								</Col>
+							)
+						)}
 					</Row>
 				</div>
 			)}

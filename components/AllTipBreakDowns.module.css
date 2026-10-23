@@ -202,3 +202,14 @@
 		display: none !important;
 	}
 }
+
+/* Last carousel card: points to the full, searchable list. */
+.seeAllBody {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	gap: 8px;
+	min-height: 240px;
+}
