@@ -74,7 +74,7 @@ export default function TipBreakDown({
 
 	const validate = () => {
 		if (!selectedShow) return "Please select a show.";
-		if (bartendersWithTipOut.length <= 0) {
+		if (adjustedBartendersWithTipOut.length <= 0) {
 			return "Please select at least 1 bartender.";
 		}
 		const exists = (allTipBreakdowns || []).some(
