@@ -455,7 +455,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 							</Row>
 						</Container>
 						{split.warning && (
-							<div className="alert alert-danger" role="alert">
+							<div className={`${style.notice} ${style.noticeDanger}`} role="alert">
 								{split.warning}
 							</div>
 						)}

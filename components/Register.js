@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { Button, Form, FormGroup, Input, Label } from "reactstrap";
+import GoogleIcon from "./GoogleIcon";
+import style from "./SignIn.module.css";
 
 export const Register = ({ employee }) => {
 	const router = useRouter();
@@ -9,7 +13,7 @@ export const Register = ({ employee }) => {
 
 	// State variables to store form data
 	const [username, setUsername] = useState("");
-	const [email, setEmail] = useState("");
+	const [email, setEmail] = useState(employee.email || "");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 
@@ -61,93 +65,103 @@ export const Register = ({ employee }) => {
 	}
 
 	return (
-		<div className="container mt-5 front-page">
-			<div className="row justify-content-center">
-				<div className="col-md-6">
-					<div className="card">
-						<div className="card-header">
-							<h3 className="text-center">Register</h3>
-							<p>
-								{employee.firstName} {employee.lastName}
-							</p>
-						</div>
-						<div className="card-body">
-							{signedInAsSomeoneElse && (
-								<div className="alert alert-warning">
-									You are signed in as <strong>{session.user.email}</strong>,
-									but this link was sent to{" "}
-									<strong>{employee.email || "a different address"}</strong>.
-									To use Google, sign out and pick that account. Otherwise set
-									a username and password below.
-									<div className="mt-2">
-										<button
-											type="button"
-											className="btn btn-outline-secondary btn-sm"
-											onClick={() => signOut({ redirect: false })}
-										>
-											Sign out
-										</button>
-									</div>
-								</div>
-							)}
-							<p className="small text-muted">
-								Signing in with Google works with the Google account for{" "}
-								<strong>{employee.email || "the email this link was sent to"}</strong>.
-							</p>
-							<button
-								className="btn btn-success  btn-block"
-								onClick={handleSignInWithGoogle}
-							>
-								Sign in with Google
-							</button>
-							<p className="mt-2">Or with username and password</p>
-							{error && <p className="text-danger">{error}</p>}
-							<form onSubmit={handleSubmit}>
-								<div className="form-group">
-									<label htmlFor="username">Username</label>
-									<input
-										type="text"
-										className="form-control"
-										id="username"
-										name="username"
-										placeholder="Enter username"
-										value={username}
-										onChange={(e) => setUsername(e.target.value)}
-										required
-									/>
-								</div>
-								<div className="form-group">
-									<label htmlFor="email">Email address</label>
-									<input
-										type="email"
-										className="form-control"
-										id="email"
-										name="email"
-										placeholder="Enter email"
-										value={email}
-										onChange={(e) => setEmail(e.target.value)}
-										required
-									/>
-								</div>
-								<div className="form-group mb-3">
-									<label htmlFor="password">Password</label>
-									<input
-										type="password"
-										className="form-control"
-										id="password"
-										name="password"
-										placeholder="Enter password"
-										value={password}
-										onChange={(e) => setPassword(e.target.value)}
-										required
-									/>
-								</div>
-								<button type="submit" className="btn btn-primary btn-block">
-									Register
-								</button>
-							</form>
-						</div>
+		<div className={style.page}>
+			<div className={style.content}>
+				<Link href="/" className={style.logo}>
+					TipJar
+				</Link>
+				<p className={style.subtitle}>
+					Welcome, {employee.firstName} {employee.lastName}. Set up your sign in.
+				</p>
+
+				{error && (
+					<div className={style.error} role="alert">
+						{error}
 					</div>
+				)}
+				{signedInAsSomeoneElse && (
+					<div className={style.error} role="alert">
+						You are signed in as <strong>{session.user.email}</strong>, but this
+						link was sent to{" "}
+						<strong>{employee.email || "a different address"}</strong>. To use
+						Google, sign out and pick that account. Otherwise set a username and
+						password below.
+						<Button
+							type="button"
+							outline
+							size="sm"
+							className="mt-2 d-block"
+							color="light"
+							onClick={() => signOut({ redirect: false })}
+						>
+							Sign out
+						</Button>
+					</div>
+				)}
+
+				<div className={style.card}>
+					<Button
+						type="button"
+						className={style.googleButton}
+						onClick={handleSignInWithGoogle}
+					>
+						<GoogleIcon /> Sign in with Google
+					</Button>
+					<p className={style.hint}>
+						Use the Google account for{" "}
+						<strong>{employee.email || "the email this link was sent to"}</strong>.
+					</p>
+
+					<div className={style.divider}>or pick a username and password</div>
+
+					<Form onSubmit={handleSubmit}>
+						<FormGroup className={style.field}>
+							<Label for="username" className={style.label}>
+								Username
+							</Label>
+							<Input
+								id="username"
+								name="username"
+								autoComplete="username"
+								autoCapitalize="none"
+								autoCorrect="off"
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
+								required
+							/>
+						</FormGroup>
+						<FormGroup className={style.field}>
+							<Label for="email" className={style.label}>
+								Email
+							</Label>
+							<Input
+								id="email"
+								name="email"
+								type="email"
+								autoComplete="email"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								required
+							/>
+						</FormGroup>
+						<FormGroup className={style.field}>
+							<Label for="password" className={style.label}>
+								Password
+							</Label>
+							<Input
+								id="password"
+								name="password"
+								type="password"
+								autoComplete="new-password"
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								required
+							/>
+						</FormGroup>
+						<Button type="submit" className={style.primaryButton}>
+							Register
+						</Button>
+					</Form>
 				</div>
 			</div>
 		</div>

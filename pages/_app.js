@@ -15,6 +15,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
 		"/signin",
 		"/forgot-password",
 		"/reset-password/[id]",
+		"/RegisterPage/[id]",
 	].includes(router.pathname);
 
 	const header = showChrome ? <Header /> : null;

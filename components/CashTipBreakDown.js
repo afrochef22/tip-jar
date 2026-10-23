@@ -51,7 +51,7 @@ export default function CashTipBreakDown({
 					<Col sm={6} xs={6}>
 						<h4>
 							Total Tips:
-							<p className="highlight-color">${tipsCollected}</p>
+							<p className="highlight-color">${Number(tipsCollected).toFixed(2)}</p>
 						</h4>
 					</Col>
 
@@ -121,7 +121,7 @@ export default function CashTipBreakDown({
 				</div>
 
 				{split.leftover > 0 && (
-					<div className="alert alert-warning" role="alert">
+					<div className={`${style.notice} ${style.noticeWarning}`} role="alert">
 						There is an extra ${split.leftover.toFixed(2)} left over.
 					</div>
 				)}
