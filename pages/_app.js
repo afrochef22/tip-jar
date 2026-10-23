@@ -8,10 +8,14 @@ import Footer from "../components/Footer";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
-	const isNotIndexPage = router.pathname !== "/";
-	const isNotTokenExpiredPage = router.pathname !== "/TokenExpired";
-	const isNotSignInPage = router.pathname !== "/signin";
-	const showChrome = isNotIndexPage && isNotTokenExpiredPage && isNotSignInPage;
+	// Full-screen pages with no header or footer.
+	const showChrome = ![
+		"/",
+		"/TokenExpired",
+		"/signin",
+		"/forgot-password",
+		"/reset-password/[id]",
+	].includes(router.pathname);
 
 	const header = showChrome ? <Header /> : null;
 	const footer = showChrome ? <Footer /> : null;

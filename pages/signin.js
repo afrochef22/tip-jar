@@ -133,6 +133,9 @@ export default function SignInPage() {
 							{busy === "credentials" ? <Spinner size="sm" /> : "Sign in"}
 						</Button>
 					</Form>
+					<p className={style.forgot}>
+						<Link href="/forgot-password">Forgot password?</Link>
+					</p>
 
 					<div className={style.divider}>or</div>
 

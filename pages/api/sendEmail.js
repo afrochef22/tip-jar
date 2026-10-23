@@ -1,9 +1,9 @@
-import nodemailer from "nodemailer";
 import { ObjectId } from "mongodb";
 import { randomUUID } from "crypto";
 import clientPromise from "../../lib/mongodb";
 import { requireSession } from "../../lib/auth";
 import { reportError } from "../../lib/alert";
+import { sendMail } from "../../lib/mailer";
 
 const LINK_TTL_DAYS = 7;
 
@@ -44,16 +44,7 @@ export default requireSession(async (req, res) => {
 		const baseUrl = (process.env.NEXTAUTH_URL || "").replace(/\/$/, "");
 		const registrationLink = `${baseUrl}/RegisterPage/${employee._id}?token=${token}`;
 
-		const transporter = nodemailer.createTransport({
-			service: "Gmail",
-			auth: {
-				user: process.env.EMAIL_SERVER_USER,
-				pass: process.env.EMAIL_SERVER_PASSWORD,
-			},
-		});
-
-		await transporter.sendMail({
-			from: process.env.EMAIL_FROM,
+		await sendMail({
 			to: employee.email,
 			subject: "Registration Link",
 			html: `

@@ -113,7 +113,7 @@ save/delete failures, and page size/speed. What's left:
 
 ## 8. Smaller product gaps
 
-- [ ] **Self-service password reset.** Right now, a person who forgets their password needs a manager to resend their registration link, which lets them set a new password through the same flow as initial registration. That works, but it's manager-mediated. A "forgot password" link on the sign-in page would remove that dependency, if worth the effort for how often it actually comes up.
+- [x] **Self-service password reset.** Done 2026-10-23: "Forgot password?" on the sign-in page → `/forgot-password` emails a one-time link (1 hour, only its SHA-256 hash is stored, `lib/passwordReset.js`) to `/reset-password/[id]`. Same answer whether or not the account exists; rate limited. New passwords need 8+ characters. Was: Right now, a person who forgets their password needs a manager to resend their registration link, which lets them set a new password through the same flow as initial registration. That works, but it's manager-mediated. A "forgot password" link on the sign-in page would remove that dependency, if worth the effort for how often it actually comes up.
 - [ ] **CSV export from the tip spreadsheet.** `CCTipsTotals` and the Dashboard's pay-period view are read-only tables; whoever runs payroll is presumably retyping totals into another system by hand. A "Download CSV" button would be a small, high-value addition if that's actually happening.
 - [ ] **Add a `.env.example` file.** `CLAUDE.md` lists the required environment variables in prose, but there's no template file. A `.env.example` with the variable names (no real values) makes new setup faster and is a five-minute addition.
 
