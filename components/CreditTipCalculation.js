@@ -220,6 +220,7 @@ export default function CreditTipCalculation({
 				</div>
 
 				<section className={form.card}>
+					{moneyInput("BarSalesTotal", "Bar sales")}
 					{/* totalTips keeps its old id so the form and tests can find it. */}
 					<FormGroup className={form.field}>
 						<Label for="tipsCollected" className={form.label}>
@@ -240,7 +241,6 @@ export default function CreditTipCalculation({
 							/>
 						</InputGroup>
 					</FormGroup>
-					{moneyInput("BarSalesTotal", "Bar sales")}
 					{cooks.length > 0 && moneyInput("FoodSalesTotal", "Food sales")}
 					{barBacks.length > 0 && (
 						<FormGroup className={`${form.field} ${form.inline}`}>
