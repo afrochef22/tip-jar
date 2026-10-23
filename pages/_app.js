@@ -10,9 +10,11 @@ import "../styles/globals.css";
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
 	const isNotIndexPage = router.pathname !== "/";
 	const isNotTokenExpiredPage = router.pathname !== "/TokenExpired";
+	const isNotSignInPage = router.pathname !== "/signin";
+	const showChrome = isNotIndexPage && isNotTokenExpiredPage && isNotSignInPage;
 
-	const header = isNotIndexPage && isNotTokenExpiredPage ? <Header /> : null;
-	const footer = isNotIndexPage && isNotTokenExpiredPage ? <Footer /> : null;
+	const header = showChrome ? <Header /> : null;
+	const footer = showChrome ? <Footer /> : null;
 	return (
 		<div className="background-color">
 			<AuthProvider>

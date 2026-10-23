@@ -15,7 +15,7 @@ export default function Component() {
 	}, [session, router]);
 
 	const handleSignIn = async () => {
-		await signIn(); // Trigger the sign-in process
+		await signIn(undefined, { callbackUrl: "/Dashboard" });
 	};
 	if (session) {
 		return (

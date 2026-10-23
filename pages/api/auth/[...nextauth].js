@@ -66,6 +66,11 @@ export const authOptions = {
 		strategy: "jwt",
 		maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
 	},
+	// TipJar-styled sign-in page; NextAuth sends errors there as ?error=<code>.
+	pages: {
+		signIn: "/signin",
+		error: "/signin",
+	},
 	secret: process.env.NEXTAUTH_SECRET,
 	adapter: MongoDBAdapter(clientPromise, { databaseName: "TeragramBallroom" }),
 	callbacks: {

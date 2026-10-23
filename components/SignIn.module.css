@@ -1,0 +1,136 @@
+/* Manager sign-in page. Matches the landing page (dark, Italiana logo) and
+   the credit tip form's cards and buttons. */
+
+.page {
+	background-color: var(--third-color);
+	color: var(--text-color);
+	min-height: 100vh;
+	padding: 32px 16px 48px;
+}
+
+.content {
+	max-width: 400px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.logo {
+	display: inline-block;
+	font-family: "Italiana", sans-serif;
+	font-size: 4.5rem;
+	line-height: 1;
+	color: var(--text-color);
+	text-decoration: none;
+}
+.logo:hover {
+	color: var(--text-color);
+}
+.subtitle {
+	font-size: 18px;
+	opacity: 0.8;
+	margin: 8px 0 24px;
+}
+
+.error {
+	background-color: rgba(208, 40, 40, 0.15);
+	border: 1px solid var(--secondary-color);
+	border-radius: 10px;
+	padding: 12px 14px;
+	margin-bottom: 16px;
+	text-align: left;
+}
+
+.card {
+	background-color: #484747;
+	border-radius: 16px;
+	padding: 24px 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	text-align: left;
+}
+
+.field {
+	margin-bottom: 16px;
+}
+.label {
+	font-size: 16px;
+	margin-bottom: 6px;
+}
+/* 16px+ text stops iOS Safari from zooming in on focus. */
+.field input {
+	font-size: 18px;
+	min-height: 48px;
+}
+
+.primaryButton,
+.googleButton,
+.secondaryButton {
+	width: 100%;
+	min-height: 52px;
+	font-size: 18px;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+.primaryButton {
+	background-color: var(--button-green);
+	border-color: var(--button-green);
+	font-weight: 600;
+}
+.primaryButton:hover,
+.primaryButton:focus {
+	background-color: var(--button-hover);
+	border-color: var(--button-hover);
+}
+.googleButton {
+	background-color: #fff;
+	border-color: #fff;
+	color: #333;
+}
+.googleButton:hover,
+.googleButton:focus {
+	background-color: #eee;
+	border-color: #eee;
+	color: #333;
+}
+.secondaryButton {
+	color: var(--text-color);
+	border-color: #888;
+}
+.secondaryButton:hover {
+	background-color: var(--third-color);
+	color: var(--text-color);
+}
+
+.divider {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 20px 0;
+	opacity: 0.6;
+	font-size: 14px;
+}
+.divider::before,
+.divider::after {
+	content: "";
+	flex: 1;
+	border-top: 1px solid #777;
+}
+
+.sent {
+	color: var(--highlight);
+	margin: 0;
+}
+
+.back {
+	display: inline-block;
+	margin-top: 24px;
+	color: var(--text-color);
+	opacity: 0.8;
+	text-decoration: none;
+}
+.back:hover {
+	color: var(--text-color);
+	opacity: 1;
+}
