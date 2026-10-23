@@ -47,15 +47,6 @@ export default function CashTipForm({ initial = {}, onSubmit, submitLabel, child
 
 	const groups = [
 		{
-			title: "Bartenders",
-			single: "Bartender",
-			people: bartenders,
-			setPeople: setBartenders,
-			min: 1,
-			byHours: isBartenderHoursClicked,
-			setByHours: setBartenderHoursClicked,
-		},
-		{
 			title: "Bar Backs",
 			single: "Bar Back",
 			people: barBacks,
@@ -63,6 +54,15 @@ export default function CashTipForm({ initial = {}, onSubmit, submitLabel, child
 			min: 0,
 			byHours: isBarBackHoursClicked,
 			setByHours: setBarBackHoursClicked,
+		},
+		{
+			title: "Bartenders",
+			single: "Bartender",
+			people: bartenders,
+			setPeople: setBartenders,
+			min: 1,
+			byHours: isBartenderHoursClicked,
+			setByHours: setBartenderHoursClicked,
 		},
 	];
 
