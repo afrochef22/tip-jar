@@ -49,7 +49,8 @@ save/delete failures, and page size/speed. What's left:
 
 ## 2. Security housekeeping left on purpose
 
-- [ ] **Decide on the `bcrypt` and `uuid` major-version bumps**
+- [x] **Decide on the `bcrypt` and `uuid` major-version bumps**
+  - Done 2026-10-23: `bcrypt` 5 → 6 (hashes made by 5 verify under 6; local sign-in path checked). `uuid` removed: nothing imported it, registration tokens use `crypto.randomUUID`. `npm audit fix` also took Next.js 16.3.5 → 16.4.3. Left: 5 warnings with no fix available, all inside next-auth v4 (`@auth/core`, its `nodemailer` and `cookie`); clearing them means migrating to Auth.js v5.
   - Context: `npm audit fix` (no `--force`) already took vulnerabilities from 26 down to 9. The remaining 9 all need `bcrypt` 5→6 or `uuid` 9→14, both breaking changes I didn't want to apply silently.
   - `bcrypt` sits on the password-hashing path (`updateEmployee` API, credentials sign-in) — a version bump needs a real test of registering and signing in with a password afterward, since the native binding can change.
   - `uuid` generates registration tokens (`sendEmail` API) — lower risk, mostly an import-style change, but still worth testing a registration link end to end after bumping.
