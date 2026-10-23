@@ -10,7 +10,6 @@ import {
 	Carousel,
 	CarouselItem,
 	CarouselControl,
-	Button,
 } from "reactstrap";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -254,10 +253,6 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 			)}
 		</CarouselItem>
 	));
-	const scrollToTipsSpreadsheet = () => {
-		const tipsSpreadsheet = document.getElementById("tipsSpreadsheet");
-		tipsSpreadsheet.scrollIntoView({ behavior: "smooth" });
-	};
 	return (
 		<div id="allTipBreakDowns" className={`${style.carouselSection}`}>
 			<div className={`${style.title}`}>
@@ -309,13 +304,6 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 					)}
 				</Carousel>
 			</div>
-			<Row className="justify-content-center mt-4 ">
-				<Col xs="auto">
-					<Button onClick={scrollToTipsSpreadsheet}>
-						Scroll Down to Tips Spreadsheet
-					</Button>
-				</Col>
-			</Row>
 		</div>
 	);
 }

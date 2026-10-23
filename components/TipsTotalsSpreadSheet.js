@@ -135,11 +135,6 @@ export default function TipsTotalsSpreadSheet({
 		}, 0);
 	};
 
-	const scrollAllTipBreakDowns = () => {
-		const tipsSpreadsheet = document.getElementById("allTipBreakDowns");
-		tipsSpreadsheet?.scrollIntoView({ behavior: "smooth" });
-	};
-
 	const dateRangeDisplay = (
 		<>
 			{startDate.toLocaleString({
@@ -376,13 +371,6 @@ export default function TipsTotalsSpreadSheet({
 				</Row>
 			</Container>
 			{table}
-			<Row className="justify-content-center mt-4 ">
-				<Col xs="auto">
-					<Button onClick={scrollAllTipBreakDowns}>
-						Scroll Up to Tip Breakdowns
-					</Button>
-				</Col>
-			</Row>
 		</div>
 	);
 }
