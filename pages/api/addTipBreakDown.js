@@ -1,6 +1,7 @@
 import clientPromise from "../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getApiSession } from "../../lib/auth";
+import { tooManyShiftWrites } from "../../lib/rateLimit";
 import { ShiftDate } from "../../lib/shiftDate";
 import { cleanShowName, isSameShow, showKey } from "../../lib/showKey";
 
@@ -40,6 +41,7 @@ export default async (req, res) => {
 			.status(401)
 			.json({ message: "Sign in required to submit a past shift" });
 	}
+	if (!session && (await tooManyShiftWrites(req, res, "message"))) return;
 
 	const cooks = toIdList(cookTips);
 	const barBacks = toIdList(barBackTips);

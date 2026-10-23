@@ -1,6 +1,7 @@
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getApiSession } from "../../../lib/auth";
+import { tooManyShiftWrites } from "../../../lib/rateLimit";
 import { ShiftDate } from "../../../lib/shiftDate";
 
 export default async (req, res) => {
@@ -34,6 +35,7 @@ export default async (req, res) => {
 				.status(401)
 				.json({ error: "Sign in required to delete a past shift" });
 		}
+		if (!session && (await tooManyShiftWrites(req, res))) return;
 
 		const employeeIds = []
 			.concat(

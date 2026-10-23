@@ -79,7 +79,8 @@ save/delete failures, and page size/speed. What's left:
 
 ## 5. No rate limiting on the endpoints logged-out staff can hit
 
-- [ ] **Add basic rate limiting to `addTipBreakDown` and `UpdateTipBreakDown`**
+- [x] **Add basic rate limiting to `addTipBreakDown` and `UpdateTipBreakDown`**
+  - Done 2026-10-23: `lib/rateLimit.js`. Logged-out add, edit and delete share a limit of 60 per hour per IP (managers are never limited). Counts live in a self-expiring `rateLimits` collection so they work across Vercel instances. If the check itself fails, the request goes through.
   - These intentionally stay open to logged-out staff for the current shift (that was a deliberate decision earlier in this project). The only guard against abuse is the duplicate check on show name + date.
   - Someone could still spam distinct show names, or hammer the endpoint for other reasons, with nothing to slow them down.
   - Fix: a lightweight IP-based rate limit (many options — Vercel's own, or a simple in-memory/Upstash-Redis token bucket) on the two logged-out-accessible write routes. Low urgency for a small venue, but cheap to add.

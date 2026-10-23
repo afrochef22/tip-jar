@@ -1,6 +1,7 @@
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getApiSession } from "../../../lib/auth";
+import { tooManyShiftWrites } from "../../../lib/rateLimit";
 import { ShiftDate } from "../../../lib/shiftDate";
 import { cleanShowName, isSameShow, showKey } from "../../../lib/showKey";
 
@@ -37,6 +38,7 @@ export default async (req, res) => {
 						.status(401)
 						.json({ error: "Sign in required to edit a past shift" });
 				}
+				if (await tooManyShiftWrites(req, res)) return;
 			}
 
 			if (data.show !== undefined) {
