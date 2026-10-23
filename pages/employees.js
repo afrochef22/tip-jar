@@ -1,4 +1,5 @@
 import clientPromise from "../lib/mongodb";
+import { MANAGER_EMPLOYEE_FIELDS } from "../lib/employeeFields";
 import Bartenders from "../components/Bartenders";
 import BarBacks from "../components/BarBacks";
 import Cooks from "../components/Cooks";
@@ -32,7 +33,7 @@ export async function getServerSideProps() {
 
 		const employees = await db
 			.collection("employees")
-			.find({})
+			.find({}, { projection: MANAGER_EMPLOYEE_FIELDS })
 			.sort()
 			.limit(1000)
 			.toArray();

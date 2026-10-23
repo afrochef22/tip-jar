@@ -2,6 +2,7 @@
 import React from "react";
 import SelectEmployee from "../components/SelectEmployee";
 import clientPromise from "../lib/mongodb";
+import { PUBLIC_EMPLOYEE_FIELDS } from "../lib/employeeFields";
 
 export default function SelectWorkingEmployee({ employees, allTipBreakdowns }) {
 	return (
@@ -21,7 +22,9 @@ export async function getServerSideProps() {
 
 		// you can use the cursor interface to iterate over the entire result set without specifying a limit. This approach is more efficient for handling large result sets because it doesn't load all documents into memory at once:
 
-		const cursor = db.collection("employees").find({});
+		const cursor = db
+			.collection("employees")
+			.find({}, { projection: PUBLIC_EMPLOYEE_FIELDS });
 		const employees = await cursor.toArray();
 
 		const cursor2 = db.collection("tipBreakdown").find({});

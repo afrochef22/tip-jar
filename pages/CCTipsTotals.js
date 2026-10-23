@@ -1,4 +1,5 @@
 import clientPromise from "../lib/mongodb";
+import { PUBLIC_EMPLOYEE_TIP_FIELDS } from "../lib/employeeFields";
 import TipsTotalsSpreadSheet from "../components/TipsTotalsSpreadSheet";
 
 export default function CCTipsTotals({ employees, allTipBreakdowns }) {
@@ -17,7 +18,10 @@ export async function getServerSideProps() {
 		const db = client.db("TeragramBallroom");
 
 		const allTipBreakdowns = await db.collection("tipBreakdown").find({}).toArray();
-		const employees = await db.collection("employees").find({}).toArray();
+		const employees = await db
+			.collection("employees")
+			.find({}, { projection: PUBLIC_EMPLOYEE_TIP_FIELDS })
+			.toArray();
 
 		return {
 			props: {

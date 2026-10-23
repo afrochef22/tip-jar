@@ -1,4 +1,5 @@
 import clientPromise from "../../lib/mongodb";
+import { MANAGER_EMPLOYEE_FIELDS } from "../../lib/employeeFields";
 import { useRouter } from "next/router";
 import { ObjectId } from "mongodb";
 import Link from "next/link";
@@ -36,7 +37,9 @@ export default function getEmployee({ employee }) {
 		if (employee.firstSignInDate) {
 			return <p>Registered on {formattedFirstSignInDate}</p>;
 		}
-		if (employee.token) {
+		// The token itself is never sent to the browser; its expiration is set
+		// and cleared alongside it.
+		if (employee.tokenExpiration) {
 			return (
 				<>
 					<p className="highlight-color">
@@ -154,9 +157,10 @@ export async function getServerSideProps(data) {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
 		const employeeCollection = db.collection("employees");
-		const employee = await employeeCollection.findOne({
-			_id: new ObjectId(id),
-		});
+		const employee = await employeeCollection.findOne(
+			{ _id: new ObjectId(id) },
+			{ projection: MANAGER_EMPLOYEE_FIELDS }
+		);
 
 		if (!employee) {
 			// Return a 404 status for not found

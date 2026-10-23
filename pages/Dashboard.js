@@ -1,5 +1,6 @@
 import React from "react";
 import clientPromise from "../lib/mongodb";
+import { PUBLIC_EMPLOYEE_TIP_FIELDS } from "../lib/employeeFields";
 import AllTipBreakDowns from "../components/AllTipBreakDowns";
 import TipsTotalsSpreadSheet from "../components/TipsTotalsSpreadSheet";
 
@@ -28,7 +29,7 @@ export async function getServerSideProps() {
 
 		const employees = await db
 			.collection("employees")
-			.find({})
+			.find({}, { projection: PUBLIC_EMPLOYEE_TIP_FIELDS })
 
 			.toArray();
 
