@@ -10,6 +10,29 @@ Ordered roughly by how much it matters. Check items off as they're done.
 
 ---
 
+## 0. Follow-ups from the 2026-10-22 audit (do these first)
+
+The audit fixed and deployed: employee secrets leaking on public pages,
+duplicate tip breakdowns (plus removing the five 2024 duplicates), silent
+save/delete failures, and page size/speed. What's left:
+
+- [ ] **Resend registration links to the 6 employees with pending ones**
+  - Until 2026-10-22, `/SelectWorkingEmployee` and `/CCTipsTotals` put every employee's registration token in the public page source. Resending a link replaces the token, so the old (possibly copied) one stops working.
+- [ ] **Have anyone with a password change it**
+  - Password hashes were in the same public page data. bcrypt makes them slow to crack, not impossible.
+- [ ] **Open the Dashboard once while signed in and confirm it looks normal**
+  - It now loads less breakdown data and couldn't be checked without a sign-in.
+- [ ] **Decide whether every signed-in user should be a manager**
+  - There are no roles: anyone who completes registration can see and edit everything, including payroll and employees. Fine if only managers ever get registration links; worth a `role` field if staff do.
+- [ ] **Happy Hour can only be submitted once per day**
+  - Kept on purpose (one button). On a night with two happy hours (e.g. 10/20: "Happy Hour Cafe" and "Happy Hour Main"), the second has to be typed into "Enter an event", which logged-out staff only see on nights with no show.
+- [ ] **Load the spreadsheet one pay period at a time** (later, if it feels slow)
+  - `CCTipsTotals` is still ~389 KB, mostly every employee's full `tipsCollected` history, and grows every shift. Fixing it means the pay-period arrows fetch data as you move between periods. Skipped for now as the riskiest change on the payroll page for a modest gain.
+- [ ] **Deploys: production only updates from GitHub `main`**
+  - Branch pushes only make Vercel previews. 14 commits sat unpushed on local `main` from 2026-09-17 to 2026-10-22, so production ran old code the whole time. After finishing work, check `git log origin/main..main` is empty.
+
+---
+
 ## 1. Deleting an employee with real history erases them from past payroll totals (real bug)
 
 - [ ] **Make `removeEmployee` refuse to hard-delete anyone with tip history; steer to deactivating instead**
@@ -63,6 +86,7 @@ Ordered roughly by how much it matters. Check items off as they're done.
 - [ ] **Make `FindBandPerformingToday` fail loudly instead of silently**
   - File: `pages/api/FindBandPerformingToday.js`
   - It scrapes `teragramballroom.com`'s HTML by CSS class name (`.twelve`, `.tw-name`, `.tw-event-date`). If the venue's website gets redesigned, this returns an empty list with no error — staff just sees "No show Today" and has to type the show name manually, with nothing telling them *why* the picker stopped working.
+  - Partly done (2026-10-22): the lookup now times out after 8s, and a failed lookup tells staff "Couldn't load today's show. Enter it below." instead of "No show Today". Still open: a scrape that succeeds but finds nothing because the site's HTML changed still looks like a dark night.
   - Fix: at minimum, distinguish "the site returned zero shows" from "the scrape structure looks wrong" (e.g., if the fetch succeeds but finds zero `.twelve` elements at all, that's suspicious and worth a distinct log line or even a visible note in the UI, versus a legitimately dark night).
   - Bigger fix, if the venue has one: use a real API/RSS feed from their ticketing platform instead of scraping HTML, if one exists.
 
@@ -95,6 +119,7 @@ Ordered roughly by how much it matters. Check items off as they're done.
 
 ## Suggested order
 
+0. Item 0's first two bullets (resend links, password changes) — the leak is closed, but treat what leaked as exposed.
 1. Item 1 (`removeEmployee` fix) — it's a real bug, same family as what's already been fixed, and it's small.
 2. Item 3 (confirm backups) — not code, just find out the fact and act on it if the answer is bad.
 3. Item 2 (bcrypt/uuid) — needs your decision on how much risk to take on, then a focused session to bump and test.
