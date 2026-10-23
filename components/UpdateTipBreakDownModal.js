@@ -454,6 +454,11 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 								</Col>
 							</Row>
 						</Container>
+						{split.warning && (
+							<div className="alert alert-danger" role="alert">
+								{split.warning}
+							</div>
+						)}
 						<div className={style.container}>
 							<h1>Cook Tips </h1>
 							<Row>

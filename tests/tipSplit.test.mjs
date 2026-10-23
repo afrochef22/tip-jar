@@ -143,3 +143,24 @@ test("bartenders never differ by more than a cent on an even split", () => {
 		assert.ok(Math.max(...tips) - Math.min(...tips) <= 1, String(tips));
 	}
 });
+
+test("warns when the cooks' share is more than the tips", () => {
+	const result = split({
+		totalTips: 50,
+		foodSalesTotal: 400,
+		bartenders: people(0),
+		cooks: people(0),
+	});
+	assert.match(result.warning, /\$60\.00.*\$50\.00/);
+	assert.equal(result.bartenders[0].tipOut, -10);
+});
+
+test("no warning on a normal shift", () => {
+	const result = split({
+		totalTips: 260,
+		foodSalesTotal: 400,
+		bartenders: people(0),
+		cooks: people(0),
+	});
+	assert.equal(result.warning, null);
+});
