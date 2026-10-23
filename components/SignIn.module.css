@@ -150,3 +150,15 @@
 	margin: 8px 0 0;
 	text-align: center;
 }
+
+.message {
+	font-size: 18px;
+	text-align: center;
+	margin: 0 0 8px;
+}
+.card .message + a {
+	margin-top: 12px;
+}
+.card a.primaryButton {
+	color: var(--text-color);
+}

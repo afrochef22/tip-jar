@@ -19,6 +19,7 @@ import style from "./AllTipBreakDowns.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
+import { money } from "../lib/money";
 
 export default function AllTipBreakDowns({ allTipBreakdowns }) {
 	const router = useRouter();
@@ -160,13 +161,13 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 											<CardSubtitle className="mb-2 " tag="h6">
 												Bar Sales:{" "}
 												<span className="highlight-color">
-													${(Number(data.totalBarSales) || 0).toFixed(2)}
+													${money(data.totalBarSales)}
 												</span>
 											</CardSubtitle>
 											<CardSubtitle className="mb-2 " tag="h6">
 												Total Tips:{" "}
 												<span className="highlight-color">
-													${(Number(data.totalTips) || 0).toFixed(2)}
+													${money(data.totalTips)}
 												</span>
 											</CardSubtitle>
 
@@ -184,7 +185,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 																<td
 																	className={`${style.expand} p-2 highlight-color text-right`}
 																>
-																	${(Number(cook.tipOut) || 0).toFixed(2)}
+																	${money(cook.tipOut)}
 																</td>
 															</tr>
 														</tbody>
@@ -193,7 +194,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 
 											<div>
 												{data.barBackTips?.length > 0 && (
-													<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
+													<h5 className={`${style.positionTitle}`}>Bar Backs:</h5>
 												)}
 												<Col>
 													{data.barBackTips &&
@@ -210,7 +211,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 																		<td
 																			className={`${style.expand} p-2 highlight-color text-right`}
 																		>
-																			${(Number(barBack.tipOut) || 0).toFixed(2)}
+																			${money(barBack.tipOut)}
 																		</td>
 																	</tr>
 																</tbody>
@@ -236,7 +237,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 																	<td
 																		className={`${style.expand} p-2 highlight-color text-right`}
 																	>
-																		${(Number(bartender.tipOut) || 0).toFixed(2)}
+																		${money(bartender.tipOut)}
 																	</td>
 																</tr>
 															</tbody>

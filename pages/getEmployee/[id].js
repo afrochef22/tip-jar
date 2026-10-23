@@ -50,7 +50,7 @@ export default function getEmployee({ employee }) {
 				</>
 			);
 		} else {
-			return <></>;
+			return <p className={style.muted}>Not registered yet</p>;
 		}
 	};
 	const handelBack = () => {
@@ -91,7 +91,7 @@ export default function getEmployee({ employee }) {
 									<UpdateEmployeeModal data={employee} />
 								</Button>
 							</Col>
-							<Col>
+							<Col xs={6}>
 								<h1>
 									{employee.firstName} {employee.lastName}
 								</h1>
@@ -117,13 +117,17 @@ export default function getEmployee({ employee }) {
 								<h4>Email:</h4>
 							</Col>
 							<Col xs={12} md={8}>
-								<p>{employee.email}</p>
+								{employee.email ? (
+									<p>{employee.email}</p>
+								) : (
+									<p className={style.muted}>No email yet</p>
+								)}
 							</Col>
 						</Row>
 
 						<Row>
 							<Col xs={12} md={4}>
-								<h4>Postions:</h4>
+								<h4>Positions:</h4>
 							</Col>
 							<Col xs={12} md={8}>
 								<span>

@@ -17,6 +17,7 @@ import {
 import { useRouter } from "next/router";
 import style from "../components/AllTipBreakDowns.module.css";
 import { reportError } from "../lib/alert";
+import { money } from "../lib/money";
 
 // Rendering every breakdown at once makes the page slow to load on a phone.
 const PAGE_SIZE = 30;
@@ -114,14 +115,14 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 								<CardSubtitle className="mb-2 " tag="h6">
 									Bar Sales:{" "}
 									<span className="highlight-color">
-										${(Number(data.totalBarSales) || 0).toFixed(2)}{" "}
+										${money(data.totalBarSales)}{" "}
 									</span>
 								</CardSubtitle>
 								<CardSubtitle className="mb-2 " tag="h6">
 									Total Tips:{" "}
 									<span className="highlight-color">
 										{" "}
-										${(Number(data.totalTips) || 0).toFixed(2)}
+										${money(data.totalTips)}
 									</span>
 								</CardSubtitle>
 
@@ -139,7 +140,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 													<td
 														className={`${style.expand} p-2 highlight-color text-right`}
 													>
-														${(Number(cook.tipOut) || 0).toFixed(2)}
+														${money(cook.tipOut)}
 													</td>
 												</tr>
 											</tbody>
@@ -148,7 +149,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 
 								<div>
 									{data.barBackTips?.length > 0 && (
-										<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
+										<h5 className={`${style.positionTitle}`}>Bar Backs:</h5>
 									)}
 									<Col>
 										{data.barBackTips &&
@@ -165,7 +166,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 															<td
 																className={`${style.expand} p-2 highlight-color text-right`}
 															>
-																${(Number(barBack.tipOut) || 0).toFixed(2)}
+																${money(barBack.tipOut)}
 															</td>
 														</tr>
 													</tbody>
@@ -191,7 +192,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 														<td
 															className={`${style.expand} p-2 highlight-color text-right`}
 														>
-															${(Number(bartender.tipOut) || 0).toFixed(2)}
+															${money(bartender.tipOut)}
 														</td>
 													</tr>
 												</tbody>

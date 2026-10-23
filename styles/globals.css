@@ -420,3 +420,30 @@ body {
 		margin-bottom: 50px;
 	}
 }
+
+/* Phone menu: one link per row, full width, easy to tap. */
+.collapse-menue .navbar-collapse {
+	flex-direction: column;
+	align-items: stretch;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+}
+.collapse-menue .navbar-collapse.show {
+	display: flex;
+}
+.collapse-menue .navbar-link {
+	display: block;
+	padding: 14px 20px;
+	font-size: 20px;
+	text-align: left;
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+.collapse-menue .spacer {
+	display: none;
+}
+.collapse-menue .btn.navbar-link {
+	display: block;
+	width: calc(100% - 40px);
+	margin: 12px 20px 14px !important;
+	text-align: center;
+	border-top: none;
+}

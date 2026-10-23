@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { ConfirmationDialog } from "./ConformationDialog";
 import { splitCreditTips } from "../lib/tipSplit.mjs";
 import { isSameShow } from "../lib/showKey";
+import { money } from "../lib/money";
 
 export default function TipBreakDown({
 	bartenders,
@@ -95,7 +96,7 @@ export default function TipBreakDown({
 			Number(breakdown.totalTips) === Number(totalTips)
 	);
 	const duplicateWarning = sameTotalBreakdown
-		? `"${sameTotalBreakdown.show}" was already submitted today with the same total of ${Number(totalTips).toFixed(2)}. Make sure this isn't the same shift entered twice.`
+		? `"${sameTotalBreakdown.show}" was already submitted today with the same total of ${money(totalTips)}. Make sure this isn't the same shift entered twice.`
 		: "";
 
 	const toggleConfirmation = () => {
@@ -176,12 +177,12 @@ export default function TipBreakDown({
 						<Col sm={4} xs={6}>
 							<h4>Total Tips:</h4>
 							<h2 className="highlight-color">
-								${Number(totalTips).toFixed(2)}
+								${money(totalTips)}
 							</h2>
 						</Col>
 						<Col sm={4} xs={6}>
 							<h4>Food sales:</h4>
-							<h2 className="highlight-color">${foodSalesTotal.toFixed(2)}</h2>
+							<h2 className="highlight-color">${money(foodSalesTotal)}</h2>
 						</Col>
 						<Col sm={4} xs={12}>
 							<h4>Bar Back Percentage:</h4>
@@ -205,7 +206,7 @@ export default function TipBreakDown({
 									Tips per hour:
 									<span className="highlight-color">
 										{" "}
-										${tipsPerCook().toFixed(2)}
+										${money(tipsPerCook())}
 									</span>
 								</h4>
 							)}
@@ -228,7 +229,7 @@ export default function TipBreakDown({
 												<Col>
 													<FontAwesomeIcon icon={faSackDollar} />{" "}
 													<p className="highlight-color">
-														${cook.tipOut.toFixed(2)}
+														${money(cook.tipOut)}
 													</p>
 												</Col>
 											</Row>
@@ -248,7 +249,7 @@ export default function TipBreakDown({
 							<h5>
 								Tips per hour:{" "}
 								<span className="highlight-color">
-									${tipsPerBarBack().toFixed(2)}
+									${money(tipsPerBarBack())}
 								</span>
 							</h5>
 						)}
@@ -272,7 +273,7 @@ export default function TipBreakDown({
 												<Col>
 													<FontAwesomeIcon icon={faSackDollar} />{" "}
 													<p className="highlight-color">
-														${barBack.tipOut.toFixed(2)}
+														${money(barBack.tipOut)}
 													</p>
 												</Col>
 											</Row>
@@ -291,7 +292,7 @@ export default function TipBreakDown({
 						<h5>
 							Tips per hour:{" "}
 							<span className="highlight-color">
-								${tipsPerBartender().toFixed(2)}
+								${money(tipsPerBartender())}
 							</span>
 						</h5>
 					)}
@@ -314,7 +315,7 @@ export default function TipBreakDown({
 										<Col>
 											<FontAwesomeIcon icon={faSackDollar} />{" "}
 											<p className="highlight-color">
-												${Number(bartender.tipOut).toFixed(2)}
+												${money(bartender.tipOut)}
 											</p>
 										</Col>
 									</Row>

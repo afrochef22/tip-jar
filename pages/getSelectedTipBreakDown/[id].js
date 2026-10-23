@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/router";
 import clientPromise from "../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { Button, Col, Container, Row } from "reactstrap";
@@ -9,9 +10,11 @@ import UpdateTipBreakDownModal from "../../components/UpdateTipBreakDownModal";
 import { useSession } from "next-auth/react";
 import { ShiftDate } from "../../components/CurrentShift";
 import { reportError } from "../../lib/alert";
+import { money } from "../../lib/money";
 
 export default function getSelectedTipBreakDown({ breakDown }) {
 	const { data: session } = useSession();
+	const router = useRouter();
 	if (!breakDown) {
 		return <div>Tip Breakdown not found</div>;
 	}
@@ -19,7 +22,6 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 	const cookTips = breakDown.cookTips ?? [];
 	const barBackTips = breakDown.barBackTips ?? [];
 	const bartenderTips = breakDown.BartenderTips ?? [];
-	const money = (v) => (Number(v) || 0).toFixed(2);
 
 	const bartenderHours = bartenderTips.map(
 		(bartender) => bartender.tippedHours || 0
@@ -32,8 +34,16 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 	const cookHours = cookTips
 		.map((cook) => cook.tippedHours || 0)
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
+	// Go back to wherever they came from (Dashboard, the list, the
+	// spreadsheet); with no history, fall back to the list or the start page.
+	const goBack = () => {
+		if (window.history.length > 1) router.back();
+		else router.push(session ? "/getAllTipBreakDowns" : "/");
+	};
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
+			<div className={style.pageActions}>
+				<Button onClick={goBack}>← Back</Button>
 			{session || shiftMatch ? (
 				// Keying on the data that changes after a save forces the modal
 				// to remount (and re-run its useState initializers) instead of
@@ -45,6 +55,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 			) : (
 				<></>
 			)}
+			</div>
 			<div className={style.backgroundColor}>
 				<Container className={` ${style.container}`}>
 					<Row className="mb-3">
@@ -91,12 +102,14 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 								</h2>
 							</Col>
 						)}
-						<Col sm={6} xs={12} className="mb-3">
-							<h4>Shift Notes:</h4>
-							<h2 className={`highlight-color ${style.shiftNotes}`}>
-								{breakDown.shiftNotes}
-							</h2>
-						</Col>
+						{breakDown.shiftNotes?.trim() && (
+							<Col sm={6} xs={12} className="mb-3">
+								<h4>Shift Notes:</h4>
+								<h2 className={`highlight-color ${style.shiftNotes}`}>
+									{breakDown.shiftNotes}
+								</h2>
+							</Col>
+						)}
 					</Row>
 				</Container>
 				{cookTips.length > 0 && (
@@ -133,7 +146,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 												<Col>
 													<FontAwesomeIcon icon={faSackDollar} />{" "}
 													<p className="highlight-color">
-														${(Number(cook.tipOut) || 0).toFixed(2)}
+														${money(cook.tipOut)}
 													</p>
 												</Col>
 											</Row>
@@ -177,7 +190,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 												<Col>
 													<FontAwesomeIcon icon={faSackDollar} />{" "}
 													<p className="highlight-color">
-														${(Number(barBack.tipOut) || 0).toFixed(2)}
+														${money(barBack.tipOut)}
 													</p>
 												</Col>
 											</Row>
@@ -226,7 +239,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 										<Col>
 											<FontAwesomeIcon icon={faSackDollar} />{" "}
 											<p className="highlight-color">
-												${(Number(bartender.tipOut) || 0).toFixed(2)}
+												${money(bartender.tipOut)}
 											</p>
 										</Col>
 									</Row>

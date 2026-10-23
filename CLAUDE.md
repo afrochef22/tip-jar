@@ -15,7 +15,7 @@ Tip Jar is a Next.js (Pages Router) application for managing tip distribution at
 - `npm run backup` — Save every database collection to `backups/<timestamp>/` (gitignored)
 - `npm run restore -- <backup folder>` — Preview a restore; add `--yes` to do it (saves the current data first), `--only a,b` for some collections
 
-No linter is configured. The credit tip split lives in `lib/tipSplit.mjs` and is shared by `TipBreakDown` and `UpdateTipBreakDownModal`; change it there and run `npm test`. The cash split (whole dollars for bartenders, leftover to bar backs) lives in `lib/cashSplit.mjs`.
+No linter is configured. The credit tip split lives in `lib/tipSplit.mjs` and is shared by `TipBreakDown` and `UpdateTipBreakDownModal`; change it there and run `npm test`. The cash split (whole dollars for bartenders, leftover to bar backs) lives in `lib/cashSplit.mjs`. Show dollar amounts with `money()` from `lib/money.js` (adds commas: 6,601.50).
 
 ## Architecture
 

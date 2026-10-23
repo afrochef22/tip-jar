@@ -1,349 +1,230 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 
 import {
 	Form,
 	Label,
 	Input,
-	Col,
-	Container,
-	Row,
 	Button,
 	FormGroup,
+	InputGroup,
+	InputGroupText,
 } from "reactstrap";
-import {
-	HourlyBarBackCashInput,
-	HourlyBartenderCashInput,
-} from "../components/HourlyCashInput";
-import style from "../components/CreditTipCalculation.module.css";
+import form from "../components/CreditTipForm.module.css";
+
+const makePeople = (title, count) =>
+	Array.from({ length: count }, (_, i) => ({ name: `${title} ${i + 1}`, hours: "" }));
 
 export default function CashTipCalculator() {
 	const router = useRouter();
 
-	const [defaultbarBackPercentage, setDefaultBarBackPercentage] = useState(15);
+	const [barBackPercentage, setBarBackPercentage] = useState(15);
+	const [tipsCollected, setTipsCollected] = useState("");
+	const [bartenders, setBartenders] = useState(makePeople("Bartender", 1));
+	const [barBacks, setBarBacks] = useState(makePeople("Bar Back", 1));
 	const [isBartenderHoursClicked, setBartenderHoursClicked] = useState(false);
 	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
 
-	const [tipsCollected, setTipsCollected] = useState(0);
-	const [numberOfBartenders, setNumberOfBartenders] = useState(0);
-	const [numberOfBarBacks, setNumberOfBarBacks] = useState(1);
-	const [bartenders, setBartenders] = useState([]);
-	const [barBacks, setBarBacks] = useState([]);
-	// numberOfBarBacks,
-	// numberOfBartenders,
-	// isBarBackHoursClicked,
-	// isBartenderHoursClicked,
-	// barBacks,
-	// bartenders
+	const groups = [
+		{
+			title: "Bartenders",
+			single: "Bartender",
+			people: bartenders,
+			setPeople: setBartenders,
+			min: 1,
+			byHours: isBartenderHoursClicked,
+			setByHours: setBartenderHoursClicked,
+		},
+		{
+			title: "Bar Backs",
+			single: "Bar Back",
+			people: barBacks,
+			setPeople: setBarBacks,
+			min: 0,
+			byHours: isBarBackHoursClicked,
+			setByHours: setBarBackHoursClicked,
+		},
+	];
 
-	useEffect(() => {
-		if (!isBartenderHoursClicked) {
-			// If the toggle is being turned off for the first time, set hours to zero for all bartenders
-			setBartenders((prevBartenders) =>
-				prevBartenders.map((bartender) => ({
-					...bartender,
-					hours: 0,
-				}))
-			);
-		}
-	}, [isBartenderHoursClicked]);
-
-	useEffect(() => {
-		if (!isBarBackHoursClicked) {
-			// If the toggle is being turned off for the first time, set hours to zero for all bar backs
-			setBarBacks((prevBarBacks) =>
-				prevBarBacks.map((barBack) => ({
-					...barBack,
-					hours: 0,
-				}))
-			);
-		}
-	}, [isBarBackHoursClicked]);
-
-	const handleSwitchToggle = (position) => {
-		switch (position) {
-			case "Bartender":
-				setBartenderHoursClicked(!isBartenderHoursClicked);
-
-				break;
-
-			case "Bar Back":
-				setBarBackHoursClicked(!isBarBackHoursClicked);
-
-				break;
-			default:
-				break;
-		}
+	// Changing how many people worked starts their hours over.
+	const changeCount = (group, change) => {
+		const count = Math.min(Math.max(group.people.length + change, group.min), 20);
+		group.setPeople(makePeople(group.single, count));
+		if (count < 2) group.setByHours(false);
 	};
 
-	const handleIncrease = () => {
-		setDefaultBarBackPercentage((prevPercentage) =>
-			Math.min(prevPercentage + 1, 100)
+	const changeHours = (group, index, hours) => {
+		group.setPeople((people) =>
+			people.map((person, i) => (i === index ? { ...person, hours } : person))
 		);
 	};
 
-	const handleDecrease = () => {
+	const toggleByHours = (group) => {
+		// Turning hours off clears them so the split goes back to even shares.
+		if (group.byHours) {
+			group.setPeople((people) => people.map((person) => ({ ...person, hours: 0 })));
+		}
+		group.setByHours(!group.byHours);
+	};
 
-		setDefaultBarBackPercentage((prevPercentage) =>
-			Math.max(prevPercentage - 1, 0)
+	const changePercentage = (change) => {
+		setBarBackPercentage((percentage) =>
+			Math.min(Math.max((parseInt(percentage, 10) || 0) + change, 0), 100)
 		);
-	};
-
-	const generateBartendersArray = (count) => {
-		const bartendersArray = [];
-		for (let i = 1; i <= count; i++) {
-			bartendersArray.push({ name: `Bartender ${i}`, hours: "" });
-		}
-		return bartendersArray;
-	};
-
-	const generateBarBacksArray = (count) => {
-		const bartendersArray = [];
-		for (let i = 1; i <= count; i++) {
-			bartendersArray.push({ name: `Bar Back ${i}`, hours: "" });
-		}
-		return bartendersArray;
-	};
-
-	// Update bartenders array when the number of bartenders changes
-	const handleNumberOfBartendersChange = (value) => {
-		setNumberOfBartenders(value);
-		if (Number.isInteger(value) && value >= 1) {
-			setBartenders(generateBartendersArray(value));
-		}
-	};
-
-	const handleNumberOfBarBacksChange = (value) => {
-		setNumberOfBarBacks(value);
-		if (Number.isInteger(value) && value >= 0) {
-			setBarBacks(generateBarBacksArray(value));
-		}
 	};
 
 	const handleCalculate = (e) => {
 		e.preventDefault();
 
-		const data = {};
-		const formData = new FormData(e.target);
-		const employeeHours = {};
-
-		formData.forEach((value, key) => {
-			data;
-		});
-
 		router.push({
 			pathname: "/CashTipBreakDownPage",
 			query: {
-				numberOfBarBacks: JSON.stringify(numberOfBarBacks),
-				numberOfBartenders: JSON.stringify(numberOfBartenders),
-				tipsCollected: JSON.stringify(tipsCollected),
+				numberOfBarBacks: JSON.stringify(barBacks.length),
+				numberOfBartenders: JSON.stringify(bartenders.length),
+				tipsCollected: JSON.stringify(parseFloat(tipsCollected) || 0),
 				barBacks: JSON.stringify(barBacks),
 				bartenders: JSON.stringify(bartenders),
-				barBackPercentage: JSON.stringify(defaultbarBackPercentage),
+				barBackPercentage: JSON.stringify(barBackPercentage),
 				isBartenderHoursClicked: isBartenderHoursClicked,
 				isBarBackHoursClicked: isBarBackHoursClicked,
 			},
 		});
 	};
 
+	const stepper = (label, value, onDecrease, onIncrease, input) => (
+		<div className={form.stepper}>
+			<Button
+				type="button"
+				className={form.stepButton}
+				onClick={onDecrease}
+				aria-label={`Decrease ${label}`}
+			>
+				−
+			</Button>
+			{input || (
+				<div className={`${form.stepValue} ${form.stepCount}`} aria-live="polite">
+					{value}
+				</div>
+			)}
+			<Button
+				type="button"
+				className={form.stepButton}
+				onClick={onIncrease}
+				aria-label={`Increase ${label}`}
+			>
+				+
+			</Button>
+		</div>
+	);
+
 	return (
-		<Container className={style.backgroundColor}>
-			<Form onSubmit={handleCalculate} className={style.background}>
-				<h1 className={style.centerTitle}>Cash Tip Calculator</h1>
-				<Row className={style.container}>
-					<Col md={5} sm={5} xs={12} className="mb-2 mt-2">
-						<Row>
-							<Col xs={8}>
-								<Label for="CashTips">Cash Tips Collected</Label>
-							</Col>
+		<div className={form.page}>
+			<Form onSubmit={handleCalculate} className={form.form}>
+				<h1 className={form.pageTitle}>Cash Tip Calculator</h1>
 
-							<Col>
+				<section className={form.card}>
+					<FormGroup className={form.field}>
+						<Label for="CashTips" className={form.label}>
+							Cash tips collected
+						</Label>
+						<InputGroup>
+							<InputGroupText>$</InputGroupText>
+							<Input
+								id="CashTips"
+								name="CashTips"
+								type="tel"
+								inputMode="decimal"
+								pattern="[0-9]+(\.[0-9]{1,2})?"
+								placeholder="0.00"
+								required
+								className={form.tipsInput}
+								value={tipsCollected}
+								onChange={(e) => setTipsCollected(e.target.value)}
+							/>
+						</InputGroup>
+					</FormGroup>
+					{barBacks.length > 0 && (
+						<FormGroup className={`${form.field} ${form.inline}`}>
+							<Label for="BarBackPercentage" className={form.label}>
+								Bar back %
+							</Label>
+							{stepper(
+								"bar back percentage",
+								barBackPercentage,
+								() => changePercentage(-1),
+								() => changePercentage(1),
 								<Input
-									id="CashTips"
-									name="CashTips"
+									id="BarBackPercentage"
+									name="BarBackPercentage"
 									type="tel"
-									inputMode="decimal"
-									pattern="[0-9]+(\.[0-9]{1,2})?"
-									step="0.01"
-									required
-									onChange={(e) => setTipsCollected(parseFloat(e.target.value))}
-								></Input>
-							</Col>
-						</Row>
-					</Col>
+									inputMode="numeric"
+									className={form.stepValue}
+									value={barBackPercentage}
+									onChange={(e) => setBarBackPercentage(e.target.value)}
+								/>
+							)}
+						</FormGroup>
+					)}
+				</section>
 
-					<Col md={7} sm={5} xs={12} className="mb-2 mt-2">
-						<Row>
-							<Col>
-								<Label
-									md={7}
-									sm={6}
-									xs={9}
-									for="BarBackPercentage"
-									className={style.BarBackPercentageLabel}
-								>
-									Bar Back Percentage
-								</Label>
-							</Col>
-
-							<Col md={4} sm={5} xs={4} className="d-flex align-items-center">
-								<div className="d-flex align-items-center">
-									<Input
-										id="BarBackPercentage"
-										name="BarBackPercentage"
-										type="tel"
-										inputMode="numeric"
-										value={defaultbarBackPercentage}
-										onChange={(e) =>
-											setDefaultBarBackPercentage(e.target.value)
-										}
-										className={style.barBackInput}
-									/>
-									<div className="d-flex flex-column">
-										<Button
-											size="sm"
-											onClick={handleIncrease}
-											className={style.percentageButton}
-										>
-											˄
-										</Button>
-										<Button
-											size="sm"
-											onClick={handleDecrease}
-											className={style.percentageButton}
-										>
-											˯
-										</Button>
+				<section className={form.card}>
+					<h2 className={form.cardTitle}>Working tonight</h2>
+					{groups.map((group) => (
+						<div key={group.title} className={form.group}>
+							<div className={`${form.field} ${form.inline}`}>
+								<div className={form.label}>{group.title}</div>
+								{stepper(
+									`number of ${group.title.toLowerCase()}`,
+									group.people.length,
+									() => changeCount(group, -1),
+									() => changeCount(group, 1)
+								)}
+							</div>
+							{group.byHours &&
+								group.people.map((person, index) => (
+									<div key={person.name} className={form.hoursRow}>
+										<Label for={`${person.name}Hours`} className={form.name}>
+											{person.name}
+										</Label>
+										<InputGroup className={form.hoursInput}>
+											<Input
+												id={`${person.name}Hours`}
+												name={`${person.name}Hours`}
+												type="tel"
+												inputMode="decimal"
+												pattern="[0-9]+(\.[0-9]{1,2})?"
+												required
+												value={person.hours || ""}
+												onChange={(e) => changeHours(group, index, e.target.value)}
+											/>
+											<InputGroupText>hrs</InputGroupText>
+										</InputGroup>
 									</div>
-								</div>
-							</Col>
-						</Row>
-					</Col>
-				</Row>
+								))}
+							{group.people.length > 1 && (
+								<FormGroup switch className={form.switch}>
+									<Input
+										type="switch"
+										role="switch"
+										id={`${group.single}ByHours`}
+										onChange={() => toggleByHours(group)}
+										checked={group.byHours}
+									/>
+									<Label check for={`${group.single}ByHours`}>
+										Split {group.title.toLowerCase()} by hours worked
+									</Label>
+								</FormGroup>
+							)}
+						</div>
+					))}
+				</section>
 
-				<Row className={style.container}>
-					<Col md={5} sm={5} xs={12} className="mb-2 mt-2">
-						<Row>
-							<Col xs={9}>
-								<Label for="barBackNumber">Number of Bar Backs</Label>
-							</Col>
-							<Col>
-								<Input
-									id="barBackNumber"
-									name="barBackNumber"
-									type="tel"
-									inputMode="numeric"
-									pattern="[0-9]+"
-									min="0"
-									step="1"
-									required
-									onChange={(e) =>
-										handleNumberOfBarBacksChange(parseInt(e.target.value, 10))
-									}
-								></Input>
-							</Col>
-						</Row>
-					</Col>
-					<Col className="mb-2 mt-2">
-						<Row>
-							<Col xs={9}>
-								<Label for="bartenderNumber">Number of Bartenders</Label>
-							</Col>
-							<Col>
-								<Input
-									id="bartenderNumber"
-									name="bartenderNumber"
-									type="tel"
-									inputMode="numeric"
-									pattern="[1-9][0-9]*"
-									min="1"
-									step="1"
-									required
-									onChange={(e) =>
-										handleNumberOfBartendersChange(
-											parseInt(e.target.value, 10)
-										)
-									}
-								></Input>
-							</Col>
-						</Row>
-					</Col>
-				</Row>
-				<Row
-					className={`${style.toggleContainer} ${
-						(numberOfBarBacks || null) <= 1
-							? ""
-							: style.tipoutCashByHoursContainer
-					} ${
-						(numberOfBartenders || null) <= 1
-							? ""
-							: style.tipoutCashByHoursContainer
-					}`}
-				>
-					{(numberOfBarBacks || null) <= 1 ? (
-						<div className={style.hidden}></div>
-					) : (
-						<FormGroup switch>
-							<Input
-								type="switch"
-								role="switch"
-								onChange={() => handleSwitchToggle("Bar Back")}
-								checked={isBarBackHoursClicked}
-							/>
-							<Label check>
-								Toggle to tip out{" "}
-								<span className="highlight-color">Bar Back</span> by hours
-								worked.
-							</Label>
-							<div className={style.seperationLine}></div>
-						</FormGroup>
-					)}
-					{(numberOfBartenders || null) <= 1 ? (
-						<div className={style.hidden}></div>
-					) : (
-						<FormGroup switch>
-							<Input
-								type="switch"
-								role="switch"
-								onChange={() => handleSwitchToggle("Bartender")}
-								checked={isBartenderHoursClicked}
-							/>
-							<Label check>
-								Toggle to tip out{" "}
-								<span className="highlight-color">Bartender</span> by hours
-								worked.
-							</Label>
-							<div className={style.seperationLine}></div>
-						</FormGroup>
-					)}
-				</Row>
-				{isBarBackHoursClicked && barBacks.length > 1 ? (
-					<HourlyBarBackCashInput
-						barBacks={barBacks}
-						updateBarBacks={setBarBacks}
-						isHoursClicked={isBarBackHoursClicked}
-					/>
-				) : (
-					<div></div>
-				)}
-				{isBartenderHoursClicked && bartenders.length > 1 ? (
-					<HourlyBartenderCashInput
-						bartenders={bartenders}
-						updateBartenders={setBartenders}
-						isHoursClicked={isBartenderHoursClicked}
-					/>
-				) : (
-					<div></div>
-				)}
-				<div className={style.centerButtonContainer}>
-					<Button
-						className={`${style.centerButton} ${style.calculateButton}`}
-						type="submit"
-					>
-						Calculate
+				<div className={form.actions}>
+					<Button type="submit" className={form.primaryButton}>
+						Calculate →
 					</Button>
 				</div>
 			</Form>
-		</Container>
+		</div>
 	);
 }

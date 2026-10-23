@@ -3,6 +3,7 @@ import { Label, Input, Row, Col, Container, Button } from "reactstrap";
 import { DateTime } from "luxon";
 import { getPayrollDates } from "./DateRange";
 import Link from "next/link";
+import { money } from "../lib/money";
 
 // Shared by the Dashboard carousel (variant="dashboard") and the standalone
 // /CCTipsTotals page (variant="page"). The two only ever differed in the
@@ -265,7 +266,7 @@ export default function TipsTotalsSpreadSheet({
 									});
 								})}
 								<td className=" bold-text">
-									${calculateTotalTips(employee).toFixed(2)}
+									${money(calculateTotalTips(employee))}
 								</td>
 							</tr>
 						);
@@ -297,19 +298,19 @@ export default function TipsTotalsSpreadSheet({
 									key={`total-${date}`}
 									colSpan={uniqueShowsCount}
 								>
-									${total.toFixed(2)}
+									${money(total)}
 								</td>
 							);
 						})}
 						<td className=" bold-text">
 							{/* Total for the "Total Tips" column */}$
-							{employeesWithTipsInRange
-								.reduce(
+							{money(
+								employeesWithTipsInRange.reduce(
 									(acc, employee) =>
 										Number(acc) + Number(calculateTotalTips(employee).toFixed(2)),
 									0
 								)
-								.toFixed(2)}
+							)}
 						</td>
 					</tr>
 				</tfoot>

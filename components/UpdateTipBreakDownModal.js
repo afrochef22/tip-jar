@@ -13,12 +13,23 @@ import {
 	Col,
 	Container,
 	Row,
+	InputGroup,
+	InputGroupText,
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { DeleteDialog } from "./ConformationDialog";
 import style from "./TipBreakDown.module.css";
+import form from "./CreditTipForm.module.css";
+import { money } from "../lib/money";
+
+// Saved dates look like 10/5/2026; the date box needs 2026-10-05.
+const toDateInput = (date) => {
+	const [month, day, year] = String(date || "").split("/");
+	if (!year) return "";
+	return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+};
 
 const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const [modal, setModal] = useState(false);
@@ -59,6 +70,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 
 	const handleDateChange = (e) => {
 		const dateString = e.target.value; // Example date string in YYYY-MM-DD format
+		if (!dateString) return;
 		const parts = dateString.split("-");
 		const day = parseInt(parts[2], 10); // Convert day to integer
 		const formattedDay = day.toString(); // Convert day back to string to remove leading zero
@@ -80,11 +92,11 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		setFoodSales(e.target.value);
 	};
 	const handleIncrease = () => {
-		setBarBackPercentage((prevPercentage) => Math.min(prevPercentage + 1, 100));
+		setBarBackPercentage((prevPercentage) => Math.min((Number(prevPercentage) || 0) + 1, 100));
 	};
 
 	const handleDecrease = () => {
-		setBarBackPercentage((prevPercentage) => Math.max(prevPercentage - 1, 0));
+		setBarBackPercentage((prevPercentage) => Math.max((Number(prevPercentage) || 0) - 1, 0));
 	};
 
 	const setCookHours = (cookId, newHours) => {
@@ -241,219 +253,124 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		}
 	};
 
-	const closeBtn = (
-		<div>
-			<Button color="primary mb-1" onClick={handleUpdateBreakDown}>
-				Update
-			</Button>{" "}
-			<Button color="secondary mb-1" onClick={toggle}>
-				Cancel
-			</Button>
-		</div>
+	const moneyInput = (id, label, value, onChange, extraClass) => (
+		<FormGroup className={form.field}>
+			<Label for={id} className={form.label}>
+				{label}
+			</Label>
+			<InputGroup>
+				<InputGroupText>$</InputGroupText>
+				<Input
+					id={id}
+					name={id}
+					type="tel"
+					inputMode="decimal"
+					pattern="[0-9]+(\.[0-9]{1,2})?"
+					required={true}
+					value={value}
+					onChange={onChange}
+					className={extraClass}
+				/>
+			</InputGroup>
+		</FormGroup>
 	);
 
 	return (
 		<div>
 			<Button onClick={toggle}>Edit</Button>
 
-			<Modal isOpen={modal} toggle={toggle} {...args} fullscreen>
-				<ModalHeader toggle={toggle} close={closeBtn}>
+			<Modal
+				isOpen={modal}
+				toggle={toggle}
+				{...args}
+				fullscreen
+				contentClassName={style.editModal}
+			>
+				<ModalHeader toggle={toggle} className={style.editHeader}>
 					Edit Breakdown
 				</ModalHeader>
 
 				<Container className={`${style.topRow} justify-content-center`}>
 					<div className={style.backgroundColor}>
-						<Container className={` ${style.container}`}>
-							<Row>
-								<Col md={6} sm={12} className="mb-1 mt-1">
-									<Row className={`${style.formRow} `}>
-										<Label sm={6} xs={3} className={style.formLabel} for="show">
-											<h4>Show:</h4>
-										</Label>
-										<Col sm={6} xs={12} className="d-flex align-items-center">
-											<Input
-												id="show"
-												name="show"
-												type="text"
-												required={true}
-												value={show}
-												onChange={handleShowChange}
-											/>
-										</Col>
-									</Row>
-								</Col>
-
-								<Col md={6} sm={12} className="mb-1 mt-1">
-									<Row>
-										<Label sm={6} xs={3} className={style.formLabel} for="date">
-											<h4>Date</h4>
-										</Label>
-										<Col sm={6} xs={9} className="d-flex align-items-center">
-											<Input
-												id="date"
-												name="date"
-												type="date"
-												required={true}
-												placeholder={date}
-												onChange={handleDateChange}
-											/>
-										</Col>
-									</Row>
-								</Col>
-							</Row>
-
-							<Row>
-								<Col sm={4} xs={12} className="mb-1 mt-1">
-									<Label className={style.formLabel} for="totalBarSales">
-										<h4>Total Bar Sales:</h4>
+						<section className={`${form.card} ${style.editCard}`}>
+							<FormGroup className={form.field}>
+								<Label for="show" className={form.label}>
+									Show
+								</Label>
+								<Input
+									id="show"
+									name="show"
+									type="text"
+									required={true}
+									value={show}
+									onChange={handleShowChange}
+								/>
+							</FormGroup>
+							<FormGroup className={form.field}>
+								<Label for="date" className={form.label}>
+									Date
+								</Label>
+								<Input
+									id="date"
+									name="date"
+									type="date"
+									required={true}
+									value={toDateInput(date)}
+									onChange={handleDateChange}
+								/>
+							</FormGroup>
+							{moneyInput("totalBarSales", "Bar sales", totalBarSales, handleTotalBarSalesChange)}
+							{moneyInput("totalTips", "Credit card tips", totalTips, handleTotalTipChange, form.tipsInput)}
+							{(cookTipsData.length > 0 || Number(foodSales) > 0) &&
+								moneyInput("foodSales", "Food sales", foodSales, handleFoodSalesChange)}
+							{barBackTipsData.length > 0 && (
+								<FormGroup className={`${form.field} ${form.inline}`}>
+									<Label for="BarBackPercentage" className={form.label}>
+										Bar back %
 									</Label>
-									<Row>
-										<Col sm={3} xs={3}></Col>
-										<Col sm={7} xs={6}>
-											<Input
-												id="totalBarSales"
-												name="totalBarSales"
-												type="tel"
-												inputMode="decimal"
-												pattern="[0-9]+(\.[0-9]{1,2})?"
-												step="0.01"
-												required={true}
-												value={totalBarSales}
-												onChange={handleTotalBarSalesChange}
-											/>
-										</Col>
-									</Row>
-								</Col>
-
-								<Col sm={4} xs={12} className="mb-1 mt-1">
-									<Label className={style.formLabel} for="totalTips">
-										<h4>Total Tips:</h4>
-									</Label>
-									<Row>
-										<Col sm={3} xs={3}></Col>
-										<Col sm={7} xs={6}>
-											<Input
-												id="totalTips"
-												name="totalTips"
-												type="tel"
-												inputMode="decimal"
-												pattern="[0-9]+(\.[0-9]{1,2})?"
-												step="0.01"
-												required={true}
-												value={totalTips}
-												onChange={handleTotalTipChange}
-											/>
-										</Col>
-									</Row>
-								</Col>
-
-								<Col sm={4} xs={12} className="mb-1 mt-1">
-									<Label className={style.formLabel} for="foodSales">
-										<h4>Food sales:</h4>
-									</Label>
-									<Row>
-										<Col sm={3} xs={3}></Col>
-										<Col sm={7} xs={6}>
-											<Input
-												id="foodSales"
-												name="foodSales"
-												type="tel"
-												inputMode="decimal"
-												pattern="[0-9]+(\.[0-9]{1,2})?"
-												step="0.01"
-												required={true}
-												value={foodSales}
-												onChange={handleFoodSalesChange}
-											/>
-										</Col>
-									</Row>
-								</Col>
-
-								<Col md={12} sm={12} className="mb-1 mt-1">
-									{/* Bar Back Percentage and Input Column */}
-									<Row className={`${style.formRow} align-items-center`}>
-										<Col md={6} sm={12} className="mb-1 mt-1">
-											<Label
-												sm={12}
-												xs={12}
-												className={style.formLabel}
-												for="showNotes"
-											>
-												<h4 className="mb-0">Show Notes:</h4>
-											</Label>
-											<Row>
-												<Col sm={3} xs={1}></Col>
-
-												<Col
-													sm={12}
-													xs={12}
-													className={`d-flex align-items-center ${style.shiftNotesTextAerea}`}
-												>
-													<Input
-														id="shiftNotes"
-														name="shiftNotes"
-														type="textarea"
-														value={shiftNotes}
-														onChange={handleShiftNotesChange}
-														className={` ${style.textArea}`}
-													/>
-												</Col>
-											</Row>
-										</Col>
-
-										<Col md={6} sm={12}>
-											<Label
-												md={12}
-												sm={12}
-												xs={12}
-												className={style.formLabel}
-												for="BarBackPercentage"
-											>
-												<h4 className="mb-0">Bar Back %</h4>
-											</Label>
-											<Row>
-												<Col md={3} sm={3} xs={3}></Col>
-												<Col
-													md={6}
-													sm={6}
-													xs={6}
-													className="d-flex align-items-center"
-												>
-													<Input
-														id="BarBackPercentage"
-														name="BarBackPercentage"
-														type="tel"
-														inputMode="numeric"
-														value={barBackPercentage}
-														onChange={(e) =>
-															setBarBackPercentage(e.target.value)
-														}
-														className={`text-center`}
-													/>
-
-													<Col sm={2} xs={2}>
-														<Button
-															// size="sm"
-															onClick={handleIncrease}
-															className={` ${style.percentageButton} mb-1 ms-1`}
-														>
-															˄
-														</Button>
-														<Button
-															// size="sm"
-															onClick={handleDecrease}
-															className={` ms-1 ${style.percentageButton}`}
-														>
-															˯
-														</Button>
-													</Col>
-												</Col>
-											</Row>
-										</Col>
-									</Row>
-								</Col>
-							</Row>
-						</Container>
+									<div className={form.stepper}>
+										<Button
+											type="button"
+											className={form.stepButton}
+											onClick={handleDecrease}
+											aria-label="Decrease bar back percentage"
+										>
+											−
+										</Button>
+										<Input
+											id="BarBackPercentage"
+											name="BarBackPercentage"
+											type="tel"
+											inputMode="numeric"
+											className={form.stepValue}
+											value={barBackPercentage}
+											onChange={(e) => setBarBackPercentage(e.target.value)}
+										/>
+										<Button
+											type="button"
+											className={form.stepButton}
+											onClick={handleIncrease}
+											aria-label="Increase bar back percentage"
+										>
+											+
+										</Button>
+									</div>
+								</FormGroup>
+							)}
+							<FormGroup className={form.field}>
+								<Label for="shiftNotes" className={form.label}>
+									Notes <span className={form.optional}>(optional)</span>
+								</Label>
+								<Input
+									id="shiftNotes"
+									name="shiftNotes"
+									type="textarea"
+									rows={3}
+									value={shiftNotes}
+									onChange={handleShiftNotesChange}
+								/>
+							</FormGroup>
+						</section>
 						{split.warning && (
 							<div className={`${style.notice} ${style.noticeDanger}`} role="alert">
 								{split.warning}
@@ -470,7 +387,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 											Tips per hour:
 											<span className="highlight-color">
 												{" "}
-												${tipsPerCook.toFixed(2)}
+												${money(tipsPerCook)}
 											</span>
 										</h4>
 									)}
@@ -505,7 +422,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														<Col>
 															<FontAwesomeIcon icon={faSackDollar} />{" "}
 															<p className="highlight-color">
-																${cook.tipOut.toFixed(2)}
+																${money(cook.tipOut)}
 															</p>
 														</Col>
 													</Row>
@@ -525,7 +442,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 									<h5>
 										Tips per hour:{" "}
 										<span className="highlight-color">
-											${tipsPerBarBack.toFixed(2)}
+											${money(tipsPerBarBack)}
 										</span>
 									</h5>
 								)}
@@ -561,7 +478,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														<Col>
 															<FontAwesomeIcon icon={faSackDollar} />{" "}
 															<p className="highlight-color">
-																${barBack.tipOut.toFixed(2)}
+																${money(barBack.tipOut)}
 															</p>
 														</Col>
 													</Row>
@@ -580,7 +497,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 								<h5>
 									Tips per hour:{" "}
 									<span className="highlight-color">
-										${tipsPerBartender.toFixed(2)}
+										${money(tipsPerBartender)}
 									</span>
 								</h5>
 							)}
@@ -616,7 +533,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 												<Col>
 													<FontAwesomeIcon icon={faSackDollar} />{" "}
 													<p className="highlight-color">
-														${Number(bartender.tipOut).toFixed(2)}
+														${money(bartender.tipOut)}
 													</p>
 												</Col>
 											</Row>
@@ -626,15 +543,15 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 							</Row>
 						</div>
 						{saveError && <div className={style.error}>{saveError}</div>}
-						<ModalFooter>
-							<Button color="primary" onClick={handleUpdateBreakDown}>
-								Update
-							</Button>{" "}
+						<ModalFooter className={style.editFooter}>
+							<Button color="danger" outline onClick={toggleConfirmation}>
+								Delete
+							</Button>
 							<Button color="secondary" onClick={toggle}>
 								Cancel
 							</Button>
-							<Button color="danger" onClick={toggleConfirmation}>
-								Delete
+							<Button className={form.primaryButton} onClick={handleUpdateBreakDown}>
+								Save changes
 							</Button>
 							<DeleteDialog
 								isOpen={showConfirmation}

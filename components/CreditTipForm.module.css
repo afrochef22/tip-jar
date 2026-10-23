@@ -156,3 +156,21 @@
 	background-color: var(--button-hover);
 	border-color: var(--button-hover);
 }
+
+.pageTitle {
+	text-align: center;
+	font-size: 28px;
+	margin: 8px 0 16px;
+}
+/* A read-only count between − and + that looks like the % box. */
+.stepCount {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 48px;
+	font-size: 20px;
+	font-weight: 600;
+	background-color: var(--text-color);
+	color: #222;
+	border-radius: 6px;
+}

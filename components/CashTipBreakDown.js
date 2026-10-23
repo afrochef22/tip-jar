@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import UpdateCashTipBreakDownModal from "./UpdateCashTipBreakDownModal";
 import { splitCashTips } from "../lib/cashSplit.mjs";
+import { money } from "../lib/money";
 
 export default function CashTipBreakDown({
 	numberOfBarBacks,
@@ -51,7 +52,7 @@ export default function CashTipBreakDown({
 					<Col sm={6} xs={6}>
 						<h4>
 							Total Tips:
-							<p className="highlight-color">${Number(tipsCollected).toFixed(2)}</p>
+							<p className="highlight-color">${money(tipsCollected)}</p>
 						</h4>
 					</Col>
 
@@ -72,7 +73,7 @@ export default function CashTipBreakDown({
 							<h5>
 								Tips per hour:{" "}
 								<span className="highlight-color">
-									${tipsPerBarBack().toFixed(2)}
+									${money(tipsPerBarBack())}
 								</span>
 							</h5>
 						)}
@@ -87,7 +88,7 @@ export default function CashTipBreakDown({
 														<Col className=" mt-2"> {barBack.name}</Col>
 														<Col className=" mt-2">
 															<FontAwesomeIcon icon={faSackDollar} />
-															<p className="highlight-color">${Number(barBack.tipOut).toFixed(2)}</p>
+															<p className="highlight-color">${money(barBack.tipOut)}</p>
 														</Col>
 													</Row>
 												) : (
@@ -99,7 +100,7 @@ export default function CashTipBreakDown({
 														</Col>
 														<Col className=" mb-4 mt-2">
 															<FontAwesomeIcon icon={faSackDollar} />
-															<p className="highlight-color">${Number(barBack.tipOut).toFixed(2)}</p>
+															<p className="highlight-color">${money(barBack.tipOut)}</p>
 														</Col>
 													</Row>
 												)}
@@ -112,10 +113,10 @@ export default function CashTipBreakDown({
 							<p className="mt-2 mb-0">
 								Includes{" "}
 								<span className="highlight-color">
-									${split.barBackExtra.toFixed(2)}
+									${money(split.barBackExtra)}
 								</span>{" "}
 								extra on top of the {barBackPercentage}% share ($
-								{split.barBackShare.toFixed(2)}), left over from paying bartenders
+								{money(split.barBackShare)}), left over from paying bartenders
 								in whole dollars.
 							</p>
 						)}
@@ -124,7 +125,7 @@ export default function CashTipBreakDown({
 
 				{split.leftover > 0 && (
 					<div className={`${style.notice} ${style.noticeWarning}`} role="alert">
-						There is an extra ${split.leftover.toFixed(2)} left over.
+						There is an extra ${money(split.leftover)} left over.
 					</div>
 				)}
 				<div className={style.container}>
@@ -135,7 +136,7 @@ export default function CashTipBreakDown({
 						<h5>
 							Tips per hour:{" "}
 							<span className="highlight-color">
-								${tipsPerBartender().toFixed(2)}
+								${money(tipsPerBartender())}
 							</span>
 						</h5>
 					)}
@@ -150,7 +151,7 @@ export default function CashTipBreakDown({
 
 												<Col className=" mt-2">
 													<FontAwesomeIcon icon={faSackDollar} />
-													<p className="highlight-color">${Number(bartender.tipOut).toFixed(2)}</p>
+													<p className="highlight-color">${money(bartender.tipOut)}</p>
 												</Col>
 											</Row>
 										) : (
@@ -162,7 +163,7 @@ export default function CashTipBreakDown({
 												</Col>
 												<Col className="mb-2 mt-2">
 													<FontAwesomeIcon icon={faSackDollar} />
-													<p className="highlight-color">${Number(bartender.tipOut).toFixed(2)}</p>
+													<p className="highlight-color">${money(bartender.tipOut)}</p>
 												</Col>
 											</Row>
 										)}
