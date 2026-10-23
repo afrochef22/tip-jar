@@ -15,7 +15,11 @@ import style from "./addEmployee.module.css";
 export function UpdateEmployeeModal(props, args) {
 	const [modal, setModal] = useState(false);
 
-	const toggle = () => setModal(!modal);
+	const [saveError, setSaveError] = useState("");
+	const toggle = () => {
+		setSaveError("");
+		setModal(!modal);
+	};
 
 	const [employeeUpdate, setEmployeeUpdate] = useState({
 		firstName: "",
@@ -98,12 +102,15 @@ export function UpdateEmployeeModal(props, args) {
 			});
 
 			if (response.ok) {
+				toggle();
 				router.push("/employees");
-			} else {
+				return;
 			}
+			const body = await response.json().catch(() => ({}));
+			setSaveError(body.error || "Could not save the changes. Please try again.");
 		} catch (error) {
-		} finally {
-			toggle();
+			console.error(error);
+			setSaveError("Could not reach the server. Please try again.");
 		}
 	};
 
@@ -210,6 +217,7 @@ export function UpdateEmployeeModal(props, args) {
 						</div>
 					</FormGroup>
 
+					{saveError && <div className={style.alertMessage}>{saveError}</div>}
 					<ModalFooter>
 						<Button type="submit" color="primary">
 							Update

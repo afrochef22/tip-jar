@@ -14,6 +14,7 @@ export default function getEmployee({ employee }) {
 	const router = useRouter();
 	const [showConfirmation, setShowConfirmation] = useState(false);
 	const [confirmationStates, setConfirmationStates] = useState({});
+	const [deleteError, setDeleteError] = useState("");
 
 	const toggleConfirmation = (id) => {
 		setConfirmationStates({
@@ -65,10 +66,14 @@ export default function getEmployee({ employee }) {
 			if (response.ok) {
 				router.push("/employees");
 			} else {
-				console.error("Failed to delete Employee");
+				const body = await response.json().catch(() => ({}));
+				setDeleteError(
+					body.error || "Could not delete the employee. Please try again."
+				);
 			}
 		} catch (error) {
 			console.error("Error deleting Employee:", error);
+			setDeleteError("Could not reach the server. Please try again.");
 		} finally {
 			toggleConfirmation(id);
 		}
@@ -104,6 +109,7 @@ export default function getEmployee({ employee }) {
 								/>
 							</Col>
 						</Row>
+						{deleteError && <div className={style.error}>{deleteError}</div>}
 
 						<Row>
 							<Col xs={12} md={4}>

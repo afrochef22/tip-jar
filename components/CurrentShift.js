@@ -28,6 +28,7 @@ export function CurrentShowPerforming({
 	const [bandPerformingToday, setBandPerformingToday] = useState([]);
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const [loadError, setLoadError] = useState(false);
 
 	// Recurring events that can be submitted once per shift alongside the show.
 	const [happyHour, afterHours] = ["Happy Hour", "After Hours"].map((event) => {
@@ -82,7 +83,10 @@ export function CurrentShowPerforming({
 	useEffect(() => {
 		// Fetch data from your API when the component mounts
 		fetch("/api/FindBandPerformingToday")
-			.then((response) => response.json())
+			.then((response) => {
+				if (!response.ok) throw new Error(`HTTP ${response.status}`);
+				return response.json();
+			})
 			.then((data) => {
 				setBandPerformingToday(
 					Array.isArray(data?.bandPerformingToday)
@@ -92,6 +96,7 @@ export function CurrentShowPerforming({
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error);
+				setLoadError(true);
 				setBandPerformingToday([]);
 			})
 			.finally(() => setIsLoading(false));
@@ -114,7 +119,11 @@ export function CurrentShowPerforming({
 				<Row className="justify-content-center">
 					{bandPerformingToday.length === 0 ? (
 						<>
-							<h2>No show Today</h2>
+							{loadError ? (
+								<h4>Couldn&apos;t load today&apos;s show. Enter it below.</h4>
+							) : (
+								<h2>No show Today</h2>
+							)}
 							<Container className={`${style.bandContainer} `}>
 								<Row className="justify-content-center">
 									<Col className={`${style.enterEventInboxContainer}`}>
