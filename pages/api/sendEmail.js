@@ -4,6 +4,7 @@ import clientPromise from "../../lib/mongodb";
 import { requireSession } from "../../lib/auth";
 import { reportError } from "../../lib/alert";
 import { sendMail } from "../../lib/mailer";
+import { siteUrl } from "../../lib/siteUrl";
 
 const LINK_TTL_DAYS = 7;
 
@@ -41,7 +42,7 @@ export default requireSession(async (req, res) => {
 			{ $set: { token, tokenExpiration } }
 		);
 
-		const baseUrl = (process.env.NEXTAUTH_URL || "").replace(/\/$/, "");
+		const baseUrl = siteUrl(req);
 		const registrationLink = `${baseUrl}/RegisterPage/${employee._id}?token=${token}`;
 
 		await sendMail({

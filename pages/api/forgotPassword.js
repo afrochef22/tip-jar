@@ -1,6 +1,7 @@
 import clientPromise from "../../lib/mongodb";
 import { reportError } from "../../lib/alert";
 import { sendMail } from "../../lib/mailer";
+import { siteUrl } from "../../lib/siteUrl";
 import { tooManyRequests } from "../../lib/rateLimit";
 import { RESET_TTL_MINUTES, hashResetToken, newResetToken } from "../../lib/passwordReset";
 
@@ -41,7 +42,7 @@ export default async (req, res) => {
 					},
 				}
 			);
-			const baseUrl = (process.env.NEXTAUTH_URL || "").replace(/\/$/, "");
+			const baseUrl = siteUrl(req);
 			const link = `${baseUrl}/reset-password/${employee._id}?token=${token}`;
 			await sendMail({
 				to: employee.email,
