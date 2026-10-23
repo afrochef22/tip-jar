@@ -125,7 +125,9 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 									</span>
 								</CardSubtitle>
 
-								<h5 className={`${style.positionTitle}`}>Cooks:</h5>
+								{data.cookTips?.length > 0 && (
+									<h5 className={`${style.positionTitle}`}>Cooks:</h5>
+								)}
 								{data.cookTips &&
 									data.cookTips.map((cook) => (
 										<table key={cook.id} className={style.employeeContainer}>
@@ -145,7 +147,9 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 									))}
 
 								<div>
-									<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
+									{data.barBackTips?.length > 0 && (
+										<h5 className={`${style.positionTitle}`}>Barbacks:</h5>
+									)}
 									<Col>
 										{data.barBackTips &&
 											data.barBackTips.map((barBack) => (
@@ -170,7 +174,9 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 									</Col>
 								</div>
 								<div>
-									<h5 className={`${style.positionTitle}`}>Bartenders:</h5>
+									{data.BartenderTips?.length > 0 && (
+										<h5 className={`${style.positionTitle}`}>Bartenders:</h5>
+									)}
 									{data.BartenderTips &&
 										data.BartenderTips.map((bartender) => (
 											<table

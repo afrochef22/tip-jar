@@ -459,114 +459,118 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 								{split.warning}
 							</div>
 						)}
-						<div className={style.container}>
-							<h1>Cook Tips </h1>
-							<Row>
-								{cookHours === 0 ? (
+						{cooksWithTipOut.length > 0 && (
+							<div className={style.container}>
+								<h1>Cook Tips </h1>
+								<Row>
+									{cookHours === 0 ? (
+										<></>
+									) : (
+										<h4>
+											Tips per hour:
+											<span className="highlight-color">
+												{" "}
+												${tipsPerCook.toFixed(2)}
+											</span>
+										</h4>
+									)}
+									{cooksWithTipOut.length > 0 &&
+										cooksWithTipOut.map((cook) => (
+											<Col key={cook.id} xs={12} sm={6} md={4}>
+												<Container className={style.employeeContainer}>
+													<Row>
+														<Col>
+															<span>{cook.label}</span>
+														</Col>
+														{cookHours === 0 ? (
+															<></>
+														) : (
+															<Col>
+																<FontAwesomeIcon icon={faClock} />{" "}
+																<NumericFormat
+																	id="cookHours"
+																	name="cookHours"
+																	type="number"
+																	inputMode="decimal"
+																	pattern="[0-9]+(\.[0-9]{1,2})?"
+																	step="0.01"
+																	value={cook.tippedHours}
+																	onChange={(e) =>
+																		setCookHours(cook.id, e.target.value)
+																	}
+																	className={`${style.enterHoursInbox}`}
+																/>
+															</Col>
+														)}
+														<Col>
+															<FontAwesomeIcon icon={faSackDollar} />{" "}
+															<p className="highlight-color">
+																${cook.tipOut.toFixed(2)}
+															</p>
+														</Col>
+													</Row>
+												</Container>
+											</Col>
+										))}
+								</Row>
+							</div>
+						)}
+
+						{barBacksWithTipOut.length > 0 && (
+							<div className={style.container}>
+								<h1>Bar Back Tips </h1>
+								{barBackHours === 0 ? (
 									<></>
 								) : (
-									<h4>
-										Tips per hour:
+									<h5>
+										Tips per hour:{" "}
 										<span className="highlight-color">
-											{" "}
-											${tipsPerCook.toFixed(2)}
+											${tipsPerBarBack.toFixed(2)}
 										</span>
-									</h4>
+									</h5>
 								)}
-								{cooksWithTipOut.length > 0 &&
-									cooksWithTipOut.map((cook) => (
-										<Col key={cook.id} xs={12} sm={6} md={4}>
-											<Container className={style.employeeContainer}>
-												<Row>
-													<Col>
-														<span>{cook.label}</span>
-													</Col>
-													{cookHours === 0 ? (
-														<></>
-													) : (
+								<Row>
+									{barBacksWithTipOut.length > 0 &&
+										barBacksWithTipOut.map((barBack) => (
+											<Col key={barBack.id} xs={12} sm={6} md={4}>
+												<Container className={style.employeeContainer}>
+													<Row>
 														<Col>
-															<FontAwesomeIcon icon={faClock} />{" "}
-															<NumericFormat
-																id="cookHours"
-																name="cookHours"
-																type="number"
-																inputMode="decimal"
-																pattern="[0-9]+(\.[0-9]{1,2})?"
-																step="0.01"
-																value={cook.tippedHours}
-																onChange={(e) =>
-																	setCookHours(cook.id, e.target.value)
-																}
-																className={`${style.enterHoursInbox}`}
-															/>
+															<span>{barBack.label}</span>
 														</Col>
-													)}
-													<Col>
-														<FontAwesomeIcon icon={faSackDollar} />{" "}
-														<p className="highlight-color">
-															${cook.tipOut.toFixed(2)}
-														</p>
-													</Col>
-												</Row>
-											</Container>
-										</Col>
-									))}
-							</Row>
-						</div>
-
-						<div className={style.container}>
-							<h1>Bar Back Tips </h1>
-							{barBackHours === 0 ? (
-								<></>
-							) : (
-								<h5>
-									Tips per hour:{" "}
-									<span className="highlight-color">
-										${tipsPerBarBack.toFixed(2)}
-									</span>
-								</h5>
-							)}
-							<Row>
-								{barBacksWithTipOut.length > 0 &&
-									barBacksWithTipOut.map((barBack) => (
-										<Col key={barBack.id} xs={12} sm={6} md={4}>
-											<Container className={style.employeeContainer}>
-												<Row>
-													<Col>
-														<span>{barBack.label}</span>
-													</Col>
-													{barBackHours === 0 ? (
-														<></>
-													) : (
+														{barBackHours === 0 ? (
+															<></>
+														) : (
+															<Col>
+																<FontAwesomeIcon icon={faClock} />{" "}
+																<NumericFormat
+																	id="barBackHours"
+																	name="barBackHours"
+																	type="number"
+																	inputMode="decimal"
+																	pattern="[0-9]+(\.[0-9]{1,2})?"
+																	step="0.01"
+																	value={barBack.tippedHours}
+																	onChange={(e) =>
+																		setBarBackHours(barBack.id, e.target.value)
+																	}
+																	className={`${style.enterHoursInbox}`}
+																/>
+															</Col>
+														)}
 														<Col>
-															<FontAwesomeIcon icon={faClock} />{" "}
-															<NumericFormat
-																id="barBackHours"
-																name="barBackHours"
-																type="number"
-																inputMode="decimal"
-																pattern="[0-9]+(\.[0-9]{1,2})?"
-																step="0.01"
-																value={barBack.tippedHours}
-																onChange={(e) =>
-																	setBarBackHours(barBack.id, e.target.value)
-																}
-																className={`${style.enterHoursInbox}`}
-															/>
+															<FontAwesomeIcon icon={faSackDollar} />{" "}
+															<p className="highlight-color">
+																${barBack.tipOut.toFixed(2)}
+															</p>
 														</Col>
-													)}
-													<Col>
-														<FontAwesomeIcon icon={faSackDollar} />{" "}
-														<p className="highlight-color">
-															${barBack.tipOut.toFixed(2)}
-														</p>
-													</Col>
-												</Row>
-											</Container>
-										</Col>
-									))}
-							</Row>
-						</div>
+													</Row>
+												</Container>
+											</Col>
+										))}
+								</Row>
+							</div>
+						)}
 
 						<div className={style.container}>
 							<h1>Bartender Tips </h1>

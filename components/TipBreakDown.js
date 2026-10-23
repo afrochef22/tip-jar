@@ -194,90 +194,94 @@ export default function TipBreakDown({
 						{split.warning}
 					</div>
 				)}
-				<div className={style.container}>
-					<h1>Cook Tips </h1>
-					<Row>
-						{cookHours === 0 ? (
+				{cooks.length > 0 && (
+					<div className={style.container}>
+						<h1>Cook Tips </h1>
+						<Row>
+							{cookHours === 0 ? (
+								<></>
+							) : (
+								<h4>
+									Tips per hour:
+									<span className="highlight-color">
+										{" "}
+										${tipsPerCook().toFixed(2)}
+									</span>
+								</h4>
+							)}
+							{cooks.length > 0 &&
+								cooksWithTipOut.map((cook) => (
+									<Col key={cook.id} xs={12} sm={6} md={4}>
+										<Container className={style.employeeContainer}>
+											<Row>
+												<Col>
+													<span>{cook.label}</span>
+												</Col>
+												{cookHours === 0 ? (
+													<></>
+												) : (
+													<Col>
+														<FontAwesomeIcon icon={faClock} />{" "}
+														<p>{cook.tippedHours} hrs</p>
+													</Col>
+												)}
+												<Col>
+													<FontAwesomeIcon icon={faSackDollar} />{" "}
+													<p className="highlight-color">
+														${cook.tipOut.toFixed(2)}
+													</p>
+												</Col>
+											</Row>
+										</Container>
+									</Col>
+								))}
+						</Row>
+					</div>
+				)}
+
+				{barBacks.length > 0 && (
+					<div className={style.container}>
+						<h1>Bar Back Tips </h1>
+						{barBackHours === 0 ? (
 							<></>
 						) : (
-							<h4>
-								Tips per hour:
+							<h5>
+								Tips per hour:{" "}
 								<span className="highlight-color">
-									{" "}
-									${tipsPerCook().toFixed(2)}
+									${tipsPerBarBack().toFixed(2)}
 								</span>
-							</h4>
+							</h5>
 						)}
-						{cooks.length > 0 &&
-							cooksWithTipOut.map((cook) => (
-								<Col key={cook.id} xs={12} sm={6} md={4}>
-									<Container className={style.employeeContainer}>
-										<Row>
-											<Col>
-												<span>{cook.label}</span>
-											</Col>
-											{cookHours === 0 ? (
-												<></>
-											) : (
+						<Row>
+							{barBacks.length > 0 &&
+								barBacksWithTipOut.map((barBack) => (
+									<Col key={barBack.id} xs={12} sm={6} md={4}>
+										<Container className={style.employeeContainer}>
+											<Row>
 												<Col>
-													<FontAwesomeIcon icon={faClock} />{" "}
-													<p>{cook.tippedHours} hrs</p>
+													<span>{barBack.label}</span>
 												</Col>
-											)}
-											<Col>
-												<FontAwesomeIcon icon={faSackDollar} />{" "}
-												<p className="highlight-color">
-													${cook.tipOut.toFixed(2)}
-												</p>
-											</Col>
-										</Row>
-									</Container>
-								</Col>
-							))}
-					</Row>
-				</div>
-
-				<div className={style.container}>
-					<h1>Bar Back Tips </h1>
-					{barBackHours === 0 ? (
-						<></>
-					) : (
-						<h5>
-							Tips per hour:{" "}
-							<span className="highlight-color">
-								${tipsPerBarBack().toFixed(2)}
-							</span>
-						</h5>
-					)}
-					<Row>
-						{barBacks.length > 0 &&
-							barBacksWithTipOut.map((barBack) => (
-								<Col key={barBack.id} xs={12} sm={6} md={4}>
-									<Container className={style.employeeContainer}>
-										<Row>
-											<Col>
-												<span>{barBack.label}</span>
-											</Col>
-											{barBackHours === 0 ? (
-												<></>
-											) : (
+												{barBackHours === 0 ? (
+													<></>
+												) : (
+													<Col>
+														<FontAwesomeIcon icon={faClock} />{" "}
+														<p>{barBack.tippedHours} hrs</p>
+													</Col>
+												)}
 												<Col>
-													<FontAwesomeIcon icon={faClock} />{" "}
-													<p>{barBack.tippedHours} hrs</p>
+													<FontAwesomeIcon icon={faSackDollar} />{" "}
+													<p className="highlight-color">
+														${barBack.tipOut.toFixed(2)}
+													</p>
 												</Col>
-											)}
-											<Col>
-												<FontAwesomeIcon icon={faSackDollar} />{" "}
-												<p className="highlight-color">
-													${barBack.tipOut.toFixed(2)}
-												</p>
-											</Col>
-										</Row>
-									</Container>
-								</Col>
-							))}
-					</Row>
-				</div>
+											</Row>
+										</Container>
+									</Col>
+								))}
+						</Row>
+					</div>
+				)}
 
 				<div className={style.container}>
 					<h1>Bartender Tips </h1>

@@ -63,62 +63,64 @@ export default function CashTipBreakDown({
 					</Col>
 				</Row>
 
-				<div className={style.container}>
-					<h1>Bar Back Tips </h1>
-					{barBackHours === 0 ? (
-						<></>
-					) : (
-						<h5>
-							Tips per hour:{" "}
-							<span className="highlight-color">
-								${tipsPerBarBack().toFixed(2)}
-							</span>
-						</h5>
-					)}
-					<Row>
-						{barBacks.length > 0 &&
-							barBacksWithTipOut.map((barBack) => (
-								<Col key={barBack.name} xs={12} sm={6} md={4}>
-									<Container className={style.employeeContainer}>
-										<Row>
-											{barBackHours === 0 ? (
-												<Row>
-													<Col className=" mt-2"> {barBack.name}</Col>
-													<Col className=" mt-2">
-														<FontAwesomeIcon icon={faSackDollar} />
-														<p className="highlight-color">${Number(barBack.tipOut).toFixed(2)}</p>
-													</Col>
-												</Row>
-											) : (
-												<Row>
-													<Col className=" mt-2"> {barBack.name}</Col>
-													<Col className=" mt-2">
-														<FontAwesomeIcon icon={faClock} />{" "}
-														<p>{barBack.hours} hrs</p>
-													</Col>
-													<Col className=" mb-4 mt-2">
-														<FontAwesomeIcon icon={faSackDollar} />
-														<p className="highlight-color">${Number(barBack.tipOut).toFixed(2)}</p>
-													</Col>
-												</Row>
-											)}
-										</Row>
-									</Container>
-								</Col>
-							))}
-					</Row>
-					{split.barBackExtra > 0 && (
-						<p className="mt-2 mb-0">
-							Includes{" "}
-							<span className="highlight-color">
-								${split.barBackExtra.toFixed(2)}
-							</span>{" "}
-							extra on top of the {barBackPercentage}% share ($
-							{split.barBackShare.toFixed(2)}), left over from paying bartenders
-							in whole dollars.
-						</p>
-					)}
-				</div>
+				{barBacks.length > 0 && (
+					<div className={style.container}>
+						<h1>Bar Back Tips </h1>
+						{barBackHours === 0 ? (
+							<></>
+						) : (
+							<h5>
+								Tips per hour:{" "}
+								<span className="highlight-color">
+									${tipsPerBarBack().toFixed(2)}
+								</span>
+							</h5>
+						)}
+						<Row>
+							{barBacks.length > 0 &&
+								barBacksWithTipOut.map((barBack) => (
+									<Col key={barBack.name} xs={12} sm={6} md={4}>
+										<Container className={style.employeeContainer}>
+											<Row>
+												{barBackHours === 0 ? (
+													<Row>
+														<Col className=" mt-2"> {barBack.name}</Col>
+														<Col className=" mt-2">
+															<FontAwesomeIcon icon={faSackDollar} />
+															<p className="highlight-color">${Number(barBack.tipOut).toFixed(2)}</p>
+														</Col>
+													</Row>
+												) : (
+													<Row>
+														<Col className=" mt-2"> {barBack.name}</Col>
+														<Col className=" mt-2">
+															<FontAwesomeIcon icon={faClock} />{" "}
+															<p>{barBack.hours} hrs</p>
+														</Col>
+														<Col className=" mb-4 mt-2">
+															<FontAwesomeIcon icon={faSackDollar} />
+															<p className="highlight-color">${Number(barBack.tipOut).toFixed(2)}</p>
+														</Col>
+													</Row>
+												)}
+											</Row>
+										</Container>
+									</Col>
+								))}
+						</Row>
+						{split.barBackExtra > 0 && (
+							<p className="mt-2 mb-0">
+								Includes{" "}
+								<span className="highlight-color">
+									${split.barBackExtra.toFixed(2)}
+								</span>{" "}
+								extra on top of the {barBackPercentage}% share ($
+								{split.barBackShare.toFixed(2)}), left over from paying bartenders
+								in whole dollars.
+							</p>
+						)}
+					</div>
+				)}
 
 				{split.leftover > 0 && (
 					<div className={`${style.notice} ${style.noticeWarning}`} role="alert">
