@@ -1,4 +1,5 @@
 import clientPromise from "../lib/mongodb";
+import { BREAKDOWN_CARD_FIELDS } from "../lib/breakdownFields";
 import React, { useState, useEffect } from "react";
 
 import {
@@ -11,15 +12,20 @@ import {
 	Col,
 	Container,
 	Input,
+	Button,
 } from "reactstrap";
 import { useRouter } from "next/router";
 import style from "../components/AllTipBreakDowns.module.css";
+
+// Rendering every breakdown at once makes the page slow to load on a phone.
+const PAGE_SIZE = 30;
 export default function getAllTipBreakDown({ allTipBreakdowns }) {
 	const router = useRouter();
 	const [reversedAllTipBreakdowns, setReversedAllTipBreakdowns] = useState(
 		[...allTipBreakdowns].reverse()
 	);
 	const [searchValue, setSearchValue] = useState("");
+	const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
 	const handleCardClick = (id) => {
 		router.push(`/getSelectedTipBreakDown/${id}`);
@@ -43,11 +49,13 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 		);
 
 		setReversedAllTipBreakdowns([...searchResults].reverse());
+		setVisibleCount(PAGE_SIZE);
 	};
 
 	const handleClear = () => {
 		setSearchValue("");
 		setReversedAllTipBreakdowns([...allTipBreakdowns].reverse());
+		setVisibleCount(PAGE_SIZE);
 	};
 
 	return (
@@ -86,7 +94,7 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 				</div>
 			</div>
 			<Row xs={12} sm={2} md={3}>
-				{reversedAllTipBreakdowns.map((data) => (
+				{reversedAllTipBreakdowns.slice(0, visibleCount).map((data) => (
 					<Col sm={12} key={data._id} className={`${style.cardRow} `}>
 						<Card
 							onClick={() => handleCardClick(data._id)}
@@ -188,6 +196,13 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 					</Col>
 				))}
 			</Row>
+			{visibleCount < reversedAllTipBreakdowns.length && (
+				<div className="text-center mb-4">
+					<Button onClick={() => setVisibleCount(visibleCount + PAGE_SIZE)}>
+						Show more ({reversedAllTipBreakdowns.length - visibleCount} left)
+					</Button>
+				</div>
+			)}
 		</div>
 	);
 }
@@ -199,7 +214,7 @@ export async function getServerSideProps() {
 
 		const allTipBreakdowns = await db
 			.collection("tipBreakdown")
-			.find({})
+			.find({}, { projection: BREAKDOWN_CARD_FIELDS })
 			.sort()
 			.toArray();
 		return {

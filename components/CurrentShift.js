@@ -82,7 +82,10 @@ export function CurrentShowPerforming({
 
 	useEffect(() => {
 		// Fetch data from your API when the component mounts
-		fetch("/api/FindBandPerformingToday")
+		// The date only varies the cache key; the server works out the shift itself.
+		fetch(
+			`/api/FindBandPerformingToday?date=${encodeURIComponent(ShiftDate())}`
+		)
 			.then((response) => {
 				if (!response.ok) throw new Error(`HTTP ${response.status}`);
 				return response.json();

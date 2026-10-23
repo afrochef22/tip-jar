@@ -3,6 +3,8 @@ import React from "react";
 import SelectEmployee from "../components/SelectEmployee";
 import clientPromise from "../lib/mongodb";
 import { PUBLIC_EMPLOYEE_FIELDS } from "../lib/employeeFields";
+import { BREAKDOWN_SUMMARY_FIELDS } from "../lib/breakdownFields";
+import { ShiftDate } from "../lib/shiftDate";
 
 export default function SelectWorkingEmployee({ employees, allTipBreakdowns }) {
 	return (
@@ -27,7 +29,10 @@ export async function getServerSideProps() {
 			.find({}, { projection: PUBLIC_EMPLOYEE_FIELDS });
 		const employees = await cursor.toArray();
 
-		const cursor2 = db.collection("tipBreakdown").find({});
+		// Only today's breakdowns matter here (duplicate checks for this shift).
+		const cursor2 = db
+			.collection("tipBreakdown")
+			.find({ date: ShiftDate() }, { projection: BREAKDOWN_SUMMARY_FIELDS });
 		const allTipBreakdowns = await cursor2.toArray();
 
 		return {
@@ -39,7 +44,7 @@ export async function getServerSideProps() {
 	} catch (err) {
 		console.error(err);
 		return {
-			props: { employees: [] },
+			props: { employees: [], allTipBreakdowns: [] },
 		};
 	}
 }

@@ -7,7 +7,9 @@ const websiteUrl = "https://teragramballroom.com/";
 // Function to fetch the HTML content of the website
 async function fetchWebsiteData(url) {
 	// Node 18+ has fetch built in, so no need for the node-fetch package.
-	const response = await fetch(url);
+	// Don't leave the shift screen waiting on a slow venue site.
+	const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+	if (!response.ok) throw new Error(`Venue site returned ${response.status}`);
 	return await response.text();
 }
 
@@ -43,6 +45,12 @@ export default async function handler(req, res) {
 	try {
 		const html = await fetchWebsiteData(websiteUrl);
 		const bandPerformingToday = findBandPerformingToday(html);
+		// Let Vercel's CDN reuse the answer for an hour. The client includes the
+		// shift date in the URL, so the cache rolls over with the shift.
+		res.setHeader(
+			"Cache-Control",
+			"public, s-maxage=3600, stale-while-revalidate=600"
+		);
 		res.status(200).json({ bandPerformingToday });
 	} catch (error) {
 		console.error("Error fetching website data:", error);

@@ -3,6 +3,8 @@ import clientPromise from "../lib/mongodb";
 
 import { useRouter } from "next/router";
 import TipBreakDown from "../components/TipBreakDown";
+import { BREAKDOWN_SUMMARY_FIELDS } from "../lib/breakdownFields";
+import { ShiftDate } from "../lib/shiftDate";
 
 export default function TipBreakDownPage({ allTipBreakdowns }) {
 	const router = useRouter();
@@ -60,7 +62,7 @@ export async function getServerSideProps() {
 
 		const allTipBreakdowns = await db
 			.collection("tipBreakdown")
-			.find({}, { projection: { show: 1, date: 1, totalTips: 1 } })
+			.find({ date: ShiftDate() }, { projection: BREAKDOWN_SUMMARY_FIELDS })
 			.toArray();
 		return {
 			props: { allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)) },
