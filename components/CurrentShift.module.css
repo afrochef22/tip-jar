@@ -27,7 +27,8 @@
 
 .bandContainer {
 	background-color: #555;
-	max-width: 250px;
+	width: 250px;
+	max-width: 100%;
 	min-width: 10%;
 	height: 90%;
 	border-radius: 10px;

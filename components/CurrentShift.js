@@ -28,10 +28,49 @@ export function CurrentShowPerforming({
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
-	const cafeAfterHoursName = `Cafe After Hours - ${ShiftDate()}`;
-	const cafeAlreadySubmitted = allTipBreakdowns.some(
-		(breakdown) =>
-			breakdown.show === cafeAfterHoursName && breakdown.date === ShiftDate()
+	// Recurring events that can be submitted once per shift alongside the show.
+	const [happyHour, afterHours] = ["Happy Hour", "After Hours"].map((event) => {
+		const name = `${event} - ${ShiftDate()}`;
+		return {
+			name,
+			alreadySubmitted: allTipBreakdowns.some(
+				(breakdown) => breakdown.show === name && breakdown.date === ShiftDate()
+			),
+		};
+	});
+
+	// Stacked on mobile; from md up, columns shrink to the card so they sit close together.
+	const renderRecurringEvent = ({ name, alreadySubmitted }) => (
+		<Col key={name} xs={12} md="auto">
+			<Container
+				className={`mb-1 ${style.bandContainer} ${
+					alreadySubmitted ? style.disabledBandContainer : ""
+				}`}
+			>
+				<Row>
+					<Col sm={10} xs={10}>
+						<Label>{name}</Label>
+						{alreadySubmitted && (
+							<div>
+								<small>Already submitted for today</small>
+							</div>
+						)}
+					</Col>
+					<Col
+						sm={2}
+						xs={2}
+						className={
+							alreadySubmitted
+								? style.disabledCheckbox
+								: selectedShow === name
+								? style.checkedCheckbox
+								: style.unCheckBox
+						}
+						onClick={() => !alreadySubmitted && handleSelectedBand(name)}
+					></Col>
+				</Row>
+			</Container>
+		</Col>
 	);
 
 	const toggleDescription = () => {
@@ -89,8 +128,9 @@ export function CurrentShowPerforming({
 					) : (
 						<>
 							<h3 className={style.title}>Select A Show</h3>
+							{renderRecurringEvent(happyHour)}
 							{bandPerformingToday.map((band) => (
-								<Col key={band} sm={4}>
+								<Col key={band} xs={12} md="auto">
 									{band ? (
 										<div>
 											<Container
@@ -145,45 +185,17 @@ export function CurrentShowPerforming({
 									)}
 								</Col>
 							))}
+							{renderRecurringEvent(afterHours)}
 						</>
 					)}
 				</Row>
 			)}
-			<Row className="justify-content-center">
-				<Col sm={4}>
-					<Container
-						className={`mb-1 ${style.bandContainer} ${
-							cafeAlreadySubmitted ? style.disabledBandContainer : ""
-						}`}
-					>
-						<Row>
-							<Col sm={10} xs={10}>
-								<Label>{cafeAfterHoursName}</Label>
-								{cafeAlreadySubmitted && (
-									<div>
-										<small>Already submitted for today</small>
-									</div>
-								)}
-							</Col>
-							<Col
-								sm={2}
-								xs={2}
-								className={
-									cafeAlreadySubmitted
-										? style.disabledCheckbox
-										: selectedShow === cafeAfterHoursName
-										? style.checkedCheckbox
-										: style.unCheckBox
-								}
-								onClick={() =>
-									!cafeAlreadySubmitted &&
-									handleSelectedBand(cafeAfterHoursName)
-								}
-							></Col>
-						</Row>
-					</Container>
-				</Col>
-			</Row>
+			{(isLoading || bandPerformingToday.length === 0) && (
+				<Row className="justify-content-center">
+					{renderRecurringEvent(happyHour)}
+					{renderRecurringEvent(afterHours)}
+				</Row>
+			)}
 			{session && bandPerformingToday.length > 0 ? (
 				<div>
 					<h3 className={`${style.title} mt-3`}>Or</h3>
