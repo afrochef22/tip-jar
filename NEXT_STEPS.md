@@ -16,9 +16,9 @@ The audit fixed and deployed: employee secrets leaking on public pages,
 duplicate tip breakdowns (plus removing the five 2024 duplicates), silent
 save/delete failures, and page size/speed. What's left:
 
-- [ ] **Resend registration links to the 6 employees with pending ones**
+- [x] **Resend registration links to the 6 employees with pending ones** (done 2026-10-23)
   - Until 2026-10-22, `/SelectWorkingEmployee` and `/CCTipsTotals` put every employee's registration token in the public page source. Resending a link replaces the token, so the old (possibly copied) one stops working.
-- [ ] **Have anyone with a password change it**
+- [x] **Have anyone with a password change it** (done 2026-10-23)
   - Password hashes were in the same public page data. bcrypt makes them slow to crack, not impossible.
 - [ ] **Open the Dashboard once while signed in and confirm it looks normal**
   - It now loads less breakdown data and couldn't be checked without a sign-in.
@@ -35,11 +35,12 @@ save/delete failures, and page size/speed. What's left:
 
 ## 1. Deleting an employee with real history erases them from past payroll totals (real bug)
 
-- [ ] **Make `removeEmployee` refuse to hard-delete anyone with tip history; steer to deactivating instead**
+- [x] **Make `removeEmployee` refuse to hard-delete anyone with tip history; steer to deactivating instead**
   - File: `pages/api/removeEmployee/[id].js`
   - Corrected understanding (the first draft of this item had the mechanism wrong): each shift's breakdown record (`tipBreakdown`) already stores the employee's name, position, and tip amount directly, so it stays fully accurate forever no matter what happens to the employee document later — that part was never broken.
   - The real problem is the payroll spreadsheet (`CCTipsTotals`, and the Dashboard's pay-period view). It builds its totals by reading `tipsCollected` off every employee's own document (`employees.find({})` with no filter on `active`). A _deactivated_ employee still shows up correctly in past pay periods, exactly as it should. But if the employee document is _deleted_ outright, their entire tip history vanishes from that spreadsheet along with it — so someone who quit and had their record deleted would silently disappear from last month's payroll totals, even though the shift-by-shift detail pages still show their name.
   - Fix: in `removeEmployee`, check the employee's `tipsCollected` before deleting. If it's non-empty, reject the delete (409) with a message telling the manager to deactivate instead (`active: false`) — which the app already fully supports and which keeps the person correctly in all historical views. Only allow a hard delete when `tipsCollected` is empty (a genuine mistake, like a fill-in typo that was never actually paid out).
+  - Done 2026-10-23: deletes with tip history get a 409 telling the manager to uncheck Active; tested on a throwaway record (409 with history, 200 without, 404 after).
   - Verify: try to delete an employee with tip history, confirm it's refused and told to deactivate instead; deactivate them and confirm they still appear correctly in a past pay period's spreadsheet total; delete an employee with zero tip history and confirm that still works.
 
 ---
@@ -56,7 +57,8 @@ save/delete failures, and page size/speed. What's left:
 
 ## 3. Confirm there's an actual backup / recovery plan for the database
 
-- [ ] **Find out what MongoDB host this uses and whether backups are on**
+- [x] **Find out what MongoDB host this uses and whether backups are on**
+  - Answer (2026-10-23): MongoDB Atlas free tier, which has no backups. Instead, `npm run backup` (`scripts/backup.js`) saves every collection to `backups/<timestamp>/` as Extended JSON. That folder is gitignored because it holds password hashes. Run it weekly and before any script that writes to live data. There is no restore script yet.
   - This session made several irreversible writes directly to production: deleting duplicate employee records, converting ~2,750 stored tip values from strings to numbers. Both were done carefully with dry runs, but "carefully" isn't the same as "recoverable."
   - Action: check whether the Mongo cluster (Atlas or otherwise) has continuous backups / point-in-time recovery turned on. If not, turn it on — for most hosts this is a checkbox, not a project.
   - No code change here, just confirming an operational fact.

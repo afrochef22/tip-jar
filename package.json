@@ -3,7 +3,8 @@
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
-		"start": "next start"
+		"start": "next start",
+		"backup": "node scripts/backup.js"
 	},
 	"dependencies": {
 		"@auth/mongodb-adapter": "^3.0.0",
