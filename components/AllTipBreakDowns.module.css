@@ -184,3 +184,18 @@
 		min-height: 550px;
 	}
 }
+
+/* Touch screens swipe between breakdowns, so they get a swipe hint instead
+   of the arrows. Keyed on the input device rather than width so a narrow
+   desktop window keeps its arrows. */
+.touchOnly {
+	display: none;
+}
+@media (hover: none) and (pointer: coarse) {
+	.touchOnly {
+		display: block;
+	}
+	.pointerOnly {
+		display: none !important;
+	}
+}

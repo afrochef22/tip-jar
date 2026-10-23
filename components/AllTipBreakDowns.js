@@ -223,7 +223,15 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 		<div id="allTipBreakDowns" className={`${style.carouselSection}`}>
 			<div className={`${style.title}`}>
 				<h2>Tip Breakdowns</h2>
-				<h5>Click on a card to see more detail or edit</h5>
+				{/* Both rendered; CSS shows the one that fits the device so the
+				    server and client markup always match. */}
+				<h5 className={style.pointerOnly}>
+					Click on a card to see more detail or edit
+				</h5>
+				<h5 className={style.touchOnly}>
+					Tap a card to see more detail or edit
+				</h5>
+				<p className={style.touchOnly}>← Swipe for more →</p>
 			</div>
 			<div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 				<Carousel
@@ -240,7 +248,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 							direction="prev"
 							directionText="Previous"
 							onClickHandler={previous}
-							className={`${style.carouselControlPrevIcon}`}
+							className={`${style.carouselControlPrevIcon} ${style.pointerOnly}`}
 						/>
 					)}
 					{activeIndex === slides.length - 1 ? (
@@ -251,7 +259,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 							direction="next"
 							directionText="Next"
 							onClickHandler={next}
-							className={`${style.carouselControlNextIcon}`}
+							className={`${style.carouselControlNextIcon} ${style.pointerOnly}`}
 						/>
 					)}
 				</Carousel>
