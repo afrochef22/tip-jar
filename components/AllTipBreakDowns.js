@@ -231,7 +231,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 				<h5 className={style.touchOnly}>
 					Tap a card to see more detail or edit
 				</h5>
-				<p className={style.touchOnly}>← Swipe for more →</p>
+				<p className={`${style.touchOnly} ${style.swipeHint}`}>← Swipe for more →</p>
 			</div>
 			<div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
 				<Carousel

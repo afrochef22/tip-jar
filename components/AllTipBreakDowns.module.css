@@ -191,6 +191,9 @@
 .touchOnly {
 	display: none;
 }
+.swipeHint {
+	color: var(--gold);
+}
 @media (hover: none) and (pointer: coarse) {
 	.touchOnly {
 		display: block;
