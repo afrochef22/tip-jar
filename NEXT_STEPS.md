@@ -58,7 +58,7 @@ save/delete failures, and page size/speed. What's left:
 ## 3. Confirm there's an actual backup / recovery plan for the database
 
 - [x] **Find out what MongoDB host this uses and whether backups are on**
-  - Answer (2026-10-23): MongoDB Atlas free tier, which has no backups. Instead, `npm run backup` (`scripts/backup.js`) saves every collection to `backups/<timestamp>/` as Extended JSON. That folder is gitignored because it holds password hashes. Run it weekly and before any script that writes to live data. There is no restore script yet.
+  - Answer (2026-10-23): MongoDB Atlas free tier, which has no backups. Instead, `npm run backup` (`scripts/backup.js`) saves every collection to `backups/<timestamp>/` as Extended JSON. That folder is gitignored because it holds password hashes. Run it weekly and before any script that writes to live data. Restore with `npm run restore -- <folder>` (preview), then add `--yes`; it backs up the current data first and swaps each collection in only once fully loaded (added 2026-10-23, tested on a scratch database).
   - This session made several irreversible writes directly to production: deleting duplicate employee records, converting ~2,750 stored tip values from strings to numbers. Both were done carefully with dry runs, but "carefully" isn't the same as "recoverable."
   - Action: check whether the Mongo cluster (Atlas or otherwise) has continuous backups / point-in-time recovery turned on. If not, turn it on — for most hosts this is a checkbox, not a project.
   - No code change here, just confirming an operational fact.

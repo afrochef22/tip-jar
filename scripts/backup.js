@@ -19,11 +19,9 @@ if (fs.existsSync(envPath)) {
 	}
 }
 
-async function main() {
-	const client = new MongoClient(process.env.MONGODB_URI);
-	await client.connect();
-	const db = client.db("TeragramBallroom");
-
+// Saves every collection in `db` to backups/<timestamp>/ and returns that
+// folder. Also used by restore.js to save the current data before a restore.
+async function backupDatabase(db) {
 	const stamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
 	const dir = path.join(__dirname, "..", "backups", stamp);
 	fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
@@ -39,12 +37,22 @@ async function main() {
 		);
 		console.log(`${name}: ${docs.length} documents`);
 	}
+	return dir;
+}
 
+async function main() {
+	const client = new MongoClient(process.env.MONGODB_URI);
+	await client.connect();
+	const dir = await backupDatabase(client.db("TeragramBallroom"));
 	await client.close();
 	console.log(`\nSaved to ${dir}`);
 }
 
-main().catch((err) => {
-	console.error(err);
-	process.exit(1);
-});
+module.exports = { backupDatabase };
+
+if (require.main === module) {
+	main().catch((err) => {
+		console.error(err);
+		process.exit(1);
+	});
+}
