@@ -1,8 +1,7 @@
-import { load } from "cheerio";
 import { ShowDateComparer } from "../../lib/shiftDate";
+import { parseVenueShows, showsOn } from "../../lib/venueShows.mjs";
 // URL of the website with the list of bands and dates
 const websiteUrl = "https://teragramballroom.com/";
-// const websiteUrl = "https://themoroccan.com/";
 
 // Function to fetch the HTML content of the website
 async function fetchWebsiteData(url) {
@@ -13,45 +12,26 @@ async function fetchWebsiteData(url) {
 	return await response.text();
 }
 
-// Function to find the band performing today
-function findBandPerformingToday(html) {
-	const $ = load(html);
-	const events = $(".twelve"); // Select all event info containers
-	const today = ShowDateComparer();
-	let bandPerformingToday = [];
-
-	events.each(function () {
-		const bandName = $(this).find(".tw-name").text().trim(); // Find the band name
-		const eventDate = $(this)
-			.find(".tw-event-date")
-			.text()
-			.trim()
-			.replace(",", "")
-			.replace("@", "")
-			.trim();
-
-		if (eventDate === today) {
-			bandPerformingToday.push(bandName);
-			// return false;
-			// Exit the loop early once we find the band performing today
-		}
-	});
-
-	return bandPerformingToday;
-}
-
 // Fetch website data and find the band performing today
 export default async function handler(req, res) {
 	try {
 		const html = await fetchWebsiteData(websiteUrl);
-		const bandPerformingToday = findBandPerformingToday(html);
+		const shows = parseVenueShows(html);
+		if (shows.length === 0) {
+			// The site always lists upcoming shows, so none at all means its
+			// layout changed. Tell the shift screen instead of "No show Today",
+			// and only cache briefly so a fix shows up quickly.
+			console.error("Show lookup: no shows found on the venue site; its layout may have changed");
+			res.setHeader("Cache-Control", "public, s-maxage=300");
+			return res.status(200).json({ bandPerformingToday: [], lookupBroken: true });
+		}
 		// Let Vercel's CDN reuse the answer for an hour. The client includes the
 		// shift date in the URL, so the cache rolls over with the shift.
 		res.setHeader(
 			"Cache-Control",
 			"public, s-maxage=3600, stale-while-revalidate=600"
 		);
-		res.status(200).json({ bandPerformingToday });
+		res.status(200).json({ bandPerformingToday: showsOn(shows, ShowDateComparer()) });
 	} catch (error) {
 		console.error("Error fetching website data:", error);
 		res.status(500).json({ error: "Internal Server Error" });

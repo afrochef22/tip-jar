@@ -91,6 +91,7 @@ export function CurrentShowPerforming({
 				return response.json();
 			})
 			.then((data) => {
+				if (data?.lookupBroken) setLoadError(true);
 				setBandPerformingToday(
 					Array.isArray(data?.bandPerformingToday)
 						? data.bandPerformingToday
@@ -123,7 +124,10 @@ export function CurrentShowPerforming({
 					{bandPerformingToday.length === 0 ? (
 						<>
 							{loadError ? (
-								<h4>Couldn&apos;t load today&apos;s show. Enter it below.</h4>
+								<h4>
+									Couldn&apos;t read today&apos;s show from the Teragram
+									website. Enter it below.
+								</h4>
 							) : (
 								<h2>No show Today</h2>
 							)}

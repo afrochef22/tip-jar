@@ -87,7 +87,8 @@ save/delete failures, and page size/speed. What's left:
 
 ## 6. The band lookup is a fragile scrape with no fallback signal
 
-- [ ] **Make `FindBandPerformingToday` fail loudly instead of silently**
+- [x] **Make `FindBandPerformingToday` fail loudly instead of silently**
+  - Done 2026-10-23: parsing moved to `lib/venueShows.mjs` with tests. If the site loads but no dated shows can be read at all, the API returns `lookupBroken` (cached 5 min), logs an error, and the shift screen says it couldn't read the show from the Teragram website instead of "No show Today".
   - File: `pages/api/FindBandPerformingToday.js`
   - It scrapes `teragramballroom.com`'s HTML by CSS class name (`.twelve`, `.tw-name`, `.tw-event-date`). If the venue's website gets redesigned, this returns an empty list with no error — staff just sees "No show Today" and has to type the show name manually, with nothing telling them _why_ the picker stopped working.
   - Partly done (2026-10-22): the lookup now times out after 8s, and a failed lookup tells staff "Couldn't load today's show. Enter it below." instead of "No show Today". Still open: a scrape that succeeds but finds nothing because the site's HTML changed still looks like a dark night.
