@@ -5,21 +5,14 @@ import {
 	FormGroup,
 	Label,
 	Input,
-	Col,
-	Container,
-	Row,
+	InputGroup,
+	InputGroupText,
 	Spinner,
 } from "reactstrap";
-import style from "./CreditTipCalculation.module.css";
+import form from "./CreditTipForm.module.css";
 import { useRouter } from "next/router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CustomAlertModal } from "./ConformationDialog";
-
-import StandardCreditTipCalculator from "./StandardCreditTipCalculator";
-import BartenderHourlyInput from "./BartenderHourlyInput";
-import HourlyBarBackInput from "./HourlyBarBackInput";
-import HourlyCookInput from "./HourlyCookInput";
-import CCTipsInput from "./CCTipsInput";
+import { shiftDateTime } from "../lib/shiftDate";
 
 export default function CreditTipCalculation({
 	workingEmployees,
@@ -49,14 +42,14 @@ export default function CreditTipCalculation({
 	const [defaultbarBackPercentage, setDefaultBarBackPercentage] = useState(15);
 	const handleIncrease = () => {
 		setDefaultBarBackPercentage((prevPercentage) =>
-			Math.min(prevPercentage + 1, 100)
+			Math.min((Number(prevPercentage) || 0) + 1, 100)
 		);
 	};
 
 	const handleDecrease = () => {
 
 		setDefaultBarBackPercentage((prevPercentage) =>
-			Math.max(prevPercentage - 1, 0)
+			Math.max((Number(prevPercentage) || 0) - 1, 0)
 		);
 	};
 
@@ -171,278 +164,195 @@ export default function CreditTipCalculation({
 		});
 	};
 
-	return (
-		<div className={style.background}>
-			<Container className={style.backgroundColor}>
-				<Form onSubmit={handleCalculate}>
-					<Row className={style.container}>
-						<Col md={1} sm={1} xs={1}></Col>
-						<Col md={4} sm={12}>
-							{/* Bar Back Percentage and Input Column */}
-							{barBacks.length < 1 ? (
-								<div></div>
-							) : (
-								<Row className={`${style.formRow}`}>
-									<Label
-										md={7}
-										sm={8}
-										xs={7}
-										className={style.formLabel}
-										for="BarBackPercentage"
-									>
-										Bar Back Percentage
-									</Label>
-									<Col
-										md={4}
-										sm={2}
-										xs={3}
-										className="d-flex align-items-center ms-1"
-									>
-										<Input
-											id="BarBackPercentage"
-											name="BarBackPercentage"
-											type="tel"
-											inputMode="numeric"
-											value={defaultbarBackPercentage}
-											onChange={(e) =>
-												setDefaultBarBackPercentage(e.target.value)
-											}
-										/>
-										<Col md={1} sm={3} xs={2}>
-											<Button
-												// size="sm"
-												onClick={handleIncrease}
-												className={` ${style.percentageButton}`}
-											>
-												˄
-											</Button>
-											<Button
-												// size="sm"
-												onClick={handleDecrease}
-												className={style.percentageButton}
-											>
-												˯
-											</Button>
-										</Col>
-									</Col>
-								</Row>
-							)}
-						</Col>
-						{cooks.length === 0 ? (
-							<Col md={5} sm={12}>
-								<Row className={`${style.formRow} `}>
-									<Label
-										sm={8}
-										xs={8}
-										className={style.formLabel}
-										for="BarSalesTotal"
-									>
-										Enter Total Bar Sales
-									</Label>
-									<Col sm={4} xs={4}>
-										<Input
-											id="BarSalesTotal"
-											name="BarSalesTotal"
-											type="tel"
-											inputMode="decimal"
-											pattern="[0-9]+(\.[0-9]{1,2})?"
-											step="0.01"
-											required={true}
-										/>
-									</Col>
-								</Row>
-							</Col>
-						) : (
-							<Col md={5} sm={12}>
-								<Row className={`${style.formRow} `}>
-									<Label
-										sm={8}
-										xs={8}
-										className={style.formLabel}
-										for="BarSalesTotal"
-									>
-										Enter Total <span className={style.wordHighlight}>Bar</span>{" "}
-										Sales
-									</Label>
-									<Col sm={4} xs={4}>
-										<Input
-											id="BarSalesTotal"
-											name="BarSalesTotal"
-											type="tel"
-											inputMode="decimal"
-											pattern="[0-9]+(\.[0-9]{1,2})?"
-											step="0.01"
-											required={true}
-										/>
-									</Col>
-								</Row>
-								<Row className={`${style.formRow} `}>
-									<Label
-										sm={8}
-										xs={8}
-										className={style.formLabel}
-										for="FoodSalesTotal"
-									>
-										Enter Total{" "}
-										<span className={style.wordHighlight}>Food</span> Sales
-									</Label>
-									<Col sm={4} xs={4}>
-										<Input
-											id="FoodSalesTotal"
-											name="FoodSalesTotal"
-											type="tel"
-											inputMode="decimal"
-											pattern="[0-9]+(\.[0-9]{1,2})?"
-											step="0.01"
-											required={true}
-										/>
-									</Col>
-								</Row>
-							</Col>
-						)}
-						<Row className={`${style.formRow} `}>
-							<Label sm={6} xs={8} className={style.formLabel} for="ShiftNotes">
-								Shift Notes{" "}
-							</Label>
+	const shiftLabel = shiftDateTime().toFormat("ccc M/d");
 
-							<Col sm={6} xs={12}>
+	// One entry per role working tonight. "Split by hours" is only offered when
+	// more than one person shares a role, matching the tip math.
+	const groups = [
+		{
+			title: "Bartenders",
+			employees: bartenders,
+			position: "Bartender",
+			byHours: isBartenderHoursClicked,
+		},
+		{
+			title: "Bar Backs",
+			employees: barBacks,
+			position: "Bar Back",
+			byHours: isBarBackHoursClicked,
+		},
+		{
+			title: "Cooks",
+			employees: cooks,
+			position: "Cook",
+			byHours: isCookHoursClicked,
+		},
+	].filter((group) => group.employees.length > 0);
+
+	const moneyInput = (id, label, props = {}) => (
+		<FormGroup className={form.field}>
+			<Label for={id} className={form.label}>
+				{label}
+			</Label>
+			<InputGroup>
+				<InputGroupText>$</InputGroupText>
+				<Input
+					id={id}
+					name={id}
+					type="tel"
+					inputMode="decimal"
+					pattern="[0-9]+(\.[0-9]{1,2})?"
+					step="0.01"
+					placeholder="0.00"
+					required
+					{...props}
+				/>
+			</InputGroup>
+		</FormGroup>
+	);
+
+	return (
+		<div className={form.page}>
+			<Form onSubmit={handleCalculate} className={form.form}>
+				<div className={form.showHeader}>
+					<div className={form.showName}>{selectedShow || "No show selected"}</div>
+					<div className={form.showDate}>{shiftLabel}</div>
+				</div>
+
+				<section className={form.card}>
+					{/* totalTips keeps its old id so the form and tests can find it. */}
+					<FormGroup className={form.field}>
+						<Label for="tipsCollected" className={form.label}>
+							Credit card tips
+						</Label>
+						<InputGroup>
+							<InputGroupText>$</InputGroupText>
+							<Input
+								id="tipsCollected"
+								name="totalTips"
+								type="tel"
+								inputMode="decimal"
+								pattern="[0-9]+(\.[0-9]{1,2})?"
+								step="0.01"
+								placeholder="0.00"
+								required
+								className={form.tipsInput}
+							/>
+						</InputGroup>
+					</FormGroup>
+					{moneyInput("BarSalesTotal", "Bar sales")}
+					{cooks.length > 0 && moneyInput("FoodSalesTotal", "Food sales")}
+					{barBacks.length > 0 && (
+						<FormGroup className={`${form.field} ${form.inline}`}>
+							<Label for="BarBackPercentage" className={form.label}>
+								Bar back %
+							</Label>
+							<div className={form.stepper}>
+								<Button
+									type="button"
+									className={form.stepButton}
+									onClick={handleDecrease}
+									aria-label="Decrease bar back percentage"
+								>
+									−
+								</Button>
 								<Input
-									className={style.shiftNotesTextArea}
-									id="shiftNotes"
-									name="shiftNotes"
-									type="textarea"
-									required={false}
+									id="BarBackPercentage"
+									name="BarBackPercentage"
+									type="tel"
+									inputMode="numeric"
+									className={form.stepValue}
+									value={defaultbarBackPercentage}
+									onChange={(e) => setDefaultBarBackPercentage(e.target.value)}
 								/>
-							</Col>
-						</Row>
-						<Col md={1} sm={1} xs={1}></Col>
-					</Row>
-					<CCTipsInput />
-					<div>
-						{/* Your existing code */}
-						<CustomAlertModal
-							isOpen={isOpen}
-							toggle={toggleModal}
-							message={alertMessage}
-						/>
-					</div>
-					<Row
-						className={`${style.toggleContainer} ${
-							bartenders.length <= 1 ? "" : style.tipoutCashByHoursContainer
-						} 
-						${barBacks.length <= 1 ? "" : style.tipoutCashByHoursContainer} 
-							${cooks.length <= 1 ? "" : style.tipoutCashByHoursContainer} 
-				
-						`}
-					>
-						<Col>
-							{/* Switches Column */}
-							{bartenders.length <= 1 ? (
-								<div></div>
-							) : (
-								<FormGroup switch>
+								<Button
+									type="button"
+									className={form.stepButton}
+									onClick={handleIncrease}
+									aria-label="Increase bar back percentage"
+								>
+									+
+								</Button>
+							</div>
+						</FormGroup>
+					)}
+					<FormGroup className={form.field}>
+						<Label for="shiftNotes" className={form.label}>
+							Notes <span className={form.optional}>(optional)</span>
+						</Label>
+						<Input id="shiftNotes" name="shiftNotes" type="textarea" rows={3} />
+					</FormGroup>
+				</section>
+
+				<section className={form.card}>
+					<h2 className={form.cardTitle}>Working tonight</h2>
+					{groups.map((group) => (
+						<div key={group.position} className={form.group}>
+							<div className={form.groupTitle}>{group.title}</div>
+							{group.employees.map((employee) =>
+								group.byHours ? (
+									<div key={employee.id} className={form.hoursRow}>
+										<Label for={`${employee.id}Hours`} className={form.name}>
+											{employee.label}
+										</Label>
+										<InputGroup className={form.hoursInput}>
+											<Input
+												id={`${employee.id}Hours`}
+												name={`${employee.id}Hours`}
+												type="tel"
+												inputMode="decimal"
+												pattern="[0-9]+(\.[0-9]{1,2})?"
+												step="0.01"
+												required
+											/>
+											<InputGroupText>hrs</InputGroupText>
+										</InputGroup>
+									</div>
+								) : (
+									<div key={employee.id} className={form.name}>
+										{employee.label}
+									</div>
+								)
+							)}
+							{group.employees.length > 1 && (
+								<FormGroup switch className={form.switch}>
 									<Input
 										type="switch"
 										role="switch"
-										onChange={() => handleSwitchToggle("Bartender")}
-										checked={isBartenderHoursClicked}
+										id={`${group.position}ByHours`}
+										onChange={() => handleSwitchToggle(group.position)}
+										checked={group.byHours}
 									/>
-									<Label check>
-										Toggle to tip out{" "}
-										<span className="highlight-color">Bartender</span> by hours
-										worked.
+									<Label check for={`${group.position}ByHours`}>
+										Split {group.title.toLowerCase()} by hours worked
 									</Label>
-									<div className={style.seperationLine}></div>
 								</FormGroup>
 							)}
-							{barBacks.length <= 1 ? (
-								<div></div>
-							) : (
-								<FormGroup switch>
-									<Input
-										type="switch"
-										role="switch"
-										onChange={() => handleSwitchToggle("Bar Back")}
-										checked={isBarBackHoursClicked}
-									/>
-									<Label check>
-										Toggle to tip out{" "}
-										<span className="highlight-color">Bar Back</span> by hours
-										worked.
-									</Label>
-									<div className={style.seperationLine}></div>
-								</FormGroup>
-							)}
-							{cooks.length <= 1 ? (
-								<div></div>
-							) : (
-								<FormGroup switch>
-									<Input
-										type="switch"
-										role="switch"
-										onChange={() => handleSwitchToggle("Cook")}
-										checked={isCookHoursClicked}
-									/>
-									<Label check>
-										Toggle to tip out{" "}
-										<span className="highlight-color">Cook</span> by hours
-										worked.
-									</Label>
-									<div className={style.seperationLine}></div>
-								</FormGroup>
-							)}
-						</Col>
-					</Row>
-					{isCookHoursClicked === false ? (
-						<div>
-							<StandardCreditTipCalculator employees={cooks} position="Cooks" />
 						</div>
-					) : (
-						<HourlyCookInput cooks={cooks} />
-					)}
-					{isBarBackHoursClicked === false ? (
-						<div>
-							<StandardCreditTipCalculator
-								employees={barBacks}
-								position="Bar Backs"
-							/>
-						</div>
-					) : (
-						<HourlyBarBackInput barBacks={barBacks} />
-					)}
-					{isBartenderHoursClicked === false ? (
-						<div>
-							<StandardCreditTipCalculator
-								employees={bartenders}
-								position="Bartenders"
-							/>
-						</div>
-					) : (
-						<BartenderHourlyInput bartenders={bartenders} />
-					)}
-					<div className={style.centerButtonContainer}>
-						<Button
-							className={`${style.centerButton} ${style.backButton}`}
-							onClick={handleBackButtonClick}
-						>
-							Back
-						</Button>
-						<Button
-							className={`${style.centerButton} ${style.calculateButton}`}
-							type="submit"
-						>
-							{submitting ? (
-								<>
-									<Spinner size="sm">Loading...</Spinner>
-									<span>Submitting....</span>
-								</>
-							) : (
-								"Submit"
-							)}
-						</Button>
-					</div>
-				</Form>
-			</Container>
+					))}
+				</section>
+
+				<CustomAlertModal
+					isOpen={isOpen}
+					toggle={toggleModal}
+					message={alertMessage}
+				/>
+
+				<div className={form.actions}>
+					<Button type="button" className={form.backButton} onClick={handleBackButtonClick}>
+						Back
+					</Button>
+					<Button type="submit" className={form.primaryButton} disabled={submitting}>
+						{submitting ? (
+							<>
+								<Spinner size="sm" /> Loading…
+							</>
+						) : (
+							"Review breakdown →"
+						)}
+					</Button>
+				</div>
+			</Form>
 		</div>
 	);
 }
