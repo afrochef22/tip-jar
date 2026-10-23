@@ -2,6 +2,7 @@ import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getApiSession } from "../../../lib/auth";
 import { ShiftDate } from "../../../lib/shiftDate";
+import { cleanShowName, isSameShow, showKey } from "../../../lib/showKey";
 
 export default async (req, res) => {
 	const id = req.query.id;
@@ -38,12 +39,36 @@ export default async (req, res) => {
 				}
 			}
 
+			if (data.show !== undefined) {
+				if (typeof data.show !== "string" || !data.show.trim()) {
+					return res.status(400).json({ error: "Show name is required" });
+				}
+				data.show = cleanShowName(data.show);
+			}
+
+			// Renaming or moving a breakdown must not collide with another one.
+			const newShow = data.show ?? existing.show;
+			const newDate = data.date ?? existing.date;
+			if (!isSameShow(newShow, existing.show) || newDate !== existing.date) {
+				const sameDate = await tipBreakDownCollection
+					.find({ date: newDate, _id: { $ne: objectId } }, { projection: { show: 1 } })
+					.toArray();
+				const clash = sameDate.find((b) => isSameShow(b.show, newShow));
+				if (clash) {
+					return res.status(409).json({
+						error: `A tip breakdown for "${clash.show}" on ${newDate} already exists.`,
+						tipBreakdownId: clash._id,
+					});
+				}
+			}
+
 			// Copy only the fields that were sent. 0 and "" are valid values.
 			const setValues = {};
 			const copy = (key, transform = (v) => v) => {
 				if (data[key] !== undefined) setValues[key] = transform(data[key]);
 			};
 			copy("show");
+			if (data.show !== undefined) setValues.showKey = showKey(data.show);
 			copy("date");
 			copy("shiftNotes");
 			copy("totalTips", Number);
@@ -153,6 +178,11 @@ export default async (req, res) => {
 
 			res.status(200).json({ message: "Tip Breakdown updated successfully" });
 		} catch (error) {
+			if (error?.code === 11000) {
+				return res.status(409).json({
+					error: "A tip breakdown for this show and date already exists.",
+				});
+			}
 			console.error("Error updating data:", error);
 			res.status(500).json({ error: "Internal Server Error" });
 		}

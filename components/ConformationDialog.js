@@ -1,11 +1,12 @@
 import React from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
-export const ConfirmationDialog = ({ isOpen, toggle, onConfirm }) => {
+export const ConfirmationDialog = ({ isOpen, toggle, onConfirm, warning }) => {
 	return (
 		<Modal isOpen={isOpen} toggle={toggle}>
 			<ModalHeader toggle={toggle}>Confirmation</ModalHeader>
 			<ModalBody>
+				{warning && <p className="text-danger fw-bold">{warning}</p>}
 				Are you sure you want to submit? This action cannot be undone.
 			</ModalBody>
 			<ModalFooter>

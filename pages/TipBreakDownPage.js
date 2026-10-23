@@ -60,7 +60,7 @@ export async function getServerSideProps() {
 
 		const allTipBreakdowns = await db
 			.collection("tipBreakdown")
-			.find({}, { projection: { show: 1, date: 1 } })
+			.find({}, { projection: { show: 1, date: 1, totalTips: 1 } })
 			.toArray();
 		return {
 			props: { allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)) },

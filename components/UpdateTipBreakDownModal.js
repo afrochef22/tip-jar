@@ -44,10 +44,14 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const [showConfirmation, setShowConfirmation] = useState(false);
 	const [totalBarSales, setTotalBarSales] = useState(breakDown.totalBarSales);
 	const [shiftNotes, setShiftNotes] = useState(breakDown.shiftNotes);
+	const [saveError, setSaveError] = useState("");
 
 	const router = useRouter();
 
-	const toggle = () => setModal(!modal);
+	const toggle = () => {
+		setSaveError("");
+		setModal(!modal);
+	};
 
 	const handleShowChange = (e) => {
 		setShow(e.target.value);
@@ -346,14 +350,16 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 				}),
 			});
 			if (response.ok) {
+				toggle();
 				router.push(`/getSelectedTipBreakDown/${breakDown._id}`);
-			} else {
+				return;
 			}
+			const body = await response.json().catch(() => ({}));
+			setSaveError(body.error || "Could not save the changes. Please try again.");
 		} catch (error) {
-		} finally {
-			toggle();
+			console.error(error);
+			setSaveError("Could not reach the server. Please try again.");
 		}
-		// toggle();
 	};
 
 	const toggleConfirmation = () => {
@@ -387,12 +393,15 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 				}),
 			});
 			if (response.ok) {
+				toggle();
 				router.push(`/CCTipsTotals`);
-			} else {
+				return;
 			}
+			const body = await response.json().catch(() => ({}));
+			setSaveError(body.error || "Could not delete the breakdown. Please try again.");
 		} catch (error) {
-		} finally {
-			toggle();
+			console.error(error);
+			setSaveError("Could not reach the server. Please try again.");
 		}
 	};
 
@@ -810,6 +819,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 								))}
 							</Row>
 						</div>
+						{saveError && <div className={style.error}>{saveError}</div>}
 						<ModalFooter>
 							<Button color="primary" onClick={handleUpdateBreakDown}>
 								Update

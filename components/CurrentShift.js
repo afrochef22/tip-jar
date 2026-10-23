@@ -4,6 +4,7 @@ import { Container, Row, Col, Label, Input } from "reactstrap";
 import { CardsSkeleton } from "./skeletons";
 import { useSession } from "next-auth/react";
 import { ShiftDate, ShowDateComparer } from "../lib/shiftDate";
+import { isSameShow } from "../lib/showKey";
 
 // Re-exported so existing imports keep working. The logic lives in lib/shiftDate.js.
 export { ShiftDate, ShowDateComparer };
@@ -34,7 +35,8 @@ export function CurrentShowPerforming({
 		return {
 			name,
 			alreadySubmitted: allTipBreakdowns.some(
-				(breakdown) => breakdown.show === name && breakdown.date === ShiftDate()
+				(breakdown) =>
+					isSameShow(breakdown.show, name) && breakdown.date === ShiftDate()
 			),
 		};
 	});

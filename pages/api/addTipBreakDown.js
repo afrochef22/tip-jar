@@ -2,6 +2,7 @@ import clientPromise from "../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getApiSession } from "../../lib/auth";
 import { ShiftDate } from "../../lib/shiftDate";
+import { cleanShowName, isSameShow, showKey } from "../../lib/showKey";
 
 const toIdList = (list) => (Array.isArray(list) ? list : []);
 
@@ -11,7 +12,7 @@ export default async (req, res) => {
 	}
 
 	const {
-		show,
+		show: rawShow,
 		date,
 		totalTips,
 		foodSales,
@@ -26,9 +27,10 @@ export default async (req, res) => {
 		shiftNotes,
 	} = req.body ?? {};
 
-	if (typeof show !== "string" || !show.trim() || typeof date !== "string") {
+	if (typeof rawShow !== "string" || !rawShow.trim() || typeof date !== "string") {
 		return res.status(400).json({ message: "Show and date are required" });
 	}
+	const show = cleanShowName(rawShow);
 
 	// Managers can submit any date. Logged-out staff may only submit the
 	// current shift.
@@ -51,16 +53,24 @@ export default async (req, res) => {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
 
-		const duplicate = await db.collection("tipBreakdown").findOne({ show, date });
+		// Compare in code rather than by exact match so differences in spacing,
+		// capitalization or punctuation still count as the same show. The unique
+		// index on { date, showKey } backs this up when two phones submit at once.
+		const sameDate = await db
+			.collection("tipBreakdown")
+			.find({ date }, { projection: { show: 1 } })
+			.toArray();
+		const duplicate = sameDate.find((b) => isSameShow(b.show, show));
 		if (duplicate) {
 			return res.status(409).json({
-				message: "A tip breakdown for this show and date already exists.",
+				message: `A tip breakdown for "${duplicate.show}" on ${date} already exists.`,
 				tipBreakdownId: duplicate._id,
 			});
 		}
 
 		const tipBreakdownResult = await db.collection("tipBreakdown").insertOne({
 			show,
+			showKey: showKey(show),
 			date,
 			totalTips,
 			foodSales,
@@ -100,6 +110,12 @@ export default async (req, res) => {
 			tipBreakdownId,
 		});
 	} catch (error) {
+		if (error?.code === 11000) {
+			// Lost a race with an identical submission from another device.
+			return res.status(409).json({
+				message: "A tip breakdown for this show and date was just submitted.",
+			});
+		}
 		console.error(error);
 		res.status(500).json({ message: "Internal server error" });
 	}

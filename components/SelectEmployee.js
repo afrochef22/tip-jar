@@ -7,6 +7,7 @@ import SelectBartender from "./SelectBartender";
 import SelectBarBack from "./SelectBarBack";
 import SelectCook from "./SelectCook";
 import { CurrentShift, CurrentShowPerforming, ShiftDate } from "./CurrentShift";
+import { isSameShow } from "../lib/showKey";
 
 export default function SelectEmployee({ employees, allTipBreakdowns }) {
 	const router = useRouter();
@@ -292,7 +293,10 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 			return;
 		}
 		const tipBreakdownExists = allTipBreakdowns.some((breakdown) => {
-			return breakdown.show === selectedShow && breakdown.date === ShiftDate();
+			return (
+				isSameShow(breakdown.show, selectedShow) &&
+				breakdown.date === ShiftDate()
+			);
 		});
 		if (tipBreakdownExists) {
 			setSubmitError(

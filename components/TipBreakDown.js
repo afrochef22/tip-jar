@@ -11,6 +11,7 @@ import { CurrentShift, ShiftDate } from "./CurrentShift";
 import { useRouter } from "next/router";
 import { ConfirmationDialog } from "./ConformationDialog";
 import { Decimal } from "decimal.js";
+import { isSameShow } from "../lib/showKey";
 
 export default function TipBreakDown({
 	bartenders,
@@ -233,13 +234,25 @@ export default function TipBreakDown({
 		}
 		const exists = (allTipBreakdowns || []).some(
 			(breakdown) =>
-				breakdown.show === selectedShow && breakdown.date === shiftDate
+				isSameShow(breakdown.show, selectedShow) && breakdown.date === shiftDate
 		);
 		if (exists) {
 			return "Tip breakdown already exists for the selected show and date.";
 		}
 		return "";
 	};
+
+	// A different show name with the exact same total on the same shift is
+	// almost always the same breakdown entered twice, so ask before saving.
+	const sameTotalBreakdown = (allTipBreakdowns || []).find(
+		(breakdown) =>
+			Number(totalTips) > 0 &&
+			breakdown.date === shiftDate &&
+			Number(breakdown.totalTips) === Number(totalTips)
+	);
+	const duplicateWarning = sameTotalBreakdown
+		? `"${sameTotalBreakdown.show}" was already submitted today with the same total of ${Number(totalTips).toFixed(2)}. Make sure this isn't the same shift entered twice.`
+		: "";
 
 	const toggleConfirmation = () => {
 		if (!showConfirmation) {
@@ -529,6 +542,7 @@ export default function TipBreakDown({
 							isOpen={showConfirmation}
 							toggle={toggleConfirmation}
 							onConfirm={handleAddTipBreakDown}
+							warning={duplicateWarning}
 						/>
 					</Col>
 				</Row>
