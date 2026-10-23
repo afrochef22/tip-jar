@@ -1,44 +1,33 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Spinner, Button } from "reactstrap";
 
-export default function Component() {
+// Manager sign-in button on the start page. Already signed in? Go straight to
+// the Dashboard.
+export default function LoginBtn({ className }) {
 	const { data: session } = useSession();
 	const router = useRouter();
 
 	useEffect(() => {
-		// If the user is authenticated, redirect them to the dashboard
 		if (session) {
 			router.push("/Dashboard");
 		}
 	}, [session, router]);
 
-	const handleSignIn = async () => {
-		await signIn(undefined, { callbackUrl: "/Dashboard" });
-	};
 	if (session) {
 		return (
-			<>
-				<div className="login-button-container">
-					<button className="manager-login-button" onClick={() => signOut({ callbackUrl: "/" })}>
-						<Spinner className="" size="sm">
-							Loading...
-						</Spinner>
-
-						<span>Signing in...</span>
-					</button>
-				</div>
-			</>
+			<Button className={className} disabled>
+				<Spinner size="sm" /> Signing in…
+			</Button>
 		);
 	}
 	return (
-		<div>
-			<div className="login-button-container">
-				<button className="manager-login-button" onClick={handleSignIn}>
-					Manager Sign in
-				</button>
-			</div>
-		</div>
+		<Button
+			className={className}
+			onClick={() => signIn(undefined, { callbackUrl: "/Dashboard" })}
+		>
+			Manager Sign in
+		</Button>
 	);
 }
