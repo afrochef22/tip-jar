@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import UpdateCashTipBreakDownModal from "./UpdateCashTipBreakDownModal";
 import { splitCashTips } from "../lib/cashSplit.mjs";
-import { money } from "../lib/money";
+import { money } from "../lib/money.mjs";
 
 export default function CashTipBreakDown({
 	numberOfBarBacks,

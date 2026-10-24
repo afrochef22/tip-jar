@@ -22,7 +22,7 @@ import { useRouter } from "next/router";
 import { DeleteDialog } from "./ConformationDialog";
 import style from "./TipBreakDown.module.css";
 import form from "./CreditTipForm.module.css";
-import { money } from "../lib/money";
+import { money } from "../lib/money.mjs";
 
 // Saved dates look like 10/5/2026; the date box needs 2026-10-05.
 const toDateInput = (date) => {

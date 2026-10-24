@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { money, tipPercent } from "../lib/money.js";
+import { money, tipPercent } from "../lib/money.mjs";
 
 test("money adds commas and cents", () => {
 	assert.equal(money(6601.5), "6,601.50");

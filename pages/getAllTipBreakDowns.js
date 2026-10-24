@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/router";
 import style from "../components/AllTipBreakDowns.module.css";
 import { reportError } from "../lib/alert";
-import { money, tipPercent } from "../lib/money";
+import { money, tipPercent } from "../lib/money.mjs";
 
 // Rendering every breakdown at once makes the page slow to load on a phone.
 const PAGE_SIZE = 30;

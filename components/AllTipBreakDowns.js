@@ -18,7 +18,7 @@ import style from "./AllTipBreakDowns.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
-import { money, tipPercent } from "../lib/money";
+import { money, tipPercent } from "../lib/money.mjs";
 
 export default function AllTipBreakDowns({ allTipBreakdowns }) {
 	const router = useRouter();

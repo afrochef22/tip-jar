@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { ConfirmationDialog } from "./ConformationDialog";
 import { splitCreditTips } from "../lib/tipSplit.mjs";
 import { isSameShow } from "../lib/showKey";
-import { money, tipPercent } from "../lib/money";
+import { money, tipPercent } from "../lib/money.mjs";
 
 export default function TipBreakDown({
 	bartenders,

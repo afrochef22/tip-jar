@@ -3,7 +3,7 @@ import { Label, Input, Row, Col, Container, Button } from "reactstrap";
 import { DateTime } from "luxon";
 import { getPayrollDates } from "./DateRange";
 import Link from "next/link";
-import { money } from "../lib/money";
+import { money } from "../lib/money.mjs";
 
 // Shared by the Dashboard carousel (variant="dashboard") and the standalone
 // /CCTipsTotals page (variant="page"). The two only ever differed in the
