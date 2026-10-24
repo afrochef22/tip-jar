@@ -10,6 +10,30 @@ Ordered roughly by how much it matters. Check items off as they're done.
 
 ---
 
+## Left over from the 2026-10-24 design review
+
+Everything else from that session (design pass, spreadsheet fixes, edit
+employee window, row highlight, Node 24, renames updating old breakdowns)
+is done and live.
+
+- [ ] **Let the edit employee window erase an email**
+  - Leaving the email box blank keeps the old email, so there's no way to remove one. `pages/api/updateEmployee/[id].js` skips blank emails; the edit window would need to send "remove it" on purpose, without breaking registration (which also sends `email`).
+- [ ] **Fix Schuyler's name on 72 old breakdown entries**
+  - They say "Schuyler  Grimsman" (two spaces). Open Schuyler in Employees, tap ✏️, tap Save changes without changing anything; saving now updates the name on old breakdowns.
+- [ ] **Check the grayed-out main show on a real show night**
+  - Made from the phone: once tonight's show has a breakdown, the show picker grays it out and says "Already submitted for today". The code was read but not seen on screen, since it needs that night's show list from the venue site.
+- [ ] **Six March 2024 payouts are a few cents off** (left alone on purpose)
+  - Found in the 2026-10-23 data check: the employee tip records and the breakdowns differ by cents. Only worth fixing if anyone asks about March 2024.
+- [ ] **Phone sessions: use Node 24**
+  - `.nvmrc` says 24, matching Vercel. When making changes from Claude on the phone, say "use the Node version in .nvmrc". Tests pass on Node 20, 22 and 24 either way.
+- [ ] **Optional: remove the old Node 20.14 in `/usr/local/bin`**
+  - The Mac now defaults to Node 24 through nvm. The old install is harmless; it's only used by apps that don't load the terminal settings.
+
+Known and fine as is: names on old breakdowns for fill-ins and removed
+employees (35 entries) don't change, since they aren't in the employee list.
+
+---
+
 ## 0. Follow-ups from the 2026-10-22 audit (do these first)
 
 The audit fixed and deployed: employee secrets leaking on public pages,
