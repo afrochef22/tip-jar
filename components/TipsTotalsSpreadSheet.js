@@ -25,6 +25,12 @@ export default function TipsTotalsSpreadSheet({
 	const [payPeriodStartDate, setPayPeriodStartDate] = useState(startDate);
 	const [payPeriodEndDate, setPayPeriodEndDate] = useState(endDate);
 
+	// Tapping a row highlights it so it's easy to follow across the shows;
+	// tapping it again (or another row) moves the highlight.
+	const [highlightedId, setHighlightedId] = useState(null);
+	const toggleHighlight = (id) =>
+		setHighlightedId((current) => (current === id ? null : id));
+
 	const handleStartDateChange = (e) => {
 		if (!e.target.value) return; // ignore the input being cleared
 		setStartDate(DateTime.fromISO(e.target.value));
@@ -221,7 +227,12 @@ export default function TipsTotalsSpreadSheet({
 				<tbody className="scorllableContainer">
 					{sortedEmployees.map((employee) => {
 						return (
-							<tr key={employee._id}>
+							<tr
+								key={employee._id}
+								className={`employee-row ${highlightedId === employee._id ? "row-highlighted" : ""}`}
+								onClick={() => toggleHighlight(employee._id)}
+								aria-selected={highlightedId === employee._id}
+							>
 								<td className="employee-column">{`${employee.firstName} ${employee.lastName}`}</td>
 								{uniqueDates.map((date) => {
 									// Get unique shows for the current date
@@ -337,7 +348,8 @@ export default function TipsTotalsSpreadSheet({
 					</Row>
 					<h5 className="mt-2">
 						<span className="pointer-only">Click</span>
-						<span className="touch-only">Tap</span> on a band name to see more detail
+						<span className="touch-only">Tap</span> on a band name to see more detail,
+							or on a person to highlight their row
 					</h5>
 				</Container>
 				{table}
@@ -357,7 +369,7 @@ export default function TipsTotalsSpreadSheet({
 					<h5>
 						<span className="pointer-only">Click</span>
 						<span className="touch-only">Tap</span> on a band name to see more
-						detail or edit
+						detail or edit, or on a person to highlight their row
 					</h5>
 				</Row>
 			</Container>

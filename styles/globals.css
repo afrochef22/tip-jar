@@ -550,3 +550,16 @@ body {
 		display: none;
 	}
 }
+
+/* Spreadsheet: the row someone tapped, so it's easy to follow sideways.
+   Every cell is colored, including the sticky name and total cells. */
+.employee-row {
+	cursor: pointer;
+}
+.table tbody tr.row-highlighted td,
+.table tbody tr.row-highlighted td:first-child,
+.table tbody tr.row-highlighted td:last-child {
+	background-color: var(--gold) !important;
+	color: #000 !important;
+	font-weight: 700;
+}
