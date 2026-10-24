@@ -185,7 +185,7 @@ export default function TipBreakDown({
 					<Row>
 						{tipPercentText ? (
 							<Col sm={4} xs={6}>
-								<h4>Bar sales:</h4>
+								<h4>Bar Sales:</h4>
 								<h2 className="highlight-color">${money(totalBarSales)}</h2>
 							</Col>
 						) : (
@@ -195,11 +195,11 @@ export default function TipBreakDown({
 							</Col>
 						)}
 						<Col sm={4} xs={6}>
-							<h4>Food sales:</h4>
+							<h4>Food Sales:</h4>
 							<h2 className="highlight-color">${money(foodSalesTotal)}</h2>
 						</Col>
 						<Col sm={4} xs={12}>
-							<h4>Bar Back Percentage:</h4>
+							<h4>Bar Back %:</h4>
 							<h2 className="highlight-color">{barBackPercentage}%</h2>
 						</Col>
 					</Row>

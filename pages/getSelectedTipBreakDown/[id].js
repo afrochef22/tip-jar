@@ -75,7 +75,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 
 					<Row className="mb-3">
 						<Col className="mb-3" sm={4} xs={7}>
-							<h4>Total Bar Sales:</h4>
+							<h4>Bar Sales:</h4>
 							<h2 className="highlight-color">
 								${money(breakDown.totalBarSales)}
 							</h2>
@@ -95,7 +95,7 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 							</Col>
 						)}
 						<Col className="mb-3" sm={4} xs={6}>
-							<h4>Food sales:</h4>
+							<h4>Food Sales:</h4>
 							<h2 className="highlight-color">
 								${money(breakDown.foodSales)}
 							</h2>
