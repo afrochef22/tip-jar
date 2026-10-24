@@ -117,6 +117,22 @@ export default async (req, res) => {
 		}
 
 		await employees.updateOne(filter, update);
+
+		// Saved tip breakdowns keep each person's name for display. Bring them
+		// up to date so a fixed name shows on old shows too (people are matched
+		// by id; the name is only what's shown).
+		if (session && ($set.firstName || $set.lastName)) {
+			const name = `${$set.firstName ?? employee.firstName} ${$set.lastName ?? employee.lastName}`;
+			const breakdowns = db.collection("tipBreakdown");
+			for (const list of ["BartenderTips", "barBackTips", "cookTips"]) {
+				await breakdowns.updateMany(
+					{ [list]: { $elemMatch: { id, label: { $ne: name } } } },
+					{ $set: { [`${list}.$[person].label`]: name } },
+					{ arrayFilters: [{ "person.id": id }] }
+				);
+			}
+		}
+
 		res.status(200).json({ message: "Employee updated successfully" });
 	} catch (error) {
 		await reportError("updateEmployee", error);
