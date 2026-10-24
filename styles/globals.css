@@ -563,3 +563,11 @@ body {
 	color: #000 !important;
 	font-weight: 700;
 }
+
+/* Bootstrap turns on smooth scrolling for the whole page, which made every
+   page change visibly scroll (the long Tip Breakdowns list slid from the
+   bottom to the top). Jump instead; buttons that want smooth scrolling ask
+   for it themselves. */
+:root {
+	scroll-behavior: auto;
+}
