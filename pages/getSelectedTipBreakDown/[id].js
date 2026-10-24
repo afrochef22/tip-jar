@@ -36,12 +36,8 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
 	// Go back to wherever they came from (Dashboard, the list, the
 	// spreadsheet); with no history, fall back to the list or the start page.
-	// Right after a submit, the page behind this one is the entry form for the
-	// same show, so go to the list of tip breakdowns instead of back into it.
-	const justSaved = router.query.saved === "1";
 	const goBack = () => {
-		if (justSaved) router.push("/getAllTipBreakDowns");
-		else if (window.history.length > 1) router.back();
+		if (window.history.length > 1) router.back();
 		else router.push(session ? "/getAllTipBreakDowns" : "/");
 	};
 	return (
