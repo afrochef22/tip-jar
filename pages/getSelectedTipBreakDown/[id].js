@@ -10,7 +10,7 @@ import UpdateTipBreakDownModal from "../../components/UpdateTipBreakDownModal";
 import { useSession } from "next-auth/react";
 import { ShiftDate } from "../../components/CurrentShift";
 import { reportError } from "../../lib/alert";
-import { money } from "../../lib/money";
+import { money, tipPercent } from "../../lib/money";
 
 export default function getSelectedTipBreakDown({ breakDown }) {
 	const { data: session } = useSession();
@@ -86,6 +86,14 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 								${money(breakDown.totalTips)}
 							</h2>
 						</Col>
+						{tipPercent(breakDown.totalTips, breakDown.totalBarSales) && (
+							<Col className="mb-3" sm={4} xs={6}>
+								<h4>Tip %:</h4>
+								<h2 className="highlight-color">
+									{tipPercent(breakDown.totalTips, breakDown.totalBarSales)}
+								</h2>
+							</Col>
+						)}
 						<Col className="mb-3" sm={4} xs={6}>
 							<h4>Food sales:</h4>
 							<h2 className="highlight-color">

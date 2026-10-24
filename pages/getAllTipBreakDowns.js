@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/router";
 import style from "../components/AllTipBreakDowns.module.css";
 import { reportError } from "../lib/alert";
-import { money } from "../lib/money";
+import { money, tipPercent } from "../lib/money";
 
 // Rendering every breakdown at once makes the page slow to load on a phone.
 const PAGE_SIZE = 30;
@@ -129,6 +129,14 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 										${money(data.totalTips)}
 									</span>
 								</CardSubtitle>
+								{tipPercent(data.totalTips, data.totalBarSales) && (
+									<CardSubtitle className="mb-2 " tag="h6">
+										Tip %:{" "}
+										<span className="highlight-color">
+											{tipPercent(data.totalTips, data.totalBarSales)}
+										</span>
+									</CardSubtitle>
+								)}
 
 								{data.cookTips?.length > 0 && (
 									<h5 className={`${style.positionTitle}`}>Cooks:</h5>

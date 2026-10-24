@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { ConfirmationDialog } from "./ConformationDialog";
 import { splitCreditTips } from "../lib/tipSplit.mjs";
 import { isSameShow } from "../lib/showKey";
-import { money } from "../lib/money";
+import { money, tipPercent } from "../lib/money";
 
 export default function TipBreakDown({
 	bartenders,
@@ -71,6 +71,8 @@ export default function TipBreakDown({
 	};
 
 	const shiftDate = ShiftDate();
+	// Null when no bar sales were entered; then only Total Tips is shown.
+	const tipPercentText = tipPercent(totalTips, totalBarSales);
 
 	const validate = () => {
 		if (!selectedShow) return "Please select a show.";
@@ -181,12 +183,17 @@ export default function TipBreakDown({
 					</Row>
 
 					<Row>
-						<Col sm={4} xs={6}>
-							<h4>Total Tips:</h4>
-							<h2 className="highlight-color">
-								${money(totalTips)}
-							</h2>
-						</Col>
+						{tipPercentText ? (
+							<Col sm={4} xs={6}>
+								<h4>Bar sales:</h4>
+								<h2 className="highlight-color">${money(totalBarSales)}</h2>
+							</Col>
+						) : (
+							<Col sm={4} xs={6}>
+								<h4>Total Tips:</h4>
+								<h2 className="highlight-color">${money(totalTips)}</h2>
+							</Col>
+						)}
 						<Col sm={4} xs={6}>
 							<h4>Food sales:</h4>
 							<h2 className="highlight-color">${money(foodSalesTotal)}</h2>
@@ -196,6 +203,18 @@ export default function TipBreakDown({
 							<h2 className="highlight-color">{barBackPercentage}%</h2>
 						</Col>
 					</Row>
+					{tipPercentText && (
+						<Row>
+							<Col sm={4} xs={6}>
+								<h4>Total Tips:</h4>
+								<h2 className="highlight-color">${money(totalTips)}</h2>
+							</Col>
+							<Col sm={4} xs={6}>
+								<h4>Tip %:</h4>
+								<h2 className="highlight-color">{tipPercentText}</h2>
+							</Col>
+						</Row>
+					)}
 				</Container>
 				{split.warning && (
 					<div className={`${style.notice} ${style.noticeDanger}`} role="alert">

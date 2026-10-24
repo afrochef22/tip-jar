@@ -18,7 +18,7 @@ import style from "./AllTipBreakDowns.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
-import { money } from "../lib/money";
+import { money, tipPercent } from "../lib/money";
 
 export default function AllTipBreakDowns({ allTipBreakdowns }) {
 	const router = useRouter();
@@ -169,6 +169,14 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 													${money(data.totalTips)}
 												</span>
 											</CardSubtitle>
+											{tipPercent(data.totalTips, data.totalBarSales) && (
+												<CardSubtitle className="mb-2 " tag="h6">
+													Tip %:{" "}
+													<span className="highlight-color">
+														{tipPercent(data.totalTips, data.totalBarSales)}
+													</span>
+												</CardSubtitle>
+											)}
 
 											{data.cookTips?.length > 0 && (
 												<h5 className={`${style.positionTitle}`}>Cooks:</h5>
