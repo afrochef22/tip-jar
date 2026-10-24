@@ -30,16 +30,17 @@ export function CurrentShowPerforming({
 	const [isLoading, setIsLoading] = useState(true);
 	const [loadError, setLoadError] = useState(false);
 
+	// Each show and event can be submitted once per shift.
+	const isSubmitted = (name) =>
+		allTipBreakdowns.some(
+			(breakdown) =>
+				isSameShow(breakdown.show, name) && breakdown.date === ShiftDate()
+		);
+
 	// Recurring events that can be submitted once per shift alongside the show.
 	const [happyHour, afterHours] = ["Happy Hour", "After Hours"].map((event) => {
 		const name = `${event} - ${ShiftDate()}`;
-		return {
-			name,
-			alreadySubmitted: allTipBreakdowns.some(
-				(breakdown) =>
-					isSameShow(breakdown.show, name) && breakdown.date === ShiftDate()
-			),
-		};
+		return { name, alreadySubmitted: isSubmitted(name) };
 	});
 
 	// Stacked on mobile; from md up, columns shrink to the card so they sit close together.
@@ -106,7 +107,10 @@ export function CurrentShowPerforming({
 			.finally(() => setIsLoading(false));
 	}, []);
 	useEffect(() => {
-		if (bandPerformingToday.length === 1) {
+		if (
+			bandPerformingToday.length === 1 &&
+			!isSubmitted(bandPerformingToday[0])
+		) {
 			setSelectedShow(bandPerformingToday[0]);
 		}
 	}, [bandPerformingToday, setSelectedShow]);
@@ -154,7 +158,7 @@ export function CurrentShowPerforming({
 											<Container
 												className={`mb-1 ${style.bandContainer} ${
 													showFullDescription ? style.expanded : ""
-												}`}
+												} ${isSubmitted(band) ? style.disabledBandContainer : ""}`}
 											>
 												<Row>
 													<Col sm={10} xs={10}>
@@ -169,16 +173,23 @@ export function CurrentShowPerforming({
 																</span>
 															)}
 														</Label>
+														{isSubmitted(band) && (
+															<div>
+																<small>Already submitted for today</small>
+															</div>
+														)}
 													</Col>
 													<Col
 														sm={2}
 														xs={2}
 														className={
-															selectedShow === band
+															isSubmitted(band)
+																? style.disabledCheckbox
+																: selectedShow === band
 																? style.checkedCheckbox
 																: style.unCheckBox
 														}
-														onClick={() => handleSelectedBand(band)}
+														onClick={() => !isSubmitted(band) && handleSelectedBand(band)}
 													></Col>
 												</Row>
 											</Container>
