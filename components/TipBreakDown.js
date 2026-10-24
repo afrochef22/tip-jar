@@ -147,7 +147,11 @@ export default function TipBreakDown({
 			const body = await response.json().catch(() => ({}));
 			if (response.ok && body.tipBreakdownId) {
 				// replace() so the browser Back button does not land here again.
-				router.replace(`/getSelectedTipBreakDown/${body.tipBreakdownId}`);
+				// saved=1 tells that page this is a fresh submit, so its Back
+				// button does not return to this show's entry form.
+				router.replace(
+					`/getSelectedTipBreakDown/${body.tipBreakdownId}?saved=1`
+				);
 				return;
 			}
 			setSubmitError(
