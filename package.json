@@ -6,7 +6,7 @@
 		"start": "next start",
 		"backup": "node scripts/backup.js",
 		"restore": "node scripts/restore.js",
-		"test": "node --test tests/"
+		"test": "node --test \"tests/*.test.mjs\""
 	},
 	"dependencies": {
 		"@auth/mongodb-adapter": "^3.0.0",
