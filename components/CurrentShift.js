@@ -135,7 +135,7 @@ export function CurrentShowPerforming({
 							) : (
 								<h2>No show Today</h2>
 							)}
-							<Container className={`${style.bandContainer} `}>
+							<Container className={`mb-3 ${style.bandContainer}`}>
 								<Row className="justify-content-center">
 									<Col className={`${style.enterEventInboxContainer}`}>
 										<p>Enter an event</p>
@@ -197,7 +197,7 @@ export function CurrentShowPerforming({
 									) : (
 										<>
 											<h2>No show Today</h2>
-											<Container className={`${style.bandContainer} `}>
+											<Container className={`mb-3 ${style.bandContainer}`}>
 												<Row className="justify-content-center">
 													<Col className={`${style.enterEventInboxContainer}`}>
 														<p>Enter an event</p>
