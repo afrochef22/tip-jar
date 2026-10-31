@@ -118,8 +118,10 @@ export function splitCreditTips<P extends SplitPerson>(
 	}));
 
 	// Hand out any cents still left over, one each to randomly chosen bartenders.
+	// With no bartenders there's no one to give them to; the warning below
+	// reports them with the rest of the unpaid share.
 	const adjustedTotal = total(adjustedBartenders);
-	if (adjustedTotal !== newTotalTipOutBartenders) {
+	if (adjustedBartenders.length > 0 && adjustedTotal !== newTotalTipOutBartenders) {
 		const remainingDifference = newTotalTipOutBartenders - adjustedTotal;
 		if (remainingDifference <= 0.09 && remainingDifference >= -0.09) {
 			const adjustedDifference = Number(remainingDifference.toFixed(2));
@@ -149,6 +151,10 @@ export function splitCreditTips<P extends SplitPerson>(
 		b.tipOut = Number(Number(b.tipOut).toFixed(2));
 	});
 
+	// What's left after the cooks and bar backs goes to the bartenders, so with
+	// none selected it isn't paid to anyone.
+	const unpaid = Number((Number(totalTips) - totalTipOutBarBacks - totalTipOutCooks).toFixed(2));
+
 	return {
 		bartenders: adjustedBartenders,
 		barBacks: barBacksWithTipOut,
@@ -158,10 +164,13 @@ export function splitCreditTips<P extends SplitPerson>(
 		tipsPerCook,
 		totalTipOutBartenders: total(adjustedBartenders),
 		// Set when the cooks' share is more than the credit tips, which leaves
-		// the bartenders with a negative payout.
+		// the bartenders with a negative payout, or when there are no bartenders
+		// to take what's left.
 		warning:
 			cooksTips > Number(totalTips)
 				? `The cooks' 15% of food sales ($${cooksTips.toFixed(2)}) is more than the credit card tips ($${Number(totalTips).toFixed(2)}), so the bartenders come out negative. Check the tips and food sales before saving.`
-				: null,
+				: bartenders.length === 0 && unpaid !== 0
+					? `No bartender is selected, so the bartenders' share ($${unpaid.toFixed(2)}) isn't paid to anyone. Add a bartender before saving.`
+					: null,
 	};
 }

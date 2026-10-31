@@ -164,3 +164,31 @@ test("no warning on a normal shift", () => {
 	});
 	assert.equal(result.warning, null);
 });
+
+test("no bartenders: no crash, and the unpaid share is reported", () => {
+	// $100 / 3 bar backs leaves 1¢ that used to go to a bartender that
+	// doesn't exist, which threw.
+	const result = split({
+		totalTips: 100,
+		barBackPercentage: 100,
+		barBacks: people(0, 0, 0),
+	});
+	assert.deepEqual(payouts(result), [33.33, 33.33, 33.33]);
+	assert.match(result.warning, /No bartender.*\$0\.01/);
+});
+
+test("no bartenders: warns about the whole bartender share", () => {
+	const result = split({
+		totalTips: 100,
+		barBackPercentage: 15,
+		barBacks: people(0, 0, 0),
+	});
+	assert.deepEqual(payouts(result), [5, 5, 5]);
+	assert.match(result.warning, /\$85\.00/);
+});
+
+test("no bartenders and nothing left over: no warning", () => {
+	const result = split({ totalTips: 90, barBackPercentage: 100, barBacks: people(0, 0, 0) });
+	assert.deepEqual(payouts(result), [30, 30, 30]);
+	assert.equal(result.warning, null);
+});
