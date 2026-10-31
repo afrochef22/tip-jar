@@ -7,11 +7,12 @@ import EmailProvider from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { reportError } from "../../../lib/alert";
-import type { Document, UpdateFilter } from "mongodb";
+import type { UpdateFilter } from "mongodb";
+import type { EmployeeDoc } from "../../../types/models";
 
 async function employeesCollection() {
 	const client = await clientPromise;
-	return client.db("TeragramBallroom").collection("employees");
+	return client.db("TeragramBallroom").collection<EmployeeDoc>("employees");
 }
 
 export const authOptions: NextAuthOptions = {
@@ -99,7 +100,7 @@ export const authOptions: NextAuthOptions = {
 					const $set: { googleId?: string; firstSignInDate?: Date } = {};
 					if (!existing.googleId) $set.googleId = account.providerAccountId;
 					if (!existing.firstSignInDate) $set.firstSignInDate = new Date();
-					const update: UpdateFilter<Document> = { $unset: { token: "", tokenExpiration: "" } };
+					const update: UpdateFilter<EmployeeDoc> = { $unset: { token: "", tokenExpiration: "" } };
 					if (Object.keys($set).length) update.$set = $set;
 					await employees.updateOne({ _id: existing._id }, update);
 				}

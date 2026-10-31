@@ -31,3 +31,18 @@ the same there.
 - **Suggested fix:** Either require at least one bartender on the credit form,
   or have `splitCreditTips` return a `warning` (like the cooks one) when
   `bartenders` is empty and the bartender share is more than 0.
+
+## 3. One saved tip breakdown has every field set to null (data)
+
+- **File:** the `tipBreakdown` collection (seen in the 2026-10-23 backup).
+  Types: `types/models.ts`.
+- **Problem:** One document has `show`, `date`, `totalTips`, `foodSales`,
+  `barBackPercentage`, `cookTips`, `barBackTips`, `BartenderTips` and the
+  `tipsPer*` fields all `null`. The code assumes these are set (for example
+  `breakdown.cookTips.map(...)`), so any page that loads this record in full
+  can throw. The types treat these fields as always present, matching the
+  other 465 records, rather than spreading null checks through the app for
+  one bad record.
+- **Suggested fix:** Look at the record (`npm run backup` first) and delete
+  it if it's junk. To stop more like it, `addTipBreakDown` already rejects a
+  missing show or date, so this record is probably from before that check.
