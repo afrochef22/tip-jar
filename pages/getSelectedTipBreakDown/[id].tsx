@@ -11,8 +11,13 @@ import { useSession } from "next-auth/react";
 import { ShiftDate } from "../../components/CurrentShift";
 import { reportError } from "../../lib/alert";
 import { money, tipPercent } from "../../lib/money";
+import { toJson } from "../../lib/json";
+import type { GetServerSideProps } from "next";
+import type { TipBreakdown, TipBreakdownDoc } from "../../types/models";
 
-export default function getSelectedTipBreakDown({ breakDown }) {
+type Props = { breakDown: TipBreakdown | null; error?: string };
+
+export default function getSelectedTipBreakDown({ breakDown }: Props) {
 	const { data: session } = useSession();
 	const router = useRouter();
 	if (!breakDown) {
@@ -261,13 +266,13 @@ export default function getSelectedTipBreakDown({ breakDown }) {
 	);
 }
 
-export async function getServerSideProps(id) {
-	// Destructure query directly
-	const showId = id.query.id;
+export const getServerSideProps: GetServerSideProps<Props> = async (id) => {
+	// Destructure query directly. The [id] in the page's path, so always one string.
+	const showId = String(id.query.id);
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
-		const breakDownCollection = db.collection("tipBreakdown");
+		const breakDownCollection = db.collection<TipBreakdownDoc>("tipBreakdown");
 		const breakDown = await breakDownCollection.findOne({
 			_id: new ObjectId(showId), // Use showId directly
 		});
@@ -275,7 +280,7 @@ export async function getServerSideProps(id) {
 		if (!breakDown) {
 		}
 		return {
-			props: { breakDown: JSON.parse(JSON.stringify(breakDown)) },
+			props: { breakDown: toJson(breakDown) },
 		};
 	} catch (error) {
 		await reportError("Breakdown detail page", error);
@@ -286,4 +291,4 @@ export async function getServerSideProps(id) {
 			},
 		};
 	}
-}
+};

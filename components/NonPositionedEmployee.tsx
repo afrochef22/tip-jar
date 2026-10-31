@@ -4,7 +4,8 @@ import style from "./EmployeeList.module.css";
 import { AddEmployeeModal } from "./addEmployeeModal";
 import type { PublicEmployee } from "../types/models";
 
-const NonPositionedEmployee = ({ employees }: { employees: PublicEmployee[] }) => {
+// className is passed by pages/employees but not used.
+const NonPositionedEmployee = ({ employees }: { employees: PublicEmployee[]; className?: string }) => {
 	return (
 		<Container className={style.employeeList}>
 			<AddEmployeeModal position="No Position" />

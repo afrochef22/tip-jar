@@ -6,8 +6,9 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 import "../styles/globals.css";
+import type { AppProps } from "next/app";
 
-function MyApp({ Component, pageProps: { session, ...pageProps }, router }) {
+function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppProps<{ session?: unknown }>) {
 	// Full-screen pages with no header or footer.
 	const showChrome = ![
 		"/",

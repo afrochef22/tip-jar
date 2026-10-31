@@ -21,7 +21,7 @@ the same there.
 
 ## 2. With no bartenders, the bartenders' share is not paid to anyone
 
-- **File:** `lib/tipSplit.ts`, plus `components/CreditTipCalculation.js`, which
+- **File:** `lib/tipSplit.ts`, plus `components/CreditTipCalculation.tsx`, which
   lets the form be submitted with no bartenders selected.
 - **Problem:** Bartenders get whatever is left after the cooks and bar backs.
   When no bartender is selected that remainder disappears without a warning:
@@ -108,3 +108,16 @@ the same there.
 - **Suggested fix:** Drop `NumberTypeInput` and use `type="text"` with the
   existing `inputMode="decimal"`, which still brings up the number keyboard
   on phones. Test the hours boxes on a phone afterwards.
+
+## 8. A mistyped id in a detail page's URL sends an error alert email
+
+- **Files:** `pages/getEmployee/[id].tsx` and
+  `pages/getSelectedTipBreakDown/[id].tsx`, `getServerSideProps`.
+- **Problem:** Neither page checks the id before `new ObjectId(id)`, which
+  throws on anything that isn't a valid id (e.g. `/getSelectedTipBreakDown/abc`).
+  The catch block reports it as a server error, so `ALERT_EMAIL` gets an email
+  for what is only a bad link, and the page shows "not found" text with a 200
+  status instead of a 404. `RegisterPage/[id]` and `reset-password/[id]`
+  already check the id first.
+- **Suggested fix:** Start both with `if (!isObjectId(id)) return { notFound: true };`
+  (from `lib/objectId`).

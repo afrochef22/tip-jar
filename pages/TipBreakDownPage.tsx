@@ -6,8 +6,18 @@ import TipBreakDown from "../components/TipBreakDown";
 import { BREAKDOWN_SUMMARY_FIELDS } from "../lib/breakdownFields";
 import { ShiftDate } from "../lib/shiftDate";
 import { reportError } from "../lib/alert";
+import { fromQuery, toJson } from "../lib/json";
+import type { GetServerSideProps } from "next";
+import type {
+	BreakdownSummary,
+	BreakdownSummaryDoc,
+	TipBreakdownDoc,
+	WorkerOption,
+} from "../types/models";
 
-export default function TipBreakDownPage({ allTipBreakdowns }) {
+type Props = { allTipBreakdowns: BreakdownSummary[] };
+
+export default function TipBreakDownPage({ allTipBreakdowns }: Props) {
 	const router = useRouter();
 	const {
 		bartenders,
@@ -24,19 +34,19 @@ export default function TipBreakDownPage({ allTipBreakdowns }) {
 	} = router.query;
 
 
-	const parsedBartenders = bartenders ? JSON.parse(bartenders) : [];
-	const parsedBarBacks = barBacks ? JSON.parse(barBacks) : [];
-	const parsedCooks = cooks ? JSON.parse(cooks) : [];
+	const parsedBartenders = bartenders ? fromQuery<WorkerOption[]>(bartenders) : [];
+	const parsedBarBacks = barBacks ? fromQuery<WorkerOption[]>(barBacks) : [];
+	const parsedCooks = cooks ? fromQuery<WorkerOption[]>(cooks) : [];
 	const parsedBarBackPercentage = Number(barBackPercentage) || 0;
 	const parsedFoodSalesTotal = Number(foodSalesTotal) || 0;
-	const parsedEmployeeHours = employeeHours ? JSON.parse(employeeHours) : [];
+	const parsedEmployeeHours = employeeHours ? fromQuery<Record<string, number>>(employeeHours) : [];
 	const parsedEmployeeTipCollected = employeeTipCollected
-		? JSON.parse(employeeTipCollected)
+		? fromQuery<Record<string, number>>(employeeTipCollected)
 		: [];
-	const parseSelectedShow = selectedShow ? JSON.parse(selectedShow) : "";
-	const parseTotalTips = totalTips ? Number(JSON.parse(totalTips)) || 0 : 0;
-	const parseTotalBarSales = totalBarSales ? Number(JSON.parse(totalBarSales)) || 0 : 0;
-	const parseShiftNotes = shiftNotes ? JSON.parse(shiftNotes) : "";
+	const parseSelectedShow = selectedShow ? fromQuery<string>(selectedShow) : "";
+	const parseTotalTips = totalTips ? Number(fromQuery<unknown>(totalTips)) || 0 : 0;
+	const parseTotalBarSales = totalBarSales ? Number(fromQuery<unknown>(totalBarSales)) || 0 : 0;
+	const parseShiftNotes = shiftNotes ? fromQuery<string>(shiftNotes) : "";
 
 	return (
 		<TipBreakDown
@@ -56,20 +66,20 @@ export default function TipBreakDownPage({ allTipBreakdowns }) {
 	);
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
 
 		const allTipBreakdowns = await db
-			.collection("tipBreakdown")
-			.find({ date: ShiftDate() }, { projection: BREAKDOWN_SUMMARY_FIELDS })
+			.collection<TipBreakdownDoc>("tipBreakdown")
+			.find<BreakdownSummaryDoc>({ date: ShiftDate() }, { projection: BREAKDOWN_SUMMARY_FIELDS })
 			.toArray();
 		return {
-			props: { allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)) },
+			props: { allTipBreakdowns: toJson(allTipBreakdowns) },
 		};
 	} catch (err) {
 		await reportError("Tip breakdown review page", err);
 		return { props: { allTipBreakdowns: [] } };
 	}
-}
+};

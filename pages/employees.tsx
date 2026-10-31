@@ -9,8 +9,13 @@ import style from "../components/EmployeeList.module.css";
 import React from "react";
 import { Col, Row, Container } from "reactstrap";
 import { reportError } from "../lib/alert";
+import { toJson } from "../lib/json";
+import type { GetServerSideProps } from "next";
+import type { EmployeeDoc, ManagerEmployee, ManagerEmployeeDoc } from "../types/models";
 
-export default function EmployeesPage({ employees }) {
+type Props = { employees: ManagerEmployee[] };
+
+export default function EmployeesPage({ employees }: Props) {
 	return (
 		<div className={style.pageContainer}>
 			<Container className={style.listContianer}>
@@ -27,22 +32,21 @@ export default function EmployeesPage({ employees }) {
 	);
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
 
 		const employees = await db
-			.collection("employees")
-			.find({}, { projection: MANAGER_EMPLOYEE_FIELDS })
-			.sort()
+			.collection<EmployeeDoc>("employees")
+			.find<ManagerEmployeeDoc>({}, { projection: MANAGER_EMPLOYEE_FIELDS })
 			.limit(1000)
 			.toArray();
 		return {
-			props: { employees: JSON.parse(JSON.stringify(employees)) },
+			props: { employees: toJson(employees) },
 		};
 	} catch (err) {
 		await reportError("Employees page", err);
 		return { props: { employees: [] } };
 	}
-}
+};

@@ -18,10 +18,16 @@ import { useRouter } from "next/router";
 import style from "../components/AllTipBreakDowns.module.css";
 import { reportError } from "../lib/alert";
 import { money, tipPercent } from "../lib/money";
+import { toJson } from "../lib/json";
+import type { ChangeEvent } from "react";
+import type { GetServerSideProps } from "next";
+import type { BreakdownCard, BreakdownCardDoc, TipBreakdownDoc } from "../types/models";
+
+type Props = { allTipBreakdowns: BreakdownCard[] };
 
 // Rendering every breakdown at once makes the page slow to load on a phone.
 const PAGE_SIZE = 30;
-export default function getAllTipBreakDown({ allTipBreakdowns }) {
+export default function getAllTipBreakDown({ allTipBreakdowns }: Props) {
 	const router = useRouter();
 	const [reversedAllTipBreakdowns, setReversedAllTipBreakdowns] = useState(
 		[...allTipBreakdowns].reverse()
@@ -29,19 +35,19 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 	const [searchValue, setSearchValue] = useState("");
 	const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-	const handleCardClick = (id) => {
+	const handleCardClick = (id: string) => {
 		router.push(`/getSelectedTipBreakDown/${id}`);
 	};
-	const formatDateStringWithDayOfWeek = (dateString) => {
+	const formatDateStringWithDayOfWeek = (dateString: string) => {
 		const date = new Date(dateString);
-		const options = { weekday: "long" }; // Specify the format for the day of the week
+		const options: Intl.DateTimeFormatOptions = { weekday: "long" }; // Specify the format for the day of the week
 		return `${date.toLocaleDateString(
 			undefined,
 			options
 		)} ${date.toLocaleDateString()}`;
 	};
 
-	const handleSearch = (e) => {
+	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.toLowerCase();
 		setSearchValue(e.target.value); // store the actual input for the UI
 
@@ -227,21 +233,20 @@ export default function getAllTipBreakDown({ allTipBreakdowns }) {
 	);
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
 
 		const allTipBreakdowns = await db
-			.collection("tipBreakdown")
-			.find({}, { projection: BREAKDOWN_CARD_FIELDS })
-			.sort()
+			.collection<TipBreakdownDoc>("tipBreakdown")
+			.find<BreakdownCardDoc>({}, { projection: BREAKDOWN_CARD_FIELDS })
 			.toArray();
 		return {
-			props: { allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)) },
+			props: { allTipBreakdowns: toJson(allTipBreakdowns) },
 		};
 	} catch (err) {
 		await reportError("getAllTipBreakDowns page", err);
 		return { props: { allTipBreakdowns: [] } };
 	}
-}
+};

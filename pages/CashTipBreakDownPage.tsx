@@ -2,6 +2,8 @@ import React from "react";
 import { useRouter } from "next/router";
 
 import CashTipBreakDown from "../components/CashTipBreakDown";
+import { fromQuery } from "../lib/json";
+import type { CashWorker } from "../components/CashTipForm";
 
 export default function CashTipBreakDownPage() {
 	const router = useRouter();
@@ -21,12 +23,13 @@ export default function CashTipBreakDownPage() {
 	// edit modal's initial state) with NaN/[] for one frame.
 	if (!router.isReady) return null;
 
-	const parsedBartenders = bartenders ? JSON.parse(bartenders) : [];
-	const parsedBarBacks = barBacks ? JSON.parse(barBacks) : [];
-	const parsedTipsCollected = parseFloat(tipsCollected);
-	const parsedNumberOfBartenders = parseFloat(numberOfBartenders);
-	const parsedNumberOfBarBacks = parseFloat(numberOfBarBacks);
-	const parsedBarBackPercentage = parseFloat(barBackPercentage);
+	const parsedBartenders = bartenders ? fromQuery<CashWorker[]>(bartenders) : [];
+	const parsedBarBacks = barBacks ? fromQuery<CashWorker[]>(barBacks) : [];
+	// parseFloat turns its argument into a string first; String() does that here.
+	const parsedTipsCollected = parseFloat(String(tipsCollected));
+	const parsedNumberOfBartenders = parseFloat(String(numberOfBartenders));
+	const parsedNumberOfBarBacks = parseFloat(String(numberOfBarBacks));
+	const parsedBarBackPercentage = parseFloat(String(barBackPercentage));
 
 	return (
 		<CashTipBreakDown

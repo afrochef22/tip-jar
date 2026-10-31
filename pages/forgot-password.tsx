@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button, Form, FormGroup, Input, Label, Spinner } from "reactstrap";
 import style from "../components/SignIn.module.css";
+import { text } from "../lib/field";
+import type { FormEvent } from "react";
 
 export default function ForgotPasswordPage() {
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState("");
 	const [sent, setSent] = useState(false);
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const login = new FormData(e.target).get("login");
+		const login = new FormData(e.currentTarget).get("login");
 		setError("");
 		setBusy(true);
 		try {
@@ -19,9 +21,9 @@ export default function ForgotPasswordPage() {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ login }),
 			});
-			const body = await response.json().catch(() => ({}));
+			const body: unknown = await response.json().catch(() => ({}));
 			if (response.ok) setSent(true);
-			else setError(body.error || "Couldn't send the email. Please try again.");
+			else setError(text(body, "error") || "Couldn't send the email. Please try again.");
 		} catch {
 			setError("Could not reach the server. Please try again.");
 		}

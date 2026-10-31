@@ -10,14 +10,20 @@ import { Button, Col, Container, Row } from "reactstrap";
 import { UpdateEmployeeModal } from "../../components/UpdateEmployeeModal";
 import { DeleteDialog } from "../../components/ConformationDialog";
 import { reportError } from "../../lib/alert";
+import { text } from "../../lib/field";
+import { toJson } from "../../lib/json";
+import type { GetServerSideProps } from "next";
+import type { EmployeeDoc, ManagerEmployee, ManagerEmployeeDoc } from "../../types/models";
 
-export default function getEmployee({ employee }) {
+type Props = { employee: ManagerEmployee | null };
+
+export default function getEmployee({ employee }: Props) {
 	const router = useRouter();
 	const [showConfirmation, setShowConfirmation] = useState(false);
-	const [confirmationStates, setConfirmationStates] = useState({});
+	const [confirmationStates, setConfirmationStates] = useState<Record<string, boolean>>({});
 	const [deleteError, setDeleteError] = useState("");
 
-	const toggleConfirmation = (id) => {
+	const toggleConfirmation = (id: string) => {
 		setConfirmationStates({
 			...confirmationStates,
 			[id]: !confirmationStates[id],
@@ -29,10 +35,12 @@ export default function getEmployee({ employee }) {
 		// Handle the case when employee is not found
 		return <div>employee not found</div>;
 	}
-	const expirationDate = new Date(employee.tokenExpiration);
+	// Both dates are only shown when set (see isRegistrationLink); without one,
+	// new Date(undefined) is an Invalid Date that isn't used.
+	const expirationDate = new Date(employee.tokenExpiration!);
 	const formattedDate = expirationDate.toLocaleDateString();
 
-	const firstSignInDate = new Date(employee.firstSignInDate);
+	const firstSignInDate = new Date(employee.firstSignInDate!);
 	const formattedFirstSignInDate = firstSignInDate.toLocaleDateString();
 
 	const isRegistrationLink = () => {
@@ -58,7 +66,7 @@ export default function getEmployee({ employee }) {
 			pathname: "/employees",
 		});
 	};
-	const handleDelete = async (id) => {
+	const handleDelete = async (id: string) => {
 		try {
 			const response = await fetch(`/api/removeEmployee/${id}`, {
 				method: "DELETE",
@@ -67,9 +75,9 @@ export default function getEmployee({ employee }) {
 			if (response.ok) {
 				router.push("/employees");
 			} else {
-				const body = await response.json().catch(() => ({}));
+				const body: unknown = await response.json().catch(() => ({}));
 				setDeleteError(
-					body.error || "Could not delete the employee. Please try again."
+					text(body, "error") || "Could not delete the employee. Please try again."
 				);
 			}
 		} catch (error) {
@@ -161,14 +169,15 @@ export default function getEmployee({ employee }) {
 	);
 }
 
-export async function getServerSideProps(data) {
-	const id = data.query.id;
+export const getServerSideProps: GetServerSideProps<Props> = async (data) => {
+	// The [id] in the page's path, so always one string.
+	const id = String(data.query.id);
 
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
-		const employeeCollection = db.collection("employees");
-		const employee = await employeeCollection.findOne(
+		const employeeCollection = db.collection<EmployeeDoc>("employees");
+		const employee = await employeeCollection.findOne<ManagerEmployeeDoc>(
 			{ _id: new ObjectId(id) },
 			{ projection: MANAGER_EMPLOYEE_FIELDS }
 		);
@@ -181,7 +190,7 @@ export async function getServerSideProps(data) {
 		}
 
 		return {
-			props: { employee: JSON.parse(JSON.stringify(employee)) },
+			props: { employee: toJson(employee) },
 		};
 	} catch (error) {
 		await reportError("Employee page", error);
@@ -192,4 +201,4 @@ export async function getServerSideProps(data) {
 			},
 		};
 	}
-}
+};

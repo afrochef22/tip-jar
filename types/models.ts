@@ -88,19 +88,26 @@ export type Json<T> = T extends ObjectId | Date
 export type Employee = Json<WithId<EmployeeDoc>>;
 export type TipBreakdown = Json<WithId<TipBreakdownDoc>>;
 
-// The projections in lib/employeeFields and lib/breakdownFields.
-export type PublicEmployee = Pick<Employee, "_id" | "firstName" | "lastName" | "position" | "active">;
-export type PublicEmployeeWithTips = PublicEmployee & Pick<Employee, "tipsCollected">;
-export type ManagerEmployee = Omit<Employee, "password" | "token">;
+// The projections in lib/employeeFields and lib/breakdownFields: what
+// getServerSideProps loads (…Doc), and what the page receives.
+export type PublicEmployeeDoc = Pick<WithId<EmployeeDoc>, "_id" | "firstName" | "lastName" | "position" | "active">;
+export type PublicEmployeeWithTipsDoc = PublicEmployeeDoc & Pick<EmployeeDoc, "tipsCollected">;
+export type ManagerEmployeeDoc = Omit<WithId<EmployeeDoc>, "password" | "token">;
 
-export type BreakdownSummary = Pick<TipBreakdown, "_id" | "show" | "date" | "totalTips">;
+export type BreakdownSummaryDoc = Pick<WithId<TipBreakdownDoc>, "_id" | "show" | "date" | "totalTips">;
 export type BreakdownCardWorker = Pick<ShiftWorker, "id" | "label" | "tipOut">;
-export type BreakdownCard = BreakdownSummary &
-	Pick<TipBreakdown, "totalBarSales"> & {
+export type BreakdownCardDoc = BreakdownSummaryDoc &
+	Pick<TipBreakdownDoc, "totalBarSales"> & {
 		cookTips: BreakdownCardWorker[];
 		barBackTips: BreakdownCardWorker[];
 		BartenderTips: BreakdownCardWorker[];
 	};
+
+export type PublicEmployee = Json<PublicEmployeeDoc>;
+export type PublicEmployeeWithTips = Json<PublicEmployeeWithTipsDoc>;
+export type ManagerEmployee = Json<ManagerEmployeeDoc>;
+export type BreakdownSummary = Json<BreakdownSummaryDoc>;
+export type BreakdownCard = Json<BreakdownCardDoc>;
 
 // An employee in the shift screens' pick lists (SelectEmployee and the
 // Select* components): a ShiftWorker before a position is picked.

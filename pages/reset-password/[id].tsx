@@ -7,16 +7,24 @@ import clientPromise from "../../lib/mongodb";
 import { reportError } from "../../lib/alert";
 import { MIN_PASSWORD_LENGTH, resetTokenValid } from "../../lib/passwordReset";
 import style from "../../components/SignIn.module.css";
+import { text } from "../../lib/field";
+import { isObjectId } from "../../lib/objectId";
+import type { FormEvent } from "react";
+import type { GetServerSideProps } from "next";
+import type { EmployeeDoc } from "../../types/models";
+import type { WithId } from "mongodb";
 
-export default function ResetPasswordPage({ valid, username }) {
+type Props = { valid: boolean; username: string | undefined };
+
+export default function ResetPasswordPage({ valid, username }: Props) {
 	const router = useRouter();
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState("");
 	const [done, setDone] = useState(false);
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const form = new FormData(e.target);
+		const form = new FormData(e.currentTarget);
 		const password = form.get("password");
 		if (password !== form.get("confirm")) {
 			setError("The two passwords don't match.");
@@ -30,9 +38,9 @@ export default function ResetPasswordPage({ valid, username }) {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ id: router.query.id, token: router.query.token, password }),
 			});
-			const body = await response.json().catch(() => ({}));
+			const body: unknown = await response.json().catch(() => ({}));
 			if (response.ok) setDone(true);
-			else setError(body.error || "Couldn't change the password. Please try again.");
+			else setError(text(body, "error") || "Couldn't change the password. Please try again.");
 		} catch {
 			setError("Could not reach the server. Please try again.");
 		}
@@ -112,21 +120,21 @@ export default function ResetPasswordPage({ valid, username }) {
 	);
 }
 
-export async function getServerSideProps({ query }) {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
 	const { id, token } = query;
-	if (!ObjectId.isValid(id)) return { props: { valid: false, username: "" } };
+	if (!isObjectId(id)) return { props: { valid: false, username: "" } };
 	try {
 		const employee = await (await clientPromise)
 			.db("TeragramBallroom")
-			.collection("employees")
-			.findOne(
+			.collection<EmployeeDoc>("employees")
+			.findOne<WithId<Pick<EmployeeDoc, "username" | "resetTokenHash" | "resetTokenExpiration">>>(
 				{ _id: new ObjectId(id) },
 				{ projection: { username: 1, resetTokenHash: 1, resetTokenExpiration: 1 } }
 			);
 		const valid = resetTokenValid(employee, token);
-		return { props: { valid, username: valid ? employee.username : "" } };
+		return { props: { valid, username: valid ? employee!.username : "" } };
 	} catch (error) {
 		await reportError("Reset password page", error);
 		return { props: { valid: false, username: "" } };
 	}
-}
+};

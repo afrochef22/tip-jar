@@ -5,8 +5,20 @@ import { BREAKDOWN_CARD_FIELDS } from "../lib/breakdownFields";
 import AllTipBreakDowns from "../components/AllTipBreakDowns";
 import TipsTotalsSpreadSheet from "../components/TipsTotalsSpreadSheet";
 import { reportError } from "../lib/alert";
+import { toJson } from "../lib/json";
+import type { GetServerSideProps } from "next";
+import type {
+	BreakdownCard,
+	BreakdownCardDoc,
+	EmployeeDoc,
+	PublicEmployeeWithTips,
+	PublicEmployeeWithTipsDoc,
+	TipBreakdownDoc,
+} from "../types/models";
 
-export default function Dashboard({ employees, allTipBreakdowns }) {
+type Props = { employees: PublicEmployeeWithTips[]; allTipBreakdowns: BreakdownCard[] };
+
+export default function Dashboard({ employees, allTipBreakdowns }: Props) {
 	return (
 		<div>
 			<AllTipBreakDowns allTipBreakdowns={allTipBreakdowns} />
@@ -18,31 +30,31 @@ export default function Dashboard({ employees, allTipBreakdowns }) {
 	);
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
 
 		const allTipBreakdowns = await db
-			.collection("tipBreakdown")
-			.find({}, { projection: BREAKDOWN_CARD_FIELDS })
+			.collection<TipBreakdownDoc>("tipBreakdown")
+			.find<BreakdownCardDoc>({}, { projection: BREAKDOWN_CARD_FIELDS })
 
 			.toArray();
 
 		const employees = await db
-			.collection("employees")
-			.find({}, { projection: PUBLIC_EMPLOYEE_TIP_FIELDS })
+			.collection<EmployeeDoc>("employees")
+			.find<PublicEmployeeWithTipsDoc>({}, { projection: PUBLIC_EMPLOYEE_TIP_FIELDS })
 
 			.toArray();
 
 		return {
 			props: {
-				allTipBreakdowns: JSON.parse(JSON.stringify(allTipBreakdowns)),
-				employees: JSON.parse(JSON.stringify(employees)),
+				allTipBreakdowns: toJson(allTipBreakdowns),
+				employees: toJson(employees),
 			},
 		};
 	} catch (err) {
 		await reportError("Dashboard page", err);
 		return { props: { allTipBreakdowns: [], employees: [] } };
 	}
-}
+};

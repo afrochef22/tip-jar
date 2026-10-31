@@ -5,10 +5,11 @@ import { signIn, useSession } from "next-auth/react";
 import { Button, Form, FormGroup, Input, Label, Spinner } from "reactstrap";
 import style from "../components/SignIn.module.css";
 import GoogleIcon from "../components/GoogleIcon";
+import type { FormEvent } from "react";
 
 // NextAuth sends errors back here as ?error=<code> (pages.error in
 // [...nextauth].js); credentials and email errors come back from signIn().
-const ERROR_MESSAGES = {
+const ERROR_MESSAGES: Record<string, string | undefined> = {
 	CredentialsSignin: "Wrong username or password.",
 	AccessDenied:
 		"That account isn't set up for TipJar. Ask a manager to add your email.",
@@ -19,7 +20,7 @@ const ERROR_MESSAGES = {
 	EmailSignin: "Couldn't send the sign-in email. Please try again.",
 	SessionRequired: "Please sign in to continue.",
 };
-const errorMessage = (code) =>
+const errorMessage = (code: string) =>
 	code ? ERROR_MESSAGES[code] || "Sign in failed. Please try again." : "";
 
 export default function SignInPage() {
@@ -45,9 +46,9 @@ export default function SignInPage() {
 		if (status === "authenticated") router.replace(callbackUrl);
 	}, [status, callbackUrl, router]);
 
-	const handleCredentials = async (e) => {
+	const handleCredentials = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const formData = new FormData(e.target);
+		const formData = new FormData(e.currentTarget);
 		setError("");
 		setBusy("credentials");
 		const result = await signIn("credentials", {
@@ -71,9 +72,9 @@ export default function SignInPage() {
 		signIn("google", { callbackUrl });
 	};
 
-	const handleEmail = async (e) => {
+	const handleEmail = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const email = new FormData(e.target).get("email");
+		const email = new FormData(e.currentTarget).get("email");
 		setError("");
 		setBusy("email");
 		const result = await signIn("email", { email, redirect: false, callbackUrl });
