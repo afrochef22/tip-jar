@@ -6,14 +6,12 @@ import { tooManyShiftWrites } from "../../lib/rateLimit";
 import { ShiftDate } from "../../lib/shiftDate";
 import { cleanShowName, isSameShow, showKey } from "../../lib/showKey";
 import { reportError } from "../../lib/alert";
-import { field, isList, prop } from "../../lib/field";
+import { field, prop } from "../../lib/field";
 import { isObjectId } from "../../lib/objectId";
+import { checkAmounts, checkNotes, isShiftDate, readWorkers, toAmount } from "../../lib/breakdownInput";
 import type { TipBreakdownDoc } from "../../types/models";
 
-const toIdList = (list: unknown) => (isList(list) ? list : []);
-
-// A worker line from the browser whose `id` is a valid employee id. The rest
-// of the line isn't checked.
+// A worker line whose `id` is a valid employee id. readWorkers checks the rest.
 const hasEmployeeId = (worker: unknown): worker is { id: Parameters<typeof ObjectId.isValid>[0] } =>
 	isObjectId(field(worker, "id"));
 
@@ -42,6 +40,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 	if (typeof rawShow !== "string" || !rawShow.trim() || typeof date !== "string") {
 		return res.status(400).json({ message: "Show and date are required" });
 	}
+	if (!isShiftDate(date)) {
+		return res.status(400).json({ message: "Date must look like 10/31/2026" });
+	}
+	const cooks = readWorkers(cookTips ?? [], "cookTips");
+	const barBacks = readWorkers(barBackTips ?? [], "barBackTips");
+	const bartenders = readWorkers(BartenderTips ?? [], "BartenderTips");
+	const problem =
+		checkAmounts(body, ["totalTips"]) ||
+		checkNotes(shiftNotes) ||
+		cooks.error ||
+		barBacks.error ||
+		bartenders.error;
+	if (problem) {
+		return res.status(400).json({ message: problem });
+	}
 	const show = cleanShowName(rawShow);
 
 	// Managers can submit any date. Logged-out staff may only submit the
@@ -54,10 +67,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 	}
 	if (!session && (await tooManyShiftWrites(req, res, "message"))) return;
 
-	const cooks = toIdList(cookTips);
-	const barBacks = toIdList(barBackTips);
-	const bartenders = toIdList(BartenderTips);
-	const everyone = [...cooks, ...barBacks, ...bartenders];
+	const everyone = [...cooks.workers, ...barBacks.workers, ...bartenders.workers];
 	if (!everyone.every(hasEmployeeId)) {
 		return res.status(400).json({ message: "Invalid employee id in tips" });
 	}
@@ -65,8 +75,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
-		// Untyped handles for the writes below: amounts and worker lines are
-		// saved as the browser sent them (see BUGS_FOUND.md).
+		// Untyped handles for the writes below: worker lines keep any extra
+		// fields the browser sends (position, active, checked...).
 		const unchecked = {
 			tipBreakdown: db.collection("tipBreakdown"),
 			employees: db.collection("employees"),
@@ -91,16 +101,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 			show,
 			showKey: showKey(show),
 			date,
-			totalTips,
-			foodSales,
-			barBackPercentage,
-			cookTips: cooks,
-			barBackTips: barBacks,
-			BartenderTips: bartenders,
-			tipsPerCook,
-			tipsPerBarBack,
-			tipsPerBartender,
-			totalBarSales,
+			totalTips: toAmount(totalTips),
+			foodSales: toAmount(foodSales),
+			barBackPercentage: toAmount(barBackPercentage),
+			cookTips: cooks.workers,
+			barBackTips: barBacks.workers,
+			BartenderTips: bartenders.workers,
+			tipsPerCook: toAmount(tipsPerCook),
+			tipsPerBarBack: toAmount(tipsPerBarBack),
+			tipsPerBartender: toAmount(tipsPerBartender),
+			totalBarSales: toAmount(totalBarSales),
 			shiftNotes,
 			createdat: new Date(),
 		});

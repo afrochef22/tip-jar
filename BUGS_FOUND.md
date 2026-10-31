@@ -6,6 +6,10 @@ the same there.
 
 ## 1. Credit split crashes when no bartender worked and cents are left over
 
+**Fixed** after the migration: the leftover-cents step is skipped when there
+are no bartenders, and the warning from #2 reports the unpaid cents. Tests in
+`tests/tipSplit.test.mjs`.
+
 - **File:** `lib/tipSplit.ts` (was `lib/tipSplit.mjs`), the "hand out any cents
   still left over" loop.
 - **Problem:** The leftover cents go to `adjustedBartenders[index]`, picked from
@@ -20,6 +24,11 @@ the same there.
   like `splitCashTips` does). Add a test for the no-bartender case.
 
 ## 2. With no bartenders, the bartenders' share is not paid to anyone
+
+**Partly fixed:** `splitCreditTips` now returns a warning with the unpaid
+amount, shown on the new-breakdown page (which already won't save without a
+bartender) and in the edit window. The edit window still lets you save a
+breakdown with no bartenders after the warning.
 
 - **File:** `lib/tipSplit.ts`, plus `components/CreditTipCalculation.tsx`, which
   lets the form be submitted with no bartenders selected.
@@ -48,6 +57,13 @@ the same there.
   missing show or date, so this record is probably from before that check.
 
 ## 4. The breakdown API routes save amounts and worker lists without checking them
+
+**Fixed** after the migration: both routes check the body with
+`lib/breakdownInput.ts` and return 400 on a bad date, amount, note or worker
+line. Amounts and tip outs are saved as numbers from now on. All 465 real
+breakdowns in the 2026-10-23 backup pass the checks (only the null record in
+#3 doesn't), so old records can still be edited. The old string amounts are
+still in the database until they're cleaned up.
 
 - **Files:** `pages/api/addTipBreakDown.ts`, `pages/api/UpdateTipBreakDown/[id].ts`
 - **Problem:** Apart from the show, the date (add only) and each worker's `id`,

@@ -9,10 +9,10 @@ import { cleanShowName, isSameShow, showKey } from "../../../lib/showKey";
 import { reportError } from "../../../lib/alert";
 import { field, isList, prop } from "../../../lib/field";
 import { isObjectId } from "../../../lib/objectId";
+import { checkAmounts, checkNotes, isShiftDate, readWorkers } from "../../../lib/breakdownInput";
 import type { EmployeeDoc, TipBreakdownDoc } from "../../../types/models";
 
-// `(data.cookTips ?? []).find(...)` threw a TypeError when the field wasn't a
-// list, which the catch below turns into a 500. This keeps that.
+// The worker lists are checked before use, so this only narrows the type.
 const asList = (value: unknown): unknown[] => {
 	if (!isList(value)) throw new TypeError("Expected a list of workers");
 	return value;
@@ -26,13 +26,33 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 	}
 
 	if (req.method === "PATCH") {
+		if (data.date !== undefined && !isShiftDate(data.date)) {
+			return res.status(400).json({ error: "Date must look like 10/31/2026" });
+		}
+		const amountProblem = checkAmounts(data) || checkNotes(data.shiftNotes);
+		if (amountProblem) {
+			return res.status(400).json({ error: amountProblem });
+		}
+		// Saved with each tip out as a number. (The edit form sends bartenders as
+		// `bartenderTips`; they're saved as BartenderTips.)
+		for (const [key, listName] of [
+			["cookTips", "cookTips"],
+			["barBackTips", "barBackTips"],
+			["bartenderTips", "BartenderTips"],
+		]) {
+			if (data[key] === undefined) continue;
+			const { workers, error } = readWorkers(data[key], listName);
+			if (error) return res.status(400).json({ error });
+			data[key] = workers;
+		}
+
 		try {
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
 			const tipBreakDownCollection = db.collection<TipBreakdownDoc>("tipBreakdown");
 			const employeeCollection = db.collection<EmployeeDoc>("employees");
-			// Untyped handles for the queries and writes below that use values as
-			// the browser sent them (see BUGS_FOUND.md).
+			// Untyped handles for the writes below: worker lines keep any extra
+			// fields the browser sends, and the fields set depend on what was sent.
 			const unchecked = {
 				tipBreakdown: db.collection("tipBreakdown"),
 				employees: db.collection("employees"),
