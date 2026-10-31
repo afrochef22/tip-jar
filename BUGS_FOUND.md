@@ -104,6 +104,8 @@ still in the database until they're cleaned up.
 
 ## 6. `SelectNonActiveBarBack` passes "barBack" as a position (unused component)
 
+**Fixed:** the file was deleted.
+
 - **File:** `components/SelectNonActiveBarBack.tsx`
 - **Problem:** Its rows call `onClick(employee, "barBack", ...)`. The real
   position is `"Bar Back"`, so a bar back picked here would be saved with a
@@ -126,6 +128,9 @@ still in the database until they're cleaned up.
   on phones. Test the hours boxes on a phone afterwards.
 
 ## 8. A mistyped id in a detail page's URL sends an error alert email
+
+**Fixed:** both pages now return a 404 for an invalid id before touching the
+database.
 
 - **Files:** `pages/getEmployee/[id].tsx` and
   `pages/getSelectedTipBreakDown/[id].tsx`, `getServerSideProps`.

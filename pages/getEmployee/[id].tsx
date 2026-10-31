@@ -12,6 +12,7 @@ import { DeleteDialog } from "../../components/ConformationDialog";
 import { reportError } from "../../lib/alert";
 import { text } from "../../lib/field";
 import { toJson } from "../../lib/json";
+import { isObjectId } from "../../lib/objectId";
 import type { GetServerSideProps } from "next";
 import type { EmployeeDoc, ManagerEmployee, ManagerEmployeeDoc } from "../../types/models";
 
@@ -172,6 +173,8 @@ export default function getEmployee({ employee }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async (data) => {
 	// The [id] in the page's path, so always one string.
 	const id = String(data.query.id);
+	// A mistyped link is a 404, not a server error (new ObjectId throws on it).
+	if (!isObjectId(id)) return { notFound: true };
 
 	try {
 		const client = await clientPromise;

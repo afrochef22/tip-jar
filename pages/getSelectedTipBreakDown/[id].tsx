@@ -12,6 +12,7 @@ import { ShiftDate } from "../../components/CurrentShift";
 import { reportError } from "../../lib/alert";
 import { money, tipPercent } from "../../lib/money";
 import { toJson } from "../../lib/json";
+import { isObjectId } from "../../lib/objectId";
 import type { GetServerSideProps } from "next";
 import type { TipBreakdown, TipBreakdownDoc } from "../../types/models";
 
@@ -269,6 +270,8 @@ export default function getSelectedTipBreakDown({ breakDown }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async (id) => {
 	// Destructure query directly. The [id] in the page's path, so always one string.
 	const showId = String(id.query.id);
+	// A mistyped link is a 404, not a server error (new ObjectId throws on it).
+	if (!isObjectId(showId)) return { notFound: true };
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
