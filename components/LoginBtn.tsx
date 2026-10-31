@@ -5,7 +5,7 @@ import { Spinner, Button } from "reactstrap";
 
 // Manager sign-in button on the start page. Already signed in? Go straight to
 // the Dashboard.
-export default function LoginBtn({ className }) {
+export default function LoginBtn({ className }: { className?: string }) {
 	const { data: session } = useSession();
 	const router = useRouter();
 

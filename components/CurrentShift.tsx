@@ -5,6 +5,8 @@ import { CardsSkeleton } from "./skeletons";
 import { useSession } from "next-auth/react";
 import { ShiftDate, ShowDateComparer } from "../lib/shiftDate";
 import { isSameShow } from "../lib/showKey";
+import { field, isStringList } from "../lib/field";
+import type { BreakdownSummary } from "../types/models";
 
 // Re-exported so existing imports keep working. The logic lives in lib/shiftDate.js.
 export { ShiftDate, ShowDateComparer };
@@ -22,16 +24,21 @@ export function CurrentShowPerforming({
 	setSelectedShow,
 	selectedShow,
 	allTipBreakdowns = [],
+}: {
+	handleSelectedBand: (band: string) => void;
+	setSelectedShow: (show: string) => void;
+	selectedShow: string;
+	allTipBreakdowns?: Pick<BreakdownSummary, "show" | "date">[];
 }) {
 	const { data: session } = useSession();
 
-	const [bandPerformingToday, setBandPerformingToday] = useState([]);
+	const [bandPerformingToday, setBandPerformingToday] = useState<string[]>([]);
 	const [showFullDescription, setShowFullDescription] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [loadError, setLoadError] = useState(false);
 
 	// Each show and event can be submitted once per shift.
-	const isSubmitted = (name) =>
+	const isSubmitted = (name: string) =>
 		allTipBreakdowns.some(
 			(breakdown) =>
 				isSameShow(breakdown.show, name) && breakdown.date === ShiftDate()
@@ -44,7 +51,7 @@ export function CurrentShowPerforming({
 	});
 
 	// Stacked on mobile; from md up, columns shrink to the card so they sit close together.
-	const renderRecurringEvent = ({ name, alreadySubmitted }) => (
+	const renderRecurringEvent = ({ name, alreadySubmitted }: { name: string; alreadySubmitted: boolean }) => (
 		<Col key={name} xs={12} md="auto">
 			<Container
 				className={`mb-1 ${style.bandContainer} ${
@@ -91,11 +98,12 @@ export function CurrentShowPerforming({
 				if (!response.ok) throw new Error(`HTTP ${response.status}`);
 				return response.json();
 			})
-			.then((data) => {
-				if (data?.lookupBroken) setLoadError(true);
+			.then((data: unknown) => {
+				if (field(data, "lookupBroken")) setLoadError(true);
+				const bands = field(data, "bandPerformingToday");
 				setBandPerformingToday(
-					Array.isArray(data?.bandPerformingToday)
-						? data.bandPerformingToday
+					isStringList(bands)
+						? bands
 						: []
 				);
 			})

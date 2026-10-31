@@ -101,3 +101,11 @@ export type BreakdownCard = BreakdownSummary &
 		barBackTips: BreakdownCardWorker[];
 		BartenderTips: BreakdownCardWorker[];
 	};
+
+// An employee in the shift screens' pick lists (SelectEmployee and the
+// Select* components): a ShiftWorker before a position is picked.
+export type WorkerOption = Omit<ShiftWorker, "workingPosition" | "checked"> & {
+	workingPosition: WorkingPosition | "";
+	// undefined for a second fill-in added from the same form (BUGS_FOUND.md)
+	checked: boolean | undefined;
+};

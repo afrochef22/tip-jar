@@ -2,8 +2,10 @@ import axios from "axios";
 import { Button } from "reactstrap";
 import { CustomAlertModal } from "./ConformationDialog";
 import { useState } from "react";
+import { field, prop, text } from "../lib/field";
+import type { ManagerEmployee } from "../types/models";
 
-const SendRegistrationLink = ({ employee }) => {
+const SendRegistrationLink = ({ employee }: { employee: Pick<ManagerEmployee, "_id" | "email"> }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [sending, setSending] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
@@ -22,7 +24,7 @@ const SendRegistrationLink = ({ employee }) => {
 		} catch (error) {
 			console.error("Error sending email:", error);
 			setAlertMessage(
-				error.response?.data?.error || "Failed to send email. Try again."
+				text(field(prop(error, "response"), "data"), "error") || "Failed to send email. Try again."
 			);
 		} finally {
 			setSending(false);

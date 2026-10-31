@@ -66,3 +66,45 @@ the same there.
   `tippedHours` is a number. Return 400 otherwise. Once old records are
   cleaned up (a script like `scripts/migrate-tipout-numbers.js`), the
   `SavedAmount` type in `types/models.ts` can become `number`.
+
+## 5. A second fill-in added from the same form comes through unticked
+
+- **File:** `components/AddGuestEmployee.tsx`, `handleAddEmployee`
+- **Problem:** After a fill-in is added, the form state is reset to a
+  different shape: `{ firstName, lastName, position: [], active: true,
+  tipsCollected: [{ amount: Number, date: Date }] }`. That has no `checked`
+  or `workingPosition`, and `tipsCollected` holds the `Number` and `Date`
+  constructors themselves. If the manager adds another fill-in before the
+  page reloads, it's passed to the shift list with `checked: undefined`, so
+  its box shows unticked and the "N selected" count leaves it out, even
+  though it was added to the working list. (`types/models.ts` allows
+  `WorkerOption.checked` to be `undefined` because of this.)
+- **Suggested fix:** Reset to the same initial state the form starts with
+  (`checked: true`, `workingPosition: position`, `tipsBroughtIn: 0`,
+  `tippedHours: 0`, `tipOut: 0`), ideally from one shared `emptyFillIn()`
+  function. `components/addEmployeeModal.tsx` uses the same
+  `{ amount: Number, date: Date }` placeholder; it's harmless there because
+  `JSON.stringify` drops it, but it can go too.
+
+## 6. `SelectNonActiveBarBack` passes "barBack" as a position (unused component)
+
+- **File:** `components/SelectNonActiveBarBack.tsx`
+- **Problem:** Its rows call `onClick(employee, "barBack", ...)`. The real
+  position is `"Bar Back"`, so a bar back picked here would be saved with a
+  working position that no page matches. Nothing imports this component
+  today, so it has no effect yet.
+- **Suggested fix:** Delete the file. `SelectNonActiveEmployee` does the same
+  job for every position.
+
+## 7. Edit window's hours boxes use `type="number"`, which react-number-format doesn't support
+
+- **File:** `components/UpdateTipBreakDownModal.tsx` (the cook, bar back and
+  bartender hours inputs)
+- **Problem:** `NumericFormat` only supports `type` `text`, `tel` or
+  `password` (that's how its types are written). It tracks the cursor with
+  `setSelectionRange`, which browsers don't allow on number inputs, so typing
+  in these boxes can behave oddly. The conversion keeps `type="number"`
+  exactly as before (through `customInput`) so nothing changes.
+- **Suggested fix:** Drop `NumberTypeInput` and use `type="text"` with the
+  existing `inputMode="decimal"`, which still brings up the number keyboard
+  on phones. Test the hours boxes on a phone afterwards.

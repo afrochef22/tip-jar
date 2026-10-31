@@ -7,7 +7,8 @@ import { tooManyShiftWrites } from "../../../lib/rateLimit";
 import { ShiftDate } from "../../../lib/shiftDate";
 import { cleanShowName, isSameShow, showKey } from "../../../lib/showKey";
 import { reportError } from "../../../lib/alert";
-import { field, isList, isObjectId, prop } from "../../../lib/field";
+import { field, isList, prop } from "../../../lib/field";
+import { isObjectId } from "../../../lib/objectId";
 import type { EmployeeDoc, TipBreakdownDoc } from "../../../types/models";
 
 // `(data.cookTips ?? []).find(...)` threw a TypeError when the field wasn't a

@@ -10,14 +10,28 @@ import {
 	ModalHeader,
 	ModalFooter,
 } from "reactstrap";
+import type { ChangeEvent, FormEvent } from "react";
+import type { ModalProps } from "reactstrap";
 import style from "./addEmployee.module.css";
+import { text } from "../lib/field";
+import type { Position } from "../types/models";
 
-export function AddEmployeeModal({ position, args }) {
+// The form's state. tipsCollected holds the Number and Date constructors as a
+// placeholder; JSON.stringify drops them and the API ignores the field.
+type NewEmployeeForm = {
+	firstName: string;
+	lastName: string;
+	position: string[]; // values of the ticked position checkboxes
+	active: boolean;
+	tipsCollected: { amount: NumberConstructor; date: DateConstructor }[];
+};
+
+export function AddEmployeeModal({ position, args }: { position: Position; args?: Partial<ModalProps> }) {
 	const [modal, setModal] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const toggle = () => setModal(!modal);
 
-	const [newEmployee, setNewEmployee] = useState({
+	const [newEmployee, setNewEmployee] = useState<NewEmployeeForm>({
 		firstName: "",
 		lastName: "",
 		position: [],
@@ -38,10 +52,10 @@ export function AddEmployeeModal({ position, args }) {
 			}));
 		}
 	}, [position]);
-	const handleInputChange = (e) => {
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (e.target.name === "position") {
 			const selectedOptions = Array.from(
-				document.querySelectorAll('input[name="position"]:checked'),
+				document.querySelectorAll<HTMLInputElement>('input[name="position"]:checked'),
 				(checkbox) => checkbox.value
 			);
 			setNewEmployee((prevEmployee) => ({
@@ -55,7 +69,7 @@ export function AddEmployeeModal({ position, args }) {
 
 	const router = useRouter();
 
-	const handleAddEmployee = async (e) => {
+	const handleAddEmployee = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		if (newEmployee.position.length === 0) {
@@ -89,8 +103,8 @@ export function AddEmployeeModal({ position, args }) {
 				setAlertMessage(""); // Clear the alert message
 				toggle();
 			} else {
-				const body = await response.json().catch(() => ({}));
-				setAlertMessage(body.message || "Could not add employee. Please try again.");
+				const body: unknown = await response.json().catch(() => ({}));
+				setAlertMessage(text(body, "message") || "Could not add employee. Please try again.");
 			}
 		} catch (error) {
 			console.error(error);

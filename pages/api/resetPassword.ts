@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { reportError } from "../../lib/alert";
 import { tooManyRequests } from "../../lib/rateLimit";
 import { MIN_PASSWORD_LENGTH, hashResetToken } from "../../lib/passwordReset";
-import { isObjectId } from "../../lib/field";
+import { isObjectId } from "../../lib/objectId";
 import type { EmployeeDoc } from "../../types/models";
 
 // Sets a new password from an emailed reset link. The link works once.

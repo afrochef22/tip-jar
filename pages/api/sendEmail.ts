@@ -5,7 +5,7 @@ import { requireSession } from "../../lib/auth";
 import { reportError } from "../../lib/alert";
 import { sendMail } from "../../lib/mailer";
 import { siteUrl } from "../../lib/siteUrl";
-import { isObjectId } from "../../lib/field";
+import { isObjectId } from "../../lib/objectId";
 import type { EmployeeDoc } from "../../types/models";
 
 const LINK_TTL_DAYS = 7;

@@ -5,8 +5,14 @@ import Link from "next/link";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import GoogleIcon from "./GoogleIcon";
 import style from "./SignIn.module.css";
+import type { FormEvent } from "react";
+import type { ManagerEmployee } from "../types/models";
 
-export const Register = ({ employee }) => {
+export const Register = ({
+	employee,
+}: {
+	employee: Pick<ManagerEmployee, "_id" | "email" | "firstName" | "lastName">;
+}) => {
 	const router = useRouter();
 	const token = router.query.token;
 	const { data: session } = useSession();
@@ -31,7 +37,7 @@ export const Register = ({ employee }) => {
 	}, [sessionEmail, linkEmail, router]);
 
 	// Function to handle form submission
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setError("");
 
@@ -81,7 +87,7 @@ export const Register = ({ employee }) => {
 				)}
 				{signedInAsSomeoneElse && (
 					<div className={style.error} role="alert">
-						You are signed in as <strong>{session.user.email}</strong>, but this
+						You are signed in as <strong>{session!.user.email}</strong>, but this
 						link was sent to{" "}
 						<strong>{employee.email || "a different address"}</strong>. To use
 						Google, sign out and pick that account. Otherwise set a username and

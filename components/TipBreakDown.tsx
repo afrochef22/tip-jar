@@ -13,6 +13,8 @@ import { ConfirmationDialog } from "./ConformationDialog";
 import { splitCreditTips } from "../lib/tipSplit";
 import { isSameShow } from "../lib/showKey";
 import { money, tipPercent } from "../lib/money";
+import { field, text } from "../lib/field";
+import type { BreakdownSummary, WorkerOption } from "../types/models";
 
 export default function TipBreakDown({
 	bartenders,
@@ -27,6 +29,20 @@ export default function TipBreakDown({
 	totalTips,
 	totalBarSales,
 	shiftNotes,
+}: {
+	bartenders: WorkerOption[];
+	barBacks: WorkerOption[];
+	cooks: WorkerOption[];
+	barBackPercentage: number;
+	foodSalesTotal: number;
+	// Keyed by employee id. The page passes [] when the URL has none.
+	employeeHours: Record<string, number> | never[];
+	employeeTipCollected: Record<string, number> | never[];
+	selectedShow: string;
+	allTipBreakdowns: BreakdownSummary[];
+	totalTips: number;
+	totalBarSales: number;
+	shiftNotes: string;
 }) {
 	const [submitting, setSubmitting] = useState(false);
 	const [submitError, setSubmitError] = useState("");
@@ -146,15 +162,15 @@ export default function TipBreakDown({
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(tipBreakdown),
 			});
-			const body = await response.json().catch(() => ({}));
-			if (response.ok && body.tipBreakdownId) {
+			const body: unknown = await response.json().catch(() => ({}));
+			if (response.ok && field(body, "tipBreakdownId")) {
 				// Show the list of all tip breakdowns (the new one is first).
 				// replace() so the browser Back button does not land here again.
 				router.replace("/getAllTipBreakDowns");
 				return;
 			}
 			setSubmitError(
-				body.message || "Could not save the tip breakdown. Please try again."
+				text(body, "message") || "Could not save the tip breakdown. Please try again."
 			);
 		} catch (error) {
 			console.error(error);

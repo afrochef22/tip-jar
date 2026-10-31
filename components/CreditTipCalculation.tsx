@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import type { FormEvent } from "react";
+import type { InputProps } from "reactstrap";
 import {
 	Button,
 	Form,
@@ -13,10 +15,14 @@ import form from "./CreditTipForm.module.css";
 import { useRouter } from "next/router";
 import { CustomAlertModal } from "./ConformationDialog";
 import { shiftDateTime } from "../lib/shiftDate";
+import type { WorkerOption, WorkingPosition } from "../types/models";
 
 export default function CreditTipCalculation({
 	workingEmployees,
 	selectedShow,
+}: {
+	workingEmployees: WorkerOption[];
+	selectedShow: string;
 }) {
 	const router = useRouter();
 	const [submitting, setSubmitting] = useState(false);
@@ -39,7 +45,7 @@ export default function CreditTipCalculation({
 	const [isCookHoursClicked, setCookHoursClicked] = useState(false);
 	const [isBarBackHoursClicked, setBarBackHoursClicked] = useState(false);
 
-	const [defaultbarBackPercentage, setDefaultBarBackPercentage] = useState(15);
+	const [defaultbarBackPercentage, setDefaultBarBackPercentage] = useState<number | string>(15);
 	const handleIncrease = () => {
 		setDefaultBarBackPercentage((prevPercentage) =>
 			Math.min((Number(prevPercentage) || 0) + 1, 100)
@@ -53,13 +59,13 @@ export default function CreditTipCalculation({
 		);
 	};
 
-	const handleCalculate = (e) => {
+	const handleCalculate = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setSubmitting(true);
-		const formData = new FormData(e.target); // Create a FormData object from the form
+		const formData = new FormData(e.currentTarget); // Create a FormData object from the form
 
 		const tips = formData.get("totalTips");
-		const isValidInput = /^\d*\.?\d{0,2}$/.test(tips);
+		const isValidInput = /^\d*\.?\d{0,2}$/.test(String(tips));
 		if (isValidInput === false) {
 			setAlertMessage(
 				"Please enter a valid number for the tips. The number can't have more than 2 decimal places."
@@ -70,8 +76,8 @@ export default function CreditTipCalculation({
 			return;
 		}
 
-		const employeeTips = {};
-		const employeeHours = {};
+		const employeeTips: Record<string, number> = {};
+		const employeeHours: Record<string, number> = {};
 		// Iterate through form data and pull out the per-employee tip/hours fields
 		formData.forEach((value, key) => {
 			const inputValue = formData.get("totalTips");
@@ -79,7 +85,7 @@ export default function CreditTipCalculation({
 			// Check if the input value contains only numbers
 			// const isValidInput = /^\d*\.?\d+$/.test(inputValue);
 
-			const isValidId = (id) => {
+			const isValidId = (id: string) => {
 				const regex = /^[0-9a-fA-F]{24}$/;
 				const regexUUID =
 					/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -114,7 +120,7 @@ export default function CreditTipCalculation({
 		const totalBarSales = Number(formData.get("BarSalesTotal")) || 0;
 		const shiftNotes = formData.get("shiftNotes") ?? "";
 
-		const withHours = (employee) => ({
+		const withHours = (employee: WorkerOption) => ({
 			...employee,
 			tippedHours: employeeHours[employee.id] || 0,
 		});
@@ -141,7 +147,7 @@ export default function CreditTipCalculation({
 		});
 	};
 
-	const handleSwitchToggle = (position) => {
+	const handleSwitchToggle = (position: WorkingPosition) => {
 		switch (position) {
 			case "Bartender":
 				setBartenderHoursClicked(!isBartenderHoursClicked);
@@ -168,7 +174,8 @@ export default function CreditTipCalculation({
 
 	// One entry per role working tonight. "Split by hours" is only offered when
 	// more than one person shares a role, matching the tip math.
-	const groups = [
+	const groups = (
+		[
 		{
 			title: "Bartenders",
 			employees: bartenders,
@@ -187,9 +194,10 @@ export default function CreditTipCalculation({
 			position: "Cook",
 			byHours: isCookHoursClicked,
 		},
-	].filter((group) => group.employees.length > 0);
+		] satisfies { title: string; employees: WorkerOption[]; position: WorkingPosition; byHours: boolean }[]
+	).filter((group) => group.employees.length > 0);
 
-	const moneyInput = (id, label, props = {}) => (
+	const moneyInput = (id: string, label: string, props: InputProps = {}) => (
 		<FormGroup className={form.field}>
 			<Label for={id} className={form.label}>
 				{label}

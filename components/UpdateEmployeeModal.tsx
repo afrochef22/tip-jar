@@ -14,12 +14,14 @@ import {
 import form from "./CreditTipForm.module.css";
 import edit from "./TipBreakDown.module.css";
 import style from "./addEmployee.module.css";
-
-const POSITIONS = ["Bartender", "Bar Back", "Cook", "No Position"];
+import type { ChangeEvent, FormEvent } from "react";
+import { text } from "../lib/field";
+import { POSITIONS } from "../lib/positions";
+import type { ManagerEmployee, Position } from "../types/models";
 
 // Filled in from the employee each time the window opens, so Cancel throws
 // away anything typed.
-const fromEmployee = (data) => ({
+const fromEmployee = (data: ManagerEmployee) => ({
 	firstName: data.firstName ?? "",
 	lastName: data.lastName ?? "",
 	email: data.email ?? "",
@@ -27,7 +29,7 @@ const fromEmployee = (data) => ({
 	active: data.active !== false,
 });
 
-export function UpdateEmployeeModal({ data }) {
+export function UpdateEmployeeModal({ data }: { data: ManagerEmployee }) {
 	const [modal, setModal] = useState(false);
 	const [saveError, setSaveError] = useState("");
 	const [employeeUpdate, setEmployeeUpdate] = useState(fromEmployee(data));
@@ -39,12 +41,12 @@ export function UpdateEmployeeModal({ data }) {
 		setModal(!modal);
 	};
 
-	const handleInputChange = (e) => {
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setEmployeeUpdate((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const togglePosition = (position) => {
+	const togglePosition = (position: Position) => {
 		setEmployeeUpdate((prev) => ({
 			...prev,
 			position: prev.position.includes(position)
@@ -53,7 +55,7 @@ export function UpdateEmployeeModal({ data }) {
 		}));
 	};
 
-	const handleUpdateEmployee = async (e) => {
+	const handleUpdateEmployee = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (employeeUpdate.position.length === 0) {
 			setSaveError("Pick at least one position.");
@@ -80,8 +82,8 @@ export function UpdateEmployeeModal({ data }) {
 				router.push("/employees");
 				return;
 			}
-			const body = await response.json().catch(() => ({}));
-			setSaveError(body.error || "Could not save the changes. Please try again.");
+			const body: unknown = await response.json().catch(() => ({}));
+			setSaveError(text(body, "error") || "Could not save the changes. Please try again.");
 		} catch (error) {
 			console.error(error);
 			setSaveError("Could not reach the server. Please try again.");

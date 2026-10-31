@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import type { ChangeEvent } from "react";
 import { Label, Input, Row, Col, Container, Button } from "reactstrap";
 import { DateTime } from "luxon";
 import { getPayrollDates } from "./DateRange";
 import Link from "next/link";
 import { money } from "../lib/money";
+import { field } from "../lib/field";
+import type { BreakdownSummary, PublicEmployeeWithTips } from "../types/models";
 
 // Shared by the Dashboard carousel (variant="dashboard") and the standalone
 // /CCTipsTotals page (variant="page"). The two only ever differed in the
@@ -14,10 +17,16 @@ export default function TipsTotalsSpreadSheet({
 	employees,
 	allTipBreakdowns,
 	variant = "dashboard",
+}: {
+	employees: PublicEmployeeWithTips[];
+	allTipBreakdowns: BreakdownSummary[];
+	variant?: "dashboard" | "page";
 }) {
 	const { startDate: start, endDate: end } = getPayrollDates();
-	const [startDate, setStartDate] = useState(DateTime.fromISO(start));
-	const [endDate, setEndDate] = useState(DateTime.fromISO(end));
+	// toISODate() is only null for an invalid date; the pay periods are
+	// counted from a fixed, valid start date.
+	const [startDate, setStartDate] = useState(DateTime.fromISO(start!));
+	const [endDate, setEndDate] = useState(DateTime.fromISO(end!));
 
 	// Track the start and end dates of the pay period range separately from
 	// startDate/endDate, which the manual date pickers (page variant) can
@@ -27,16 +36,16 @@ export default function TipsTotalsSpreadSheet({
 
 	// Tapping a row highlights it so it's easy to follow across the shows;
 	// tapping it again (or another row) moves the highlight.
-	const [highlightedId, setHighlightedId] = useState(null);
-	const toggleHighlight = (id) =>
+	const [highlightedId, setHighlightedId] = useState<string | null>(null);
+	const toggleHighlight = (id: string) =>
 		setHighlightedId((current) => (current === id ? null : id));
 
-	const handleStartDateChange = (e) => {
+	const handleStartDateChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.value) return; // ignore the input being cleared
 		setStartDate(DateTime.fromISO(e.target.value));
 	};
 
-	const handleEndDateChange = (e) => {
+	const handleEndDateChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.value) return;
 		setEndDate(DateTime.fromISO(e.target.value));
 	};
@@ -60,12 +69,12 @@ export default function TipsTotalsSpreadSheet({
 	};
 
 	// "Thu 10/15" - the year is in the pay period row above the table.
-	const formatDateStringWithDayOfWeek = (dateString) => {
+	const formatDateStringWithDayOfWeek = (dateString: string) => {
 		const date = parseDateWithFormats(dateString, dateFormats);
 		return date ? date.toFormat("ccc M/d") : dateString;
 	};
 
-	function parseDateWithFormats(dateString, formats) {
+	function parseDateWithFormats(dateString: string, formats: string[]) {
 		for (const format of formats) {
 			const parsed = DateTime.fromFormat(dateString, format);
 			if (parsed.isValid) {
@@ -83,6 +92,7 @@ export default function TipsTotalsSpreadSheet({
 		if (!date) return false; // Skip null dates
 		const currentDate = parseDateWithFormats(date, dateFormats);
 		return (
+			currentDate !== null &&
 			currentDate >= startDate.startOf("day") &&
 			currentDate <= endDate.endOf("day")
 		);
@@ -91,7 +101,7 @@ export default function TipsTotalsSpreadSheet({
 	uniqueDates.sort((a, b) => {
 		const dateA = parseDateWithFormats(a, dateFormats);
 		const dateB = parseDateWithFormats(b, dateFormats);
-		return dateA - dateB;
+		return Number(dateA) - Number(dateB);
 	});
 
 	// Filter employees with tips within the date range
@@ -122,10 +132,11 @@ export default function TipsTotalsSpreadSheet({
 		return firstNameA.localeCompare(firstNameB);
 	});
 
-	const calculateTotalTips = (employee) => {
+	const calculateTotalTips = (employee: PublicEmployeeWithTips) => {
 		return employee.tipsCollected.reduce((total, tip) => {
 			const tipDate = parseDateWithFormats(tip.date, dateFormats);
 			if (
+				tipDate !== null &&
 				tipDate >= startDate.startOf("day") &&
 				tipDate <= endDate.endOf("day")
 			) {
@@ -168,7 +179,8 @@ export default function TipsTotalsSpreadSheet({
 								...new Set(
 									allTipBreakdowns
 										.filter((tip) => tip.date === date)
-										.map((tip) => ({ id: tip.id, show: tip.show })) // Include both id and show in the array
+										// Breakdowns have no `id` field, so this is always undefined.
+										.map((tip) => ({ id: field(tip, "id"), show: tip.show })) // Include both id and show in the array
 										.map((tip) => tip.show) // Extract only the show name
 								),
 							];
@@ -199,7 +211,7 @@ export default function TipsTotalsSpreadSheet({
 								),
 							];
 							// Create an object to map each show name to its corresponding ID
-							let showIdMap = {};
+							let showIdMap: Record<string, string> = {};
 							allTipBreakdowns
 								.filter(
 									(tip) => tip.date === date && uniqueShows.includes(tip.show)

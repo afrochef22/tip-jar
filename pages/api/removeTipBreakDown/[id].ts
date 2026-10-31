@@ -5,7 +5,7 @@ import { getApiSession } from "../../../lib/auth";
 import { tooManyShiftWrites } from "../../../lib/rateLimit";
 import { ShiftDate } from "../../../lib/shiftDate";
 import { reportError } from "../../../lib/alert";
-import { isObjectId } from "../../../lib/field";
+import { isObjectId } from "../../../lib/objectId";
 import type { EmployeeDoc, ShiftWorker, TipBreakdownDoc } from "../../../types/models";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

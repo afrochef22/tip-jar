@@ -1,4 +1,6 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, memo, forwardRef } from "react";
+import type { ChangeEvent, InputHTMLAttributes } from "react";
+import type { ModalProps } from "reactstrap";
 import { splitCreditTips } from "../lib/tipSplit";
 import { NumericFormat } from "react-number-format";
 import {
@@ -23,21 +25,34 @@ import { DeleteDialog } from "./ConformationDialog";
 import style from "./TipBreakDown.module.css";
 import form from "./CreditTipForm.module.css";
 import { money } from "../lib/money";
+import { text } from "../lib/field";
+import type { SavedAmount, TipBreakdown } from "../types/models";
+
+// The hours boxes have always been <input type="number">. react-number-format's
+// types don't allow that type (BUGS_FOUND.md), so it's set here, on the same
+// input element the library would render, with the same ref and props.
+const NumberTypeInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
+	function NumberTypeInput(props, ref) {
+		return <input {...props} ref={ref} type="number" />;
+	}
+);
 
 // Saved dates look like 10/5/2026; the date box needs 2026-10-05.
-const toDateInput = (date) => {
+const toDateInput = (date: string) => {
 	const [month, day, year] = String(date || "").split("/");
 	if (!year) return "";
 	return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 };
 
-const UpdateTipBreakDown = ({ breakDown }, args) => {
+// React passes its legacy context ({}) as the second argument; it's spread
+// into the Modal below.
+const UpdateTipBreakDown = ({ breakDown }: { breakDown: TipBreakdown }, args?: Partial<ModalProps>) => {
 	const [modal, setModal] = useState(false);
 	const [show, setShow] = useState(breakDown.show);
 	const [date, setDate] = useState(breakDown.date);
-	const [totalTips, setTotalTips] = useState(breakDown.totalTips);
-	const [foodSales, setFoodSales] = useState(breakDown.foodSales);
-	const [barBackPercentage, setBarBackPercentage] = useState(
+	const [totalTips, setTotalTips] = useState<SavedAmount>(breakDown.totalTips);
+	const [foodSales, setFoodSales] = useState<SavedAmount>(breakDown.foodSales);
+	const [barBackPercentage, setBarBackPercentage] = useState<number | string>(
 		breakDown.barBackPercentage
 	);
 	const [cookTipsData, setCookTipsData] = useState(breakDown.cookTips);
@@ -53,7 +68,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	);
 	const [tipsPerCook, setTipsPerCook] = useState(breakDown.tipsPerCook);
 	const [showConfirmation, setShowConfirmation] = useState(false);
-	const [totalBarSales, setTotalBarSales] = useState(breakDown.totalBarSales);
+	const [totalBarSales, setTotalBarSales] = useState<SavedAmount | undefined>(breakDown.totalBarSales);
 	const [shiftNotes, setShiftNotes] = useState(breakDown.shiftNotes);
 	const [saveError, setSaveError] = useState("");
 
@@ -64,11 +79,11 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		setModal(!modal);
 	};
 
-	const handleShowChange = (e) => {
+	const handleShowChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setShow(e.target.value);
 	};
 
-	const handleDateChange = (e) => {
+	const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const dateString = e.target.value; // Example date string in YYYY-MM-DD format
 		if (!dateString) return;
 		const parts = dateString.split("-");
@@ -78,17 +93,17 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		setDate(formattedDate);
 	};
 
-	const handleTotalBarSalesChange = (e) => {
+	const handleTotalBarSalesChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setTotalBarSales(e.target.value);
 	};
-	const handleShiftNotesChange = (e) => {
+	const handleShiftNotesChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setShiftNotes(e.target.value);
 	};
-	const handleTotalTipChange = (e) => {
+	const handleTotalTipChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setTotalTips(e.target.value);
 	};
 
-	const handleFoodSalesChange = (e) => {
+	const handleFoodSalesChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setFoodSales(e.target.value);
 	};
 	const handleIncrease = () => {
@@ -99,7 +114,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		setBarBackPercentage((prevPercentage) => Math.max((Number(prevPercentage) || 0) - 1, 0));
 	};
 
-	const setCookHours = (cookId, newHours) => {
+	const setCookHours = (cookId: string, newHours: string) => {
 		parseFloat(newHours);
 		const updatedCookTipsData = cookTipsData.map((cook) => {
 			if (cook.id === cookId) {
@@ -110,7 +125,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		setCookTipsData(updatedCookTipsData);
 	};
 
-	const setBarBackHours = (barBackId, newHours) => {
+	const setBarBackHours = (barBackId: string, newHours: string) => {
 		parseFloat(newHours);
 		const updatedBarBackTipsData = barBackTipsData.map((barBack) => {
 			if (barBack.id === barBackId) {
@@ -121,7 +136,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 		setBarBackTipsData(updatedBarBackTipsData);
 	};
 
-	const setBartenderHours = (bartenderId, newHours) => {
+	const setBartenderHours = (bartenderId: string, newHours: string) => {
 		parseFloat(newHours);
 		const updatedBartenderTipsData = bartenderTipsData.map((bartender) => {
 			if (bartender.id === bartenderId) {
@@ -172,7 +187,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const barBacksWithTipOut = split.barBacks;
 	const adjustedBartendersWithTipOut = split.bartenders;
 
-	const handleUpdateBreakDown = async (e) => {
+	const handleUpdateBreakDown = async (e: { preventDefault(): void }) => {
 		e.preventDefault();
 		// alert("Sorry doesn't work yet");
 		try {
@@ -202,8 +217,8 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 				router.push(`/getSelectedTipBreakDown/${breakDown._id}`);
 				return;
 			}
-			const body = await response.json().catch(() => ({}));
-			setSaveError(body.error || "Could not save the changes. Please try again.");
+			const body: unknown = await response.json().catch(() => ({}));
+			setSaveError(text(body, "error") || "Could not save the changes. Please try again.");
 		} catch (error) {
 			console.error(error);
 			setSaveError("Could not reach the server. Please try again.");
@@ -213,7 +228,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 	const toggleConfirmation = () => {
 		setShowConfirmation(!showConfirmation);
 	};
-	const handleDelete = async (e) => {
+	const handleDelete = async (e: { preventDefault(): void }) => {
 		e.preventDefault();
 		setShowConfirmation(!showConfirmation);
 
@@ -245,15 +260,21 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 				router.push(`/CCTipsTotals`);
 				return;
 			}
-			const body = await response.json().catch(() => ({}));
-			setSaveError(body.error || "Could not delete the breakdown. Please try again.");
+			const body: unknown = await response.json().catch(() => ({}));
+			setSaveError(text(body, "error") || "Could not delete the breakdown. Please try again.");
 		} catch (error) {
 			console.error(error);
 			setSaveError("Could not reach the server. Please try again.");
 		}
 	};
 
-	const moneyInput = (id, label, value, onChange, extraClass) => (
+	const moneyInput = (
+		id: string,
+		label: string,
+		value: SavedAmount | undefined,
+		onChange: (e: ChangeEvent<HTMLInputElement>) => void,
+		extraClass?: string
+	) => (
 		<FormGroup className={form.field}>
 			<Label for={id} className={form.label}>
 				{label}
@@ -407,7 +428,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 																<NumericFormat
 																	id="cookHours"
 																	name="cookHours"
-																	type="number"
+																	customInput={NumberTypeInput}
 																	inputMode="decimal"
 																	pattern="[0-9]+(\.[0-9]{1,2})?"
 																	step="0.01"
@@ -463,7 +484,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 																<NumericFormat
 																	id="barBackHours"
 																	name="barBackHours"
-																	type="number"
+																	customInput={NumberTypeInput}
 																	inputMode="decimal"
 																	pattern="[0-9]+(\.[0-9]{1,2})?"
 																	step="0.01"
@@ -517,7 +538,7 @@ const UpdateTipBreakDown = ({ breakDown }, args) => {
 														<NumericFormat
 															id="bartenderHours"
 															name="bartenderHours"
-															type="number"
+															customInput={NumberTypeInput}
 															inputMode="decimal"
 															pattern="[0-9]+(\.[0-9]{1,2})?"
 															step="0.01"

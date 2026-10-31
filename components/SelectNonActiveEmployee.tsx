@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import AddGuestEmployee from "./AddGuestEmployee";
+import type { WorkerOption, WorkingPosition } from "../types/models";
+import type { AddNewEmployee, PickEmployee, SelectStep } from "./SelectEmployeeDisplay";
 
 export default function SelectNonActiveEmployee({
 	onClick,
@@ -11,6 +13,15 @@ export default function SelectNonActiveEmployee({
 	btn,
 	addNewEmployee,
 	position,
+}: {
+	onClick: PickEmployee;
+	// Only the list for `position` is passed.
+	sortedBartenders?: WorkerOption[];
+	sortedBarBacks?: WorkerOption[];
+	sortedCooks?: WorkerOption[];
+	btn?: (step: SelectStep) => void;
+	addNewEmployee: AddNewEmployee;
+	position: WorkingPosition;
 }) {
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
@@ -27,7 +38,7 @@ export default function SelectNonActiveEmployee({
 	}, []);
 
 	const checkedEmployeesCount = () => {
-		let num = "";
+		let num: string | number = "";
 		if (sortedBartenders) {
 			num = sortedBartenders.filter((bartender) => bartender.checked).length;
 			return num;
@@ -42,7 +53,7 @@ export default function SelectNonActiveEmployee({
 		}
 	};
 	const sortedEmployees = () => {
-		let sort = [];
+		let sort: WorkerOption[] = [];
 		if (sortedBartenders) {
 			sort = sortedBartenders;
 			return sort;
@@ -57,7 +68,7 @@ export default function SelectNonActiveEmployee({
 		}
 	};
 
-	const HandleEmployeeTitle = (position) => {
+	const HandleEmployeeTitle = (position: { position: WorkingPosition }) => {
 		switch (position.position) {
 			case "Bartender":
 				return "Bartenders";
@@ -83,7 +94,6 @@ export default function SelectNonActiveEmployee({
 						<Col>
 							<h2
 								className={`third-color ${style.centerTitle}`}
-								htmlFor="exampleSelect"
 							>
 								<HandleEmployeeTitle position={position} />
 							</h2>
@@ -96,7 +106,7 @@ export default function SelectNonActiveEmployee({
 							<div
 								className={`third-color  ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
 							>
-								{sortedEmployees()
+								{sortedEmployees()!
 									.filter((employee) => employee.active === false)
 									.map((employee) => (
 										<Row
@@ -131,7 +141,6 @@ export default function SelectNonActiveEmployee({
 					<Col>
 						<h2
 							className={`third-color ${style.centerTitle}`}
-							htmlFor="exampleSelect"
 						>
 							<HandleEmployeeTitle position={position} />
 						</h2>
@@ -147,7 +156,7 @@ export default function SelectNonActiveEmployee({
 								addNewEmployee={addNewEmployee}
 							/> */}
 
-							{sortedEmployees()
+							{sortedEmployees()!
 								.filter((employee) => employee.active === false)
 								.map((employee) => (
 									<Row

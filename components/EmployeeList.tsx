@@ -1,8 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import style from "./EmployeeList.module.css";
+import type { Position, PublicEmployee } from "../types/models";
 
-const EmployeeTable = ({ employees, position }) => {
+const EmployeeTable = ({ employees, position }: { employees: PublicEmployee[]; position: Position }) => {
 	// Filter active and non-active bartenders
 	const activeEmployee = employees.filter(
 		(employee) =>

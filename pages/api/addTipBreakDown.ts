@@ -6,7 +6,8 @@ import { tooManyShiftWrites } from "../../lib/rateLimit";
 import { ShiftDate } from "../../lib/shiftDate";
 import { cleanShowName, isSameShow, showKey } from "../../lib/showKey";
 import { reportError } from "../../lib/alert";
-import { field, isList, isObjectId, prop } from "../../lib/field";
+import { field, isList, prop } from "../../lib/field";
+import { isObjectId } from "../../lib/objectId";
 import type { TipBreakdownDoc } from "../../types/models";
 
 const toIdList = (list: unknown) => (isList(list) ? list : []);

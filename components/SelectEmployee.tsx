@@ -1,24 +1,33 @@
 import React, { useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import { useRouter } from "next/router";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import style from "./SelectEmployee.module.css";
 import SelectEmployeeDisplay from "./SelectEmployeeDisplay";
+import type { SelectStep } from "./SelectEmployeeDisplay";
 import SelectBartender from "./SelectBartender";
 import SelectBarBack from "./SelectBarBack";
 import SelectCook from "./SelectCook";
 import { CurrentShift, CurrentShowPerforming, ShiftDate } from "./CurrentShift";
 import { isSameShow } from "../lib/showKey";
+import type { BreakdownSummary, Position, PublicEmployee, WorkerOption, WorkingPosition } from "../types/models";
 
-export default function SelectEmployee({ employees, allTipBreakdowns }) {
+export default function SelectEmployee({
+	employees,
+	allTipBreakdowns,
+}: {
+	employees: PublicEmployee[];
+	allTipBreakdowns: BreakdownSummary[];
+}) {
 	const router = useRouter();
-	const [allEmployees, setAllEmployees] = useState([]);
-	const [workingEmployees, setWorkingEmployees] = useState([]);
+	const [allEmployees, setAllEmployees] = useState<WorkerOption[]>([]);
+	const [workingEmployees, setWorkingEmployees] = useState<WorkerOption[]>([]);
 
-	const [bartenderList, setBartenderList] = useState([]);
-	const [barBacksList, setBarBacksList] = useState([]);
-	const [cooksList, setCooksList] = useState([]);
+	const [bartenderList, setBartenderList] = useState<WorkerOption[]>([]);
+	const [barBacksList, setBarBacksList] = useState<WorkerOption[]>([]);
+	const [cooksList, setCooksList] = useState<WorkerOption[]>([]);
 
-	const [nextBtn, setNextBtn] = useState("Bartender");
+	const [nextBtn, setNextBtn] = useState<SelectStep>("Bartender");
 
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
@@ -27,7 +36,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 	const [showCooks, setShowCooks] = useState(false);
 	const [selectedShow, setSelectedShow] = useState("");
 	const [shouldNavigate, setShouldNavigate] = useState(false);
-	const [submitError, setSubmitError] = useState("");
+	const [submitError, setSubmitError] = useState<ReactNode>("");
 
 	// Use useEffect to update screen size on mount and window resize
 	useEffect(() => {
@@ -38,11 +47,11 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 		};
 	}, []);
 
-	const filterEmployeesByPosition = (employees, position) =>
+	const filterEmployeesByPosition = (employees: WorkerOption[], position: Position) =>
 		employees.filter((employee) => employee.position.includes(position));
 
 	useEffect(() => {
-		const options = employees.map((employee) => {
+		const options = employees.map((employee): WorkerOption => {
 			return {
 				id: employee._id,
 				label: `${employee.firstName} ${employee.lastName}`,
@@ -64,7 +73,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 		setCooksList(filterEmployeesByPosition(allEmployees, "Cook"));
 	}, [allEmployees]);
 
-	const addWorkingEmployee = (selectedEmployee, position) => {
+	const addWorkingEmployee = (selectedEmployee: WorkerOption, position: WorkingPosition) => {
 		const workingBartender = workingEmployees.filter(
 			(bartender) => bartender.workingPosition === "Bartender"
 		);
@@ -127,17 +136,17 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 		setShowCooks(!showCooks);
 	};
 
-	const handleSelectedBand = (band) => {
+	const handleSelectedBand = (band: string) => {
 		setSelectedShow(band);
 		setSubmitError("");
 	};
 
-	const addNewEmployee = (newEmployeeData) => {
+	const addNewEmployee = (newEmployeeData: WorkerOption) => {
 		setAllEmployees([...allEmployees, newEmployeeData]);
 		setWorkingEmployees(() => [...workingEmployees, newEmployeeData]);
 	};
 
-	const removeWorkingEmployee = (selectedEmployee, position) => {
+	const removeWorkingEmployee = (selectedEmployee: WorkerOption, position: WorkingPosition) => {
 		setWorkingEmployees((prev) =>
 			prev.filter((id) => id.id !== selectedEmployee.id)
 		);
@@ -172,8 +181,8 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 		}
 	};
 
-	const handleCheckboxChange = (selectedEmployee, position, checked) => {
-		const updatedEmployees = allEmployees.map((employee) => {
+	const handleCheckboxChange = (selectedEmployee: WorkerOption, position: WorkingPosition, checked: boolean) => {
+		const updatedEmployees = allEmployees.map((employee): WorkerOption => {
 			if (employee.id === selectedEmployee.id) {
 				if (checked) {
 					return {
@@ -214,7 +223,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 		);
 		setNextBtn("Bartender");
 
-		document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+		document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach((checkbox) => {
 			checkbox.checked = false;
 		});
 		router.push({
@@ -268,7 +277,7 @@ export default function SelectEmployee({ employees, allTipBreakdowns }) {
 		(cook) => cook.workingPosition !== "Bartender"
 	);
 
-	const handleNextBtn = (position) => {
+	const handleNextBtn = (position: SelectStep) => {
 		const workingBartender = workingEmployees.filter(
 			(bartender) => bartender.workingPosition === "Bartender"
 		);

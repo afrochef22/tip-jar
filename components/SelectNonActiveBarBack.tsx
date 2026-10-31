@@ -2,12 +2,21 @@ import React, { useState, useEffect } from "react";
 import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import AddGuestEmployee from "./AddGuestEmployee";
+import type { ReactNode } from "react";
+import type { WorkerOption } from "../types/models";
+import type { AddNewEmployee, SelectStep } from "./SelectEmployeeDisplay";
 
 export default function SelectNonActiveBarBack({
 	onClick,
 	sortedBarBacks,
 	btn,
 	addNewEmployee,
+}: {
+	// Not used anywhere. It passes "barBack", not a real position (BUGS_FOUND.md).
+	onClick: (employee: WorkerOption, position: string, checked: boolean) => void;
+	sortedBarBacks: WorkerOption[];
+	btn?: (step: SelectStep) => void;
+	addNewEmployee?: AddNewEmployee;
 }) {
 	const [isMobile, setIsMobile] = useState(false);
 	const updateScreenSize = () => {
@@ -37,7 +46,6 @@ export default function SelectNonActiveBarBack({
 						<Col>
 							<h2
 								className={`third-color ${style.centerTitle}`}
-								htmlFor="exampleSelect"
 							>
 								Bar Backs
 							</h2>
@@ -84,7 +92,6 @@ export default function SelectNonActiveBarBack({
 					<Col>
 						<h2
 							className={`third-color ${style.centerTitle}`}
-							htmlFor="exampleSelect"
 						>
 							Bar Backs
 						</h2>

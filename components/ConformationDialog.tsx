@@ -1,7 +1,17 @@
 import React from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
-export const ConfirmationDialog = ({ isOpen, toggle, onConfirm, warning }) => {
+type DialogProps = { isOpen: boolean; toggle: () => void };
+// Runs as the confirm button's onClick.
+type OnConfirm = MouseEventHandler<HTMLButtonElement>;
+
+export const ConfirmationDialog = ({
+	isOpen,
+	toggle,
+	onConfirm,
+	warning,
+}: DialogProps & { onConfirm: OnConfirm; warning?: ReactNode }) => {
 	return (
 		<Modal isOpen={isOpen} toggle={toggle}>
 			<ModalHeader toggle={toggle}>Confirmation</ModalHeader>
@@ -21,7 +31,7 @@ export const ConfirmationDialog = ({ isOpen, toggle, onConfirm, warning }) => {
 	);
 };
 
-export const DeleteDialog = ({ isOpen, toggle, onConfirm }) => {
+export const DeleteDialog = ({ isOpen, toggle, onConfirm }: DialogProps & { onConfirm: OnConfirm }) => {
 	return (
 		<Modal isOpen={isOpen} toggle={toggle}>
 			<ModalHeader toggle={toggle}>Confirmation</ModalHeader>
@@ -41,7 +51,7 @@ export const DeleteDialog = ({ isOpen, toggle, onConfirm }) => {
 	);
 };
 
-export const CustomAlertModal = ({ isOpen, toggle, message }) => {
+export const CustomAlertModal = ({ isOpen, toggle, message }: DialogProps & { message: ReactNode }) => {
 	return (
 		<Modal isOpen={isOpen} toggle={toggle}>
 			<ModalBody>{message}</ModalBody>

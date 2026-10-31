@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import type { FormEvent, ReactNode } from "react";
+import type { NextRouter } from "next/router";
 import {
 	Form,
 	Label,
@@ -9,20 +11,35 @@ import {
 	InputGroupText,
 } from "reactstrap";
 import form from "./CreditTipForm.module.css";
+import type { CashPerson } from "../lib/cashSplit";
 
-const makePeople = (title, count) =>
+// One row in the cash form. `hours` is "" until typed, and 0 after hours are
+// turned off.
+export type CashWorker = CashPerson & { name: string };
+
+export type CashTipValues = {
+	tipsCollected: number | string;
+	barBackPercentage: number | string; // a string once typed into the input
+	bartenders: CashWorker[];
+	barBacks: CashWorker[];
+};
+
+const makePeople = (title: string, count: number): CashWorker[] =>
 	Array.from({ length: count }, (_, i) => ({ name: `${title} ${i + 1}`, hours: "" }));
 
-const hasHours = (people) => people.some((person) => parseFloat(person.hours) > 0);
+const hasHours = (people: CashWorker[]) => people.some((person) => parseFloat(String(person.hours)) > 0);
 
 // Opens the cash breakdown for the numbers entered.
-export const showCashBreakdown = (router, { tipsCollected, barBackPercentage, bartenders, barBacks }) =>
+export const showCashBreakdown = (
+	router: NextRouter,
+	{ tipsCollected, barBackPercentage, bartenders, barBacks }: CashTipValues
+) =>
 	router.push({
 		pathname: "/CashTipBreakDownPage",
 		query: {
 			numberOfBarBacks: JSON.stringify(barBacks.length),
 			numberOfBartenders: JSON.stringify(bartenders.length),
-			tipsCollected: JSON.stringify(parseFloat(tipsCollected) || 0),
+			tipsCollected: JSON.stringify(parseFloat(String(tipsCollected)) || 0),
 			barBacks: JSON.stringify(barBacks),
 			bartenders: JSON.stringify(bartenders),
 			barBackPercentage: JSON.stringify(barBackPercentage),
@@ -33,8 +50,18 @@ export const showCashBreakdown = (router, { tipsCollected, barBackPercentage, ba
 
 // Cash tips, bar back %, and who worked. Used by the Cash Tip Calculator page
 // and the cash breakdown's edit window; `initial` fills it in for editing.
-export default function CashTipForm({ initial = {}, onSubmit, submitLabel, children }) {
-	const [barBackPercentage, setBarBackPercentage] = useState(initial.barBackPercentage ?? 15);
+export default function CashTipForm({
+	initial = {},
+	onSubmit,
+	submitLabel,
+	children,
+}: {
+	initial?: Partial<CashTipValues>;
+	onSubmit: (values: CashTipValues) => void;
+	submitLabel: string;
+	children?: ReactNode;
+}) {
+	const [barBackPercentage, setBarBackPercentage] = useState<number | string>(initial.barBackPercentage ?? 15);
 	const [tipsCollected, setTipsCollected] = useState(
 		initial.tipsCollected ? Number(initial.tipsCollected).toFixed(2) : ""
 	);
@@ -67,19 +94,21 @@ export default function CashTipForm({ initial = {}, onSubmit, submitLabel, child
 	];
 
 	// Changing how many people worked starts their hours over.
-	const changeCount = (group, change) => {
+	type Group = (typeof groups)[number];
+
+	const changeCount = (group: Group, change: number) => {
 		const count = Math.min(Math.max(group.people.length + change, group.min), 20);
 		group.setPeople(makePeople(group.single, count));
 		if (count < 2) group.setByHours(false);
 	};
 
-	const changeHours = (group, index, hours) => {
+	const changeHours = (group: Group, index: number, hours: string) => {
 		group.setPeople((people) =>
 			people.map((person, i) => (i === index ? { ...person, hours } : person))
 		);
 	};
 
-	const toggleByHours = (group) => {
+	const toggleByHours = (group: Group) => {
 		// Turning hours off clears them so the split goes back to even shares.
 		if (group.byHours) {
 			group.setPeople((people) => people.map((person) => ({ ...person, hours: 0 })));
@@ -87,18 +116,24 @@ export default function CashTipForm({ initial = {}, onSubmit, submitLabel, child
 		group.setByHours(!group.byHours);
 	};
 
-	const changePercentage = (change) => {
+	const changePercentage = (change: number) => {
 		setBarBackPercentage((percentage) =>
-			Math.min(Math.max((parseInt(percentage, 10) || 0) + change, 0), 100)
+			Math.min(Math.max((parseInt(String(percentage), 10) || 0) + change, 0), 100)
 		);
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		onSubmit({ tipsCollected, barBackPercentage, bartenders, barBacks });
 	};
 
-	const stepper = (label, value, onDecrease, onIncrease, input) => (
+	const stepper = (
+		label: string,
+		value: ReactNode,
+		onDecrease: () => void,
+		onIncrease: () => void,
+		input?: ReactNode
+	) => (
 		<div className={form.stepper}>
 			<Button
 				type="button"

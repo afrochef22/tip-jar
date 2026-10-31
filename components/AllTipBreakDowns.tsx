@@ -19,15 +19,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
 import { money, tipPercent } from "../lib/money";
+import type { TouchEvent } from "react";
+import type { BreakdownCard } from "../types/models";
 
-export default function AllTipBreakDowns({ allTipBreakdowns }) {
+// A breakdown's card, or the last card linking to the full list.
+type CarouselCard = (BreakdownCard & { seeAll?: undefined }) | { _id: "see-all"; seeAll: true };
+
+export default function AllTipBreakDowns({ allTipBreakdowns }: { allTipBreakdowns: BreakdownCard[] }) {
 	const router = useRouter();
-	const handleCardClick = (id) => {
+	const handleCardClick = (id: string) => {
 		router.push(`/getSelectedTipBreakDown/${id}`);
 	};
-	const formatDateStringWithDayOfWeek = (dateString) => {
+	const formatDateStringWithDayOfWeek = (dateString: string) => {
 		const date = new Date(dateString);
-		const options = { weekday: "long" }; // Specify the format for the day of the week
+		const options: Intl.DateTimeFormatOptions = { weekday: "long" }; // Specify the format for the day of the week
 		return `${date.toLocaleDateString(
 			undefined,
 			options
@@ -38,7 +43,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 	// Tip Breakdowns page, which has search. Newest show date first; shows on
 	// the same date keep newest-entered first.
 	const RECENT_COUNT = 10;
-	const showTime = (date) => {
+	const showTime = (date: string) => {
 		const [month, day, year] = String(date).split("/").map(Number);
 		return new Date(year, month - 1, day).getTime() || 0;
 	};
@@ -46,7 +51,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 		.reverse()
 		.sort((a, b) => showTime(b.date) - showTime(a.date))
 		.slice(0, RECENT_COUNT);
-	const cards =
+	const cards: CarouselCard[] =
 		allTipBreakdowns.length > RECENT_COUNT
 			? [...recentTipBreakdowns, { _id: "see-all", seeAll: true }]
 			: recentTipBreakdowns;
@@ -78,7 +83,7 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 		};
 	}, []);
 
-	const chunks = cards.reduce((resultArray, item, index) => {
+	const chunks = cards.reduce<CarouselCard[][]>((resultArray, item, index) => {
 		const chunkIndex = Math.floor(index / chunkSize);
 		if (!resultArray[chunkIndex]) {
 			resultArray[chunkIndex] = []; // start a new chunk
@@ -101,12 +106,12 @@ export default function AllTipBreakDowns({ allTipBreakdowns }) {
 	// reactstrap only wires up swiping when the carousel has indicators, so
 	// handle it here. Mostly-vertical drags are left alone so the page scrolls.
 	const SWIPE_THRESHOLD = 40;
-	const touchStart = useRef(null);
-	const handleTouchStart = (e) => {
+	const touchStart = useRef<{ x: number; y: number } | null>(null);
+	const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
 		const touch = e.changedTouches[0];
 		touchStart.current = { x: touch.screenX, y: touch.screenY };
 	};
-	const handleTouchEnd = (e) => {
+	const handleTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
 		if (!touchStart.current) return;
 		const touch = e.changedTouches[0];
 		const dx = touch.screenX - touchStart.current.x;

@@ -6,6 +6,7 @@ import { faClock, faSackDollar } from "@fortawesome/free-solid-svg-icons";
 import UpdateCashTipBreakDownModal from "./UpdateCashTipBreakDownModal";
 import { splitCashTips } from "../lib/cashSplit";
 import { money } from "../lib/money";
+import type { CashWorker } from "./CashTipForm";
 
 export default function CashTipBreakDown({
 	numberOfBarBacks,
@@ -16,6 +17,16 @@ export default function CashTipBreakDown({
 	barBackPercentage,
 	isBartenderHoursClicked,
 	isBarBackHoursClicked,
+}: {
+	numberOfBarBacks: number;
+	numberOfBartenders: number;
+	tipsCollected: number;
+	barBacks: CashWorker[];
+	bartenders: CashWorker[];
+	barBackPercentage: number;
+	// Straight from the URL query.
+	isBartenderHoursClicked?: string | string[];
+	isBarBackHoursClicked?: string | string[];
 }) {
 	const split = splitCashTips({
 		tipsCollected,
@@ -24,10 +35,10 @@ export default function CashTipBreakDown({
 		barBacks,
 	});
 	const bartenderHours = bartenders
-		.map((bartender) => parseFloat(bartender.hours) || 0)
+		.map((bartender) => parseFloat(String(bartender.hours)) || 0)
 		.reduce((acc, hours) => acc + hours, 0);
 	const barBackHours = barBacks
-		.map((barBack) => parseFloat(barBack.hours) || 0)
+		.map((barBack) => parseFloat(String(barBack.hours)) || 0)
 		.reduce((acc, hours) => acc + hours, 0);
 	const tipsPerBarBack = () => split.tipsPerBarBack;
 	const tipsPerBartender = () => split.tipsPerBartender;

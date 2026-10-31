@@ -14,10 +14,31 @@ import {
 	ModalBody,
 	Container,
 } from "reactstrap";
+import type { ChangeEvent, FormEvent } from "react";
 import style from "./addEmployee.module.css";
 import style2 from "./SelectEmployee.module.css";
 
 import SelectNonActiveEmployee from "./SelectNonActiveEmployee";
+import type { Position, WorkerOption, WorkingPosition } from "../types/models";
+import type { AddNewEmployee, PickEmployee } from "./SelectEmployeeDisplay";
+import { stringField, text } from "../lib/field";
+
+// The form's state. After a fill-in is added it's reset to a different shape
+// (no checked/workingPosition, and the Number and Date constructors as
+// tipsCollected), which BUGS_FOUND.md describes.
+type NewFillIn = {
+	id?: number;
+	firstName: string;
+	lastName: string;
+	position: Position[];
+	checked?: boolean;
+	workingPosition?: WorkingPosition;
+	tipsBroughtIn?: number;
+	tippedHours?: number;
+	tipOut?: number;
+	active?: boolean;
+	tipsCollected?: { amount: NumberConstructor; date: DateConstructor }[];
+};
 
 export default function AddGuestEmployee({
 	position,
@@ -26,12 +47,20 @@ export default function AddGuestEmployee({
 	onClick,
 	sortedBarBacks,
 	sortedCooks,
+}: {
+	position: WorkingPosition;
+	addNewEmployee: AddNewEmployee;
+	onClick: PickEmployee;
+	// The list for `position`; the other two aren't passed.
+	sortedBartenders?: WorkerOption[];
+	sortedBarBacks?: WorkerOption[];
+	sortedCooks?: WorkerOption[];
 }) {
 	const [modal, setModal] = useState(false);
 	const [nestedModal, setNestedModal] = useState(false);
 	const [closeAll, setCloseAll] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
-	const [newEmployee, setNewEmployee] = useState({
+	const [newEmployee, setNewEmployee] = useState<NewFillIn>({
 		id: 0,
 		firstName: "",
 		lastName: "",
@@ -53,7 +82,7 @@ export default function AddGuestEmployee({
 		setCloseAll(true);
 	};
 
-	const handleInputChange = (e) => {
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setNewEmployee({
 			...newEmployee,
 			[e.target.name]: e.target.value,
@@ -62,7 +91,7 @@ export default function AddGuestEmployee({
 		});
 	};
 
-	const handleAddEmployee = async (e) => {
+	const handleAddEmployee = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		// Combine first name and last name to form the label
 		const label = `${newEmployee.firstName} ${newEmployee.lastName}`;
@@ -77,9 +106,9 @@ export default function AddGuestEmployee({
 			});
 
 			if (response.ok) {
-				const data = await response.json();
-				const newEmployeeData = {
-					id: data.insertedEmployeeId,
+				const data: unknown = await response.json();
+				const newEmployeeData: WorkerOption = {
+					id: stringField(data, "insertedEmployeeId"),
 					label,
 					position: [position],
 					checked: newEmployee.checked,
@@ -108,9 +137,9 @@ export default function AddGuestEmployee({
 				setAlertMessage(""); // Clear the alert message
 				toggleNested();
 			} else {
-				const body = await response.json().catch(() => ({}));
+				const body: unknown = await response.json().catch(() => ({}));
 				setAlertMessage(
-					body.message || "Could not add employee. Please try again."
+					text(body, "message") || "Could not add employee. Please try again."
 				);
 			}
 		} catch (error) {

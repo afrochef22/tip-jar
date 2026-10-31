@@ -5,7 +5,8 @@ import type { UpdateFilter } from "mongodb";
 import bcrypt from "bcrypt";
 import { getApiSession } from "../../../lib/auth";
 import { reportError } from "../../../lib/alert";
-import { isList, isObjectId } from "../../../lib/field";
+import { isList } from "../../../lib/field";
+import { isObjectId } from "../../../lib/objectId";
 import { isPosition } from "../../../lib/positions";
 import type { EmployeeDoc, Position } from "../../../types/models";
 

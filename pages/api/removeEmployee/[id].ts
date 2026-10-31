@@ -2,7 +2,7 @@ import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { requireSession } from "../../../lib/auth";
 import { reportError } from "../../../lib/alert";
-import { isObjectId } from "../../../lib/field";
+import { isObjectId } from "../../../lib/objectId";
 import type { EmployeeDoc } from "../../../types/models";
 
 export default requireSession(async (req, res) => {

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSession, signOut, getSession } from "next-auth/react";
 import { Form, Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
+import type { ModalProps } from "reactstrap";
 
 const WARNING_THRESHOLD_MS = 5 * 60 * 1000; // show the warning 5 minutes out
 const CHECK_INTERVAL_MS = 30 * 1000; // poll twice a minute
 
-const SessionExpirationWarning = (args) => {
+const SessionExpirationWarning = (args: Partial<ModalProps>) => {
 	const { data: session, update } = useSession();
 	const [showWarning, setShowWarning] = useState(false);
 

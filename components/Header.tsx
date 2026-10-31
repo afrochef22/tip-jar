@@ -18,14 +18,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalculator } from "@fortawesome/free-solid-svg-icons";
 import SessionExpirationWarning from "./SessionExpirationWarning";
 
-const Header = ({ user }) => {
+// `user` is never passed or used.
+const Header = ({ user }: { user?: unknown }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { data: session } = useSession();
 
 	const handleToggle = () => {
 		setIsOpen(!isOpen);
 		const navbarToggler = document.querySelector(".navbar-toggler");
-		navbarToggler.classList.toggle("active");
+		navbarToggler!.classList.toggle("active");
 	};
 
 	const [isMobile, setIsMobile] = useState(false);

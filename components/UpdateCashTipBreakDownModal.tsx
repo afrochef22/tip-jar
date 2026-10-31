@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import CashTipForm, { showCashBreakdown } from "./CashTipForm";
 import form from "./CreditTipForm.module.css";
 import style from "./TipBreakDown.module.css";
+import type { CashTipValues } from "./CashTipForm";
 
 // Cash breakdowns aren't saved, so editing just reopens the breakdown with
 // the new numbers.
@@ -12,12 +13,18 @@ const UpdateCashTipBreakDown = ({
 	barBacks,
 	bartenders,
 	barBackPercentage,
+}: CashTipValues & {
+	// Passed by CashTipBreakDown but not used here.
+	numberOfBarBacks?: number;
+	numberOfBartenders?: number;
+	isBarBackHoursClicked?: string | string[];
+	isBartenderHoursClicked?: string | string[];
 }) => {
 	const router = useRouter();
 	const [modal, setModal] = useState(false);
 	const toggle = () => setModal(!modal);
 
-	const handleUpdate = (values) => {
+	const handleUpdate = (values: CashTipValues) => {
 		showCashBreakdown(router, values);
 		setModal(false);
 	};

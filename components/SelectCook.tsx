@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import style from "./SelectEmployee.module.css";
 import { Button, Label, Row, Col, Container } from "reactstrap";
 import AddGuestEmployee from "./AddGuestEmployee";
+import type { ReactNode } from "react";
+import type { WorkerOption } from "../types/models";
+import type { AddNewEmployee, PickEmployee, SelectStep } from "./SelectEmployeeDisplay";
 
 export default function SelectCook({
 	sortedCooks,
@@ -10,6 +13,14 @@ export default function SelectCook({
 	submit,
 	addNewEmployee,
 	submitError,
+}: {
+	sortedCooks: WorkerOption[];
+	onClick: PickEmployee;
+	// Only the phone layout, which shows one list at a time, passes these.
+	btn?: (step: SelectStep) => void;
+	submit?: () => void;
+	addNewEmployee: AddNewEmployee;
+	submitError?: ReactNode;
 }) {
 	const [isMobile, setIsMobile] = useState(false);
 
@@ -40,7 +51,6 @@ export default function SelectCook({
 						<Col>
 							<h2
 								className={`text-color ${style.centerTitle}`}
-								htmlFor="exampleSelect"
 							>
 								Cooks
 							</h2>
@@ -97,7 +107,7 @@ export default function SelectCook({
 							</Row>
 						)}
 						<Button
-							onClick={() => btn("BarBack")}
+							onClick={() => btn!("BarBack")}
 							className={`mx-2 ${style.centerButton}`}
 						>
 							Back
@@ -112,7 +122,6 @@ export default function SelectCook({
 					<Col>
 						<h2
 							className={`text-color ${style.centerTitle}`}
-							htmlFor="exampleSelect"
 						>
 							Cooks
 						</h2>

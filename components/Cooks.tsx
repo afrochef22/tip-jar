@@ -2,8 +2,9 @@ import EmployeeTable from "./EmployeeList";
 import { Container } from "reactstrap";
 import style from "./EmployeeList.module.css";
 import { AddEmployeeModal } from "./addEmployeeModal";
+import type { PublicEmployee } from "../types/models";
 
-const Cooks = ({ employees }) => {
+const Cooks = ({ employees }: { employees: PublicEmployee[] }) => {
 	return (
 		<Container className={style.employeeList}>
 			<AddEmployeeModal position="Cook" />
