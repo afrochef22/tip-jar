@@ -1,0 +1,176 @@
+import React, { useState, useEffect } from "react";
+import style from "./SelectEmployee.module.css";
+import { Button, Label, Row, Col, Container } from "reactstrap";
+import AddGuestEmployee from "./AddGuestEmployee";
+import type { ReactNode } from "react";
+import type { WorkerOption } from "../types/models";
+import type { AddNewEmployee, PickEmployee, SelectStep } from "./SelectEmployeeDisplay";
+
+export default function SelectBarBack({
+	onClick,
+	sortedBarBacks,
+	btn,
+	addNewEmployee,
+	showCooks,
+	submit,
+	submitError,
+}: {
+	onClick: PickEmployee;
+	sortedBarBacks: WorkerOption[];
+	// Only the phone layout, which shows one list at a time, passes these.
+	btn?: (step: SelectStep) => void;
+	addNewEmployee: AddNewEmployee;
+	showCooks?: boolean;
+	submit?: () => void;
+	submitError?: ReactNode;
+}) {
+	const [isMobile, setIsMobile] = useState(false);
+	const updateScreenSize = () => {
+		setIsMobile(window.innerWidth < 875);
+	};
+
+	// Use useEffect to update screen size on mount and window resize
+	useEffect(() => {
+		updateScreenSize();
+		window.addEventListener("resize", updateScreenSize);
+		return () => {
+			window.removeEventListener("resize", updateScreenSize);
+		};
+	}, []);
+	const checkedBarBacksCount = sortedBarBacks.filter(
+		(bartender) => bartender.checked
+	).length;
+	return (
+		<div>
+			{isMobile ? (
+				<Container>
+					<Row
+						className={`${style.formContainerMobile} ${style.formContainer}`}
+					>
+						<Col>
+							<h2
+								className={`text-color ${style.centerTitle}`}
+							>
+								Bar Backs
+							</h2>
+							<h5 className={`text-color ${style.centerTitle}`}>
+								{" "}
+								{checkedBarBacksCount} selected
+							</h5>
+							<div
+								className={`text-color ${style.scrollableContainer} ${style.scrollableContainerMobile}`}
+							>
+								<AddGuestEmployee
+									position="Bar Back"
+									addNewEmployee={addNewEmployee}
+									sortedBarBacks={sortedBarBacks}
+									onClick={onClick}
+								/>
+								{sortedBarBacks
+									.filter(
+										(employee) =>
+											employee.active === true ||
+											(employee.active === false && employee.checked)
+									)
+									.map((employee) => (
+										<Row
+											onClick={() =>
+												onClick(employee, "Bar Back", !employee.checked)
+											}
+											className={`${style.seperationLine} ${style.clickEmployee}`}
+											key={employee.id}
+										>
+											<Col xs={8} sm={8} md={8}>
+												<Label>{employee.label}</Label>
+											</Col>
+											<Col xs={4} sm={4} md={4}>
+												<div
+													className={
+														employee.checked
+															? style.checkedCheckbox
+															: style.unCheckBox
+													}
+												></div>
+											</Col>
+										</Row>
+									))}
+							</div>
+						</Col>
+					</Row>
+					<Row className={`justify-content-center mt-4 mb-1 ${style.stickyActions}`}>
+						<Button
+							onClick={() => btn!("Bartender")}
+							className={`${style.centerButton}`}
+						>
+							Back
+						</Button>
+
+						<Button
+							onClick={showCooks ? () => btn!("Cook") : submit}
+							className={` ${style.centerButton}`}
+						>
+							{showCooks ? "Next" : "Submit"}
+						</Button>
+					</Row>
+					{!showCooks && submitError && (
+						<Row className="justify-content-center">
+							<Col className={`mx-2 secondary-color ${style.centerButton}`}>
+								<h2 className={style.error}>{submitError}</h2>
+							</Col>
+						</Row>
+					)}
+				</Container>
+			) : (
+				<Container className={style.formContainer}>
+					<Col>
+						<h2
+							className={`text-color ${style.centerTitle}`}
+						>
+							Bar Backs
+						</h2>
+						<h5 className={`text-color ${style.centerTitle}`}>
+							{" "}
+							{checkedBarBacksCount} selected
+						</h5>
+						<div className={`text-color ${style.scrollableContainer}`}>
+							<AddGuestEmployee
+								position="Bar Back"
+								addNewEmployee={addNewEmployee}
+								sortedBarBacks={sortedBarBacks}
+								onClick={onClick}
+							/>
+							{sortedBarBacks
+								.filter(
+									(employee) =>
+										employee.active === true ||
+										(employee.active === false && employee.checked)
+								)
+								.map((employee) => (
+									<Row
+										onClick={() =>
+											onClick(employee, "Bar Back", !employee.checked)
+										}
+										className={`${style.seperationLine} ${style.clickEmployee}`}
+										key={employee.id}
+									>
+										<Col xs={8} sm={8} md={8}>
+											<Label>{employee.label}</Label>
+										</Col>
+										<Col xs={4} sm={4} md={4}>
+											<div
+												className={
+													employee.checked
+														? style.checkedCheckbox
+														: style.unCheckBox
+												}
+											></div>
+										</Col>
+									</Row>
+								))}
+						</div>
+					</Col>
+				</Container>
+			)}
+		</div>
+	);
+}

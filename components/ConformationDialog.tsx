@@ -1,0 +1,65 @@
+import React from "react";
+import type { MouseEventHandler, ReactNode } from "react";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+
+type DialogProps = { isOpen: boolean; toggle: () => void };
+// Runs as the confirm button's onClick.
+type OnConfirm = MouseEventHandler<HTMLButtonElement>;
+
+export const ConfirmationDialog = ({
+	isOpen,
+	toggle,
+	onConfirm,
+	warning,
+}: DialogProps & { onConfirm: OnConfirm; warning?: ReactNode }) => {
+	return (
+		<Modal isOpen={isOpen} toggle={toggle}>
+			<ModalHeader toggle={toggle}>Confirmation</ModalHeader>
+			<ModalBody>
+				{warning && <p className="text-danger fw-bold">{warning}</p>}
+				Are you sure you want to submit? This action cannot be undone.
+			</ModalBody>
+			<ModalFooter>
+				<Button color="secondary" onClick={toggle}>
+					Cancel
+				</Button>
+				<Button color="primary" onClick={onConfirm}>
+					Confirm
+				</Button>
+			</ModalFooter>
+		</Modal>
+	);
+};
+
+export const DeleteDialog = ({ isOpen, toggle, onConfirm }: DialogProps & { onConfirm: OnConfirm }) => {
+	return (
+		<Modal isOpen={isOpen} toggle={toggle}>
+			<ModalHeader toggle={toggle}>Confirmation</ModalHeader>
+			<ModalBody>
+				Are you sure you want to delete? All data will be lost. This action
+				cannot be undone.
+			</ModalBody>
+			<ModalFooter>
+				<Button color="secondary" onClick={toggle}>
+					Cancel
+				</Button>
+				<Button color="danger" onClick={onConfirm}>
+					Delete
+				</Button>
+			</ModalFooter>
+		</Modal>
+	);
+};
+
+export const CustomAlertModal = ({ isOpen, toggle, message }: DialogProps & { message: ReactNode }) => {
+	return (
+		<Modal isOpen={isOpen} toggle={toggle}>
+			<ModalBody>{message}</ModalBody>
+			<ModalFooter>
+				<Button color="secondary" onClick={toggle}>
+					ok
+				</Button>
+			</ModalFooter>
+		</Modal>
+	);
+};

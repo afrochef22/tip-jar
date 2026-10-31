@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseVenueShows, showsOn } from "../lib/venueShows.mjs";
+import { parseVenueShows, showsOn } from "../lib/venueShows.ts";
 
 // Trimmed copy of the venue home page's markup (2026-10-23), including the
 // empty .twelve blocks the real page has between shows.

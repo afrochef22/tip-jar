@@ -6,7 +6,8 @@
 		"start": "next start",
 		"backup": "node scripts/backup.js",
 		"restore": "node scripts/restore.js",
-		"test": "node --test tests/*.test.mjs"
+		"test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test tests/*.test.mjs",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@auth/mongodb-adapter": "^3.0.0",
@@ -29,9 +30,12 @@
 		"reactstrap": "^9.2.2"
 	},
 	"devDependencies": {
+		"@types/bcrypt": "^6.0.0",
 		"@types/luxon": "^3.4.2",
 		"@types/node": "^20.0.0",
+		"@types/nodemailer": "^8.0.2",
 		"@types/react": "^18.2.0",
+		"@types/react-dom": "^18.3.7",
 		"ts-loader": "^9.5.1",
 		"typescript": "^5.3.0"
 	},
