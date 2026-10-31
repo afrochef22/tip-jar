@@ -1,14 +1,17 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getApiSession } from "../../../lib/auth";
 import { tooManyShiftWrites } from "../../../lib/rateLimit";
 import { ShiftDate } from "../../../lib/shiftDate";
 import { reportError } from "../../../lib/alert";
+import { isObjectId } from "../../../lib/field";
+import type { EmployeeDoc, ShiftWorker, TipBreakdownDoc } from "../../../types/models";
 
-export default async (req, res) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
 	const { id } = req.query;
 
-	if (!ObjectId.isValid(id)) {
+	if (!isObjectId(id)) {
 		return res.status(400).json({ error: "Invalid Breakdown ID", id });
 	}
 	if (req.method !== "DELETE") {
@@ -18,8 +21,8 @@ export default async (req, res) => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
-		const tipBreakdownCollection = db.collection("tipBreakdown");
-		const employeeCollection = db.collection("employees");
+		const tipBreakdownCollection = db.collection<TipBreakdownDoc>("tipBreakdown");
+		const employeeCollection = db.collection<EmployeeDoc>("employees");
 
 		const tipBreakdown = await tipBreakdownCollection.findOne({
 			_id: new ObjectId(id),
@@ -38,7 +41,8 @@ export default async (req, res) => {
 		}
 		if (!session && (await tooManyShiftWrites(req, res))) return;
 
-		const employeeIds = []
+		const noWorkers: ShiftWorker[] = [];
+		const employeeIds = noWorkers
 			.concat(
 				tipBreakdown.cookTips ?? [],
 				tipBreakdown.barBackTips ?? [],

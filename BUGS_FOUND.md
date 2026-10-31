@@ -46,3 +46,23 @@ the same there.
 - **Suggested fix:** Look at the record (`npm run backup` first) and delete
   it if it's junk. To stop more like it, `addTipBreakDown` already rejects a
   missing show or date, so this record is probably from before that check.
+
+## 4. The breakdown API routes save amounts and worker lists without checking them
+
+- **Files:** `pages/api/addTipBreakDown.ts`, `pages/api/UpdateTipBreakDown/[id].ts`
+- **Problem:** Apart from the show, the date (add only) and each worker's `id`,
+  the request body is saved exactly as sent. `totalTips`, `foodSales`,
+  `totalBarSales` and every worker's `tipOut`, `tippedHours` and
+  `workingPosition` can be any JSON value. This is how strings got into the
+  data: the backup has `totalTips` saved as a string on 6 breakdowns and
+  `amount` as a string on 56 `tipsCollected` entries, which is why the types
+  have to allow `number | string`. `UpdateTipBreakDown` also doesn't check
+  that `date` is a string before using it in a database query and saving it,
+  so a manager's request with `"date": {"$ne": null}` would run as a query
+  operator.
+- **Suggested fix:** Check the body in both routes before saving: amounts are
+  finite numbers (or numeric strings converted with `Number`), `date` is a
+  `MM/d/yyyy` string, `workingPosition` is one of the three positions, and
+  `tippedHours` is a number. Return 400 otherwise. Once old records are
+  cleaned up (a script like `scripts/migrate-tipout-numbers.js`), the
+  `SavedAmount` type in `types/models.ts` can become `number`.

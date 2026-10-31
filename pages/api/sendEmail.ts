@@ -5,6 +5,8 @@ import { requireSession } from "../../lib/auth";
 import { reportError } from "../../lib/alert";
 import { sendMail } from "../../lib/mailer";
 import { siteUrl } from "../../lib/siteUrl";
+import { isObjectId } from "../../lib/field";
+import type { EmployeeDoc } from "../../types/models";
 
 const LINK_TTL_DAYS = 7;
 
@@ -15,14 +17,15 @@ export default requireSession(async (req, res) => {
 		return res.status(405).json({ success: false, error: "Method not allowed" });
 	}
 
-	const { employeeId } = req.body ?? {};
-	if (!ObjectId.isValid(employeeId)) {
+	const body: Record<string, unknown> = { ...req.body };
+	const { employeeId } = body;
+	if (!isObjectId(employeeId)) {
 		return res.status(400).json({ success: false, error: "Invalid employee id" });
 	}
 
 	try {
 		const client = await clientPromise;
-		const employees = client.db("TeragramBallroom").collection("employees");
+		const employees = client.db("TeragramBallroom").collection<EmployeeDoc>("employees");
 		const employee = await employees.findOne({ _id: new ObjectId(employeeId) });
 
 		if (!employee) {

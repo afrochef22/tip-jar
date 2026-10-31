@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { getApiSession } from "../../lib/auth";
@@ -5,14 +6,22 @@ import { tooManyShiftWrites } from "../../lib/rateLimit";
 import { ShiftDate } from "../../lib/shiftDate";
 import { cleanShowName, isSameShow, showKey } from "../../lib/showKey";
 import { reportError } from "../../lib/alert";
+import { field, isList, isObjectId, prop } from "../../lib/field";
+import type { TipBreakdownDoc } from "../../types/models";
 
-const toIdList = (list) => (Array.isArray(list) ? list : []);
+const toIdList = (list: unknown) => (isList(list) ? list : []);
 
-export default async (req, res) => {
+// A worker line from the browser whose `id` is a valid employee id. The rest
+// of the line isn't checked.
+const hasEmployeeId = (worker: unknown): worker is { id: Parameters<typeof ObjectId.isValid>[0] } =>
+	isObjectId(field(worker, "id"));
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method !== "POST") {
 		return res.status(405).json({ message: "Method not allowed" });
 	}
 
+	const body: Record<string, unknown> = { ...req.body };
 	const {
 		show: rawShow,
 		date,
@@ -27,7 +36,7 @@ export default async (req, res) => {
 		tipsPerBartender,
 		totalBarSales,
 		shiftNotes,
-	} = req.body ?? {};
+	} = body;
 
 	if (typeof rawShow !== "string" || !rawShow.trim() || typeof date !== "string") {
 		return res.status(400).json({ message: "Show and date are required" });
@@ -48,19 +57,25 @@ export default async (req, res) => {
 	const barBacks = toIdList(barBackTips);
 	const bartenders = toIdList(BartenderTips);
 	const everyone = [...cooks, ...barBacks, ...bartenders];
-	if (everyone.some((e) => !ObjectId.isValid(e?.id))) {
+	if (!everyone.every(hasEmployeeId)) {
 		return res.status(400).json({ message: "Invalid employee id in tips" });
 	}
 
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
+		// Untyped handles for the writes below: amounts and worker lines are
+		// saved as the browser sent them (see BUGS_FOUND.md).
+		const unchecked = {
+			tipBreakdown: db.collection("tipBreakdown"),
+			employees: db.collection("employees"),
+		};
 
 		// Compare in code rather than by exact match so differences in spacing,
 		// capitalization or punctuation still count as the same show. The unique
 		// index on { date, showKey } backs this up when two phones submit at once.
 		const sameDate = await db
-			.collection("tipBreakdown")
+			.collection<TipBreakdownDoc>("tipBreakdown")
 			.find({ date }, { projection: { show: 1 } })
 			.toArray();
 		const duplicate = sameDate.find((b) => isSameShow(b.show, show));
@@ -71,7 +86,7 @@ export default async (req, res) => {
 			});
 		}
 
-		const tipBreakdownResult = await db.collection("tipBreakdown").insertOne({
+		const tipBreakdownResult = await unchecked.tipBreakdown.insertOne({
 			show,
 			showKey: showKey(show),
 			date,
@@ -89,17 +104,17 @@ export default async (req, res) => {
 			createdat: new Date(),
 		});
 
-		const tipBreakdownId = tipBreakdownResult.insertedId;
+		const tipBreakdownId: ObjectId = tipBreakdownResult.insertedId;
 
 		for (const employee of everyone) {
-			await db.collection("employees").updateOne(
+			await unchecked.employees.updateOne(
 				{ _id: new ObjectId(employee.id) },
 				{
 					$addToSet: {
 						tipsCollected: {
 							date,
-							amount: Number(employee.tipOut) || 0,
-							workingPosition: employee.workingPosition,
+							amount: Number(prop(employee, "tipOut")) || 0,
+							workingPosition: prop(employee, "workingPosition"),
 							show,
 							tipBreakdownId: tipBreakdownId.toString(),
 						},
@@ -113,7 +128,7 @@ export default async (req, res) => {
 			tipBreakdownId,
 		});
 	} catch (error) {
-		if (error?.code === 11000) {
+		if (field(error, "code") === 11000) {
 			// Lost a race with an identical submission from another device.
 			return res.status(409).json({
 				message: "A tip breakdown for this show and date was just submitted.",

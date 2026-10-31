@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import { ShowDateComparer } from "../../lib/shiftDate";
 import { parseVenueShows, showsOn } from "../../lib/venueShows";
 import { reportError } from "../../lib/alert";
@@ -5,7 +6,7 @@ import { reportError } from "../../lib/alert";
 const websiteUrl = "https://teragramballroom.com/";
 
 // Function to fetch the HTML content of the website
-async function fetchWebsiteData(url) {
+async function fetchWebsiteData(url: string) {
 	// Node 18+ has fetch built in, so no need for the node-fetch package.
 	// Don't leave the shift screen waiting on a slow venue site.
 	const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
@@ -14,7 +15,7 @@ async function fetchWebsiteData(url) {
 }
 
 // Fetch website data and find the band performing today
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		const html = await fetchWebsiteData(websiteUrl);
 		const shows = parseVenueShows(html);

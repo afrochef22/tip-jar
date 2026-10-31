@@ -1,4 +1,4 @@
-import type { ObjectId } from "mongodb";
+import type { ObjectId, WithId } from "mongodb";
 
 // Shapes of the documents in the TeragramBallroom database, checked against a
 // backup of the real data (2026-10-23). Older records saved some amounts as
@@ -17,14 +17,13 @@ export type Shift = {
 	workingPosition: WorkingPosition;
 	show: string;
 	tipBreakdownId: string;
-	tippedHours?: number;
+	tippedHours?: number | ""; // editing a breakdown saves "" when there were no hours
 	updatedat?: Date;
 };
 
 // `employees` collection. `position` is a list: one person can work more than
-// one role.
+// one role. MongoDB adds `_id` (reads return WithId<EmployeeDoc>).
 export type EmployeeDoc = {
-	_id: ObjectId;
 	firstName: string;
 	lastName: string;
 	position: Position[];
@@ -55,9 +54,8 @@ export type ShiftWorker = {
 	tipsBroughtIn?: number;
 };
 
-// `tipBreakdown` collection: one show's credit card tip split.
+// `tipBreakdown` collection: one show's credit card tip split. MongoDB adds `_id`.
 export type TipBreakdownDoc = {
-	_id: ObjectId;
 	show: string;
 	showKey: string; // see lib/showKey
 	date: string; // "MM/d/yyyy"
@@ -87,8 +85,8 @@ export type Json<T> = T extends ObjectId | Date
 			? { [K in keyof T]: Json<T[K]> }
 			: T;
 
-export type Employee = Json<EmployeeDoc>;
-export type TipBreakdown = Json<TipBreakdownDoc>;
+export type Employee = Json<WithId<EmployeeDoc>>;
+export type TipBreakdown = Json<WithId<TipBreakdownDoc>>;
 
 // The projections in lib/employeeFields and lib/breakdownFields.
 export type PublicEmployee = Pick<Employee, "_id" | "firstName" | "lastName" | "position" | "active">;

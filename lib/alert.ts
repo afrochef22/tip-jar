@@ -1,6 +1,6 @@
 import { sendMail } from "./mailer";
 import clientPromise from "./mongodb";
-import { errorField } from "./errorField";
+import { field } from "./field";
 
 // Logs a server error and emails it to ALERT_EMAIL (set in Vercel), so
 // failures during a shift don't go unnoticed in the logs. Each `where` sends
@@ -28,7 +28,7 @@ async function claimAlert(where: string) {
 		]);
 		return true;
 	} catch (error) {
-		if (errorField(error, "code") === 11000) return false; // already emailed this hour
+		if (field(error, "code") === 11000) return false; // already emailed this hour
 		const last = sentInMemory.get(where);
 		if (last && last > Date.now()) return false;
 		sentInMemory.set(where, expiresAt.getTime());
@@ -43,7 +43,7 @@ export async function reportError(where: string, error: unknown, details = "") {
 	try {
 		if (!(await claimAlert(where))) return false;
 		const time = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
-		const stack = String(errorField(error, "stack") || error).split("\n").slice(0, 8).join("\n");
+		const stack = String(field(error, "stack") || error).split("\n").slice(0, 8).join("\n");
 		await sendMail({
 			to,
 			subject: `TipJar error: ${where}`,
@@ -52,7 +52,7 @@ export async function reportError(where: string, error: unknown, details = "") {
 				``,
 				`Where: ${where}`,
 				...(details ? [`Details: ${details}`] : []),
-				`Error: ${errorField(error, "message") || error}`,
+				`Error: ${field(error, "message") || error}`,
 				``,
 				stack,
 				``,

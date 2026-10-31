@@ -1,15 +1,26 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
+import type { WithId } from "mongodb";
 import { getApiSession } from "../../../lib/auth";
 import { tooManyShiftWrites } from "../../../lib/rateLimit";
 import { ShiftDate } from "../../../lib/shiftDate";
 import { cleanShowName, isSameShow, showKey } from "../../../lib/showKey";
 import { reportError } from "../../../lib/alert";
+import { field, isList, isObjectId, prop } from "../../../lib/field";
+import type { EmployeeDoc, TipBreakdownDoc } from "../../../types/models";
 
-export default async (req, res) => {
+// `(data.cookTips ?? []).find(...)` threw a TypeError when the field wasn't a
+// list, which the catch below turns into a 500. This keeps that.
+const asList = (value: unknown): unknown[] => {
+	if (!isList(value)) throw new TypeError("Expected a list of workers");
+	return value;
+};
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
 	const id = req.query.id;
-	const data = req.body ?? {};
-	if (!ObjectId.isValid(id)) {
+	const data: Record<string, unknown> = { ...req.body };
+	if (!isObjectId(id)) {
 		return res.status(400).json({ error: "Invalid Tip breakdown ID: ", id });
 	}
 
@@ -17,8 +28,14 @@ export default async (req, res) => {
 		try {
 			const client = await clientPromise;
 			const db = client.db("TeragramBallroom");
-			const tipBreakDownCollection = db.collection("tipBreakdown");
-			const employeeCollection = db.collection("employees");
+			const tipBreakDownCollection = db.collection<TipBreakdownDoc>("tipBreakdown");
+			const employeeCollection = db.collection<EmployeeDoc>("employees");
+			// Untyped handles for the queries and writes below that use values as
+			// the browser sent them (see BUGS_FOUND.md).
+			const unchecked = {
+				tipBreakdown: db.collection("tipBreakdown"),
+				employees: db.collection("employees"),
+			};
 
 			const objectId = new ObjectId(id);
 			const filter = { _id: objectId };
@@ -53,8 +70,11 @@ export default async (req, res) => {
 			const newShow = data.show ?? existing.show;
 			const newDate = data.date ?? existing.date;
 			if (!isSameShow(newShow, existing.show) || newDate !== existing.date) {
-				const sameDate = await tipBreakDownCollection
-					.find({ date: newDate, _id: { $ne: objectId } }, { projection: { show: 1 } })
+				const sameDate = await unchecked.tipBreakdown
+					.find<WithId<Pick<TipBreakdownDoc, "show">>>(
+						{ date: newDate, _id: { $ne: objectId } },
+						{ projection: { show: 1 } }
+					)
 					.toArray();
 				const clash = sameDate.find((b) => isSameShow(b.show, newShow));
 				if (clash) {
@@ -66,8 +86,8 @@ export default async (req, res) => {
 			}
 
 			// Copy only the fields that were sent. 0 and "" are valid values.
-			const setValues = {};
-			const copy = (key, transform = (v) => v) => {
+			const setValues: Record<string, unknown> = {};
+			const copy = (key: string, transform: (v: unknown) => unknown = (v) => v) => {
 				if (data[key] !== undefined) setValues[key] = transform(data[key]);
 			};
 			copy("show");
@@ -81,15 +101,15 @@ export default async (req, res) => {
 			copy("tipsPerCook", Number);
 			copy("tipsPerBarBack", Number);
 			copy("tipsPerBartender", Number);
-			if (Array.isArray(data.cookTips)) setValues.cookTips = data.cookTips;
-			if (Array.isArray(data.barBackTips)) setValues.barBackTips = data.barBackTips;
-			if (Array.isArray(data.bartenderTips))
+			if (isList(data.cookTips)) setValues.cookTips = data.cookTips;
+			if (isList(data.barBackTips)) setValues.barBackTips = data.barBackTips;
+			if (isList(data.bartenderTips))
 				setValues.BartenderTips = data.bartenderTips;
 			setValues.updatedat = new Date();
 
 			const updateDocument = { $set: setValues };
 
-			const result = await tipBreakDownCollection.updateOne(
+			const result = await unchecked.tipBreakdown.updateOne(
 				filter,
 				updateDocument
 			);
@@ -111,49 +131,49 @@ export default async (req, res) => {
 						// Find the corresponding tip from the tip breakdown data
 						if (tip.tipBreakdownId === id) {
 							// Initialize a variable to hold the updated tip amount
-							let updatedTipAmount = tip.amount; // Default to existing amount
-							let updatedDate = tip.date;
-							let updatedWorkingPosition = tip.workingPosition;
-							let updatedShow = tip.show;
-							let updateTippedHours = tip.tippedHours ? tip.tippedHours : "";
+							let updatedTipAmount: unknown = tip.amount; // Default to existing amount
+							let updatedDate: unknown = tip.date;
+							let updatedWorkingPosition: unknown = tip.workingPosition;
+							let updatedShow: unknown = tip.show;
+							let updateTippedHours: unknown = tip.tippedHours ? tip.tippedHours : "";
 
 							// Check if the tip belongs to cookTips, barBackTips, or bartenderTips
 							if (tip.workingPosition === "Cook") {
 								// Find the corresponding cook tip and update the tip amount
-								const cook = (data.cookTips ?? []).find(
-									(cook) => cook.id === employee._id.toString()
+								const cook = asList(data.cookTips ?? []).find(
+									(cook) => prop(cook, "id") === employee._id.toString()
 								);
 
 								if (cook) {
-									updatedTipAmount = Number(cook.tipOut);
+									updatedTipAmount = Number(prop(cook, "tipOut"));
 									updatedDate = data.date ?? tip.date;
 									updatedShow = data.show ?? tip.show;
-									updatedWorkingPosition = cook.workingPosition;
-									updateTippedHours = cook.tippedHours;
+									updatedWorkingPosition = prop(cook, "workingPosition");
+									updateTippedHours = prop(cook, "tippedHours");
 								}
 							} else if (tip.workingPosition === "Bar Back") {
 								// Find the corresponding bar back tip and update the tip amount
-								const barBack = (data.barBackTips ?? []).find(
-									(barBack) => barBack.id === employee._id.toString()
+								const barBack = asList(data.barBackTips ?? []).find(
+									(barBack) => prop(barBack, "id") === employee._id.toString()
 								);
 								if (barBack) {
-									updatedTipAmount = Number(barBack.tipOut);
+									updatedTipAmount = Number(prop(barBack, "tipOut"));
 									updatedDate = data.date ?? tip.date;
 									updatedShow = data.show ?? tip.show;
-									updatedWorkingPosition = barBack.workingPosition;
-									updateTippedHours = barBack.tippedHours;
+									updatedWorkingPosition = prop(barBack, "workingPosition");
+									updateTippedHours = prop(barBack, "tippedHours");
 								}
 							} else if (tip.workingPosition === "Bartender") {
 								// Find the corresponding bartender tip and update the tip amount
-								const bartender = (data.bartenderTips ?? []).find(
-									(bartender) => bartender.id === employee._id.toString()
+								const bartender = asList(data.bartenderTips ?? []).find(
+									(bartender) => prop(bartender, "id") === employee._id.toString()
 								);
 								if (bartender) {
-									updatedTipAmount = Number(bartender.tipOut);
+									updatedTipAmount = Number(prop(bartender, "tipOut"));
 									updatedDate = data.date ?? tip.date;
 									updatedShow = data.show ?? tip.show;
-									updatedWorkingPosition = bartender.workingPosition;
-									updateTippedHours = bartender.tippedHours;
+									updatedWorkingPosition = prop(bartender, "workingPosition");
+									updateTippedHours = prop(bartender, "tippedHours");
 								}
 							}
 
@@ -172,7 +192,7 @@ export default async (req, res) => {
 					});
 
 					// Update the employee document with the updated tips
-					await employeeCollection.updateOne(
+					await unchecked.employees.updateOne(
 						{ _id: employee._id },
 						{ $set: { tipsCollected: updatedTips } }
 					);
@@ -181,7 +201,7 @@ export default async (req, res) => {
 
 			res.status(200).json({ message: "Tip Breakdown updated successfully" });
 		} catch (error) {
-			if (error?.code === 11000) {
+			if (field(error, "code") === 11000) {
 				return res.status(409).json({
 					error: "A tip breakdown for this show and date already exists.",
 				});

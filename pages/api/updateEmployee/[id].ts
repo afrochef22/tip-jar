@@ -1,20 +1,24 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
+import type { UpdateFilter } from "mongodb";
 import bcrypt from "bcrypt";
 import { getApiSession } from "../../../lib/auth";
 import { reportError } from "../../../lib/alert";
+import { isList, isObjectId } from "../../../lib/field";
+import { isPosition } from "../../../lib/positions";
+import type { EmployeeDoc, Position } from "../../../types/models";
 
 const SALT_ROUNDS = 10;
-const POSITIONS = ["Bartender", "Bar Back", "Cook", "No Position"];
 
 // Fields a logged-out person may set while completing registration.
 const REGISTRATION_FIELDS = ["username", "email", "password"];
 
-export default async (req, res) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
 	const id = req.query.id;
-	const data = req.body ?? {};
+	const data: Record<string, unknown> = { ...req.body };
 
-	if (!ObjectId.isValid(id)) {
+	if (!isObjectId(id)) {
 		return res.status(400).json({ error: "Invalid Employee ID", id });
 	}
 	if (req.method !== "PATCH") {
@@ -24,7 +28,7 @@ export default async (req, res) => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
-		const employees = db.collection("employees");
+		const employees = db.collection<EmployeeDoc>("employees");
 		const filter = { _id: new ObjectId(id) };
 
 		const employee = await employees.findOne(filter);
@@ -34,8 +38,17 @@ export default async (req, res) => {
 
 		const isRegistration = data.token !== undefined;
 		const session = isRegistration ? null : await getApiSession(req, res);
-		const $set = {};
-		const $unset = {};
+		const $set: {
+			firstName?: string;
+			lastName?: string;
+			position?: Position[];
+			active?: boolean;
+			email?: string;
+			username?: string;
+			password?: string;
+			firstSignInDate?: Date;
+		} = {};
+		const $unset: { token?: ""; tokenExpiration?: "" } = {};
 
 		if (session) {
 			// Manager edit.
@@ -43,8 +56,8 @@ export default async (req, res) => {
 				$set.firstName = data.firstName.trim();
 			if (typeof data.lastName === "string" && data.lastName.trim())
 				$set.lastName = data.lastName.trim();
-			if (Array.isArray(data.position)) {
-				if (!data.position.every((p) => POSITIONS.includes(p))) {
+			if (isList(data.position)) {
+				if (!data.position.every(isPosition)) {
 					return res.status(400).json({ error: "Invalid position" });
 				}
 				$set.position = data.position;
@@ -109,7 +122,7 @@ export default async (req, res) => {
 			}
 		}
 
-		const update = {};
+		const update: UpdateFilter<EmployeeDoc> = {};
 		if (Object.keys($set).length) update.$set = $set;
 		if (Object.keys($unset).length) update.$unset = $unset;
 		if (!Object.keys(update).length) {
@@ -123,6 +136,7 @@ export default async (req, res) => {
 		// by id; the name is only what's shown).
 		if (session && ($set.firstName || $set.lastName)) {
 			const name = `${$set.firstName ?? employee.firstName} ${$set.lastName ?? employee.lastName}`;
+			// Untyped: the field paths below are built from the list name.
 			const breakdowns = db.collection("tipBreakdown");
 			for (const list of ["BartenderTips", "barBackTips", "cookTips"]) {
 				await breakdowns.updateMany(

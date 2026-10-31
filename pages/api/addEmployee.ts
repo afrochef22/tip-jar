@@ -1,19 +1,22 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../lib/mongodb";
 import { getApiSession } from "../../lib/auth";
 import { reportError } from "../../lib/alert";
-
-const POSITIONS = ["Bartender", "Bar Back", "Cook", "No Position"];
+import { isList } from "../../lib/field";
+import { isPosition } from "../../lib/positions";
+import type { EmployeeDoc } from "../../types/models";
 
 // Escapes a string for safe use inside a RegExp, so a name containing
 // characters like "." or "+" is matched literally.
-const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-export default async (req, res) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method !== "POST") {
 		return res.status(405).json({ message: "Method not allowed" });
 	}
 
-	const { firstName, lastName, position, active } = req.body ?? {};
+	const body: Record<string, unknown> = { ...req.body };
+	const { firstName, lastName, position, active } = body;
 
 	if (
 		typeof firstName !== "string" ||
@@ -24,8 +27,8 @@ export default async (req, res) => {
 		return res.status(400).json({ message: "First and last name are required" });
 	}
 	if (
-		!Array.isArray(position) ||
-		!position.every((p) => POSITIONS.includes(p))
+		!isList(position) ||
+		!position.every(isPosition)
 	) {
 		return res.status(400).json({ message: "Invalid position" });
 	}
@@ -43,7 +46,7 @@ export default async (req, res) => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
-		const employees = db.collection("employees");
+		const employees = db.collection<EmployeeDoc>("employees");
 
 		// Same person, different capitalization/spacing should still count
 		// as a duplicate (this is how "Adrian Sandoval" ended up as two

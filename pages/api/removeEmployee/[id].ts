@@ -2,11 +2,13 @@ import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
 import { requireSession } from "../../../lib/auth";
 import { reportError } from "../../../lib/alert";
+import { isObjectId } from "../../../lib/field";
+import type { EmployeeDoc } from "../../../types/models";
 
 export default requireSession(async (req, res) => {
 	const { id } = req.query;
 
-	if (!ObjectId.isValid(id)) {
+	if (!isObjectId(id)) {
 		return res.status(400).json({ error: "Invalid employee ID", id });
 	}
 
@@ -17,7 +19,7 @@ export default requireSession(async (req, res) => {
 	try {
 		const client = await clientPromise;
 		const db = client.db("TeragramBallroom");
-		const employees = db.collection("employees");
+		const employees = db.collection<EmployeeDoc>("employees");
 
 		// Payroll totals are built from each employee's tipsCollected, so
 		// deleting someone who has been paid would erase them from past pay
