@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "../../../lib/mongodb";
 import GoogleProvider from "next-auth/providers/google";
@@ -6,18 +7,21 @@ import EmailProvider from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { reportError } from "../../../lib/alert";
+import type { Document, UpdateFilter } from "mongodb";
 
 async function employeesCollection() {
 	const client = await clientPromise;
 	return client.db("TeragramBallroom").collection("employees");
 }
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
 	providers: [
 		EmailProvider({
 			server: {
 				host: process.env.EMAIL_SERVER_HOST,
-				port: process.env.EMAIL_SERVER_PORT,
+				// nodemailer runs Number() on the port itself, so this is the port it
+				// always used.
+				port: Number(process.env.EMAIL_SERVER_PORT),
 				auth: {
 					user: process.env.EMAIL_SERVER_USER,
 					pass: process.env.EMAIL_SERVER_PASSWORD,
@@ -59,8 +63,9 @@ export const authOptions = {
 			},
 		}),
 		GoogleProvider({
-			clientId: process.env.GOOGLE_CLIENT_ID,
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+			// Required env vars (see CLAUDE.md); passed through as-is.
+			clientId: process.env.GOOGLE_CLIENT_ID!,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
 		}),
 	],
 	session: {
@@ -91,10 +96,10 @@ export const authOptions = {
 				if (account?.provider === "google") {
 					// A Google sign-in completes registration: link the account and
 					// consume any pending registration link.
-					const $set = {};
+					const $set: { googleId?: string; firstSignInDate?: Date } = {};
 					if (!existing.googleId) $set.googleId = account.providerAccountId;
 					if (!existing.firstSignInDate) $set.firstSignInDate = new Date();
-					const update = { $unset: { token: "", tokenExpiration: "" } };
+					const update: UpdateFilter<Document> = { $unset: { token: "", tokenExpiration: "" } };
 					if (Object.keys($set).length) update.$set = $set;
 					await employees.updateOne({ _id: existing._id }, update);
 				}

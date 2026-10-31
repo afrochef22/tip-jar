@@ -10,9 +10,11 @@ import { load } from "cheerio";
 // "Fri, October 23" (sometimes with "@ 8pm" style extras stripped) -> "Fri October 23"
 const DATE = /^[A-Z][a-z]{2} [A-Z][a-z]+ \d{1,2}$/;
 
-export function parseVenueShows(html) {
+export type VenueShow = { name: string; date: string };
+
+export function parseVenueShows(html: string) {
 	const $ = load(html);
-	const shows = [];
+	const shows: VenueShow[] = [];
 	$(".twelve").each(function () {
 		const name = $(this).find(".tw-name").text().trim();
 		const date = $(this)
@@ -28,6 +30,6 @@ export function parseVenueShows(html) {
 }
 
 // `today` is ShowDateComparer()'s format, e.g. "Fri October 23".
-export function showsOn(shows, today) {
+export function showsOn(shows: VenueShow[], today: string) {
 	return shows.filter((s) => s.date === today).map((s) => s.name);
 }

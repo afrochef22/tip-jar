@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { splitCreditTips } from "../lib/tipSplit.mjs";
+import { splitCreditTips } from "../lib/tipSplit.ts";
 
 const people = (...hours) =>
 	hours.map((tippedHours, i) => ({ id: `p${i}`, label: `P${i}`, tippedHours }));

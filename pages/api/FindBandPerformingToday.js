@@ -1,5 +1,5 @@
 import { ShowDateComparer } from "../../lib/shiftDate";
-import { parseVenueShows, showsOn } from "../../lib/venueShows.mjs";
+import { parseVenueShows, showsOn } from "../../lib/venueShows";
 import { reportError } from "../../lib/alert";
 // URL of the website with the list of bands and dates
 const websiteUrl = "https://teragramballroom.com/";

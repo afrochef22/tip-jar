@@ -11,13 +11,23 @@
 //
 // All math is done in cents to avoid floating point drift.
 
-const toCents = (n) => Math.round((Number(n) || 0) * 100);
-const hoursOf = (p) => parseFloat(p.hours) || 0;
-const sum = (list) => list.reduce((acc, n) => acc + n, 0);
+// Hours come from a text input, so they can be "" or a number.
+export type CashPerson = { hours: number | string };
+
+export type CashSplitInput<P extends CashPerson> = {
+	tipsCollected: number | string;
+	barBackPercentage: number;
+	bartenders: P[];
+	barBacks: P[];
+};
+
+const toCents = (n: number | string) => Math.round((Number(n) || 0) * 100);
+const hoursOf = (p: CashPerson) => parseFloat(String(p.hours)) || 0;
+const sum = (list: number[]) => list.reduce((acc, n) => acc + n, 0);
 
 // Splits `cents` across people in whole dollars: evenly, or by hours when the
 // group has hours. Returns each person's cents, rounded down to the dollar.
-const wholeDollars = (cents, people) => {
+const wholeDollars = (cents: number, people: CashPerson[]) => {
 	const totalHours = sum(people.map(hoursOf));
 	return people.map((p) => {
 		const share = totalHours === 0 ? cents / people.length : (cents * hoursOf(p)) / totalHours;
@@ -25,7 +35,12 @@ const wholeDollars = (cents, people) => {
 	});
 };
 
-export function splitCashTips({ tipsCollected, barBackPercentage, bartenders, barBacks }) {
+export function splitCashTips<P extends CashPerson>({
+	tipsCollected,
+	barBackPercentage,
+	bartenders,
+	barBacks,
+}: CashSplitInput<P>) {
 	const tips = toCents(tipsCollected);
 	const barBackPool = barBacks.length === 0 ? 0 : Math.round((tips * barBackPercentage) / 100);
 	const bartenderPool = tips - barBackPool;
@@ -33,7 +48,7 @@ export function splitCashTips({ tipsCollected, barBackPercentage, bartenders, ba
 	const bartenderCents = bartenders.length === 0 ? [] : wholeDollars(bartenderPool, bartenders);
 	let left = tips - sum(bartenderCents);
 
-	let barBackCents = [];
+	let barBackCents: number[] = [];
 	if (barBacks.length > 0) {
 		// Bar backs split everything that's left in whole dollars; the spare
 		// dollars go one each to the bar backs with the most hours (or the first
@@ -53,7 +68,7 @@ export function splitCashTips({ tipsCollected, barBackPercentage, bartenders, ba
 
 	const bartenderHours = sum(bartenders.map(hoursOf));
 	const barBackHours = sum(barBacks.map(hoursOf));
-	const dollars = (c) => c / 100;
+	const dollars = (c: number) => c / 100;
 	return {
 		bartenders: bartenders.map((p, i) => ({ ...p, tipOut: dollars(bartenderCents[i]) })),
 		barBacks: barBacks.map((p, i) => ({ ...p, tipOut: dollars(barBackCents[i]) })),

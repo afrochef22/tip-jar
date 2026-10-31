@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "./mongodb";
 
 // Caps how many times one IP address can do something per hour. Counts live
@@ -6,24 +7,30 @@ import clientPromise from "./mongodb";
 // above normal use.
 const WINDOW_SECONDS = 60 * 60;
 
-let indexReady;
+type RateLimitCount = { _id: string; count: number; expiresAt: Date };
 
-const clientIp = (req) =>
+let indexReady: Promise<string> | undefined;
+
+const clientIp = (req: NextApiRequest) =>
 	String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() ||
 	req.socket?.remoteAddress ||
 	"unknown";
 
 // Logged-out add, edit and delete of shift breakdowns. Managers aren't limited.
-export function tooManyShiftWrites(req, res, errorKey = "error") {
+export function tooManyShiftWrites(req: NextApiRequest, res: NextApiResponse, errorKey = "error") {
 	return tooManyRequests(req, res, { bucket: "shift-writes", limit: 60, errorKey });
 }
 
 // Returns true (and sends a 429) when this request is over the limit.
 // Fails open: a database hiccup here must not stop staff closing out a shift.
-export async function tooManyRequests(req, res, { bucket, limit, errorKey = "error" }) {
+export async function tooManyRequests(
+	req: NextApiRequest,
+	res: NextApiResponse,
+	{ bucket, limit, errorKey = "error" }: { bucket: string; limit: number; errorKey?: string }
+) {
 	try {
 		const db = (await clientPromise).db("TeragramBallroom");
-		const counts = db.collection("rateLimits");
+		const counts = db.collection<RateLimitCount>("rateLimits");
 		// Old windows delete themselves.
 		indexReady ??= counts
 			.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 })
@@ -35,14 +42,15 @@ export async function tooManyRequests(req, res, { bucket, limit, errorKey = "err
 
 		const now = Date.now();
 		const windowStart = now - (now % (WINDOW_SECONDS * 1000));
-		const { count } = await counts.findOneAndUpdate(
+		// An upsert that returns the document after the update always finds one.
+		const { count } = (await counts.findOneAndUpdate(
 			{ _id: `${bucket}:${clientIp(req)}:${windowStart}` },
 			{
 				$inc: { count: 1 },
 				$setOnInsert: { expiresAt: new Date(windowStart + WINDOW_SECONDS * 1000) },
 			},
 			{ upsert: true, returnDocument: "after" }
-		);
+		))!;
 		if (count <= limit) return false;
 
 		const retryAfter = Math.ceil((windowStart + WINDOW_SECONDS * 1000 - now) / 1000);

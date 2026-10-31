@@ -3,7 +3,9 @@ import nodemailer from "nodemailer";
 // Sends email through the app's Gmail account (EMAIL_SERVER_USER /
 // EMAIL_SERVER_PASSWORD), from EMAIL_FROM. Timeouts keep a slow mail server
 // from holding up the request.
-export function sendMail({ to, subject, html, text }) {
+export type MailMessage = { to: string; subject: string; html?: string; text?: string };
+
+export function sendMail({ to, subject, html, text }: MailMessage) {
 	const transporter = nodemailer.createTransport({
 		service: "Gmail",
 		auth: {

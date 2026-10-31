@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { splitCashTips } from "../lib/cashSplit.mjs";
+import { splitCashTips } from "../lib/cashSplit.ts";
 
 const people = (...hours) => hours.map((h, i) => ({ name: `P${i}`, hours: h }));
 

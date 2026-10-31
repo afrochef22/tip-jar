@@ -7,10 +7,15 @@ export const RESET_TTL_MINUTES = 60;
 export const MIN_PASSWORD_LENGTH = 8;
 
 export const newResetToken = () => randomBytes(32).toString("hex");
-export const hashResetToken = (token) => createHash("sha256").update(String(token)).digest("hex");
+export const hashResetToken = (token: unknown) => createHash("sha256").update(String(token)).digest("hex");
 
 // True when `token` matches the employee's unexpired reset link.
-export function resetTokenValid(employee, token) {
+// `employee` is whatever the database returned, so its reset fields are checked
+// before they're used.
+export function resetTokenValid(
+	employee: { resetTokenHash?: unknown; resetTokenExpiration?: unknown } | null | undefined,
+	token: unknown
+) {
 	return (
 		typeof token === "string" &&
 		token.length > 0 &&

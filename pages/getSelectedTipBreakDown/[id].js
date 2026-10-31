@@ -10,7 +10,7 @@ import UpdateTipBreakDownModal from "../../components/UpdateTipBreakDownModal";
 import { useSession } from "next-auth/react";
 import { ShiftDate } from "../../components/CurrentShift";
 import { reportError } from "../../lib/alert";
-import { money, tipPercent } from "../../lib/money.mjs";
+import { money, tipPercent } from "../../lib/money";
 
 export default function getSelectedTipBreakDown({ breakDown }) {
 	const { data: session } = useSession();

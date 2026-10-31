@@ -10,9 +10,9 @@ import {
 import { CurrentShift, ShiftDate } from "./CurrentShift";
 import { useRouter } from "next/router";
 import { ConfirmationDialog } from "./ConformationDialog";
-import { splitCreditTips } from "../lib/tipSplit.mjs";
+import { splitCreditTips } from "../lib/tipSplit";
 import { isSameShow } from "../lib/showKey";
-import { money, tipPercent } from "../lib/money.mjs";
+import { money, tipPercent } from "../lib/money";
 
 export default function TipBreakDown({
 	bartenders,

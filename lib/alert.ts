@@ -1,5 +1,6 @@
 import { sendMail } from "./mailer";
 import clientPromise from "./mongodb";
+import { errorField } from "./errorField";
 
 // Logs a server error and emails it to ALERT_EMAIL (set in Vercel), so
 // failures during a shift don't go unnoticed in the logs. Each `where` sends
@@ -9,17 +10,17 @@ import clientPromise from "./mongodb";
 const QUIET_MINUTES = 60;
 
 // Used when the database itself is what's failing.
-const sentInMemory = new Map();
+const sentInMemory = new Map<string, number>();
 
 // Returns true if this `where` hasn't been emailed within the quiet period.
-async function claimAlert(where) {
+async function claimAlert(where: string) {
 	const expiresAt = new Date(Date.now() + QUIET_MINUTES * 60 * 1000);
 	try {
 		// Give up quickly if the database is down, so the alert doesn't hold up
 		// the error page staff are waiting on.
 		await Promise.race([
 			(async () => {
-				const alerts = (await clientPromise).db("TeragramBallroom").collection("alerts");
+				const alerts = (await clientPromise).db("TeragramBallroom").collection<{ _id: string; expiresAt: Date }>("alerts");
 				await alerts.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 				await alerts.insertOne({ _id: where, expiresAt });
 			})(),
@@ -27,7 +28,7 @@ async function claimAlert(where) {
 		]);
 		return true;
 	} catch (error) {
-		if (error?.code === 11000) return false; // already emailed this hour
+		if (errorField(error, "code") === 11000) return false; // already emailed this hour
 		const last = sentInMemory.get(where);
 		if (last && last > Date.now()) return false;
 		sentInMemory.set(where, expiresAt.getTime());
@@ -35,14 +36,14 @@ async function claimAlert(where) {
 	}
 }
 
-export async function reportError(where, error, details = "") {
+export async function reportError(where: string, error: unknown, details = "") {
 	console.error(`${where}:`, error);
 	const to = process.env.ALERT_EMAIL;
 	if (!to) return false;
 	try {
 		if (!(await claimAlert(where))) return false;
 		const time = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
-		const stack = String(error?.stack || error).split("\n").slice(0, 8).join("\n");
+		const stack = String(errorField(error, "stack") || error).split("\n").slice(0, 8).join("\n");
 		await sendMail({
 			to,
 			subject: `TipJar error: ${where}`,
@@ -51,7 +52,7 @@ export async function reportError(where, error, details = "") {
 				``,
 				`Where: ${where}`,
 				...(details ? [`Details: ${details}`] : []),
-				`Error: ${error?.message || error}`,
+				`Error: ${errorField(error, "message") || error}`,
 				``,
 				stack,
 				``,

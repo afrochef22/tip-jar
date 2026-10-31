@@ -8,30 +8,46 @@
 // bartenders. `random` picks which bartenders get the odd cents.
 import { Decimal } from "decimal.js";
 
+// A saved breakdown can hold these as strings (older records, or a value just
+// typed into the edit form), so the math below converts them with Number(),
+// the same conversion `-`, `*` and `>` would do on their own.
+type Amount = number | string | null;
+
+export type SplitPerson = { id: string; tippedHours: number };
+
+export type CreditSplitInput<P extends SplitPerson> = {
+	totalTips: Amount;
+	foodSalesTotal: Amount;
+	barBackPercentage: Amount;
+	bartenders: P[];
+	barBacks: P[];
+	cooks: P[];
+};
+
 const COOK_SHARE = 0.15;
 
 // Default odd-cent picker: varies from shift to shift but is the same for the
 // same shift, so the server and browser render the same amounts (a fresh
 // Math.random() on each side caused React hydration errors) and the numbers
 // don't reshuffle on re-render.
-const stableRandom = (key) => {
+const stableRandom = (key: string) => {
 	let seed = 0;
 	for (const ch of key) seed = (seed * 31 + ch.charCodeAt(0)) % 2147483647;
 	seed = seed || 1;
 	return () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 };
 
-const sumHours = (people) =>
+const sumHours = (people: SplitPerson[]) =>
 	people.map((p) => p.tippedHours || 0).reduce((acc, h) => acc + h, 0);
 
-const perUnit = (pool, hours, count) => {
+const perUnit = (pool: number, hours: number, count: number) => {
 	const n = new Decimal(pool).div(hours === 0 ? count : hours).toNumber();
 	return Number.isFinite(n) ? n : 0; // 0/0 when a group is empty
 };
 
-export function splitCreditTips(
-	{ totalTips, foodSalesTotal, barBackPercentage, bartenders, barBacks, cooks },
-	random = stableRandom(
+export function splitCreditTips<P extends SplitPerson>(
+	{ totalTips, foodSalesTotal, barBackPercentage, bartenders, barBacks, cooks }: CreditSplitInput<P>,
+	random: () => number = stableRandom(
 		JSON.stringify([
 			totalTips,
 			bartenders.map((b) => [b.id, b.tippedHours || 0]),
@@ -42,16 +58,16 @@ export function splitCreditTips(
 	const barBackHours = sumHours(barBacks);
 	const cookHours = sumHours(cooks);
 
-	const cooksTips = cooks.length === 0 ? 0 : foodSalesTotal * COOK_SHARE;
+	const cooksTips = cooks.length === 0 ? 0 : Number(foodSalesTotal) * COOK_SHARE;
 	const tipsPerCook = perUnit(cooksTips, cookHours, cooks.length);
 
 	const barbackTips =
 		barBacks.length === 0
 			? 0
-			: ((totalTips - cooksTips) * barBackPercentage) / 100;
+			: ((Number(totalTips) - cooksTips) * Number(barBackPercentage)) / 100;
 	const tipsPerBarBack = perUnit(barbackTips, barBackHours, barBacks.length);
 
-	const bartenderTips = totalTips - cooksTips - barbackTips;
+	const bartenderTips = Number(totalTips) - cooksTips - barbackTips;
 	const tipsPerBartender = perUnit(
 		bartenderTips,
 		bartenderHours,
@@ -81,14 +97,14 @@ export function splitCreditTips(
 		),
 	}));
 
-	const total = (people) => people.reduce((acc, p) => acc + p.tipOut, 0);
+	const total = (people: { tipOut: number }[]) => people.reduce((acc, p) => acc + p.tipOut, 0);
 	const totalTipOutBartenders = Number(total(bartendersWithTipOut).toFixed(2));
 	const totalTipOutBarBacks = Number(total(barBacksWithTipOut).toFixed(2));
 	const totalTipOutCooks = Number(total(cooksWithTipOut).toFixed(2));
 
 	const totalTipOut =
 		totalTipOutBartenders + totalTipOutBarBacks + totalTipOutCooks;
-	const roundingDifference = Number((totalTips - totalTipOut).toFixed(2));
+	const roundingDifference = Number((Number(totalTips) - totalTipOut).toFixed(2));
 	const newTotalTipOutBartenders = totalTipOutBartenders + roundingDifference;
 
 	const adjustmentAmountPerBartender = Number(
@@ -118,7 +134,7 @@ export function splitCreditTips(
 			const count = Math.floor(Math.abs(adjustedDifference) / 0.01);
 			if (count > 0) {
 				const adjustment = adjustedDifference > 0 ? 0.01 : -0.01;
-				const done = new Set();
+				const done = new Set<number>();
 				for (let i = 0; i < count; i++) {
 					const index = shuffledIndexes[i % shuffledIndexes.length];
 					if (!done.has(index)) {
@@ -144,7 +160,7 @@ export function splitCreditTips(
 		// Set when the cooks' share is more than the credit tips, which leaves
 		// the bartenders with a negative payout.
 		warning:
-			cooksTips > totalTips
+			cooksTips > Number(totalTips)
 				? `The cooks' 15% of food sales ($${cooksTips.toFixed(2)}) is more than the credit card tips ($${Number(totalTips).toFixed(2)}), so the bartenders come out negative. Check the tips and food sales before saving.`
 				: null,
 	};

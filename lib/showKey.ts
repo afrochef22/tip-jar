@@ -4,12 +4,12 @@
 // scripts/backfill-show-keys.js keeps a copy of showKey; keep the two in sync.
 
 // The name as stored and displayed: trimmed, single-spaced.
-export function cleanShowName(show) {
+export function cleanShowName(show: unknown) {
 	return String(show ?? "").trim().replace(/\s+/g, " ");
 }
 
 // The comparison key: cleaned, lowercased, with look-alike punctuation unified.
-export function showKey(show) {
+export function showKey(show: unknown) {
 	return cleanShowName(show)
 		.normalize("NFKC")
 		.replace(/[‘’`´]/g, "'")
@@ -18,6 +18,6 @@ export function showKey(show) {
 		.toLowerCase();
 }
 
-export function isSameShow(a, b) {
+export function isSameShow(a: unknown, b: unknown) {
 	return showKey(a) === showKey(b);
 }
