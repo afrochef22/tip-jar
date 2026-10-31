@@ -25,10 +25,9 @@ are no bartenders, and the warning from #2 reports the unpaid cents. Tests in
 
 ## 2. With no bartenders, the bartenders' share is not paid to anyone
 
-**Partly fixed:** `splitCreditTips` now returns a warning with the unpaid
-amount, shown on the new-breakdown page (which already won't save without a
-bartender) and in the edit window. The edit window still lets you save a
-breakdown with no bartenders after the warning.
+**Fixed:** `splitCreditTips` returns a warning with the unpaid amount, shown
+on the new-breakdown page and in the edit window, and neither one saves a
+breakdown with no bartenders.
 
 - **File:** `lib/tipSplit.ts`, plus `components/CreditTipCalculation.tsx`, which
   lets the form be submitted with no bartenders selected.
@@ -42,6 +41,10 @@ breakdown with no bartenders after the warning.
   `bartenders` is empty and the bartender share is more than 0.
 
 ## 3. One saved tip breakdown has every field set to null (data)
+
+**Resolved:** the record (`66008f5c8a51b3d9da6778df`, created 2024-03-24) is
+no longer in the database; it's missing from the 2026-10-31 backup. The
+checks from #4 now reject a breakdown without a date.
 
 - **File:** the `tipBreakdown` collection (seen in the 2026-10-23 backup).
   Types: `types/models.ts`.
@@ -85,6 +88,9 @@ still in the database until they're cleaned up.
 
 ## 5. A second fill-in added from the same form comes through unticked
 
+**Fixed:** the form resets with `emptyFillIn()`, the same state it starts
+with. The placeholder in `addEmployeeModal.tsx` is gone too.
+
 - **File:** `components/AddGuestEmployee.tsx`, `handleAddEmployee`
 - **Problem:** After a fill-in is added, the form state is reset to a
   different shape: `{ firstName, lastName, position: [], active: true,
@@ -115,6 +121,9 @@ still in the database until they're cleaned up.
   job for every position.
 
 ## 7. Edit window's hours boxes use `type="number"`, which react-number-format doesn't support
+
+**Fixed:** the hours boxes are text boxes with `inputMode="decimal"` (the
+number keyboard on phones), and `NumberTypeInput` is gone.
 
 - **File:** `components/UpdateTipBreakDownModal.tsx` (the cook, bar back and
   bartender hours inputs)

@@ -23,22 +23,33 @@ import type { Position, WorkerOption, WorkingPosition } from "../types/models";
 import type { AddNewEmployee, PickEmployee } from "./SelectEmployeeDisplay";
 import { stringField, text } from "../lib/field";
 
-// The form's state. After a fill-in is added it's reset to a different shape
-// (no checked/workingPosition, and the Number and Date constructors as
-// tipsCollected), which BUGS_FOUND.md describes.
+// The form's state.
 type NewFillIn = {
-	id?: number;
+	id: number;
 	firstName: string;
 	lastName: string;
 	position: Position[];
-	checked?: boolean;
-	workingPosition?: WorkingPosition;
-	tipsBroughtIn?: number;
-	tippedHours?: number;
-	tipOut?: number;
+	checked: boolean;
+	workingPosition: WorkingPosition;
+	tipsBroughtIn: number;
+	tippedHours: number;
+	tipOut: number;
 	active?: boolean;
-	tipsCollected?: { amount: NumberConstructor; date: DateConstructor }[];
 };
+
+// A blank form. Used to start and again after each fill-in is added, so a
+// second fill-in comes through ticked like the first.
+const emptyFillIn = (position: WorkingPosition): NewFillIn => ({
+	id: 0,
+	firstName: "",
+	lastName: "",
+	position: [],
+	checked: true, // Assuming all new employees are initially checked
+	workingPosition: position, // Assigning the working position
+	tipsBroughtIn: 0,
+	tippedHours: 0,
+	tipOut: 0,
+});
 
 export default function AddGuestEmployee({
 	position,
@@ -60,17 +71,7 @@ export default function AddGuestEmployee({
 	const [nestedModal, setNestedModal] = useState(false);
 	const [closeAll, setCloseAll] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
-	const [newEmployee, setNewEmployee] = useState<NewFillIn>({
-		id: 0,
-		firstName: "",
-		lastName: "",
-		position: [],
-		checked: true, // Assuming all new employees are initially checked
-		workingPosition: position, // Assigning the working position
-		tipsBroughtIn: 0,
-		tippedHours: 0,
-		tipOut: 0,
-	});
+	const [newEmployee, setNewEmployee] = useState<NewFillIn>(() => emptyFillIn(position));
 	const toggle = () => setModal(!modal);
 	const toggleNested = () => {
 		setNestedModal(!nestedModal);
@@ -122,18 +123,7 @@ export default function AddGuestEmployee({
 				// Pass the new employee data to the parent component
 				addNewEmployee(newEmployeeData);
 				// Reset the form and close the modal
-				setNewEmployee({
-					firstName: "",
-					lastName: "",
-					position: [],
-					active: true,
-					tipsCollected: [
-						{
-							amount: Number,
-							date: Date,
-						},
-					],
-				});
+				setNewEmployee(emptyFillIn(position));
 				setAlertMessage(""); // Clear the alert message
 				toggleNested();
 			} else {

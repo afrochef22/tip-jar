@@ -16,14 +16,12 @@ import style from "./addEmployee.module.css";
 import { text } from "../lib/field";
 import type { Position } from "../types/models";
 
-// The form's state. tipsCollected holds the Number and Date constructors as a
-// placeholder; JSON.stringify drops them and the API ignores the field.
+// The form's state.
 type NewEmployeeForm = {
 	firstName: string;
 	lastName: string;
 	position: string[]; // values of the ticked position checkboxes
 	active: boolean;
-	tipsCollected: { amount: NumberConstructor; date: DateConstructor }[];
 };
 
 export function AddEmployeeModal({ position, args }: { position: Position; args?: Partial<ModalProps> }) {
@@ -36,12 +34,6 @@ export function AddEmployeeModal({ position, args }: { position: Position; args?
 		lastName: "",
 		position: [],
 		active: true,
-		tipsCollected: [
-			{
-				amount: Number,
-				date: Date,
-			},
-		],
 	});
 	// Update the initial position based on the passed prop
 	useEffect(() => {
@@ -93,12 +85,6 @@ export function AddEmployeeModal({ position, args }: { position: Position; args?
 					lastName: "",
 					position: [],
 					active: true,
-					tipsCollected: [
-						{
-							amount: Number,
-							date: Date,
-						},
-					],
 				});
 				setAlertMessage(""); // Clear the alert message
 				toggle();

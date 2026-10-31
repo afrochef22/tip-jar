@@ -1,5 +1,5 @@
-import React, { useState, useEffect, memo, forwardRef } from "react";
-import type { ChangeEvent, InputHTMLAttributes } from "react";
+import React, { useState, useEffect, memo } from "react";
+import type { ChangeEvent } from "react";
 import type { ModalProps } from "reactstrap";
 import { splitCreditTips } from "../lib/tipSplit";
 import { NumericFormat } from "react-number-format";
@@ -27,15 +27,6 @@ import form from "./CreditTipForm.module.css";
 import { money } from "../lib/money";
 import { text } from "../lib/field";
 import type { SavedAmount, TipBreakdown } from "../types/models";
-
-// The hours boxes have always been <input type="number">. react-number-format's
-// types don't allow that type (BUGS_FOUND.md), so it's set here, on the same
-// input element the library would render, with the same ref and props.
-const NumberTypeInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
-	function NumberTypeInput(props, ref) {
-		return <input {...props} ref={ref} type="number" />;
-	}
-);
 
 // Saved dates look like 10/5/2026; the date box needs 2026-10-05.
 const toDateInput = (date: string) => {
@@ -189,6 +180,12 @@ const UpdateTipBreakDown = ({ breakDown }: { breakDown: TipBreakdown }, args?: P
 
 	const handleUpdateBreakDown = async (e: { preventDefault(): void }) => {
 		e.preventDefault();
+		// Same rule as a new breakdown: with no bartender, their share isn't paid
+		// to anyone (see the warning above the lists).
+		if (adjustedBartendersWithTipOut.length === 0) {
+			setSaveError("Please keep at least 1 bartender on the breakdown.");
+			return;
+		}
 		// alert("Sorry doesn't work yet");
 		try {
 			const response = await fetch(`/api/UpdateTipBreakDown/${breakDown._id}`, {
@@ -428,10 +425,8 @@ const UpdateTipBreakDown = ({ breakDown }: { breakDown: TipBreakdown }, args?: P
 																<NumericFormat
 																	id="cookHours"
 																	name="cookHours"
-																	customInput={NumberTypeInput}
 																	inputMode="decimal"
 																	pattern="[0-9]+(\.[0-9]{1,2})?"
-																	step="0.01"
 																	value={cook.tippedHours}
 																	onChange={(e) =>
 																		setCookHours(cook.id, e.target.value)
@@ -484,10 +479,8 @@ const UpdateTipBreakDown = ({ breakDown }: { breakDown: TipBreakdown }, args?: P
 																<NumericFormat
 																	id="barBackHours"
 																	name="barBackHours"
-																	customInput={NumberTypeInput}
 																	inputMode="decimal"
 																	pattern="[0-9]+(\.[0-9]{1,2})?"
-																	step="0.01"
 																	value={barBack.tippedHours}
 																	onChange={(e) =>
 																		setBarBackHours(barBack.id, e.target.value)
@@ -538,10 +531,8 @@ const UpdateTipBreakDown = ({ breakDown }: { breakDown: TipBreakdown }, args?: P
 														<NumericFormat
 															id="bartenderHours"
 															name="bartenderHours"
-															customInput={NumberTypeInput}
 															inputMode="decimal"
 															pattern="[0-9]+(\.[0-9]{1,2})?"
-															step="0.01"
 															value={bartender.tippedHours}
 															onChange={(e) =>
 																setBartenderHours(bartender.id, e.target.value)

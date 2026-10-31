@@ -111,8 +111,6 @@ export type BreakdownCard = Json<BreakdownCardDoc>;
 
 // An employee in the shift screens' pick lists (SelectEmployee and the
 // Select* components): a ShiftWorker before a position is picked.
-export type WorkerOption = Omit<ShiftWorker, "workingPosition" | "checked"> & {
+export type WorkerOption = Omit<ShiftWorker, "workingPosition"> & {
 	workingPosition: WorkingPosition | "";
-	// undefined for a second fill-in added from the same form (BUGS_FOUND.md)
-	checked: boolean | undefined;
 };
