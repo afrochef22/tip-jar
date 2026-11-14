@@ -163,10 +163,13 @@ export default function TipBreakDown({
 				body: JSON.stringify(tipBreakdown),
 			});
 			const body: unknown = await response.json().catch(() => ({}));
-			if (response.ok && field(body, "tipBreakdownId")) {
-				// Show the list of all tip breakdowns (the new one is first).
+			const savedId = field(body, "tipBreakdownId");
+			if (response.ok && savedId) {
+				// Show the saved breakdown, where it can be printed.
 				// replace() so the browser Back button does not land here again.
-				router.replace("/getAllTipBreakDowns");
+				// "saved" makes that page's Back button go to the list, not to
+				// the forms that were just submitted.
+				router.replace(`/getSelectedTipBreakDown/${encodeURIComponent(String(savedId))}?saved=1`);
 				return;
 			}
 			setSubmitError(

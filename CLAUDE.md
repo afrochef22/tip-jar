@@ -17,6 +17,8 @@ Tip Jar is a Next.js (Pages Router) application for managing tip distribution at
 
 No linter is configured. The credit tip split lives in `lib/tipSplit.mjs` and is shared by `TipBreakDown` and `UpdateTipBreakDownModal`; change it there and run `npm test`. The cash split (whole dollars for bartenders, leftover to bar backs) lives in `lib/cashSplit.mjs`. Show dollar amounts with `money()` from `lib/money.mjs` (adds commas: 6,601.50).
 
+Receipt printing (Epson TM-m30II, 80mm) goes from the browser straight to the printer over HTTPS: `lib/receipt.ts` lays out the slip (48 characters wide), `lib/printer.ts` sends it as ePOS-Print XML, and `/PrinterSettings` saves the printer's IP in localStorage. The server never talks to the printer.
+
 ## Architecture
 
 **Routing:** Uses Next.js Pages Router (`pages/` directory), not the App Router. Pages are a mix of `.js` and `.tsx` files.

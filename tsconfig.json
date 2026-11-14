@@ -12,6 +12,7 @@
     "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",

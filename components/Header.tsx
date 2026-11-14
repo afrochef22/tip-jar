@@ -115,6 +115,9 @@ const Header = ({ user }: { user?: unknown }) => {
 										<Link className="navbar-link  " href="/getAllTipBreakDowns">
 											Tip Breakdowns
 										</Link>
+										<Link className="navbar-link" href="/PrinterSettings">
+											Printer
+										</Link>
 									</>
 								) : (
 									<>
@@ -125,6 +128,9 @@ const Header = ({ user }: { user?: unknown }) => {
 
 										<Link className="navbar-link  " href="/getAllTipBreakDowns">
 											Tip Breakdowns
+										</Link>
+										<Link className="navbar-link" href="/PrinterSettings">
+											Printer
 										</Link>
 									</>
 								)}
@@ -167,6 +173,9 @@ const Header = ({ user }: { user?: unknown }) => {
 							<Link className="navbar-link  " href="/getAllTipBreakDowns">
 								Tip Breakdowns
 							</Link>
+							<Link className="navbar-link" href="/PrinterSettings">
+								Printer
+							</Link>
 						</>
 					) : (
 						<>
@@ -175,6 +184,9 @@ const Header = ({ user }: { user?: unknown }) => {
 							</Link>
 							<Link className="navbar-link  " href="/getAllTipBreakDowns">
 								Tip Breakdowns
+							</Link>
+							<Link className="navbar-link" href="/PrinterSettings">
+								Printer
 							</Link>
 						</>
 					)}

@@ -13,6 +13,9 @@ import { reportError } from "../../lib/alert";
 import { money, tipPercent } from "../../lib/money";
 import { toJson } from "../../lib/json";
 import { isObjectId } from "../../lib/objectId";
+import { PrintButton, PrintMessage, usePrintSlip } from "../../components/PrintSlip";
+import { printedAtNow } from "../../lib/printer";
+import { breakdownSlip } from "../../lib/receipt";
 import type { GetServerSideProps } from "next";
 import type { TipBreakdown, TipBreakdownDoc } from "../../types/models";
 
@@ -21,6 +24,7 @@ type Props = { breakDown: TipBreakdown | null; error?: string };
 export default function getSelectedTipBreakDown({ breakDown }: Props) {
 	const { data: session } = useSession();
 	const router = useRouter();
+	const { printing, result, print } = usePrintSlip();
 	if (!breakDown) {
 		return <div>Tip Breakdown not found</div>;
 	}
@@ -42,14 +46,23 @@ export default function getSelectedTipBreakDown({ breakDown }: Props) {
 		.reduce((acc, tippedHours) => acc + tippedHours, 0);
 	// Go back to wherever they came from (Dashboard, the list, the
 	// spreadsheet); with no history, fall back to the list or the start page.
+	// Straight after Submit ("saved" in the address) the previous pages are the
+	// entry forms, so Back goes to the list instead.
+	const justSaved = Boolean(router.query.saved);
 	const goBack = () => {
-		if (window.history.length > 1) router.back();
+		if (justSaved) router.push("/getAllTipBreakDowns");
+		else if (window.history.length > 1) router.back();
 		else router.push(session ? "/getAllTipBreakDowns" : "/");
 	};
 	return (
 		<Container className={`${style.topRow} justify-content-center`}>
 			<div className={style.pageActions}>
 				<Button onClick={goBack}>← Back</Button>
+				<PrintButton
+					label="Print"
+					printing={printing}
+					onClick={() => print(breakdownSlip(breakDown, printedAtNow()))}
+				/>
 			{session || shiftMatch ? (
 				// Keying on the data that changes after a save forces the modal
 				// to remount (and re-run its useState initializers) instead of
@@ -62,6 +75,12 @@ export default function getSelectedTipBreakDown({ breakDown }: Props) {
 				<></>
 			)}
 			</div>
+			{justSaved && !result && (
+				<div className={`${style.notice} ${style.noticeWarning}`} role="status">
+					<strong>Saved.</strong> Use Print for a paper copy.
+				</div>
+			)}
+			<PrintMessage result={result} />
 			<div className={style.backgroundColor}>
 				<Container className={` ${style.container}`}>
 					<Row className="mb-3">
