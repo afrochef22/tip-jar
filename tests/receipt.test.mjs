@@ -59,3 +59,10 @@ test("printer replies become readable messages", () => {
 	assert.match(readPrinterReply(reply('success="false" code="WEIRD"')).message, /WEIRD/);
 	assert.equal(readPrinterReply("<html>router login</html>").ok, false);
 });
+
+test("food sales line is left out when there were none", () => {
+	const lines = (foodSales) => breakdownSlip({ ...breakDown, foodSales }, "now").map((line) => line.text).join("\n");
+	assert.match(lines(450), /Food Sales +\$450\.00/);
+	assert.doesNotMatch(lines(0), /Food Sales/);
+	assert.doesNotMatch(lines("0"), /Food Sales/);
+});

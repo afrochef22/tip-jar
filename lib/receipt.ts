@@ -96,7 +96,9 @@ export function breakdownSlip(breakDown: TipBreakdown, printedAt: string): SlipL
 			? [{ text: totalRow("Bar Sales", breakDown.totalBarSales) }]
 			: []),
 		{ text: totalRow("Total Tips", breakDown.totalTips) },
-		{ text: totalRow("Food Sales", breakDown.foodSales) },
+		...(Number(breakDown.foodSales) > 0
+			? [{ text: totalRow("Food Sales", breakDown.foodSales) }]
+			: []),
 		{ text: RULE },
 		...roleSection("BARTENDERS", breakDown.BartenderTips ?? []),
 		...roleSection("BAR BACKS", breakDown.barBackTips ?? []),
