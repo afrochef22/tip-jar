@@ -8,6 +8,10 @@
 import type { SlipLine } from "./receipt.ts";
 
 const STORAGE_KEY = "printerAddress";
+// Saved instead of an IP address when this device prints to the Star printer,
+// which the site reaches over the internet (lib/printQueue.ts) rather than
+// the venue network.
+export const CLOUD_PRINTER = "cloud";
 // How long the printer waits on its own job, and how long we wait for it.
 const PRINTER_TIMEOUT_MS = 8000;
 const REQUEST_TIMEOUT_MS = 12000;
@@ -99,10 +103,29 @@ export function readPrinterReply(reply: string): PrintResult {
 	};
 }
 
+// Queues the slip on the site; the Star printer picks it up within a few seconds.
+async function queueForStar(lines: SlipLine[]): Promise<PrintResult> {
+	try {
+		const response = await fetch("/api/printQueue", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ lines }),
+		});
+		if (response.ok) {
+			return { ok: true, message: "Sent. The printer picks it up within a few seconds." };
+		}
+		const body = await response.json().catch(() => null);
+		return { ok: false, message: body?.error || `The site refused the print job (error ${response.status}).` };
+	} catch {
+		return { ok: false, message: "Couldn't reach the site. Check this device's internet connection and try again." };
+	}
+}
+
 export async function printSlip(lines: SlipLine[], address = savedPrinterAddress()): Promise<PrintResult> {
 	if (!address) {
 		return { ok: false, needsSetup: true, message: "No printer is set up on this device yet." };
 	}
+	if (address === CLOUD_PRINTER) return queueForStar(lines);
 	const controller = new AbortController();
 	const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 	try {

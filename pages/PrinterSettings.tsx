@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, FormGroup, Input, Label } from "reactstrap";
 import form from "../components/CreditTipForm.module.css";
 import { PrintButton, PrintMessage, usePrintSlip } from "../components/PrintSlip";
-import { cleanAddress, printedAtNow, savedPrinterAddress, savePrinterAddress } from "../lib/printer";
+import { CLOUD_PRINTER, cleanAddress, printedAtNow, savedPrinterAddress, savePrinterAddress } from "../lib/printer";
 import { testSlip } from "../lib/receipt";
 
 // The receipt printer's address, saved on this device only: the printer has a
@@ -12,6 +12,18 @@ export default function PrinterSettings() {
 	const [saved, setSaved] = useState("");
 	const [note, setNote] = useState("");
 	const { printing, result, print } = usePrintSlip();
+	// The Star printer reports in to the site, so whether it is online is known.
+	const [star, setStar] = useState<{ lastSeen: string | null; queued: number } | null>(null);
+
+	useEffect(() => {
+		fetch("/api/printQueue")
+			.then((response) => (response.ok ? response.json() : null))
+			.then(setStar)
+			.catch(() => setStar(null));
+	}, []);
+
+	const starOnline = !!star?.lastSeen && Date.now() - new Date(star.lastSeen).getTime() < 60 * 1000;
+	const usingStar = saved === CLOUD_PRINTER;
 
 	// localStorage only exists in the browser, so read it after the first render.
 	useEffect(() => {
@@ -43,9 +55,47 @@ export default function PrinterSettings() {
 		if (cleaned) print(testSlip(cleaned, printedAtNow()), cleaned);
 	};
 
+	const useStar = () => {
+		if (!savePrinterAddress(CLOUD_PRINTER)) {
+			setNote("This browser wouldn't save the setting (private browsing blocks it).");
+			return;
+		}
+		setSaved(CLOUD_PRINTER);
+		setAddress("");
+		setNote("Saved. This device will print to the Star printer.");
+	};
+
 	return (
 		<div className={form.page}>
 			<h1 className={form.pageTitle}>Printer</h1>
+			<section className={form.card}>
+				<h2 className={form.cardTitle}>Star printer (mC-Print3)</h2>
+				<p>
+					The Star printer prints over the internet, so this device does not need to be on the same
+					network as it.{" "}
+					{star === null
+						? ""
+						: starOnline
+							? "The printer is online."
+							: star.lastSeen
+								? "The printer has not checked in for a while. Check that it is on and its network cable is plugged in."
+								: "The printer has never checked in. Finish its CloudPRNT setup first."}
+				</p>
+				<div className={form.actions}>
+					<Button onClick={useStar} disabled={printing || usingStar} className={form.primaryButton}>
+						{usingStar ? "This device uses the Star printer" : "Use the Star printer on this device"}
+					</Button>
+					{usingStar && (
+						<PrintButton
+							label="Test print"
+							printing={printing}
+							onClick={() => print(testSlip("Star printer", printedAtNow()), CLOUD_PRINTER)}
+							className={form.backButton}
+						/>
+					)}
+				</div>
+			</section>
+			<h2 className={form.cardTitle}>Epson printer (same network)</h2>
 			<section className={form.card}>
 				<FormGroup className={form.field}>
 					<Label for="PrinterAddress" className={form.label}>
@@ -67,9 +117,11 @@ export default function PrinterSettings() {
 					/>
 				</FormGroup>
 				<p>
-					{saved
-						? `This device prints to ${saved}.`
-						: "No printer is set up on this device yet."}{" "}
+					{usingStar
+						? "This device prints to the Star printer. Saving an address below switches it to that Epson printer."
+						: saved
+							? `This device prints to ${saved}.`
+							: "No printer is set up on this device yet."}{" "}
 					The address is saved on this device only and changes with the
 					network, so set it again at each location.
 				</p>
@@ -91,7 +143,7 @@ export default function PrinterSettings() {
 				<h2 className={form.cardTitle}>First time on a new network</h2>
 				<p>
 					The printer and this device must be on the same network. Open{" "}
-					{saved ? (
+					{saved && !usingStar ? (
 						<a href={`https://${saved}`} target="_blank" rel="noreferrer">
 							https://{saved}
 						</a>
