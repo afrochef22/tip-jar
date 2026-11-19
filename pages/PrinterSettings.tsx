@@ -9,7 +9,7 @@ import { testSlip } from "../lib/receipt";
 // different address on each network (home, the venue).
 export default function PrinterSettings() {
 	const [address, setAddress] = useState("");
-	const [saved, setSaved] = useState("");
+	const [saved, setSaved] = useState(CLOUD_PRINTER);
 	const [note, setNote] = useState("");
 	const { printing, result, print } = usePrintSlip();
 	// The Star printer reports in to the site, so whether it is online is known.
@@ -28,7 +28,7 @@ export default function PrinterSettings() {
 	// localStorage only exists in the browser, so read it after the first render.
 	useEffect(() => {
 		const current = savedPrinterAddress();
-		setAddress(current);
+		setAddress(current === CLOUD_PRINTER ? "" : current);
 		setSaved(current);
 	}, []);
 
@@ -83,7 +83,7 @@ export default function PrinterSettings() {
 				</p>
 				<div className={form.actions}>
 					<Button onClick={useStar} disabled={printing || usingStar} className={form.primaryButton}>
-						{usingStar ? "This device uses the Star printer" : "Use the Star printer on this device"}
+						{usingStar ? "This device uses the Star printer" : "Switch this device back to the Star printer"}
 					</Button>
 					{usingStar && (
 						<PrintButton
@@ -95,7 +95,8 @@ export default function PrinterSettings() {
 					)}
 				</div>
 			</section>
-			<h2 className={form.cardTitle}>Epson printer (same network)</h2>
+			<details open={!usingStar}>
+			<summary className={form.cardTitle}>Backup: Epson printer (same network)</summary>
 			<section className={form.card}>
 				<FormGroup className={form.field}>
 					<Label for="PrinterAddress" className={form.label}>
@@ -119,9 +120,7 @@ export default function PrinterSettings() {
 				<p>
 					{usingStar
 						? "This device prints to the Star printer. Saving an address below switches it to that Epson printer."
-						: saved
-							? `This device prints to ${saved}.`
-							: "No printer is set up on this device yet."}{" "}
+						: `This device prints to ${saved}.`}{" "}
 					The address is saved on this device only and changes with the
 					network, so set it again at each location.
 				</p>
@@ -138,7 +137,6 @@ export default function PrinterSettings() {
 					/>
 				</div>
 			</section>
-			<PrintMessage result={result} />
 			<section className={form.card}>
 				<h2 className={form.cardTitle}>First time on a new network</h2>
 				<p>
@@ -154,6 +152,8 @@ export default function PrinterSettings() {
 					certificate warning. After that, Test print should work.
 				</p>
 			</section>
+			</details>
+			<PrintMessage result={result} />
 		</div>
 	);
 }

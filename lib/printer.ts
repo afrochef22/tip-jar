@@ -34,12 +34,14 @@ export function cleanAddress(input: string): string | null {
 	return /^[a-z0-9]([a-z0-9.-]*[a-z0-9])?(:\d{1,5})?$/i.test(address) ? address : null;
 }
 
-// Private browsing and blocked site data make localStorage throw.
+// The Star printer is the default: a device prints to it unless it has been
+// switched to an Epson address on /PrinterSettings. Private browsing and
+// blocked site data make localStorage throw; the default applies then too.
 export function savedPrinterAddress(): string {
 	try {
-		return window.localStorage.getItem(STORAGE_KEY) || "";
+		return window.localStorage.getItem(STORAGE_KEY) || CLOUD_PRINTER;
 	} catch {
-		return "";
+		return CLOUD_PRINTER;
 	}
 }
 

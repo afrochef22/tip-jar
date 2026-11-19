@@ -17,7 +17,7 @@ Tip Jar is a Next.js (Pages Router) application for managing tip distribution at
 
 No linter is configured. The credit tip split lives in `lib/tipSplit.mjs` and is shared by `TipBreakDown` and `UpdateTipBreakDownModal`; change it there and run `npm test`. The cash split (whole dollars for bartenders, leftover to bar backs) lives in `lib/cashSplit.mjs`. Show dollar amounts with `money()` from `lib/money.mjs` (adds commas: 6,601.50).
 
-Star mC-Print3 printing (CloudPRNT) goes through the site instead: a device set to "Use the Star printer" on `/PrinterSettings` POSTs the slip lines to `/api/printQueue`, which saves them in `printJobs`; the printer polls `/api/cloudprnt/<CLOUDPRNT_KEY>` every few seconds and prints them (`lib/printQueue.ts`, `lib/starPrnt.ts`). Set `CLOUDPRNT_KEY` (a long random string) in Vercel. Not yet verified on the real printer.
+Star mC-Print3 printing (CloudPRNT) goes through the site instead: every device prints to the Star by default (no setup); one only uses the Epson after an address is saved on `/PrinterSettings` (the Epson section is a collapsed backup). The device POSTs the slip lines to `/api/printQueue`, which saves them in `printJobs`; the printer polls `/api/cloudprnt/<CLOUDPRNT_KEY>` every few seconds and prints them (`lib/printQueue.ts`, `lib/starPrnt.ts`). Set `CLOUDPRNT_KEY` (a long random string) in Vercel. Not yet verified on the real printer.
 
 Receipt printing (Epson TM-m30II, 80mm) goes from the browser straight to the printer over HTTPS: `lib/receipt.ts` lays out the slip (48 characters wide), `lib/printer.ts` sends it as ePOS-Print XML, and `/PrinterSettings` saves the printer's IP in localStorage. The server never talks to the printer.
 
